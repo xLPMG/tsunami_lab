@@ -21,7 +21,7 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'release+san', 'debug+san' )
+                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx')
               )
 )
 
@@ -37,10 +37,17 @@ env = Environment( variables = vars )
 Help( vars.GenerateHelpText( env ) )
 
 # add default flags
-env.Append( CXXFLAGS = [ '-std=c++11',
+if 'osx' in env['mode']:
+  env.Append( CXXFLAGS = [ '-std=c++11',
                          '-Wall',
                          '-Wextra' ] )
-#todo: add -Werror -Wpedantic
+else:
+  env.Append( CXXFLAGS = [ '-std=c++11',
+                        '-Wall',
+                        '-Wextra',
+                        '-Werror',
+                        '-Wpedantic' ] )
+
 
 # set optimization mode
 if 'debug' in env['mode']:
