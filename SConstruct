@@ -39,9 +39,8 @@ Help( vars.GenerateHelpText( env ) )
 # add default flags
 env.Append( CXXFLAGS = [ '-std=c++11',
                          '-Wall',
-                         '-Wextra',
-                         '-Wpedantic',
-                         '-Werror' ] )
+                         '-Wextra' ] )
+#todo: add -Werror -Wpedantic
 
 # set optimization mode
 if 'debug' in env['mode']:
