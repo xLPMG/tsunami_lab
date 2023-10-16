@@ -6,14 +6,14 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'tsunami_lab'
+project = 'gh-tsunami_lab'
 copyright = '2023, Luca-Philipp Grumbach, Richard Hofmann'
 author = 'Luca-Philipp Grumbach, Richard Hofmann'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser"]
+extensions = ["myst_parser", 'sphinx_rtd_theme']
 
 templates_path = ['_templates']
 exclude_patterns = []
