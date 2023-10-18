@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacetsunami__lab" kind="namespace" language="C++">
+    <compoundname>tsunami_lab</compoundname>
+    <innernamespace refid="namespacetsunami__lab_1_1io">tsunami_lab::io</innernamespace>
+    <innernamespace refid="namespacetsunami__lab_1_1patches">tsunami_lab::patches</innernamespace>
+    <innernamespace refid="namespacetsunami__lab_1_1setups">tsunami_lab::setups</innernamespace>
+    <innernamespace refid="namespacetsunami__lab_1_1solvers">tsunami_lab::solvers</innernamespace>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" prot="public" static="no">
+        <type>std::size_t</type>
+        <definition>typedef std::size_t tsunami_lab::t_idx</definition>
+        <argsstring></argsstring>
+        <name>t_idx</name>
+        <qualifiedname>tsunami_lab::t_idx</qualifiedname>
+        <briefdescription>
+<para>integral type for cell-ids, pointer arithmetic, etc. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/constants.h" line="14" column="23" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/constants.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" prot="public" static="no">
+        <type>float</type>
+        <definition>typedef float tsunami_lab::t_real</definition>
+        <argsstring></argsstring>
+        <name>t_real</name>
+        <qualifiedname>tsunami_lab::t_real</qualifiedname>
+        <briefdescription>
+<para>floating point type </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/constants.h" line="17" column="17" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/constants.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>Constants / typedefs used throughout the code.</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>IO-routines for writing a snapshot as Comma Separated Values (CSV).</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>Base class of the wave propagation patches.</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>One-dimensional wave propagation patch.</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>One-dimensional dam break problem.</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>Simulation setup.</para>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>Roe Riemann solver for the one-dimensional shallow water equations. </para>
+</sect1>
+    </detaileddescription>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/constants.h" line="12" column="1"/>
+  </compounddef>
+</doxygen>

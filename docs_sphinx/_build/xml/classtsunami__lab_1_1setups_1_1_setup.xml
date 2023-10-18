@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classtsunami__lab_1_1setups_1_1_setup" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>tsunami_lab::setups::Setup</compoundname>
+    <derivedcompoundref refid="classtsunami__lab_1_1setups_1_1_dam_break1d" prot="public" virt="non-virtual">tsunami_lab::setups::DamBreak1d</derivedcompoundref>
+    <includes refid="_setup_8h" local="no">Setup.h</includes>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1a0b6131241d5bd20fc68d3d6a764bcd35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual tsunami_lab::setups::Setup::~Setup</definition>
+        <argsstring>()</argsstring>
+        <name>~Setup</name>
+        <qualifiedname>tsunami_lab::setups::Setup::~Setup</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Virtual destructor for base class. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="26" column="13" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1aa7e72a3e93aad13342423ec4f06e4f87" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+        <definition>virtual t_real tsunami_lab::setups::Setup::getHeight</definition>
+        <argsstring>(t_real i_x, t_real i_y) const =0</argsstring>
+        <name>getHeight</name>
+        <qualifiedname>tsunami_lab::setups::Setup::getHeight</qualifiedname>
+        <reimplementedby refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a81271bb57c44ea59e88dcc9541cf00ee">getHeight</reimplementedby>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_x</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the water height at a given point.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>x-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>y-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>water height at the given point. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="35" column="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1a7e9e033b4954247a7fc0a9d808a53296" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+        <definition>virtual t_real tsunami_lab::setups::Setup::getMomentumX</definition>
+        <argsstring>(t_real i_x, t_real i_y) const =0</argsstring>
+        <name>getMomentumX</name>
+        <qualifiedname>tsunami_lab::setups::Setup::getMomentumX</qualifiedname>
+        <reimplementedby refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a425544509438f8b6ee2a705cf02d9a3c">getMomentumX</reimplementedby>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_x</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the momentum in x-direction.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>x-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>y-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>momentum in x-direction. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="45" column="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1a30f2396047c8658922c617a2be739f09" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+        <definition>virtual t_real tsunami_lab::setups::Setup::getMomentumY</definition>
+        <argsstring>(t_real i_x, t_real i_y) const =0</argsstring>
+        <name>getMomentumY</name>
+        <qualifiedname>tsunami_lab::setups::Setup::getMomentumY</qualifiedname>
+        <reimplementedby refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a1f16fbb0280757323fb3696fb460da66">getMomentumY</reimplementedby>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_x</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the momentum in y-direction.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>x-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>y-coordinate of the queried point. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>momentum in y-direction. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="55" column="20"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Base setup. </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>tsunami_lab::setups::DamBreak1d</label>
+        <link refid="classtsunami__lab_1_1setups_1_1_dam_break1d"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>tsunami_lab::setups::Setup</label>
+        <link refid="classtsunami__lab_1_1setups_1_1_setup"/>
+      </node>
+    </inheritancegraph>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="21" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" bodystart="21" bodyend="58"/>
+    <listofallmembers>
+      <member refid="classtsunami__lab_1_1setups_1_1_setup_1aa7e72a3e93aad13342423ec4f06e4f87" prot="public" virt="pure-virtual"><scope>tsunami_lab::setups::Setup</scope><name>getHeight</name></member>
+      <member refid="classtsunami__lab_1_1setups_1_1_setup_1a7e9e033b4954247a7fc0a9d808a53296" prot="public" virt="pure-virtual"><scope>tsunami_lab::setups::Setup</scope><name>getMomentumX</name></member>
+      <member refid="classtsunami__lab_1_1setups_1_1_setup_1a30f2396047c8658922c617a2be739f09" prot="public" virt="pure-virtual"><scope>tsunami_lab::setups::Setup</scope><name>getMomentumY</name></member>
+      <member refid="classtsunami__lab_1_1setups_1_1_setup_1a0b6131241d5bd20fc68d3d6a764bcd35" prot="public" virt="virtual"><scope>tsunami_lab::setups::Setup</scope><name>~Setup</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacetsunami__lab_1_1io" kind="namespace" language="C++">
+    <compoundname>tsunami_lab::io</compoundname>
+    <innerclass refid="classtsunami__lab_1_1io_1_1_csv" prot="public">tsunami_lab::io::Csv</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.h" line="15" column="3"/>
+  </compounddef>
+</doxygen>

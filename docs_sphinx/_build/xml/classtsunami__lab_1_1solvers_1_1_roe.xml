@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classtsunami__lab_1_1solvers_1_1_roe" kind="class" language="C++" prot="public">
+    <compoundname>tsunami_lab::solvers::Roe</compoundname>
+    <includes refid="_roe_8h" local="no">Roe.h</includes>
+    <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classtsunami__lab_1_1solvers_1_1_roe_1a95955fb2aa160d5b901afecf29179265" prot="private" static="yes" constexpr="yes" mutable="no">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> constexpr</type>
+        <definition>t_real constexpr tsunami_lab::solvers::Roe::m_gSqrt</definition>
+        <argsstring></argsstring>
+        <name>m_gSqrt</name>
+        <qualifiedname>tsunami_lab::solvers::Roe::m_gSqrt</qualifiedname>
+        <initializer>= 3.131557121</initializer>
+        <briefdescription>
+<para>square root of gravity </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" line="21" column="29" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classtsunami__lab_1_1solvers_1_1_roe_1ae66655fe8c109ecd0033ead398ad3d41" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::solvers::Roe::waveSpeeds</definition>
+        <argsstring>(t_real i_hL, t_real i_hR, t_real i_uL, t_real i_uR, t_real &amp;o_waveSpeedL, t_real &amp;o_waveSpeedR)</argsstring>
+        <name>waveSpeeds</name>
+        <qualifiedname>tsunami_lab::solvers::Roe::waveSpeeds</qualifiedname>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_uL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_uR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> &amp;</type>
+          <declname>o_waveSpeedL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> &amp;</type>
+          <declname>o_waveSpeedR</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Computes the wave speeds.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_hL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the left side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_hR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_uL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>particle velocity of the leftside. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_uR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>particles velocity of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_waveSpeedL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the speed of the wave propagating to the left. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_waveSpeedR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the speed of the wave propagating to the right.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para><ref refid="classtsunami__lab_1_1solvers_1_1_roe" kindref="compound">Roe</ref> Riemann solver for the shallow water equations. </para>
+</sect1>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" line="33" column="17" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp" bodystart="10" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1solvers_1_1_roe_1a71a0f2b1138ed6db82d22af33f1a7b9a" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::solvers::Roe::waveStrengths</definition>
+        <argsstring>(t_real i_hL, t_real i_hR, t_real i_huL, t_real i_huR, t_real i_waveSpeedL, t_real i_waveSpeedR, t_real &amp;o_strengthL, t_real &amp;o_strengthR)</argsstring>
+        <name>waveStrengths</name>
+        <qualifiedname>tsunami_lab::solvers::Roe::waveStrengths</qualifiedname>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_huL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_huR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_waveSpeedL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_waveSpeedR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> &amp;</type>
+          <declname>o_strengthL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> &amp;</type>
+          <declname>o_strengthR</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Computes the wave strengths.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_hL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the left side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_hR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_huL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>momentum of the left side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_huR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>momentum of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_waveSpeedL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>speed of the wave propagating to the left. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_waveSpeedR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>speed of the wave propagating to the right. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_strengthL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the strength of the wave propagating to the left. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_strengthR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the strength of the wave propagating to the right. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" line="52" column="17" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp" bodystart="31" bodyend="58"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classtsunami__lab_1_1solvers_1_1_roe_1a411d792e8c27c47c6bfb143404d39e5f" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::solvers::Roe::netUpdates</definition>
+        <argsstring>(t_real i_hL, t_real i_hR, t_real i_huL, t_real i_huR, t_real o_netUpdateL[2], t_real o_netUpdateR[2])</argsstring>
+        <name>netUpdates</name>
+        <qualifiedname>tsunami_lab::solvers::Roe::netUpdates</qualifiedname>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_huL</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_huR</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>o_netUpdateL</declname>
+          <array>[2]</array>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>o_netUpdateR</declname>
+          <array>[2]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Computes the net-updates.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_hL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the left side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_hR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_huL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>momentum of the left side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_huR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>momentum of the right side. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_netUpdateL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the net-updates for the left side; 0: height, 1: momentum. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>o_netUpdateR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>will be set to the net-updates for the right side; 0: height, 1: momentum. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" line="72" column="17" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp" bodystart="60" bodyend="126"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" line="18" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h" bodystart="18" bodyend="78"/>
+    <listofallmembers>
+      <member refid="classtsunami__lab_1_1solvers_1_1_roe_1a95955fb2aa160d5b901afecf29179265" prot="private" virt="non-virtual"><scope>tsunami_lab::solvers::Roe</scope><name>m_gSqrt</name></member>
+      <member refid="classtsunami__lab_1_1solvers_1_1_roe_1a411d792e8c27c47c6bfb143404d39e5f" prot="public" virt="non-virtual"><scope>tsunami_lab::solvers::Roe</scope><name>netUpdates</name></member>
+      <member refid="classtsunami__lab_1_1solvers_1_1_roe_1ae66655fe8c109ecd0033ead398ad3d41" prot="private" virt="non-virtual"><scope>tsunami_lab::solvers::Roe</scope><name>waveSpeeds</name></member>
+      <member refid="classtsunami__lab_1_1solvers_1_1_roe_1a71a0f2b1138ed6db82d22af33f1a7b9a" prot="private" virt="non-virtual"><scope>tsunami_lab::solvers::Roe</scope><name>waveStrengths</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
