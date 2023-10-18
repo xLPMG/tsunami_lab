@@ -1,10 +1,10 @@
-.. tsunami_lab documentation master file, created by
-   sphinx-quickstart on Mon Oct 16 20:09:19 2023.
+.. Tsunami documentation master file, created by
+   sphinx-quickstart on Wed Oct 18 12:04:21 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to tsunami_lab's documentation!
-=======================================
+Welcome to Tsunami's documentation!
+===================================
 
 .. toctree::
    :maxdepth: 2
