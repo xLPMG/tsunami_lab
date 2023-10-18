@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="_dam_break1d_8cpp" kind="file" language="C++">
+    <compoundname>DamBreak1d.cpp</compoundname>
+    <includes refid="_dam_break1d_8h" local="yes">DamBreak1d.h</includes>
+    <incdepgraph>
+      <node id="4">
+        <label>../constants.h</label>
+        <link refid="constants_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</label>
+        <link refid="_dam_break1d_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>DamBreak1d.h</label>
+        <link refid="_dam_break1d_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>Setup.h</label>
+        <link refid="_setup_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>cstddef</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_dam_break1d_8h" kindref="compound">DamBreak1d.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a9d09ba838d9a6699b6e2821bc9ed08b7" kindref="member">tsunami_lab::setups::DamBreak1d::DamBreak1d</ref>(<sp/>t_real<sp/>i_heightLeft,</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t_real<sp/>i_heightRight,</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t_real<sp/>i_locationDam<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1aa7c87a691819d4089ce2a59af49d42f6" kindref="member">m_heightLeft</ref><sp/>=<sp/>i_heightLeft;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a5949f08bd52d405f0a8c1903d9c913e3" kindref="member">m_heightRight</ref><sp/>=<sp/>i_heightRight;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1abb701a49066f635f80c335313397e827" kindref="member">m_locationDam</ref><sp/>=<sp/>i_locationDam;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">tsunami_lab::t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a81271bb57c44ea59e88dcc9541cf00ee" kindref="member">tsunami_lab::setups::DamBreak1d::getHeight</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>i_x,</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>i_x<sp/>&lt;<sp/>m_locationDam<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m_heightLeft;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m_heightRight;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">tsunami_lab::t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a425544509438f8b6ee2a705cf02d9a3c" kindref="member">tsunami_lab::setups::DamBreak1d::getMomentumX</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref>,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">tsunami_lab::t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a1f16fbb0280757323fb3696fb460da66" kindref="member">tsunami_lab::setups::DamBreak1d::getMomentumY</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref>,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="constants_8h" kind="file" language="C++">
+    <compoundname>constants.h</compoundname>
+    <includes local="no">cstddef</includes>
+    <includedby refid="_csv_8h" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.h</includedby>
+    <includedby refid="_csv_8test_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp</includedby>
+    <includedby refid="_wave_propagation_8h" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation.h</includedby>
+    <includedby refid="_setup_8h" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h</includedby>
+    <includedby refid="_roe_8h" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.h</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/constants.h</label>
+        <link refid="constants_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cstddef</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/constants.h</label>
+        <link refid="constants_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.cpp</label>
+        <link refid="_csv_8cpp"/>
+      </node>
+      <node id="2">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.h</label>
+        <link refid="_csv_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp</label>
+        <link refid="_csv_8test_8cpp"/>
+      </node>
+      <node id="5">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="6">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation.h</label>
+        <link refid="_wave_propagation_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</label>
+        <link refid="_wave_propagation1d_8cpp"/>
+      </node>
+      <node id="7">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h</label>
+        <link refid="_wave_propagation1d_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</label>
+        <link refid="_wave_propagation1d_8test_8cpp"/>
+      </node>
+      <node id="12">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</label>
+        <link refid="_dam_break1d_8cpp"/>
+      </node>
+      <node id="11">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h</label>
+        <link refid="_dam_break1d_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
+        <link refid="_dam_break1d_8test_8cpp"/>
+      </node>
+      <node id="10">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h</label>
+        <link refid="_setup_8h"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.cpp</label>
+        <link refid="_roe_8cpp"/>
+      </node>
+      <node id="14">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.h</label>
+        <link refid="_roe_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.test.cpp</label>
+        <link refid="_roe_8test_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacetsunami__lab">tsunami_lab</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>TSUNAMI_LAB_CONSTANTS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TSUNAMI_LAB_CONSTANTS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstddef&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="namespacetsunami__lab" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacetsunami__lab" kindref="compound">tsunami_lab</ref><sp/>{</highlight></codeline>
+<codeline lineno="14" refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/constants.h"/>
+  </compounddef>
+</doxygen>

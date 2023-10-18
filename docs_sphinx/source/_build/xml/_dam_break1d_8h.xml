@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="_dam_break1d_8h" kind="file" language="C++">
+    <compoundname>DamBreak1d.h</compoundname>
+    <includes refid="_setup_8h" local="yes">Setup.h</includes>
+    <includedby refid="main_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</includedby>
+    <includedby refid="_dam_break1d_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</includedby>
+    <includedby refid="_dam_break1d_8test_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</includedby>
+    <incdepgraph>
+      <node id="3">
+        <label>../constants.h</label>
+        <link refid="constants_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h</label>
+        <link refid="_dam_break1d_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Setup.h</label>
+        <link refid="_setup_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>cstddef</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="3">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</label>
+        <link refid="_dam_break1d_8cpp"/>
+      </node>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h</label>
+        <link refid="_dam_break1d_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
+        <link refid="_dam_break1d_8test_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classtsunami__lab_1_1setups_1_1_dam_break1d" prot="public">tsunami_lab::setups::DamBreak1d</innerclass>
+    <innernamespace refid="namespacetsunami__lab">tsunami_lab</innernamespace>
+    <innernamespace refid="namespacetsunami__lab_1_1setups">tsunami_lab::setups</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>TSUNAMI_LAB_SETUPS_DAM_BREAK_1D_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TSUNAMI_LAB_SETUPS_DAM_BREAK_1D_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_setup_8h" kindref="compound">Setup.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacetsunami__lab" kindref="compound">tsunami_lab</ref><sp/>{</highlight></codeline>
+<codeline lineno="13" refid="namespacetsunami__lab_1_1setups" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">setups<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d" kindref="compound">DamBreak1d</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="classtsunami__lab_1_1setups_1_1_dam_break1d" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d" kindref="compound">tsunami_lab::setups::DamBreak1d</ref>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classtsunami__lab_1_1setups_1_1_setup" kindref="compound">Setup</ref><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="24" refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1aa7c87a691819d4089ce2a59af49d42f6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1aa7c87a691819d4089ce2a59af49d42f6" kindref="member">m_heightLeft</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="27" refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a5949f08bd52d405f0a8c1903d9c913e3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a5949f08bd52d405f0a8c1903d9c913e3" kindref="member">m_heightRight</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1abb701a49066f635f80c335313397e827" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1abb701a49066f635f80c335313397e827" kindref="member">m_locationDam</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d" kindref="compound">DamBreak1d</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>i_heightLeft,</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>i_heightRight,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>i_locationDam<sp/>);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a81271bb57c44ea59e88dcc9541cf00ee" kindref="member">getHeight</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>i_x,</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><sp/><sp/><sp/><sp/><sp/>)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a425544509438f8b6ee2a705cf02d9a3c" kindref="member">getMomentumX</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref>,</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/><ref refid="classtsunami__lab_1_1setups_1_1_dam_break1d_1a1f16fbb0280757323fb3696fb460da66" kindref="member">getMomentumY</ref>(<sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref>,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref><sp/>)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h"/>
+  </compounddef>
+</doxygen>

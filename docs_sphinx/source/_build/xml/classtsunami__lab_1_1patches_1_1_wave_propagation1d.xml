@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classtsunami__lab_1_1patches_1_1_wave_propagation1d" kind="class" language="C++" prot="public">
+    <compoundname>tsunami_lab::patches::WavePropagation1d</compoundname>
+    <basecompoundref refid="classtsunami__lab_1_1patches_1_1_wave_propagation" prot="public" virt="non-virtual">tsunami_lab::patches::WavePropagation</basecompoundref>
+    <includes refid="_wave_propagation1d_8h" local="no">WavePropagation1d.h</includes>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aa362d147d5db8b363f307e4751e1d43c" prot="private" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short tsunami_lab::patches::WavePropagation1d::m_step</definition>
+        <argsstring></argsstring>
+        <name>m_step</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::m_step</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>current step which indicates the active values in the arrays below </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="21" column="20" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a2da2cc4b6f39fc733fee9c05e49fa4c7" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        <definition>t_idx tsunami_lab::patches::WavePropagation1d::m_nCells</definition>
+        <argsstring></argsstring>
+        <name>m_nCells</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::m_nCells</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>number of cells discretizing the computational domain </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="24" column="11" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a83258dbfbd7adea57ef3a9d11d2bf48b" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> *</type>
+        <definition>t_real* tsunami_lab::patches::WavePropagation1d::m_h[2]</definition>
+        <argsstring>[2]</argsstring>
+        <name>m_h</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::m_h</qualifiedname>
+        <initializer>= { nullptr, nullptr }</initializer>
+        <briefdescription>
+<para>water heights for the current and next time step for all cells </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="27" column="13" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="variable" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aceeacf330a8549d6fadb1f8b72f0153d" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> *</type>
+        <definition>t_real* tsunami_lab::patches::WavePropagation1d::m_hu[2]</definition>
+        <argsstring>[2]</argsstring>
+        <name>m_hu</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::m_hu</qualifiedname>
+        <initializer>= { nullptr, nullptr }</initializer>
+        <briefdescription>
+<para>momenta for the current and next time step for all cells </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="30" column="13" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="30" bodyend="30"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a888e18ad0bdf59dd05c05f2dc0f90efb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>tsunami_lab::patches::WavePropagation1d::WavePropagation1d</definition>
+        <argsstring>(t_idx i_nCells)</argsstring>
+        <name>WavePropagation1d</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::WavePropagation1d</qualifiedname>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+          <declname>i_nCells</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructs the 1d wave propagation solver.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_nCells</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>number of cells.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>One-dimensional wave propagation patch. </para>
+</sect1>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="38" column="5" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp" bodystart="10" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1af9cb88214b84e3c2cabbb8a1daaf4784" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>tsunami_lab::patches::WavePropagation1d::~WavePropagation1d</definition>
+        <argsstring>()</argsstring>
+        <name>~WavePropagation1d</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::~WavePropagation1d</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Destructor which frees all allocated memory. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="43" column="5" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp" bodystart="28" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1ac1884ddb6a52c08a5b65f60e21f6a547" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::patches::WavePropagation1d::timeStep</definition>
+        <argsstring>(t_real i_scaling)</argsstring>
+        <name>timeStep</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::timeStep</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a3d8390f139fc8cede21eb4f534a4e7fc">timeStep</reimplements>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_scaling</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Performs a time step.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_scaling</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>scaling of the time step (dt / dx). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="50" column="10" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp" bodystart="35" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a3f78574d12eb29fa6076e23004de2d22" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::patches::WavePropagation1d::setGhostOutflow</definition>
+        <argsstring>()</argsstring>
+        <name>setGhostOutflow</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::setGhostOutflow</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a02af1c6f56a9cc310efc8f997957faec">setGhostOutflow</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets the values of the ghost cells according to outflow boundary conditions. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="55" column="10" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp" bodystart="75" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a5ccb6fa952c6dc7f3f4b42a2a7a0cb27" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        <definition>t_idx tsunami_lab::patches::WavePropagation1d::getStride</definition>
+        <argsstring>()</argsstring>
+        <name>getStride</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::getStride</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1ad87630b516ccda72b4a7bae3044e802a">getStride</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the stride in y-direction. x-direction is stride-1.</para>
+<para><simplesect kind="return"><para>stride in y-direction. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="62" column="11" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="62" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aaffed61d8bfc9b09a7dd127cff7f5815" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> const *</type>
+        <definition>t_real const  * tsunami_lab::patches::WavePropagation1d::getHeight</definition>
+        <argsstring>()</argsstring>
+        <name>getHeight</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::getHeight</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a05a01f836cba2182c00aeeb176569caf">getHeight</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets cells&apos; water heights.</para>
+<para><simplesect kind="return"><para>water heights. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="71" column="19" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="71" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a4f3fc55be8ff55f4810ca3af4acc659c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> const *</type>
+        <definition>t_real const  * tsunami_lab::patches::WavePropagation1d::getMomentumX</definition>
+        <argsstring>()</argsstring>
+        <name>getMomentumX</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::getMomentumX</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a684918c61795726b873d50df69b28fdc">getMomentumX</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Gets the cells&apos; momenta in x-direction.</para>
+<para><simplesect kind="return"><para>momenta in x-direction. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="80" column="19" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="80" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a25430ddf3acbbb98bce9f801b8913e7d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref> const *</type>
+        <definition>t_real const  * tsunami_lab::patches::WavePropagation1d::getMomentumY</definition>
+        <argsstring>()</argsstring>
+        <name>getMomentumY</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::getMomentumY</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a3b2705760b36d5b0547e4be86df50c09">getMomentumY</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Dummy function which returns a nullptr. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="87" column="19" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="87" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1adf9a1009d96ea10d8944f1b83daf5644" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::patches::WavePropagation1d::setHeight</definition>
+        <argsstring>(t_idx i_ix, t_idx, t_real i_h)</argsstring>
+        <name>setHeight</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::setHeight</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a46c844b7970b7cb96a62d13bc9f470f6">setHeight</reimplements>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+          <declname>i_ix</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets the height of the cell to the given value.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_ix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>id of the cell in x-direction. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_h</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>water height. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="97" column="10" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="97" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a0344a1bc28432b38bcce02fd0604b3f1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::patches::WavePropagation1d::setMomentumX</definition>
+        <argsstring>(t_idx i_ix, t_idx, t_real i_hu)</argsstring>
+        <name>setMomentumX</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::setMomentumX</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1aed5a498ff7ca0dbefae90f21244e2671">setMomentumX</reimplements>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+          <declname>i_ix</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+          <declname>i_hu</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets the momentum in x-direction to the given value.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>i_ix</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>id of the cell in x-direction. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>i_hu</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>momentum in x-direction. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="109" column="10" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="109" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1ab1387901f780a042d2f1b21b1f95f2bb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void tsunami_lab::patches::WavePropagation1d::setMomentumY</definition>
+        <argsstring>(t_idx, t_idx, t_real)</argsstring>
+        <name>setMomentumY</name>
+        <qualifiedname>tsunami_lab::patches::WavePropagation1d::setMomentumY</qualifiedname>
+        <reimplements refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1aa17fc8f451e46cf248b4cffd1604ef43">setMomentumY</reimplements>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1afd26f38678e954f652489c828656cbca" kindref="member">t_idx</ref></type>
+        </param>
+        <param>
+          <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Dummy function since there is no y-momentum in the 1d solver. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="118" column="10" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="118" bodyend="120"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>tsunami_lab::patches::WavePropagation</label>
+        <link refid="classtsunami__lab_1_1patches_1_1_wave_propagation"/>
+      </node>
+      <node id="1">
+        <label>tsunami_lab::patches::WavePropagation1d</label>
+        <link refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>tsunami_lab::patches::WavePropagation</label>
+        <link refid="classtsunami__lab_1_1patches_1_1_wave_propagation"/>
+      </node>
+      <node id="1">
+        <label>tsunami_lab::patches::WavePropagation1d</label>
+        <link refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" line="18" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h" bodystart="18" bodyend="121"/>
+    <listofallmembers>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aaffed61d8bfc9b09a7dd127cff7f5815" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>getHeight</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a4f3fc55be8ff55f4810ca3af4acc659c" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>getMomentumX</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a25430ddf3acbbb98bce9f801b8913e7d" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>getMomentumY</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a5ccb6fa952c6dc7f3f4b42a2a7a0cb27" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>getStride</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a83258dbfbd7adea57ef3a9d11d2bf48b" prot="private" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>m_h</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aceeacf330a8549d6fadb1f8b72f0153d" prot="private" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>m_hu</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a2da2cc4b6f39fc733fee9c05e49fa4c7" prot="private" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>m_nCells</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1aa362d147d5db8b363f307e4751e1d43c" prot="private" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>m_step</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a3f78574d12eb29fa6076e23004de2d22" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>setGhostOutflow</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1adf9a1009d96ea10d8944f1b83daf5644" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>setHeight</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a0344a1bc28432b38bcce02fd0604b3f1" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>setMomentumX</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1ab1387901f780a042d2f1b21b1f95f2bb" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>setMomentumY</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1ac1884ddb6a52c08a5b65f60e21f6a547" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>timeStep</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1a888e18ad0bdf59dd05c05f2dc0f90efb" prot="public" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>WavePropagation1d</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation_1a5f0a9d03b1ab9387cf90f172800aaa92" prot="public" virt="virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>~WavePropagation</name></member>
+      <member refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1af9cb88214b84e3c2cabbb8a1daaf4784" prot="public" virt="non-virtual"><scope>tsunami_lab::patches::WavePropagation1d</scope><name>~WavePropagation1d</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

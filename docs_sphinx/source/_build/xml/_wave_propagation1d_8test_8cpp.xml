@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="_wave_propagation1d_8test_8cpp" kind="file" language="C++">
+    <compoundname>WavePropagation1d.test.cpp</compoundname>
+    <includes local="no">catch2/catch.hpp</includes>
+    <includes refid="_wave_propagation1d_8h" local="yes">WavePropagation1d.h</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>../constants.h</label>
+        <link refid="constants_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>WavePropagation.h</label>
+        <link refid="_wave_propagation_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>WavePropagation1d.h</label>
+        <link refid="_wave_propagation1d_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</label>
+        <link refid="_wave_propagation1d_8test_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>catch2/catch.hpp</label>
+      </node>
+      <node id="6">
+        <label>cstddef</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="_wave_propagation1d_8test_8cpp_1a2590669108eee6c1ea9d99bec183c2e7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>TEST_CASE</definition>
+        <argsstring>(&quot;Test the 1d wave propagation solver.&quot;, &quot;[WaveProp1d]&quot;)</argsstring>
+        <name>TEST_CASE</name>
+        <param>
+          <type>&quot;Test the 1d wave propagation solver.&quot;</type>
+        </param>
+        <param>
+          <type>&quot;&quot;</type>
+          <array>[WaveProp1d]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="author"><para>Alexander Breuer (alex.breuer AT uni-jena.de)</para>
+</simplesect>
+</para>
+<sect1 id="namespacetsunami__lab_1DESCRIPTION">
+<title>DESCRIPTION</title>
+<para>Unit tests for the one-dimensional wave propagation patch. </para>
+</sect1>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp" line="10" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp" bodystart="10" bodyend="72"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;catch2/catch.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_wave_propagation1d_8h" kindref="compound">WavePropagation1d.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><ref refid="_wave_propagation1d_8test_8cpp_1a2590669108eee6c1ea9d99bec183c2e7" kindref="member">TEST_CASE</ref>(<sp/></highlight><highlight class="stringliteral">&quot;Test<sp/>the<sp/>1d<sp/>wave<sp/>propagation<sp/>solver.&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;[WaveProp1d]&quot;</highlight><highlight class="normal"><sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/><sp/><sp/>*<sp/>Test<sp/>case:</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/>Single<sp/>dam<sp/>break<sp/>problem<sp/>between<sp/>cell<sp/>49<sp/>and<sp/>50.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/><sp/>left<sp/>|<sp/>right</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/>10<sp/>|<sp/>8</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0<sp/>|<sp/>0</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/>Elsewhere<sp/>steady<sp/>state.</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/><sp/><sp/>*<sp/>The<sp/>net-updates<sp/>at<sp/>the<sp/>respective<sp/>edge<sp/>are<sp/>given<sp/>as</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/><sp/><sp/>*<sp/>(see<sp/>derivation<sp/>in<sp/>Roe<sp/>solver):</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/>left<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>right</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>9.394671362<sp/>|<sp/>-9.394671362</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/>-88.25985<sp/><sp/><sp/><sp/><sp/>|<sp/>-88.25985</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>construct<sp/>solver<sp/>and<sp/>setup<sp/>a<sp/>dambreak<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="classtsunami__lab_1_1patches_1_1_wave_propagation1d" kindref="compound">tsunami_lab::patches::WavePropagation1d</ref><sp/>m_waveProp(<sp/>100<sp/>);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<sp/>std::size_t<sp/>l_ce<sp/>=<sp/>0;<sp/>l_ce<sp/>&lt;<sp/>50;<sp/>l_ce++<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>m_waveProp.setHeight(<sp/>l_ce,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0,</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>10<sp/>);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>m_waveProp.setMomentumX(<sp/>l_ce,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0<sp/>);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<sp/>std::size_t<sp/>l_ce<sp/>=<sp/>50;<sp/>l_ce<sp/>&lt;<sp/>100;<sp/>l_ce++<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>m_waveProp.setHeight(<sp/>l_ce,</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>8<sp/>);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>m_waveProp.setMomentumX(<sp/>l_ce,</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0,</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0<sp/>);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>set<sp/>outflow<sp/>boundary<sp/>condition</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/>m_waveProp.setGhostOutflow();</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>perform<sp/>a<sp/>time<sp/>step</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/>m_waveProp.timeStep(<sp/>0.1<sp/>);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>steady<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<sp/>std::size_t<sp/>l_ce<sp/>=<sp/>0;<sp/>l_ce<sp/>&lt;<sp/>49;<sp/>l_ce++<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>REQUIRE(<sp/>m_waveProp.getHeight()[l_ce]<sp/><sp/><sp/>==<sp/>Approx(10)<sp/>);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>REQUIRE(<sp/>m_waveProp.getMomentumX()[l_ce]<sp/>==<sp/>Approx(0)<sp/>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>dam-break</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/>REQUIRE(<sp/>m_waveProp.getHeight()[49]<sp/><sp/><sp/>==<sp/>Approx(10<sp/>-<sp/>0.1<sp/>*<sp/>9.394671362)<sp/>);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/>REQUIRE(<sp/>m_waveProp.getMomentumX()[49]<sp/>==<sp/>Approx(<sp/>0<sp/>+<sp/>0.1<sp/>*<sp/>88.25985)<sp/>);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/>REQUIRE(<sp/>m_waveProp.getHeight()[50]<sp/><sp/><sp/>==<sp/>Approx(8<sp/>+<sp/>0.1<sp/>*<sp/>9.394671362)<sp/>);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/>REQUIRE(<sp/>m_waveProp.getMomentumX()[50]<sp/>==<sp/>Approx(0<sp/>+<sp/>0.1<sp/>*<sp/>88.25985)<sp/>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>steady<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<sp/>std::size_t<sp/>l_ce<sp/>=<sp/>51;<sp/>l_ce<sp/>&lt;<sp/>100;<sp/>l_ce++<sp/>)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>REQUIRE(<sp/>m_waveProp.getHeight()[l_ce]<sp/><sp/><sp/>==<sp/>Approx(8)<sp/>);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>REQUIRE(<sp/>m_waveProp.getMomentumX()[l_ce]<sp/>==<sp/>Approx(0)<sp/>);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp"/>
+  </compounddef>
+</doxygen>

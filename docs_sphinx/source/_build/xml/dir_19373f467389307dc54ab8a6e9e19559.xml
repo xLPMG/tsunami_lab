@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_19373f467389307dc54ab8a6e9e19559" kind="dir">
+    <compoundname>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers</compoundname>
+    <innerfile refid="_roe_8cpp">Roe.cpp</innerfile>
+    <innerfile refid="_roe_8h">Roe.h</innerfile>
+    <innerfile refid="_roe_8test_8cpp">Roe.test.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/"/>
+  </compounddef>
+</doxygen>
