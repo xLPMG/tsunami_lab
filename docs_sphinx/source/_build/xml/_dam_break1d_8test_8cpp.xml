@@ -18,7 +18,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
         <link refid="_dam_break1d_8test_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -64,7 +64,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp" line="10" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp" bodystart="10" bodyend="40"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp" line="10" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp" bodystart="10" bodyend="40"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -108,6 +108,6 @@
 <codeline lineno="39"><highlight class="normal"><sp/><sp/>REQUIRE(<sp/>l_damBreak.getMomentumY(<sp/>4,<sp/>2<sp/>)<sp/>==<sp/>0<sp/>);<sp/><sp/></highlight></codeline>
 <codeline lineno="40"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp"/>
   </compounddef>
 </doxygen>

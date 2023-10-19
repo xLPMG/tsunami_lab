@@ -121,14 +121,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.h" line="34" column="17" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.cpp" bodystart="9" bodyend="42"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.h" line="34" column="17" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.cpp" bodystart="9" bodyend="42"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.h" line="20" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.h" bodystart="20" bodyend="42"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.h" line="20" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.h" bodystart="20" bodyend="42"/>
     <listofallmembers>
       <member refid="classtsunami__lab_1_1io_1_1_csv_1a4e4243c9c33ccfa4adef35542e846113" prot="public" virt="non-virtual"><scope>tsunami_lab::io::Csv</scope><name>write</name></member>
     </listofallmembers>

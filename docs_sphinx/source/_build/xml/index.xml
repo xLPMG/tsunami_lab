@@ -111,14 +111,14 @@
     <member refid="tests_8cpp_1a34b4c3eca7342fbc4cba090d02139902" kind="define"><name>CATCH_CONFIG_RUNNER</name></member>
     <member refid="tests_8cpp_1ad326631151704dee3aa2d880d265fee0" kind="function"><name>main</name></member>
   </compound>
-  <compound refid="dir_c184e51c84f2c3f0345bbc8a0d75d3e1" kind="dir"><name>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io</name>
+  <compound refid="dir_c184e51c84f2c3f0345bbc8a0d75d3e1" kind="dir"><name>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io</name>
   </compound>
-  <compound refid="dir_b30e6786f68341c2cc49d350d91cf100" kind="dir"><name>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches</name>
+  <compound refid="dir_b30e6786f68341c2cc49d350d91cf100" kind="dir"><name>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches</name>
   </compound>
-  <compound refid="dir_798010cd6d7dc7987b9428b09426eaed" kind="dir"><name>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups</name>
+  <compound refid="dir_798010cd6d7dc7987b9428b09426eaed" kind="dir"><name>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups</name>
   </compound>
-  <compound refid="dir_19373f467389307dc54ab8a6e9e19559" kind="dir"><name>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers</name>
+  <compound refid="dir_19373f467389307dc54ab8a6e9e19559" kind="dir"><name>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers</name>
   </compound>
-  <compound refid="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir"><name>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src</name>
+  <compound refid="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir"><name>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src</name>
   </compound>
 </doxygenindex>

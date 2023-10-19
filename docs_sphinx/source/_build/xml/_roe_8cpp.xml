@@ -12,7 +12,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.cpp</label>
         <link refid="_roe_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -159,6 +159,6 @@
 <codeline lineno="125"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="126"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.cpp"/>
   </compounddef>
 </doxygen>

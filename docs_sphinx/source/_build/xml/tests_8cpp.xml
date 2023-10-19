@@ -5,7 +5,7 @@
     <includes local="no">catch2/catch.hpp</includes>
     <incdepgraph>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp</label>
         <link refid="tests_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp" line="7" column="9" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp" bodystart="7" bodyend="-1"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp" line="7" column="9" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp" bodystart="7" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="func">
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp" line="11" column="5" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp" bodystart="11" bodyend="16"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp" line="11" column="5" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp" bodystart="11" bodyend="16"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -74,6 +74,6 @@
 <codeline lineno="15"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<sp/>l_result<sp/>&lt;<sp/>0xff<sp/>?<sp/>l_result<sp/>:<sp/>0xff<sp/>);</highlight></codeline>
 <codeline lineno="16"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/tests.cpp"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/tests.cpp"/>
   </compounddef>
 </doxygen>

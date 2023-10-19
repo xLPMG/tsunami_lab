@@ -3,9 +3,9 @@
   <compounddef id="_roe_8h" kind="file" language="C++">
     <compoundname>Roe.h</compoundname>
     <includes refid="constants_8h" local="yes">../constants.h</includes>
-    <includedby refid="_wave_propagation1d_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</includedby>
-    <includedby refid="_roe_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp</includedby>
-    <includedby refid="_roe_8test_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.test.cpp</includedby>
+    <includedby refid="_wave_propagation1d_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</includedby>
+    <includedby refid="_roe_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.cpp</includedby>
+    <includedby refid="_roe_8test_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.test.cpp</includedby>
     <incdepgraph>
       <node id="2">
         <label>../constants.h</label>
@@ -14,7 +14,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.h</label>
         <link refid="_roe_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -25,15 +25,15 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="2">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</label>
         <link refid="_wave_propagation1d_8cpp"/>
       </node>
       <node id="3">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.cpp</label>
         <link refid="_roe_8cpp"/>
       </node>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.h</label>
         <link refid="_roe_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -43,7 +43,7 @@
         </childnode>
       </node>
       <node id="4">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.test.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.test.cpp</label>
         <link refid="_roe_8test_8cpp"/>
       </node>
     </invincdepgraph>
@@ -98,6 +98,6 @@
 <codeline lineno="79"><highlight class="normal"></highlight></codeline>
 <codeline lineno="80"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/solvers/Roe.h"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/solvers/Roe.h"/>
   </compounddef>
 </doxygen>

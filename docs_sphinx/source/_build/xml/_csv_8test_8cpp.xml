@@ -24,7 +24,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp</label>
+        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp</label>
         <link refid="_csv_8test_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -68,7 +68,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" line="10" column="12" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="10" bodyend="-1"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" line="10" column="12" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="10" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="func">
@@ -90,7 +90,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" line="14" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="14" bodyend="39"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" line="14" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="14" bodyend="39"/>
       </memberdef>
       <memberdef kind="function" id="_csv_8test_8cpp_1a9f069ff8e263b5d5e7e13388a0c55952" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -110,7 +110,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" line="41" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="41" bodyend="75"/>
+        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" line="41" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp" bodystart="41" bodyend="75"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -189,6 +189,6 @@
 <codeline lineno="74"><highlight class="stringliteral"><sp/><sp/>REQUIRE(<sp/>l_stream1.str()<sp/>==<sp/>l_ref1<sp/>);</highlight></codeline>
 <codeline lineno="75"><highlight class="stringliteral">}</highlight></codeline>
     </programlisting>
-    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/io/Csv.test.cpp"/>
+    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/io/Csv.test.cpp"/>
   </compounddef>
 </doxygen>
