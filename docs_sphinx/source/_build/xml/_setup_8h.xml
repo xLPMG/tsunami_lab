@@ -3,7 +3,7 @@
   <compounddef id="_setup_8h" kind="file" language="C++">
     <compoundname>Setup.h</compoundname>
     <includes refid="constants_8h" local="yes">../constants.h</includes>
-    <includedby refid="_dam_break1d_8h" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h</includedby>
+    <includedby refid="_dam_break1d_8h" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.h</includedby>
     <incdepgraph>
       <node id="2">
         <label>../constants.h</label>
@@ -12,7 +12,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h</label>
         <link refid="_setup_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -23,15 +23,15 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="3">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/main.cpp</label>
         <link refid="main_8cpp"/>
       </node>
       <node id="4">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.cpp</label>
         <link refid="_dam_break1d_8cpp"/>
       </node>
       <node id="2">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.h</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.h</label>
         <link refid="_dam_break1d_8h"/>
         <childnode refid="3" relation="include">
         </childnode>
@@ -41,11 +41,11 @@
         </childnode>
       </node>
       <node id="5">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/DamBreak1d.test.cpp</label>
         <link refid="_dam_break1d_8test_8cpp"/>
       </node>
       <node id="1">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h</label>
         <link refid="_setup_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -88,6 +88,6 @@
 <codeline lineno="59"><highlight class="normal"></highlight></codeline>
 <codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
-    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h"/>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h"/>
   </compounddef>
 </doxygen>

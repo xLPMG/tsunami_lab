@@ -3,9 +3,9 @@
   <compounddef id="_wave_propagation1d_8h" kind="file" language="C++">
     <compoundname>WavePropagation1d.h</compoundname>
     <includes refid="_wave_propagation_8h" local="yes">WavePropagation.h</includes>
-    <includedby refid="main_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</includedby>
-    <includedby refid="_wave_propagation1d_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</includedby>
-    <includedby refid="_wave_propagation1d_8test_8cpp" local="yes">/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</includedby>
+    <includedby refid="main_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/main.cpp</includedby>
+    <includedby refid="_wave_propagation1d_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</includedby>
+    <includedby refid="_wave_propagation1d_8test_8cpp" local="yes">/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</includedby>
     <incdepgraph>
       <node id="3">
         <label>../constants.h</label>
@@ -20,7 +20,7 @@
         </childnode>
       </node>
       <node id="1">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.h</label>
         <link refid="_wave_propagation1d_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -31,15 +31,15 @@
     </incdepgraph>
     <invincdepgraph>
       <node id="2">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/main.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/main.cpp</label>
         <link refid="main_8cpp"/>
       </node>
       <node id="3">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.cpp</label>
         <link refid="_wave_propagation1d_8cpp"/>
       </node>
       <node id="1">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.h</label>
         <link refid="_wave_propagation1d_8h"/>
         <childnode refid="2" relation="include">
         </childnode>
@@ -49,7 +49,7 @@
         </childnode>
       </node>
       <node id="4">
-        <label>/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</label>
+        <label>/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.test.cpp</label>
         <link refid="_wave_propagation1d_8test_8cpp"/>
       </node>
     </invincdepgraph>
@@ -127,6 +127,6 @@
 <codeline lineno="122"><highlight class="normal"></highlight></codeline>
 <codeline lineno="123"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
-    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/patches/WavePropagation1d.h"/>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/patches/WavePropagation1d.h"/>
   </compounddef>
 </doxygen>

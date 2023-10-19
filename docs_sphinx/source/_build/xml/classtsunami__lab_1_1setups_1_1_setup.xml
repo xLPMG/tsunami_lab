@@ -18,7 +18,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" line="26" column="13" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" bodystart="26" bodyend="26"/>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="26" column="13" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" bodystart="26" bodyend="26"/>
       </memberdef>
       <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1aa7e72a3e93aad13342423ec4f06e4f87" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
@@ -62,7 +62,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" line="35" column="20"/>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="35" column="20"/>
       </memberdef>
       <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1a7e9e033b4954247a7fc0a9d808a53296" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" line="45" column="20"/>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="45" column="20"/>
       </memberdef>
       <memberdef kind="function" id="classtsunami__lab_1_1setups_1_1_setup_1a30f2396047c8658922c617a2be739f09" prot="public" static="no" const="yes" explicit="no" inline="no" virt="pure-virtual">
         <type><ref refid="namespacetsunami__lab_1a2db0f215df0d48460ce6a8c1e7bfe5a9" kindref="member">t_real</ref></type>
@@ -150,7 +150,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" line="55" column="20"/>
+        <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="55" column="20"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -170,7 +170,7 @@
         <link refid="classtsunami__lab_1_1setups_1_1_setup"/>
       </node>
     </inheritancegraph>
-    <location file="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" line="21" column="1" bodyfile="/Users/lpmg/Desktop/Uni/5. Semester/Tsunami/tsunami_lab/src/setups/Setup.h" bodystart="21" bodyend="58"/>
+    <location file="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" line="21" column="1" bodyfile="/Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/src/setups/Setup.h" bodystart="21" bodyend="58"/>
     <listofallmembers>
       <member refid="classtsunami__lab_1_1setups_1_1_setup_1aa7e72a3e93aad13342423ec4f06e4f87" prot="public" virt="pure-virtual"><scope>tsunami_lab::setups::Setup</scope><name>getHeight</name></member>
       <member refid="classtsunami__lab_1_1setups_1_1_setup_1a7e9e033b4954247a7fc0a9d808a53296" prot="public" virt="pure-virtual"><scope>tsunami_lab::setups::Setup</scope><name>getMomentumX</name></member>
