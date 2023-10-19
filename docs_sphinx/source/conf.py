@@ -13,7 +13,7 @@ subprocess.call('doxygen ../Doxyfile', shell=True)
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Tsunami'
+project = 'tsunami_lab'
 copyright = '2023, Luca-Philipp Grumbach & Richard Hofmann'
 author = 'Luca-Philipp Grumbach & Richard Hofmann'
 
@@ -80,7 +80,7 @@ html_static_path = ['_static']
 # -- Breathe configuration -------------------------------------------------
 
 breathe_projects = {
-	"C++ Sphinx Doxygen Breathe": "_build/xml/"
+	"tsunami_lab": "_build/xml/"
 }
-breathe_default_project = "C++ Sphinx Doxygen Breathe"
+breathe_default_project = "tsunami_lab"
 breathe_default_members = ('members', 'undoc-members')
