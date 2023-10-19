@@ -24,9 +24,9 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@1.0.0
     - name: Build docs
-      run: cd docs_sphinx
+      run: cd docs
         && make html
-        && cd _build/html
+        && cd build/html
         && touch .nojekyll
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4.4.3
