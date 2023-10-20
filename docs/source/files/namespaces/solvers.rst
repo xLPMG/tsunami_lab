@@ -1,5 +1,5 @@
 Solvers
 =======
 
-.. doxygennamespace:: tsunami_lab::solvers
+.. doxygenclass:: tsunami_lab::solvers::Roe
     :project: tsunami_lab
