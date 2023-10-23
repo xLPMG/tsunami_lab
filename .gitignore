@@ -6,3 +6,5 @@ _templates/
 .sconsign.dblite
 .DS_Store
 .vscode/
+
+.csv
