@@ -1,6 +1,7 @@
 Solvers
 =======
 
-.. doxygenclass:: tsunami_lab::solvers::Roe
+.. doxygennamespace:: tsunami_lab::solvers
     :project: tsunami_lab
     :private-members:
+    :content-only:

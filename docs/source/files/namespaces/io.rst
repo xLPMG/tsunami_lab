@@ -1,5 +1,7 @@
 I/O
 =======
 
-.. doxygenclass:: tsunami_lab::io::Csv
+.. doxygennamespace:: tsunami_lab::io
     :project: tsunami_lab
+    :private-members:
+    :content-only:

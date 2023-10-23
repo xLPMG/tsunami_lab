@@ -1,9 +1,8 @@
 Setups
 =======
 
-.. doxygenclass:: tsunami_lab::setups::Setup
+.. doxygennamespace:: tsunami_lab::setups
     :project: tsunami_lab
-
-.. doxygenclass:: tsunami_lab::setups::DamBreak1d
-    :project: tsunami_lab
+    :private-members:
+    :content-only:
     
