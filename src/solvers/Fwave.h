@@ -1,5 +1,5 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Maximilian Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * F-wave solver
