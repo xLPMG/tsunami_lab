@@ -17,12 +17,13 @@ namespace tsunami_lab {
 
 class tsunami_lab::solvers::Fwave {
   private:
+    //! gravity constant
     static t_real constexpr m_g = 9.80665;
     //! square root of gravity
     static t_real constexpr m_gSqrt = 3.131557121;
 
     /**
-     * Approximates the wave speeds.
+     * Calculates the roe eigenvalues.
      *
      * @param i_hL height of the left side.
      * @param i_hR height of the right side.
@@ -38,7 +39,7 @@ class tsunami_lab::solvers::Fwave {
                             t_real & o_waveSpeedL,
                             t_real & o_waveSpeedR );
     /**
-     * Computes the wave strengths.
+     * Computes the roe eigencoefficients.
      *
      * @param i_hL height of the left side.
      * @param i_hR height of the right side.
