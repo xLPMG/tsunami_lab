@@ -1,5 +1,5 @@
 /**
- * @author Luca-Philipp Maximilian Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * F-wave solver
@@ -17,6 +17,7 @@ namespace tsunami_lab {
 
 class tsunami_lab::solvers::Fwave {
   private:
+    static t_real constexpr m_g = 9.80665;
     //! square root of gravity
     static t_real constexpr m_gSqrt = 3.131557121;
 
@@ -30,13 +31,12 @@ class tsunami_lab::solvers::Fwave {
      * @param o_waveSpeedL will be set to the speed of the wave propagating to the left.
      * @param o_waveSpeedR will be set to the speed of the wave propagating to the right.
      **/
-    static void waveSpeeds( t_real   i_hL,
+    static void computeEigenvalues( t_real   i_hL,
                             t_real   i_hR,
                             t_real   i_uL,
                             t_real   i_uR,
                             t_real & o_waveSpeedL,
                             t_real & o_waveSpeedR );
-  
     /**
      * Computes the wave strengths.
      *
@@ -49,7 +49,7 @@ class tsunami_lab::solvers::Fwave {
      * @param o_strengthL will be set to the strength of the wave propagating to the left.
      * @param o_strengthR will be set to the strength of the wave propagating to the right.
      **/
-    static void waveStrengths( t_real   i_hL,
+    static void computeEigencoefficients( t_real   i_hL,
                                t_real   i_hR,
                                t_real   i_huL,
                                t_real   i_huR,
