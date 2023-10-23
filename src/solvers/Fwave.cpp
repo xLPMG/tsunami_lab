@@ -36,12 +36,7 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients( t_real   i_hL,
                                                t_real   eigenvalue_roe_1,
                                                t_real   eigenvalue_roe_2,
                                                t_real & alpha_1,
-                                               t_real & alpha_2 ) {
-
-  // compute particle velocities
-  t_real l_uL = i_huL / i_hL;
-  t_real l_uR = i_huR / i_hR;
-  
+                                               t_real & alpha_2 ) {  
   // compute inverse of right eigenvector-matrix
   t_real l_detInv = 1 / (eigenvalue_roe_2 - eigenvalue_roe_1);
 
@@ -51,26 +46,19 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients( t_real   i_hL,
   l_rInv[1][0] = -l_detInv * eigenvalue_roe_1;
   l_rInv[1][1] =  l_detInv;
 
+  // compute particle velocities
+  t_real l_uL = i_huL / i_hL;
+  t_real l_uR = i_huR / i_hR;
+
   //compute f difference
-  t_real f_ql[2] = {0};
-  f_ql[0] = i_huL;
-  f_ql[1] = i_huL*(l_uL*l_uL)+(1/2)*(m_g*i_hL*i_hL);
-
-  t_real f_qr[2] = {0};
-  f_qr[0] = i_huR;
-  f_qr[1] = i_huR*(l_uR*l_uR)+(1/2)*(m_g*i_hR*i_hR);
-
   t_real f_diff[2] = {0};
-  f_diff[0] = f_qr[0] - f_ql[0];
-  f_diff[1] = f_qr[1] - f_ql[1];
+  f_diff[0] = i_huR - i_huL;
+  f_diff[1] = (i_huR*l_uR+0.5*m_g*i_hR*i_hR)-(i_huL*l_uL+0.5*m_g*i_hL*i_hL);
   std::cout << "F diff: " << f_diff[0] << ", " << f_diff[1] << std::endl;
 
   // compute alpha
-  t_real alpha[2] = {0};
-  alpha[0] = l_rInv[0][0] * f_diff[0] + l_rInv[0][1] * f_diff[1];
-  alpha[1] = l_rInv[1][0] * f_diff[0] + l_rInv[1][1] * f_diff[1];
-  alpha_1 = alpha[0];
-  alpha_2 = alpha[1];
+  alpha_1 = l_rInv[0][0] * f_diff[0] + l_rInv[0][1] * f_diff[1];
+  alpha_2  = l_rInv[1][0] * f_diff[0] + l_rInv[1][1] * f_diff[1];
 }
 
 void tsunami_lab::solvers::Fwave::netUpdates( t_real i_hL,
