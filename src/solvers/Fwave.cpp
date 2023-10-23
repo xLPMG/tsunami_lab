@@ -6,6 +6,7 @@
  **/
 #include "Fwave.h"
 #include <cmath>
+#include <iostream>
 
 void tsunami_lab::solvers::Fwave::computeEigenvalues( t_real   i_hL,
                                             t_real   i_hR,
@@ -57,6 +58,7 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients( t_real   i_hL,
   t_real f_diff[2] = {{0}};
   f_diff[0] = f_qr[0] - f_ql[0];
   f_diff[1] = f_qr[1] - f_ql[1];
+  std::cout << "F diff: " << f_diff[0] << ", " << f_diff[1] << std::endl;
 
   // compute alpha
   t_real alpha[2] = {{0}};
@@ -112,6 +114,10 @@ computeEigencoefficients(i_hL,
   t_real z2[2] = {0};
   z2[0] = eigencoefficient_roe_2 * eigenvector_roe_2[0];
   z2[1] = eigencoefficient_roe_2 * eigenvector_roe_2[1];
+
+  std::cout << "Z1: " << z1[0] << ", " << z1[1] << std::endl;
+  std::cout << "Z2: " << z2[0] << ", " << z2[1] << std::endl;
+  std::cout << "Sum Z: " << z1[0]+z2[0] << ", " << z1[1]+z2[1] << std::endl;
 
   // set net-updates depending on wave speeds
   for( unsigned short l_qt = 0; l_qt < 2; l_qt++ ) {
