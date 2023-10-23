@@ -51,9 +51,18 @@
 <li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Setups</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setupsE"><code class="docutils literal notranslate"><span class="pre">setups</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups10DamBreak1dE"><code class="docutils literal notranslate"><span class="pre">setups::DamBreak1d</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups5SetupE"><code class="docutils literal notranslate"><span class="pre">setups::Setup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups5SetupE"><code class="docutils literal notranslate"><span class="pre">Setup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups5SetupD0Ev"><code class="docutils literal notranslate"><span class="pre">Setup::~Setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups5Setup9getHeightE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">Setup::getHeight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups5Setup12getMomentumXE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">Setup::getMomentumX()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups5Setup12getMomentumYE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">Setup::getMomentumY()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups10DamBreak1dE"><code class="docutils literal notranslate"><span class="pre">DamBreak1d</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">DamBreak1d::DamBreak1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">DamBreak1d::getHeight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">DamBreak1d::getMomentumX()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real"><code class="docutils literal notranslate"><span class="pre">DamBreak1d::getMomentumY()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -90,86 +99,10 @@
              
   <section id="setups">
 <h1>Setups<a class="headerlink" href="#setups" title="Link to this heading"></a></h1>
-<dl class="cpp type">
-<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setupsE">
-<span id="_CPPv3N11tsunami_lab6setupsE"></span><span id="_CPPv2N11tsunami_lab6setupsE"></span><span id="tsunami_lab::setups"></span><span class="target" id="namespacetsunami__lab_1_1setups"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setups</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab6setupsE" title="Link to this definition"></a><br /></dt>
-<dd><dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setups10DamBreak1dE">
-<span id="_CPPv3N11tsunami_lab6setups10DamBreak1dE"></span><span id="_CPPv2N11tsunami_lab6setups10DamBreak1dE"></span><span id="tsunami_lab::setups::DamBreak1d"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DamBreak1d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setupsE" title="tsunami_lab::setups"><span class="n"><span class="pre">setups</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><a class="headerlink" href="#_CPPv4N11tsunami_lab6setups10DamBreak1dE" title="Link to this definition"></a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;DamBreak1d.h&gt;</em></div>
-<p>1d dam break setup. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real">
-<span id="_CPPv3N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real"></span><span id="_CPPv2N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::DamBreak1d__t_real.t_real.t_real"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a9d09ba838d9a6699b6e2821bc9ed08b7"></span><span class="sig-name descname"><span class="n"><span class="pre">DamBreak1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_heightLeft</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_heightRight</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_locationDam</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real" title="Link to this definition"></a><br /></dt>
-<dd><p>Constructor.</p>
-<p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
-</dd>
-</dl>
-</p>
-<section id="namespacetsunami__lab_1DESCRIPTION">
-<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
-<p id="namespacetsunami__lab_1DESCRIPTION">One-dimensional dam break problem. </p>
-</section>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>i_heightLeft</strong> – water height on the left side of the dam. </p></li>
-<li><p><strong>i_heightRight</strong> – water height on the right side of the dam. </p></li>
-<li><p><strong>i_locationDam</strong> – location (x-coordinate) of the dam.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real">
-<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getHeight__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a81271bb57c44ea59e88dcc9541cf00ee"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real" title="Link to this definition"></a><br /></dt>
-<dd><p>Gets the water height at a given point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_x</strong> – x-coordinate of the queried point. </p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>height at the given point. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real">
-<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getMomentumX__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a425544509438f8b6ee2a705cf02d9a3c"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumX</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real" title="Link to this definition"></a><br /></dt>
-<dd><p>Gets the momentum in x-direction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>momentum in x-direction. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real">
-<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getMomentumY__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a1f16fbb0280757323fb3696fb460da66"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real" title="Link to this definition"></a><br /></dt>
-<dd><p>Gets the momentum in y-direction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>momentum in y-direction. </p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setups5SetupE">
 <span id="_CPPv3N11tsunami_lab6setups5SetupE"></span><span id="_CPPv2N11tsunami_lab6setups5SetupE"></span><span id="tsunami_lab::setups::Setup"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_setup"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Setup</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab6setups5SetupE" title="Link to this definition"></a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;Setup.h&gt;</em></div>
-<p>Base setup. </p>
+<dd><p>Base setup. </p>
 <p>Subclassed by <a class="reference internal" href="#classtsunami__lab_1_1setups_1_1_dam_break1d"><span class="std std-ref">tsunami_lab::setups::DamBreak1d</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
@@ -233,6 +166,73 @@
 </div>
 </dd></dl>
 
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setups10DamBreak1dE">
+<span id="_CPPv3N11tsunami_lab6setups10DamBreak1dE"></span><span id="_CPPv2N11tsunami_lab6setups10DamBreak1dE"></span><span id="tsunami_lab::setups::DamBreak1d"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DamBreak1d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><a class="headerlink" href="#_CPPv4N11tsunami_lab6setups10DamBreak1dE" title="Link to this definition"></a><br /></dt>
+<dd><p>1d dam break setup. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real">
+<span id="_CPPv3N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real"></span><span id="_CPPv2N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::DamBreak1d__t_real.t_real.t_real"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a9d09ba838d9a6699b6e2821bc9ed08b7"></span><span class="sig-name descname"><span class="n"><span class="pre">DamBreak1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_heightLeft</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_heightRight</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_locationDam</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab6setups10DamBreak1d10DamBreak1dE6t_real6t_real6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
+</dd>
+</dl>
+</p>
+<section id="namespacetsunami__lab_1DESCRIPTION">
+<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<p id="namespacetsunami__lab_1DESCRIPTION">One-dimensional dam break problem. </p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_heightLeft</strong> – water height on the left side of the dam. </p></li>
+<li><p><strong>i_heightRight</strong> – water height on the right side of the dam. </p></li>
+<li><p><strong>i_locationDam</strong> – location (x-coordinate) of the dam.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real">
+<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getHeight__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a81271bb57c44ea59e88dcc9541cf00ee"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d9getHeightE6t_real6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the water height at a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_x</strong> – x-coordinate of the queried point. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>height at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real">
+<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getMomentumX__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a425544509438f8b6ee2a705cf02d9a3c"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumX</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumXE6t_real6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the momentum in x-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in x-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real">
+<span id="_CPPv3NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real"></span><span id="_CPPv2NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real"></span><span id="tsunami_lab::setups::DamBreak1d::getMomentumY__t_real.t_realC"></span><span class="target" id="classtsunami__lab_1_1setups_1_1_dam_break1d_1a1f16fbb0280757323fb3696fb460da66"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11tsunami_lab6setups10DamBreak1d12getMomentumYE6t_real6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the momentum in y-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in y-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 </dd></dl>
 
 </section>

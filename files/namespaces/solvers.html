@@ -51,8 +51,11 @@
 <li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Solvers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solversE"><code class="docutils literal notranslate"><span class="pre">solvers</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3RoeE"><code class="docutils literal notranslate"><span class="pre">solvers::Roe</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3RoeE"><code class="docutils literal notranslate"><span class="pre">Roe</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3Roe10netUpdatesE6t_real6t_real6t_real6t_realAL2E_6t_realAL2E_6t_real"><code class="docutils literal notranslate"><span class="pre">Roe::netUpdates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3Roe10waveSpeedsE6t_real6t_real6t_real6t_realR6t_realR6t_real"><code class="docutils literal notranslate"><span class="pre">Roe::waveSpeeds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3Roe13waveStrengthsE6t_real6t_real6t_real6t_real6t_real6t_realR6t_realR6t_real"><code class="docutils literal notranslate"><span class="pre">Roe::waveStrengths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab7solvers3Roe7m_gSqrtE"><code class="docutils literal notranslate"><span class="pre">Roe::m_gSqrt</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -88,15 +91,10 @@
              
   <section id="solvers">
 <h1>Solvers<a class="headerlink" href="#solvers" title="Link to this heading"></a></h1>
-<dl class="cpp type">
-<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solversE">
-<span id="_CPPv3N11tsunami_lab7solversE"></span><span id="_CPPv2N11tsunami_lab7solversE"></span><span id="tsunami_lab::solvers"></span><span class="target" id="namespacetsunami__lab_1_1solvers"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">solvers</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab7solversE" title="Link to this definition"></a><br /></dt>
-<dd><dl class="cpp class">
+<dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solvers3RoeE">
 <span id="_CPPv3N11tsunami_lab7solvers3RoeE"></span><span id="_CPPv2N11tsunami_lab7solvers3RoeE"></span><span id="tsunami_lab::solvers::Roe"></span><span class="target" id="classtsunami__lab_1_1solvers_1_1_roe"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Roe</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab7solvers3RoeE" title="Link to this definition"></a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;Roe.h&gt;</em></div>
-<div class="breathe-sectiondef docutils container">
+<dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solvers3Roe10netUpdatesE6t_real6t_real6t_real6t_realAL2E_6t_realAL2E_6t_real">
@@ -117,8 +115,65 @@
 </dd></dl>
 
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solvers3Roe10waveSpeedsE6t_real6t_real6t_real6t_realR6t_realR6t_real">
+<span id="_CPPv3N11tsunami_lab7solvers3Roe10waveSpeedsE6t_real6t_real6t_real6t_realR6t_realR6t_real"></span><span id="_CPPv2N11tsunami_lab7solvers3Roe10waveSpeedsE6t_real6t_real6t_real6t_realR6t_realR6t_real"></span><span id="tsunami_lab::solvers::Roe::waveSpeeds__t_real.t_real.t_real.t_real.t_realR.t_realR"></span><span class="target" id="classtsunami__lab_1_1solvers_1_1_roe_1ae66655fe8c109ecd0033ead398ad3d41"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">waveSpeeds</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_waveSpeedL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_waveSpeedR</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab7solvers3Roe10waveSpeedsE6t_real6t_real6t_real6t_realR6t_realR6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the wave speeds.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
+</dd>
+</dl>
+</p>
+<section id="namespacetsunami__lab_1DESCRIPTION">
+<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<p id="namespacetsunami__lab_1DESCRIPTION"><a class="reference internal" href="#classtsunami__lab_1_1solvers_1_1_roe"><span class="std std-ref">Roe</span></a> Riemann solver for the shallow water equations. </p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_hL</strong> – height of the left side. </p></li>
+<li><p><strong>i_hR</strong> – height of the right side. </p></li>
+<li><p><strong>i_uL</strong> – particle velocity of the leftside. </p></li>
+<li><p><strong>i_uR</strong> – particles velocity of the right side. </p></li>
+<li><p><strong>o_waveSpeedL</strong> – will be set to the speed of the wave propagating to the left. </p></li>
+<li><p><strong>o_waveSpeedR</strong> – will be set to the speed of the wave propagating to the right.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solvers3Roe13waveStrengthsE6t_real6t_real6t_real6t_real6t_real6t_realR6t_realR6t_real">
+<span id="_CPPv3N11tsunami_lab7solvers3Roe13waveStrengthsE6t_real6t_real6t_real6t_real6t_real6t_realR6t_realR6t_real"></span><span id="_CPPv2N11tsunami_lab7solvers3Roe13waveStrengthsE6t_real6t_real6t_real6t_real6t_real6t_realR6t_realR6t_real"></span><span id="tsunami_lab::solvers::Roe::waveStrengths__t_real.t_real.t_real.t_real.t_real.t_real.t_realR.t_realR"></span><span class="target" id="classtsunami__lab_1_1solvers_1_1_roe_1a71a0f2b1138ed6db82d22af33f1a7b9a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">waveStrengths</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_huL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_huR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_waveSpeedL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_waveSpeedR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_strengthL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_strengthR</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab7solvers3Roe13waveStrengthsE6t_real6t_real6t_real6t_real6t_real6t_realR6t_realR6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the wave strengths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_hL</strong> – height of the left side. </p></li>
+<li><p><strong>i_hR</strong> – height of the right side. </p></li>
+<li><p><strong>i_huL</strong> – momentum of the left side. </p></li>
+<li><p><strong>i_huR</strong> – momentum of the right side. </p></li>
+<li><p><strong>i_waveSpeedL</strong> – speed of the wave propagating to the left. </p></li>
+<li><p><strong>i_waveSpeedR</strong> – speed of the wave propagating to the right. </p></li>
+<li><p><strong>o_strengthL</strong> – will be set to the strength of the wave propagating to the left. </p></li>
+<li><p><strong>o_strengthR</strong> – will be set to the strength of the wave propagating to the right. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab7solvers3Roe7m_gSqrtE">
+<span id="_CPPv3N11tsunami_lab7solvers3Roe7m_gSqrtE"></span><span id="_CPPv2N11tsunami_lab7solvers3Roe7m_gSqrtE"></span><span id="tsunami_lab::solvers::Roe::m_gSqrt__t_real"></span><span class="target" id="classtsunami__lab_1_1solvers_1_1_roe_1a95955fb2aa160d5b901afecf29179265"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gSqrt</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">3.131557121</span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab7solvers3Roe7m_gSqrtE" title="Link to this definition"></a><br /></dt>
+<dd><p>square root of gravity </p>
+</dd></dl>
+
+</div>
 </dd></dl>
 
 </section>
