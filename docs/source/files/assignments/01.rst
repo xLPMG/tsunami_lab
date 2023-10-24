@@ -67,7 +67,7 @@ Next, we need to calculate the jump in the flux function f, :math:`\Delta f := f
   f_delta[0] = i_huR - i_huL;
   f_delta[1] = (i_huR * l_uR + 0.5 * m_g * i_hR * i_hR) - (i_huL * l_uL + 0.5 * m_g * i_hL * i_hL);
 
-Finally, we can derive the wanted output vector :math:`\alpha`:
+Finally, we can derive the desired output vector :math:`\alpha`:
 
 .. code-block:: cpp
 
@@ -96,12 +96,12 @@ With the help of the eigenvalues, we can derive the eigenvectors:
   t_real eigenvectorRoe_1[2] = {1, eigenvalueRoe_1};
   t_real eigenvectorRoe_2[2] = {1, eigenvalueRoe_2};
 
-Now that we have eigenvalues and eigenvectors, we can compute the waves :math:`Z_(1/2)`:
+Now that we have the eigenvalues and eigenvectors, we can compute the waves :math:`Z_{1/2}`:
 
 .. math:: 
    Z_1 = \alpha_1 r_1, Z_2 = \alpha_2 r_2
 
-.. code-block::
+.. code-block:: cpp
 
   t_real z1[2] = {0};
   z1[0] = eigencoefficientRoe_1 * eigenvectorRoe_1[0];
@@ -120,7 +120,7 @@ All that is left to do is to set the net-updates depending on the wave speeds
       A^+ \Delta Q := \sum_{p:\{ \lambda_p^\text{Roe} > 0 \}} Z_p
   \end{split}\end{split}
 
-.. code-block::
+.. code-block:: cpp
 
   for (unsigned short l_qt = 0; l_qt < 2; l_qt++)
   {
