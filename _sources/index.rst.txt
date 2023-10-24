@@ -16,11 +16,13 @@ Table of Contents
 ^^^^^^^^^^^^^^^^^
 
 .. toctree::
+   :maxdepth: 2
    :name: mastertoc
    :glob:
 
    self
    files/categories/introduction
    files/categories/setup
+   files/categories/assignments
    files/categories/namespaces
     
