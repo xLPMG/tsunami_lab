@@ -25,10 +25,11 @@ https://scons.org/doc/production/HTML/scons-user/ch01s02.html
 The installation of Scons requires Python to be installed:
 https://www.python.org/downloads/
 
-3. Run the code!
+4. Run the code!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Navigate to the in step 1 created `tsunami_lab` folder and run
 
 .. code::
 
-    scons
+    scons 
+..  mode="osx"
