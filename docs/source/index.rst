@@ -1,16 +1,8 @@
 Welcome to tsunami_lab's documentation!
 ======================================================
 
-.. toctree::
-    :maxdepth: 2
-    :caption: Contents:
-
-Indices and tables
-==================
-
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+* `Tsunami lab GitHub repository <https://github.com/xLPMG/tsunami_lab>`_
 
 Table of Contents
 ^^^^^^^^^^^^^^^^^

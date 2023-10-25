@@ -1,8 +1,10 @@
 1. Riemann Solver
 ==================
 
+For explanations on inputs and outputs, see :ref:`ns-solvers`.  
+
 File: Fwave.cpp (and Fwave.h)
-----------------------------
+------------------------------
 
 computeEigenvalues()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -62,7 +64,7 @@ In order to do so, we start off by inverting the inverse of the right eigenvecto
   l_rInv[1][0] = -l_detInv * eigenvalueRoe_1;
   l_rInv[1][1] = l_detInv;
 
-Next, we need to calculate the jump in the flux function f, :math:`\Delta f := f(q_r) - f(q_l)`
+Next, we need to calculate the jump in the flux function f, :math:`\Delta f := f(q_r) - f(q_l)`. Remember that :math:`f := [hu, hu^2 + \frac{1}{2}gh^2]^T`.
 
 .. code-block:: cpp
 
