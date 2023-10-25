@@ -1,3 +1,5 @@
+.. _ns-setups:
+
 Setups
 =======
 
