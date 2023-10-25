@@ -1,8 +1,8 @@
 Introduction
 ================
 
-This project was created during the Tsunami Lab course WS23/24 at the FSU Jena.
-The implementation was done by Luca-Philipp Grumbach and Richard Hofmann.
+This project was created as part of the Tsunami course in the winter semester 2023/24 at FSU Jena. 
+The lectures content was implemented by `Luca-Philipp Grumbach <https://github.com/xLPMG>`_ and `Richard Hofmann <https://github.com/ZeyxRew>`_ as weekly homework / exam assignments.
 
 Visit the homepage for more information:
 https://scalable.uni-jena.de/opt/tsunami/
