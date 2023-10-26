@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
- * Fwave
+ * Fwave solver for the one-dimensional shallow water equations.
  **/
 #include "Fwave.h"
 #include <cmath>

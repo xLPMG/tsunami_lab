@@ -19,16 +19,20 @@ Setup
 3. Install SCons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-https://scons.org/doc/production/HTML/scons-user/ch01s02.html
+https://scons.org/doc/production/HTML/scons-user/ch01.html
 
-**Note:**
-The installation of Scons requires Python to be installed:
-https://www.python.org/downloads/
-
-3. Run the code!
+4. Run the code!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Navigate to the in step 1 created `tsunami_lab` folder and run
 
 .. code::
 
-    scons
+    scons 
+
+for Linux/Windows. If you are on MacOS, use
+
+.. code::
+
+    scons mode="osx"
+
+For further run configurations view the SConstruct file at the root of the tsunami_lab directory.

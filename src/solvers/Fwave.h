@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
- * F-wave solver
+ * Fwave solver for the one-dimensional shallow water equations.
  **/
 #ifndef TSUNAMI_LAB_SOLVERS_FWAVE
 #define TSUNAMI_LAB_SOLVERS_FWAVE
