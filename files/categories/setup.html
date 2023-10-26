@@ -50,7 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#clone-the-repository-from-github">1. Clone the repository from GitHub</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#initialize-and-update-submodules">2. Initialize and update submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#install-scons">3. Install SCons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run-the-code">3. Run the code!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-code">4. Run the code!</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="assignments.html">Assignments</a></li>
@@ -98,17 +98,19 @@
 </section>
 <section id="install-scons">
 <h2>3. Install SCons<a class="headerlink" href="#install-scons" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://scons.org/doc/production/HTML/scons-user/ch01s02.html">https://scons.org/doc/production/HTML/scons-user/ch01s02.html</a></p>
-<p><strong>Note:</strong>
-The installation of Scons requires Python to be installed:
-<a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<p><a class="reference external" href="https://scons.org/doc/production/HTML/scons-user/ch01.html">https://scons.org/doc/production/HTML/scons-user/ch01.html</a></p>
 </section>
 <section id="run-the-code">
-<h2>3. Run the code!<a class="headerlink" href="#run-the-code" title="Link to this heading"></a></h2>
+<h2>4. Run the code!<a class="headerlink" href="#run-the-code" title="Link to this heading"></a></h2>
 <p>Navigate to the in step 1 created <cite>tsunami_lab</cite> folder and run</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span>
 </pre></div>
 </div>
+<p>for Linux/Windows. If you are on MacOS, use</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span><span class="w"> </span><span class="n">mode</span><span class="o">=</span><span class="s">&quot;osx&quot;</span>
+</pre></div>
+</div>
+<p>For further run configurations view the SConstruct file at the root of the tsunami_lab directory.</p>
 </section>
 </section>
 
