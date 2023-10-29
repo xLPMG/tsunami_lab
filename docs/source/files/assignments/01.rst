@@ -9,9 +9,13 @@ Task 1.2 - Getting Started
 Task 1.2.2 - Visualizations
 ----------------------------
 
-Roe solver with input 500
+Roe solver with input 500 (cells in x direction)
 
-.. image:: ../images/roe_solver_visualization.avi
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/roe_solver_visualization.mp4" type="video/mp4">
+    </video> 
 
 Task 1.3 - F-wave Solver
 ============================
