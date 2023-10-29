@@ -1,10 +1,23 @@
 1. Riemann Solver
-==================
+*******************
 
-For explanations on inputs and outputs, see :ref:`ns-solvers`.  
+All project authors worked on this assignment equally.
+
+Task 1.2 - Getting Started
+============================
+
+Task 1.2.2 - Visualizations
+----------------------------
+
+TODO: Bilder einfügen
+
+Task 1.3 - F-wave Solver
+============================
 
 File: Fwave.cpp (and Fwave.h)
 ------------------------------
+
+For explanations on function inputs and outputs, see :ref:`ns-solvers`.  
 
 computeEigenvalues()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
