@@ -17,6 +17,9 @@ namespace tsunami_lab {
 
 class tsunami_lab::patches::WavePropagation1d: public WavePropagation {
   private:
+    //! 0: Roe solver;  1:Fwave solver
+    bool solver_choice = 0;
+
     //! current step which indicates the active values in the arrays below
     unsigned short m_step = 0;
 
