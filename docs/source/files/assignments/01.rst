@@ -9,7 +9,9 @@ Task 1.2 - Getting Started
 Task 1.2.2 - Visualizations
 ----------------------------
 
-TODO: Bilder einfügen
+Roe solver with input 500
+
+.. image:: ../images/roe_solver_visualization.avi
 
 Task 1.3 - F-wave Solver
 ============================
