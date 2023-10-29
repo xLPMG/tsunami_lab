@@ -11,7 +11,7 @@ Task 1.2.2 - Visualizations
 
 Roe solver with input 500
 
-.. image:: ../images/roe_solver_visualization.avi
+.. image:: ../../_static/roe_solver_visualization.mp4
 
 Task 1.3 - F-wave Solver
 ============================
