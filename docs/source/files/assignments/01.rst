@@ -27,7 +27,7 @@ For explanations on function inputs and outputs, see :ref:`ns-solvers`.
 
 computeEigenvalues()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-First we compute 
+First we compute the height and particle velocity
 
 .. math::
     \begin{split}\begin{aligned}
