@@ -14,7 +14,7 @@ jobs:
   build:
 
     runs-on: macos-latest
-
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Requirements
       run: brew install doxygen
