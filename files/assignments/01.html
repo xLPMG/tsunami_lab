@@ -50,10 +50,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1. Riemann Solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#file-fwave-cpp-and-fwave-h">File: Fwave.cpp (and Fwave.h)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#computeeigenvalues">computeEigenvalues()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#computeeigencoefficients">computeEigencoefficients()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#netupdates">netUpdates()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#task-1-2-getting-started">Task 1.2 - Getting Started</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-1-2-2-visualizations">Task 1.2.2 - Visualizations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-1-3-f-wave-solver">Task 1.3 - F-wave Solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#file-fwave-cpp-and-fwave-h">File: Fwave.cpp (and Fwave.h)</a></li>
 </ul>
 </li>
 </ul>
@@ -91,11 +93,22 @@
              
   <section id="riemann-solver">
 <h1>1. Riemann Solver<a class="headerlink" href="#riemann-solver" title="Link to this heading"></a></h1>
-<p>For explanations on inputs and outputs, see <a class="reference internal" href="../namespaces/solvers.html#ns-solvers"><span class="std std-ref">Solvers</span></a>.</p>
+<p>All project authors worked on this assignment equally.</p>
+<section id="task-1-2-getting-started">
+<h2>Task 1.2 - Getting Started<a class="headerlink" href="#task-1-2-getting-started" title="Link to this heading"></a></h2>
+<section id="task-1-2-2-visualizations">
+<h3>Task 1.2.2 - Visualizations<a class="headerlink" href="#task-1-2-2-visualizations" title="Link to this heading"></a></h3>
+<p>Roe solver with input 500</p>
+<img alt="../../_images/roe_solver_visualization.avi" src="../../_images/roe_solver_visualization.avi" />
+</section>
+</section>
+<section id="task-1-3-f-wave-solver">
+<h2>Task 1.3 - F-wave Solver<a class="headerlink" href="#task-1-3-f-wave-solver" title="Link to this heading"></a></h2>
 <section id="file-fwave-cpp-and-fwave-h">
-<h2>File: Fwave.cpp (and Fwave.h)<a class="headerlink" href="#file-fwave-cpp-and-fwave-h" title="Link to this heading"></a></h2>
+<h3>File: Fwave.cpp (and Fwave.h)<a class="headerlink" href="#file-fwave-cpp-and-fwave-h" title="Link to this heading"></a></h3>
+<p>For explanations on function inputs and outputs, see <a class="reference internal" href="../namespaces/solvers.html#ns-solvers"><span class="std std-ref">Solvers</span></a>.</p>
 <section id="computeeigenvalues">
-<h3>computeEigenvalues()<a class="headerlink" href="#computeeigenvalues" title="Link to this heading"></a></h3>
+<h4>computeEigenvalues()<a class="headerlink" href="#computeeigenvalues" title="Link to this heading"></a></h4>
 <p>First we compute</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{aligned}
@@ -121,7 +134,7 @@
 <p>Note that <cite>m_gSqrt</cite> is the given square root of gravity.</p>
 </section>
 <section id="computeeigencoefficients">
-<h3>computeEigencoefficients()<a class="headerlink" href="#computeeigencoefficients" title="Link to this heading"></a></h3>
+<h4>computeEigencoefficients()<a class="headerlink" href="#computeeigencoefficients" title="Link to this heading"></a></h4>
 <p>The task of this function is to compute</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{bmatrix}
@@ -154,7 +167,7 @@
 </div>
 </section>
 <section id="netupdates">
-<h3>netUpdates()<a class="headerlink" href="#netupdates" title="Link to this heading"></a></h3>
+<h4>netUpdates()<a class="headerlink" href="#netupdates" title="Link to this heading"></a></h4>
 <p>With the help of the eigenvalues, we can derive the eigenvectors:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{aligned}
@@ -205,6 +218,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 </section>
