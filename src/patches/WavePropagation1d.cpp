@@ -11,7 +11,7 @@
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d( t_idx i_nCells, std::string i_Solver ) {
   m_nCells = i_nCells;
-  solver_choice = i_Solver;
+  solver = i_Solver;
 
   // allocate memory including a single ghost cell on each side
   for( unsigned short l_st = 0; l_st < 2; l_st++ ) {
@@ -51,7 +51,7 @@ void tsunami_lab::patches::WavePropagation1d::timeStep( t_real i_scaling  ) {
   }
 
   //choose between Roe solver (0) and Fwave solver (1)
-  if(solver_choice=="roe"){
+  if(solver=="roe"){
 
     // iterate over edges and update with Riemann solutions
     for( t_idx l_ed = 0; l_ed < m_nCells+1; l_ed++ ) {
@@ -76,7 +76,7 @@ void tsunami_lab::patches::WavePropagation1d::timeStep( t_real i_scaling  ) {
       l_hNew[l_ceR]  -= i_scaling * l_netUpdates[1][0];
       l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
       }
-  } else if(solver_choice=="fwave"){
+  } else if(solver=="fwave"){
     // iterate over edges and update with Riemann solutions
     for( t_idx l_ed = 0; l_ed < m_nCells+1; l_ed++ ) {
       // determine left and right cell-id

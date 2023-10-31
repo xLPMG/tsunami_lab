@@ -1,4 +1,45 @@
 2. Finite Volume Discretization
-=================================
+*********************************
 
-TODO
+General Tasks
+===============
+
+Task G-1 - F-Wave solver integration
+-----------------------------------
+
+To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:
+
+(**File: main.cpp**)
+
+.. code:: cpp
+
+    if(i_argc >= 3){
+        solver = i_argv[2];
+    }else{
+        solver = "roe";
+    }
+
+This parameter is passed to the WavePropagation class in its constructor:
+
+.. code:: cpp
+
+    tsunami_lab::patches::WavePropagation *l_waveProp;
+    l_waveProp = new tsunami_lab::patches::WavePropagation1d( l_nx, solver );
+
+In the WavePropagation1d file, we make use of simple if-conditions to execute the chosen solver:
+
+(**File: WavePropagation1d.cpp**)
+
+.. code::
+
+    if(solver=="roe") { ... }
+    else if(solver=="fwave") { ... }
+
+Task G-2 - Sanity check using middle_states.csv
+-----------------------------------------------
+
+Task 2.1. Shock and Rarefaction Waves
+=======================================
+
+Task 2.2. - Dam-Break
+======================

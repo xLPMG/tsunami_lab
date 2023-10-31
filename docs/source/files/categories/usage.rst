@@ -31,3 +31,23 @@ Valid queries can look like this:
     ./tsunami_lab 12.9999999 roe
 
 Note that for all of those queries, `x_cells` will be rounded to 12.
+
+Test the code
+----------------
+
+To execute the unit tests, simply run
+
+.. code::
+
+    ./tests
+
+in the `build` folder.
+
+Build the documentation
+--------------------------
+
+If you wish to build the documentation, navigate to the `docs` folder inside the `tsunami_lab` directory and execute
+
+.. code::
+
+    make html
