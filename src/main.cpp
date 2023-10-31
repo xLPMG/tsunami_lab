@@ -22,13 +22,15 @@ int main( int   i_argc,
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
 
+  std::string solver="";
+
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
   std::cout << "###                              ###" << std::endl;
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
-  if( i_argc != 2 ) {
+  if( i_argc < 2 ) {
     std::cerr << "invalid number of arguments, usage:" << std::endl;
     std::cerr << "  ./build/tsunami_lab N_CELLS_X" << std::endl;
     std::cerr << "where N_CELLS_X is the number of cells in x-direction." << std::endl;
@@ -42,10 +44,18 @@ int main( int   i_argc,
     }
     l_dxy = 10.0 / l_nx;
   }
+
+  if(i_argc >= 3){
+    solver = i_argv[2];
+  }else{
+    solver = "roe";
+  }
+
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
+  std::cout << "  selected solver:                " << solver << std::endl;
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
@@ -54,7 +64,7 @@ int main( int   i_argc,
                                                  5 );
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d( l_nx );
+  l_waveProp = new tsunami_lab::patches::WavePropagation1d( l_nx, solver );
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits< tsunami_lab::t_real >::lowest();
@@ -115,7 +125,8 @@ int main( int   i_argc,
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-      std::string l_path = "solution_" + std::to_string(l_nOut) + ".csv";
+//TODO: create solutions folder automatically or at least checl of it exists
+      std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
       std::cout << "  writing wave field to " << l_path << std::endl;
 
       std::ofstream l_file;

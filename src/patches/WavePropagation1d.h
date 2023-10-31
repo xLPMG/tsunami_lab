@@ -8,6 +8,7 @@
 #define TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_1D
 
 #include "WavePropagation.h"
+#include <string>
 
 namespace tsunami_lab {
   namespace patches {
@@ -17,9 +18,6 @@ namespace tsunami_lab {
 
 class tsunami_lab::patches::WavePropagation1d: public WavePropagation {
   private:
-    //! 0: Roe solver;  1:Fwave solver
-    bool solver_choice = 0;
-
     //! current step which indicates the active values in the arrays below
     unsigned short m_step = 0;
 
@@ -32,13 +30,17 @@ class tsunami_lab::patches::WavePropagation1d: public WavePropagation {
     //! momenta for the current and next time step for all cells
     t_real * m_hu[2] = { nullptr, nullptr };
 
+    //! selected solver
+    std::string solver_choice;
+
   public:
     /**
      * Constructs the 1d wave propagation solver.
      *
      * @param i_nCells number of cells.
+     * @param i_Solver selected solver.
      **/
-    WavePropagation1d( t_idx i_nCells );
+    WavePropagation1d( t_idx i_nCells, std::string i_Solver );
 
     /**
      * Destructor which frees all allocated memory.
@@ -120,7 +122,7 @@ class tsunami_lab::patches::WavePropagation1d: public WavePropagation {
      **/
     void setMomentumY( t_idx,
                        t_idx,
-                       t_real ) {};
+                       t_real ) {};               
 };
 
 #endif
