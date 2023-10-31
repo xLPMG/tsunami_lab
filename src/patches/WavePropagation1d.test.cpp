@@ -78,7 +78,7 @@ TEST_CASE("Test the 1d wave propagation solver.", "[WaveProp1d]")
   }
 }
 
-TEST_CASE("1d wave propagation solver sanitiy check", "[WaveProp1d_SanityCheck]")
+TEST_CASE("1d wave propagation solver sanity check", "[WaveProp1d_SanityCheck]")
 {
   std::ofstream outputFile("out.txt");
   std::ifstream inputFile("middle_states.csv");

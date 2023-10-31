@@ -15,6 +15,7 @@ Table of Contents
    self
    files/categories/introduction
    files/categories/setup
+   files/categories/usage
    files/categories/assignments
    files/categories/namespaces
     

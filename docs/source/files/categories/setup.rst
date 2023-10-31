@@ -1,3 +1,5 @@
+.. _setup:
+
 Setup
 =================
 
@@ -16,12 +18,20 @@ Setup
     git submodule init
     git submodule update
 
-3. Install SCons
+3. Install SCons & the GCC compiler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-https://scons.org/doc/production/HTML/scons-user/ch01.html
+- SCons: https://scons.org/doc/production/HTML/scons-user/ch01.html
+- GCC: https://gcc.gnu.org/install/
 
-4. Run the code!
+On MacOS, you can use homebrew for both:
+
+.. code-block::
+
+    brew install scons
+    brew install gcc
+
+4. Build the project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Navigate to the in step 1 created `tsunami_lab` folder and run
 
