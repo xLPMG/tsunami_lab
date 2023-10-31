@@ -4,7 +4,7 @@
  * @section DESCRIPTION
  * Implementation of rare-rare Riemann problems 
  **/
-#ifndef TSUNAMI_LAB_SETUPS_RARE_RARE_H
+#ifndef TSUNAMI_LAB_SETUPS_RARE_RARE_1D_H
 #define TSUNAMI_LAB_SETUPS_RARE_RARE_1D_H
 
 #include "Setup.h"

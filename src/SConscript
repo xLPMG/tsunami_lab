@@ -27,7 +27,7 @@ l_tests = [ 'tests.cpp',
             'patches/WavePropagation1d.test.cpp',
             'io/Csv.test.cpp',
             'setups/DamBreak1d.test.cpp',
-            'setups/RareRare1d.tets.cpp',
+            'setups/RareRare1d.test.cpp',
             'setups/ShockShock1d.test.cpp' ]
 
 for l_te in l_tests:

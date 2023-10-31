@@ -15,7 +15,7 @@ tsunami_lab::setups::RareRare1d::RareRare1d( t_real i_h,
     m_xdis = i_xdis;
 }
 
-tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight( t_real i_x,
+tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight( t_real,
                                                                 t_real      ) const {
     return m_height;
 }

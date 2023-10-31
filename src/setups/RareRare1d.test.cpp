@@ -19,7 +19,7 @@ TEST_CASE( "Test the one-dimensional rare-rare setup.", "[RareRare1d]" ) {
 
   REQUIRE( l_RareRare.getMomentumY( 2, 0 ) == 0 );
 
-  REQUIRE( l_RareRare.getHeight( 2, 5 ) == 25 );
+  REQUIRE( l_RareRare.getHeight( 2, 5 ) == 20 );
 
   REQUIRE( l_RareRare.getMomentumX( 2, 5 ) == -10 );
 
