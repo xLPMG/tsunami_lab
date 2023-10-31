@@ -1,7 +1,7 @@
 1. Riemann Solver
 *******************
 
-All project authors worked on this assignment equally.
+All project authors contributed to this assignment in equal parts.
 
 Task 1.2 - Getting Started
 ============================
@@ -55,7 +55,8 @@ Using those values, we can then compute the eigenvalues
   eigenvalueRoe_1 = l_uRoe - l_ghSqrtRoe;
   eigenvalueRoe_2 = l_uRoe + l_ghSqrtRoe;
 
-Note that `m_gSqrt` is the given square root of gravity.
+.. note::
+  `m_gSqrt` is the given square root of gravity.
 
 computeEigencoefficients()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

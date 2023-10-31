@@ -1,6 +1,8 @@
 2. Finite Volume Discretization
 *********************************
 
+All project authors contributed to this assignment in equal parts.
+
 Task 2.0
 ===============
 
