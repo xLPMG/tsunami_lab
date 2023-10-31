@@ -1,11 +1,11 @@
 2. Finite Volume Discretization
 *********************************
 
-General Tasks
+Task 2.0
 ===============
 
-Task G-1 - F-Wave solver integration
------------------------------------
+Task 2.0.1 - F-Wave solver integration
+-----------------------------------------
 
 To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:
 
@@ -14,9 +14,14 @@ To allow for an easy change of which solver will be used, we implemented another
 .. code:: cpp
 
     if(i_argc >= 3){
-        solver = i_argv[2];
+        if(std::string(i_argv[2]) == "roe" || std::string(i_argv[2]) == "fwave"){
+            solver = i_argv[2];
+        }else {
+            std::cout << "invalid argument: solver parameter only accepts: roe, fwave" << std::endl;
+            return EXIT_FAILURE;
+        }
     }else{
-        solver = "roe";
+        solver = "fwave";
     }
 
 This parameter is passed to the WavePropagation class in its constructor:
@@ -35,11 +40,49 @@ In the WavePropagation1d file, we make use of simple if-conditions to execute th
     if(solver=="roe") { ... }
     else if(solver=="fwave") { ... }
 
-Task G-2 - Sanity check using middle_states.csv
------------------------------------------------
+Task 2.0.2 - Sanity check using middle_states.csv
+----------------------------------------------------
 
-Task 2.1. Shock and Rarefaction Waves
+Task 2.1 Shock and Rarefaction Waves
 =======================================
 
-Task 2.2. - Dam-Break
+Since :math:`h_l = h_r`, both setups only require one shared height input `i_h` for both sides. 
+And because of :math:`(hu)_r = -(hu)_l`, it suffices to either take :math:`(hu)_l` or :math:`(hu)_r` as the second input,
+as we can derive the other momentum easily. For further information see :ref:`ns-setups`.
+
+Since for both problems the `getMomentumY()` function returns 0 in all cases, we won't address it any further.
+
+Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
+-------------------------------------------------------------------
+
+Shock-Shock Problem
+^^^^^^^^^^^^^^^^^^^^
+
+.. code:: cpp
+
+    TODO
+
+Rare-Rare Problem
+^^^^^^^^^^^^^^^^^^^^
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight( t_real,
+                                                                    t_real  ) const {
+        return m_height;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX(  t_real i_x,
+                                                                        t_real ) const {
+        if (i_x <= m_xdis) {
+            return -m_momentumLeft;
+        } else {
+            return m_momentumLeft;
+        }
+    }
+
+Task 2.1.2 - Observations
+--------------------------
+
+Task 2.2 - Dam-Break
 ======================

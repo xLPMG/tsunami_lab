@@ -50,7 +50,7 @@ void tsunami_lab::patches::WavePropagation1d::timeStep( t_real i_scaling  ) {
     l_huNew[l_ce] = l_huOld[l_ce];
   }
 
-  //choose between Roe solver (0) and Fwave solver (1)
+  //choose between Roe solver and Fwave solver
   if(solver=="roe"){
 
     // iterate over edges and update with Riemann solutions
