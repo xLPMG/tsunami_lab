@@ -1,5 +1,5 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * Entry-point for simulations.
@@ -33,6 +33,7 @@ int main( int   i_argc,
   if( i_argc < 2 ) {
     std::cerr << "invalid number of arguments, usage:" << std::endl;
     std::cerr << "  ./build/tsunami_lab N_CELLS_X" << std::endl;
+    std::cerr << "  ./build/tsunami_lab N_CELLS_X SOLVER" << std::endl;
     std::cerr << "where N_CELLS_X is the number of cells in x-direction." << std::endl;
     return EXIT_FAILURE;
   }
@@ -46,9 +47,14 @@ int main( int   i_argc,
   }
 
   if(i_argc >= 3){
-    solver = i_argv[2];
+    if(std::string(i_argv[2]) == "roe" || std::string(i_argv[2]) == "fwave"){
+      solver = i_argv[2];
+    }else {
+      std::cout << "invalid argument: solver parameter only accepts: roe, fwave" << std::endl;
+      return EXIT_FAILURE;
+    }
   }else{
-    solver = "roe";
+    solver = "fwave";
   }
 
   std::cout << "runtime configuration" << std::endl;

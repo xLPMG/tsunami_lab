@@ -21,7 +21,7 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx')
+                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
               )
 )
 

@@ -6,6 +6,7 @@
  **/
 #include <catch2/catch.hpp>
 #include "WavePropagation1d.h"
+#include "../io/Csv.h"
 #include <fstream>
 #include <sstream>
 
@@ -80,24 +81,16 @@ TEST_CASE("Test the 1d wave propagation solver.", "[WaveProp1d]")
 
 TEST_CASE("1d wave propagation solver sanity check", "[WaveProp1d_SanityCheck]")
 {
-  std::ofstream outputFile("out.txt");
   std::ifstream inputFile("middle_states.csv");
   std::vector<std::string> row;
-  std::string line, word;
+  std::string line;
   while (getline(inputFile, line))
   {
     // ignore lines starting with #
     if (line.substr(0, 1) != "#")
     {
-      row.clear();
-      std::stringstream s(line);
-      while (getline(s, word, ','))
-      {
-        // add all the column data of a row to a vector
-        row.push_back(word);
-      }
-      outputFile << row[0] << " + " << row[1] << std::endl;
+      row = tsunami_lab::io::Csv::splitLine(std::stringstream(line), ',');
+      //TODO: do the hStar magic
     }
   }
-  outputFile.close();
 }

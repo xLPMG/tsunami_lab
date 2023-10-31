@@ -39,6 +39,15 @@ class tsunami_lab::io::Csv {
                        t_real       const * i_hu,
                        t_real       const * i_hv,
                        std::ostream       & io_stream );
+
+    /**
+     * Splits a CSV-style line into a vector of strings.
+     *
+     * @param line input line as stringstream
+     * @param separator character which separates the words (will be used to split)
+     * @return Returns a vector of strings. Its values are the results of splitting the input line by the separator.
+     **/
+    static std::vector<std::string> splitLine(std::stringstream line, char separator );
 };
 
 #endif
