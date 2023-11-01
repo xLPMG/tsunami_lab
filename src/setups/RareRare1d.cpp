@@ -8,8 +8,8 @@
 #include "RareRare1d.h"
 
 tsunami_lab::setups::RareRare1d::RareRare1d( t_real i_h, 
-                                             tsunami_lab::t_real i_huL,
-                                             tsunami_lab::t_real i_xdis ) {
+                                             t_real i_huL,
+                                             t_real i_xdis ) {
     m_height = i_h;
     m_momentumLeft = i_huL;
     m_xdis = i_xdis;
