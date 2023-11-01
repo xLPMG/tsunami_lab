@@ -6,6 +6,8 @@
  **/
 #include "patches/WavePropagation1d.h"
 #include "setups/DamBreak1d.h"
+#include "setups/RareRare1d.h"
+#include "setups/ShockShock1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
 #include <iostream>
@@ -65,8 +67,8 @@ int main( int   i_argc,
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d( 10,
-                                                 5,
+  l_setup = new tsunami_lab::setups::RareRare1d( 40,
+                                                 10,
                                                  5 );
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
@@ -131,7 +133,7 @@ int main( int   i_argc,
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-//TODO: create solutions folder automatically or at least checl of it exists
+//TODO: create solutions folder automatically or at least check if it exists
       std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
       std::cout << "  writing wave field to " << l_path << std::endl;
 

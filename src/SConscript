@@ -13,6 +13,7 @@ l_sources = [ 'solvers/Roe.cpp',
               'setups/DamBreak1d.cpp',
               'setups/RareRare1d.cpp',
               'setups/ShockShock1d.cpp',
+              'setups/MiddleStates.cpp',
               'io/Csv.cpp' ]
 
 for l_so in l_sources:
@@ -32,5 +33,11 @@ l_tests = [ 'tests.cpp',
 
 for l_te in l_tests:
   env.tests.append( env.Object( l_te ) )
+
+# gather sanity checks
+l_sanitychecks = [ 'sanitychecks.cpp' ]
+
+for l_sa in l_sanitychecks:
+  env.sanitychecks.append( env.Object( l_sa ) )
 
 Export('env')

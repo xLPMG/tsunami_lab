@@ -7,8 +7,6 @@
 #include <catch2/catch.hpp>
 #include "WavePropagation1d.h"
 #include "../io/Csv.h"
-#include <fstream>
-#include <sstream>
 
 TEST_CASE("Test the 1d wave propagation solver.", "[WaveProp1d]")
 {
@@ -76,21 +74,5 @@ TEST_CASE("Test the 1d wave propagation solver.", "[WaveProp1d]")
   {
     REQUIRE(m_waveProp.getHeight()[l_ce] == Approx(8));
     REQUIRE(m_waveProp.getMomentumX()[l_ce] == Approx(0));
-  }
-}
-
-TEST_CASE("1d wave propagation solver sanity check", "[WaveProp1d_SanityCheck]")
-{
-  std::ifstream inputFile("middle_states.csv");
-  std::vector<std::string> row;
-  std::string line;
-  while (getline(inputFile, line))
-  {
-    // ignore lines starting with #
-    if (line.substr(0, 1) != "#")
-    {
-      row = tsunami_lab::io::Csv::splitLine(std::stringstream(line), ',');
-      //TODO: do the hStar magic
-    }
   }
 }

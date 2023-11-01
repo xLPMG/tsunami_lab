@@ -14,7 +14,7 @@ Roe solver with input 500 (cells in x direction)
 .. raw:: html
 
     <video width="100%" height="auto" controls>
-      <source src="../../_static/roe_solver_visualization.mp4" type="video/mp4">
+      <source src="../../_static/assets/roe_solver_visualization.mp4" type="video/mp4">
     </video> 
 
 Task 1.3 - F-wave Solver

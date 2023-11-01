@@ -22,11 +22,7 @@ tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight( t_real,
 
 tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX( t_real i_x,
                                                                    t_real ) const {
-   if (i_x <= m_xdis) {
-        return -m_momentumLeft;
-    } else {
-        return m_momentumLeft;
-    }
+    return i_x <= m_xdis ? -m_momentumLeft : m_momentumLeft;
 }
 
 tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumY( t_real,
