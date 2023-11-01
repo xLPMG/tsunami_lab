@@ -122,8 +122,8 @@ int middleStatesSanityCheck()
         std::cout << "Middle states sanity check failed." << std::endl;
         return EXIT_FAILURE;
       }
+      executedTests++;
     }
-    executedTests++;
   }
   return 0;
 }
