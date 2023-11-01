@@ -24,6 +24,7 @@ tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
                                                                      t_real) const {
   return i_x <= m_xdis ? m_momentumLeft : -m_momentumLeft;
 }
+
 tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumY( t_real,
                                                                      t_real ) const {
   return 0;
