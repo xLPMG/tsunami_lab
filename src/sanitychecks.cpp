@@ -13,8 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stddef.h>
-#include <limits.h>
+#include <limits>
 #include <cmath>
 
 tsunami_lab::t_real calculateHStar(tsunami_lab::t_real hLeft, tsunami_lab::t_real hRight, tsunami_lab::t_real huLeft, tsunami_lab::t_real huRight)
