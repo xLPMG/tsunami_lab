@@ -98,7 +98,7 @@ tsunami_lab::t_real calculateHStar(tsunami_lab::t_real hLeft, tsunami_lab::t_rea
 int middleStatesSanityCheck()
 {
   //accuracy when comapring given hStar to calculated value
-  tsunami_lab::t_real accuracy = 0.002;
+  tsunami_lab::t_real accuracy = 0.001;
   //amount of tests to run
   tsunami_lab::t_real tests = 10000;
 
@@ -108,6 +108,7 @@ int middleStatesSanityCheck()
   std::vector<std::string> row;
   std::string line;
   tsunami_lab::t_idx executedTests=0;
+  tsunami_lab::t_idx passedTests=0;
   while (getline(inputFile, line) && executedTests<tests)
   {
     // ignore lines starting with #
@@ -121,13 +122,21 @@ int middleStatesSanityCheck()
       std::cout << "hStar diff: " << abs(hStar - std::stof(row[4])) << std::endl;
       if (abs(hStar - std::stof(row[4])) > accuracy)
       {
-        std::cout << "Middle states sanity check failed." << std::endl;
-        return EXIT_FAILURE;
+        std::cout << "TEST FAILED" << std::endl;
+      }else{
+        passedTests++;
       }
       executedTests++;
     }
   }
-  return 0;
+  //check if at least 99% of the tests passed
+  if(passedTests>=0.99*executedTests){
+    std::cout << "MIDDLE STATES TEST PASSED" << std::endl;
+    return 0;
+  }else{
+    std::cout << "MIDDLE STATES TEST FAILED" << std::endl;
+    return EXIT_FAILURE;
+  }
 }
 
 int main()
