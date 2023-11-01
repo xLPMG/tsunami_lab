@@ -21,7 +21,7 @@ tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getHeight(   t_real i_x,
 }
 
 tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
-                                                                    t_real) const {
+                                                                     t_real) const {
   if( i_x <= m_xdis ) {
     return m_momentumLeft;
   }
@@ -30,7 +30,7 @@ tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
   }
 }
 tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumY( t_real,
-                                                                   t_real ) const {
+                                                                     t_real ) const {
   return 0;
 }
 

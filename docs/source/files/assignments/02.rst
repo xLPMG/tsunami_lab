@@ -62,7 +62,20 @@ Shock-Shock Problem
 
 .. code:: cpp
 
-    TODO
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getHeight(   t_real i_x,
+                                                                        t_real) const {
+        return m_height;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
+                                                                         t_real) const {
+        if( i_x <= m_xdis ) {
+            return m_momentumLeft;
+        }
+        else {
+            return -m_momentumLeft;
+        }
+    }
 
 Rare-Rare Problem
 ^^^^^^^^^^^^^^^^^^^^
