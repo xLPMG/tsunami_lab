@@ -7,7 +7,6 @@
 #include "io/Csv.h"
 #include "patches/WavePropagation1d.h"
 #include "setups/MiddleStates.h"
-#include "setups/RareRare1d.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -16,28 +15,28 @@
 #include <limits>
 #include <cmath>
 
-tsunami_lab::t_real calculateHStar(tsunami_lab::t_real hLeft, tsunami_lab::t_real hRight, tsunami_lab::t_real huLeft, tsunami_lab::t_real huRight)
+tsunami_lab::t_real calculateHStar(tsunami_lab::t_real i_hLeft, tsunami_lab::t_real i_hRight, tsunami_lab::t_real i_huLeft, tsunami_lab::t_real i_huRight)
 {
-  //cell amount in x and y direction
+  // cell amount in x and y direction
   tsunami_lab::t_idx l_nx = 100;
   tsunami_lab::t_idx l_ny = 1;
 
-  //simulation size
+  // simulation size
   tsunami_lab::t_real l_dxy = 10.0 / l_nx;
 
-  //amount of calculated steps (more steps -> higher accuracy)
+  // amount of calculated steps (more steps -> higher accuracy)
   tsunami_lab::t_idx l_steps = 1000;
 
-  //solver choice
-  std::string solver = "fwave";
+  // solver choice
+  std::string l_solver = "fwave";
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::MiddleStates(hLeft, hRight, huLeft, huRight, l_dxy/2);
+  l_setup = new tsunami_lab::setups::MiddleStates(i_hLeft, i_hRight, i_huLeft, i_huRight, l_dxy / 2);
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, solver);
+  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, l_solver);
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -87,53 +86,59 @@ tsunami_lab::t_real calculateHStar(tsunami_lab::t_real hLeft, tsunami_lab::t_rea
 
   // iterate given amount of steps
   tsunami_lab::t_idx l_i;
-  for(l_i=0;l_i<l_steps;l_i++){
+  for (l_i = 0; l_i < l_steps; l_i++)
+  {
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scaling);
   }
-  //return height at the middle of the simulation
+  // return height at the middle of the simulation
   return l_waveProp->getHeight()[(int)(l_dxy / 2)];
 }
 
 int middleStatesSanityCheck()
 {
-  //accuracy when comapring given hStar to calculated value
-  tsunami_lab::t_real accuracy = 0.001;
-  //amount of tests to run
-  tsunami_lab::t_real tests = 10000;
+  // accuracy when comapring given hStar to calculated value
+  tsunami_lab::t_real l_accuracy = 0.001;
+  // amount of tests to run
+  tsunami_lab::t_real l_tests = 10000;
 
-  std::ifstream inputFile("resources/middle_states.csv");
+  std::ifstream l_inputFile("resources/middle_states.csv");
 
   std::cout << "Started middle states sanity check." << std::endl;
-  std::vector<std::string> row;
-  std::string line;
-  tsunami_lab::t_idx executedTests=0;
-  tsunami_lab::t_idx passedTests=0;
-  while (getline(inputFile, line) && executedTests<tests)
+  std::vector<std::string> l_row;
+  std::string l_line;
+  tsunami_lab::t_idx l_executedTests = 0;
+  tsunami_lab::t_idx l_passedTests = 0;
+  while (getline(l_inputFile, l_line) && l_executedTests < l_tests)
   {
     // ignore lines starting with #
-    if (line.substr(0, 1) != "#")
+    if (l_line.substr(0, 1) != "#")
     {
-      //extract data from csv line
-      row = tsunami_lab::io::Csv::splitLine(std::stringstream(line), ',');
-      //calculate hStar
-      tsunami_lab::t_real hStar = calculateHStar(std::stof(row[0]), std::stof(row[1]), std::stof(row[2]), std::stof(row[3]));
-      //compare calculated and given values
-      std::cout << "hStar diff: " << abs(hStar - std::stof(row[4])) << std::endl;
-      if (abs(hStar - std::stof(row[4])) > accuracy)
+      // extract data from csv line
+      l_row = tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',');
+      // calculate hStar
+      tsunami_lab::t_real l_hStar = calculateHStar(std::stof(l_row[0]), std::stof(l_row[1]), std::stof(l_row[2]), std::stof(l_row[3]));
+      // compare calculated and given values
+      std::cout << "hStar diff: " << abs(l_hStar - std::stof(l_row[4])) << std::endl;
+      if (abs(l_hStar - std::stof(l_row[4])) > l_accuracy)
       {
         std::cout << "TEST FAILED" << std::endl;
-      }else{
-        passedTests++;
       }
-      executedTests++;
+      else
+      {
+        l_passedTests++;
+      }
+      l_executedTests++;
     }
   }
-  //check if at least 99% of the tests passed
-  if(passedTests>=0.99*executedTests){
+  // check if at least 99% of the tests passed
+  if (l_passedTests >= 0.99 * l_executedTests)
+  {
     std::cout << "MIDDLE STATES TEST PASSED" << std::endl;
     return 0;
-  }else{
+  }
+  else
+  {
     std::cout << "MIDDLE STATES TEST FAILED" << std::endl;
     return EXIT_FAILURE;
   }
@@ -141,6 +146,7 @@ int middleStatesSanityCheck()
 
 int main()
 {
-  if (middleStatesSanityCheck() != 0) return EXIT_FAILURE;
+  if (middleStatesSanityCheck() != 0)
+    return EXIT_FAILURE;
   return 0;
 }

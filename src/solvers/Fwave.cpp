@@ -6,7 +6,6 @@
  **/
 #include "Fwave.h"
 #include <cmath>
-#include <iostream>
 
 void tsunami_lab::solvers::Fwave::computeEigenvalues(t_real i_hL,
                                                      t_real i_hR,
@@ -20,7 +19,7 @@ void tsunami_lab::solvers::Fwave::computeEigenvalues(t_real i_hL,
   t_real l_hSqrtR = std::sqrt(i_hR);
 
   // compute Roe averages
-  t_real l_hRoe = 0.5f * (i_hL + i_hR);
+  t_real l_hRoe = t_real(0.5) * (i_hL + i_hR);
   t_real l_uRoe = l_hSqrtL * i_uL + l_hSqrtR * i_uR;
   l_uRoe /= l_hSqrtL + l_hSqrtR;
 
@@ -55,7 +54,7 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients(t_real i_hL,
   // compute f delta
   t_real f_delta[2] = {0};
   f_delta[0] = i_huR - i_huL;
-  f_delta[1] = (i_huR * l_uR + 0.5 * m_g * i_hR * i_hR) - (i_huL * l_uL + 0.5 * m_g * i_hL * i_hL);
+  f_delta[1] = (i_huR * l_uR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * l_uL + t_real(0.5) * m_g * i_hL * i_hL);
 
   // compute alpha
   alpha_1 = l_rInv[0][0] * f_delta[0] + l_rInv[0][1] * f_delta[1];
@@ -102,7 +101,7 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
                            eigencoefficientRoe_1,
                            eigencoefficientRoe_2);
 
-  //compute waves Z_p
+  // compute waves Z_p
   t_real z1[2] = {0};
   z1[0] = eigencoefficientRoe_1 * eigenvectorRoe_1[0];
   z1[1] = eigencoefficientRoe_1 * eigenvectorRoe_1[1];
@@ -114,16 +113,20 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
   // set net-updates depending on wave speeds
   for (unsigned short l_qt = 0; l_qt < 2; l_qt++)
   {
-    //init
+    // init
     o_netUpdateL[l_qt] = 0;
     o_netUpdateR[l_qt] = 0;
 
-    //wave 1
-    if (eigenvalueRoe_1 < 0) o_netUpdateL[l_qt] += z1[l_qt];
-    else o_netUpdateR[l_qt] += z1[l_qt];
+    // wave 1
+    if (eigenvalueRoe_1 < 0)
+      o_netUpdateL[l_qt] += z1[l_qt];
+    else
+      o_netUpdateR[l_qt] += z1[l_qt];
 
-    //wave 2
-    if (eigenvalueRoe_2 < 0) o_netUpdateL[l_qt] += z2[l_qt];
-    else o_netUpdateR[l_qt] += z2[l_qt];
+    // wave 2
+    if (eigenvalueRoe_2 < 0)
+      o_netUpdateL[l_qt] += z2[l_qt];
+    else
+      o_netUpdateR[l_qt] += z2[l_qt];
   }
 }
