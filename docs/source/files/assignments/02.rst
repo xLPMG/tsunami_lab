@@ -49,6 +49,186 @@ In the ``WavePropagation1d.cpp`` file, we make use of simple if-conditions to ut
 Task 2.0.2 - Sanity check using middle_states.csv
 ----------------------------------------------------
 
+Code documentation
+^^^^^^^^^^^^^^^^^^^
+
+Before we can start calculating and checking results, we need a way to read the data from the `csv` file.
+
+To do so, we started by extending the ``Csv.cpp`` file by a ``splitLine()`` function:
+
+(**File: Csv.cpp**)
+
+.. code:: cpp
+
+    std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line, 
+                                                             char separator)
+    {
+        std::vector<std::string> result;
+        std::string word;
+        while (getline(line, word, separator))
+            result.push_back(word);
+        return result;
+    }
+
+This function takes one line as a stringstream of the `csv` file as one input 
+and the character which separates the different values as another.
+The output is a vector of strings, which represent the by the separator character separated values of the `csv` file.
+
+.. note::
+    Because the middle_states sanity check is much more extensive code- and time consumption-wise, we decided to implement it 
+    in a new and separate executable: ``sanitychecks``. 
+
+In ``sanitychecks.cpp`` there are currenty 3 functions: ``main()``, ``middleStatesSanityCheck()`` and ``calculateHStar()``. 
+We will go through all of them here individually.
+
+The main function will simply serve as an entry point for all upcoming sanity checks. 
+If one of them fails, the whole executable will return ``EXIT_FAILURE``.
+
+**File: sanitychecks.cpp**
+
+.. code:: cpp
+
+    int main()
+    {
+        if (middleStatesSanityCheck() != 0)
+            return EXIT_FAILURE;
+        return 0;
+    }
+
+The next function is ``middleStatesSanityCheck()``. To start off, we are given two options for adjustability:
+
+.. code:: cpp
+
+    // accuracy when comapring given hStar to calculated value
+    tsunami_lab::t_real l_accuracy = 0.001;
+    // amount of tests to run
+    tsunami_lab::t_real l_tests = 10000;
+
+.. note::
+    The ``middle_states.csv`` file currently contains 1 million samples. 
+    The ``l_tests`` variable determines how many of those will be used, starting from the top of the document.
+
+
+Next, the ``middle_states.csv`` file is loaded up and ``splitLine()`` is called for each line which
+does not start with a `#`. With the values returned by ``splitLine()`` we call the ``calculateHStar()`` function.
+While its name is already pretty self explanatory, we will take a closer look at the calculation process later.
+The ``middleStatesSanityCheck()`` function then compares the calculated hStar value to the given one:
+
+.. code::
+
+      // compare calculated and given values
+      std::cout << "hStar diff: " << abs(l_hStar - std::stof(l_row[4])) << std::endl;
+      if (abs(l_hStar - std::stof(l_row[4])) > l_accuracy)
+      {
+        std::cout << "TEST FAILED" << std::endl;
+      }
+      else
+      {
+        l_passedTests++;
+      }
+      l_executedTests++;
+
+While it does so, it keeps track of how many tests were executed and how many of them actually passed.
+This is useful, because:
+
+.. note::
+    We decided that it suffices to only require at least 99% of all tests to pass. 
+    
+A simple if-else-clause was used to implement the requirement.
+
+.. code:: cpp
+
+    if (l_passedTests >= 0.99 * l_executedTests)
+    {
+        std::cout << "MIDDLE STATES TEST PASSED" << std::endl;
+        return 0;
+    }
+    else
+    {
+        std::cout << "MIDDLE STATES TEST FAILED" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+Now onto how we calculate hStar.
+
+``calculateHStar()`` starts off with a few variables for adjustability:
+
+.. code:: cpp
+
+    // cell amount in x and y direction
+    tsunami_lab::t_idx l_nx = 100;
+    tsunami_lab::t_idx l_ny = 1;
+    // simulation size
+    tsunami_lab::t_real l_dxy = 10.0 / l_nx;
+    // amount of calculated steps (more steps -> higher accuracy)
+    tsunami_lab::t_idx l_steps = 1000;
+    // solver choice
+    std::string l_solver = "fwave";
+
+While most of those parameters are already known from the ``main.cpp`` file,
+we introduced ``l_steps`` to switch from a time limit to a step limit here. 
+This value defines the amount of calculation steps each simulation will do.
+For now we chose the value 1000 because it seems to be a sweet spot between the accuracy and 
+calculation time we are looking for.
+
+Next, we use a new setup ``MiddleStates``, set up the solver and run the simulation:
+
+.. code::
+
+    // iterate given amount of steps
+    tsunami_lab::t_idx l_i;
+    for (l_i = 0; l_i < l_steps; l_i++)
+    {
+        l_waveProp->setGhostOutflow();
+        l_waveProp->timeStep(l_scaling);
+    }
+    // return height at the location of the discontinuity
+    return l_waveProp->getHeight()[(int)(l_dxy / 2)];
+    }
+
+At the end, the function returns the water height at the location of the discontinuity, hStar.
+
+To finish this task, we will take a brief look into the ``MiddleStates`` setup:
+
+(You may view the inputs and outputs here: :ref:`ns-setups`)
+
+(**File: MiddleStates.cpp**)
+
+.. code::
+
+    tsunami_lab::t_real tsunami_lab::setups::MiddleStates::getHeight(t_real i_x,
+                                                                 t_real) const
+    {
+        return i_x < m_xdis ? m_heightLeft : m_heightRight;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::MiddleStates::getMomentumX(t_real i_x,
+                                                                    t_real) const
+    {
+        return i_x < m_xdis ? m_momentumLeft : m_momentumRight;
+    }
+
+This setup is a simple 1d discontinuity problem, where values for left and right
+are returned on the basis of a given discontinuity location ``m_xdis``.
+
+.. note:: 
+    ``getMomentumY`` always returns 0.
+
+Usage
+^^^^^^^^^^
+
+To execute the ``sanitychecks`` file, simply run
+
+.. code:: bash
+
+    ./build/sanitychecks
+
+from inside the ``tsunami_lab`` folder.
+
+.. note::
+    Since the path of the ``middle_states.csv`` file is hard coded, it is imperative
+    to execute the ``sanitychecks`` executable from the root directoy of the project.
+
 Task 2.1 Shock and Rarefaction Waves
 =======================================
 

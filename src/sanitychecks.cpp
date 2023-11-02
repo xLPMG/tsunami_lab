@@ -15,7 +15,10 @@
 #include <limits>
 #include <cmath>
 
-tsunami_lab::t_real calculateHStar(tsunami_lab::t_real i_hLeft, tsunami_lab::t_real i_hRight, tsunami_lab::t_real i_huLeft, tsunami_lab::t_real i_huRight)
+tsunami_lab::t_real calculateHStar(tsunami_lab::t_real i_hLeft, 
+                                   tsunami_lab::t_real i_hRight, 
+                                   tsunami_lab::t_real i_huLeft, 
+                                   tsunami_lab::t_real i_huRight)
 {
   // cell amount in x and y direction
   tsunami_lab::t_idx l_nx = 100;
@@ -32,7 +35,11 @@ tsunami_lab::t_real calculateHStar(tsunami_lab::t_real i_hLeft, tsunami_lab::t_r
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::MiddleStates(i_hLeft, i_hRight, i_huLeft, i_huRight, l_dxy / 2);
+  l_setup = new tsunami_lab::setups::MiddleStates(i_hLeft, 
+                                                  i_hRight, 
+                                                  i_huLeft, 
+                                                  i_huRight, 
+                                                  l_dxy / 2);
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
@@ -91,7 +98,7 @@ tsunami_lab::t_real calculateHStar(tsunami_lab::t_real i_hLeft, tsunami_lab::t_r
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scaling);
   }
-  // return height at the middle of the simulation
+  // return height at the location of the discontinuity
   return l_waveProp->getHeight()[(int)(l_dxy / 2)];
 }
 
@@ -116,8 +123,13 @@ int middleStatesSanityCheck()
     {
       // extract data from csv line
       l_row = tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',');
+
       // calculate hStar
-      tsunami_lab::t_real l_hStar = calculateHStar(std::stof(l_row[0]), std::stof(l_row[1]), std::stof(l_row[2]), std::stof(l_row[3]));
+      tsunami_lab::t_real l_hStar = calculateHStar(std::stof(l_row[0]), 
+                                                   std::stof(l_row[1]), 
+                                                   std::stof(l_row[2]), 
+                                                   std::stof(l_row[3]));
+
       // compare calculated and given values
       std::cout << "hStar diff: " << abs(l_hStar - std::stof(l_row[4])) << std::endl;
       if (abs(l_hStar - std::stof(l_row[4])) > l_accuracy)
