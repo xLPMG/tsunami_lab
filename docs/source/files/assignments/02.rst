@@ -315,7 +315,7 @@ Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\tex
     }
 
     tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX( t_real i_x,
-                                                                       t_real      ) const {
+                                                                       t_real  ) const {
         return i_x <= m_xdis ? -m_momentumLeft : m_momentumLeft;
     }
 
