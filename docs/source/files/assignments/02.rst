@@ -229,6 +229,18 @@ from inside the ``tsunami_lab`` folder.
     Since the path of the ``middle_states.csv`` file is hard coded, it is imperative
     to execute the ``sanitychecks`` executable from the root directoy of the project.
 
+Task 2.0.3 - Continuous Integration
+-------------------------------------
+
+The project code is automatically tested using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies to the `main` and `dev` branch. 
+View the ``.github/workflows/main.yml`` file for further information.
+
+The project documentation is automatically built using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies only to the `main` branch. 
+The compiled data is pushed into the `gh-pages` branch and from there hosted using GitHub pages.
+View the ``.github/workflows/docs.yml`` file for further information.
+
 Task 2.1 Shock and Rarefaction Waves
 =======================================
 
