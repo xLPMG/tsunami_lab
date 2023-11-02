@@ -72,7 +72,7 @@ To do so, we started by extending the ``Csv.cpp`` file by a ``splitLine()`` func
 
 This function takes one line as a stringstream of the `csv` file as one input 
 and the character which separates the different values as another.
-The output is a vector of strings, which represent the by the separator character separated values of the `csv` file.
+The output is a vector of strings, which represents the, by the separator character, separated values of the `csv` file.
 
 .. note::
     Because the middle_states sanity check is much more extensive code- and time consumption-wise, we decided to implement it 
@@ -255,6 +255,8 @@ Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
 
 Shock-Shock Problem
 ^^^^^^^^^^^^^^^^^^^^
+
+.. math:: 
 
 .. code:: cpp
 
