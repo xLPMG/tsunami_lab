@@ -252,11 +252,36 @@ Since for both problems the `getMomentumY()` function returns 0 in all cases, we
 
 Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
 -------------------------------------------------------------------
+Initial conditions are the following: 
+
+.. math:: 
+    \begin{split}q_l=
+        \begin{bmatrix}
+          h_l \\ (hu)_l
+    \end{bmatrix}, \quad
+      q_r =
+    \begin{bmatrix}
+          h_r \\ (hu)_r
+        \end{bmatrix} =
+        \begin{bmatrix}
+          h_l \\ -(hu)_l
+    \end{bmatrix}.\end{split}
+
 
 Shock-Shock Problem
 ^^^^^^^^^^^^^^^^^^^^
+The following setup for the Shock Shock scenario determines the choice of :math:`hu` for either side.
 
 .. math:: 
+    \begin{split}\begin{cases}
+        Q_i = q_{l} \quad &\text{if } x_i \le x_\text{dis} \\
+        Q_i = q_{r} \quad &\text{if }   x_i > x_\text{dis}
+    \end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}
+
+As already mentioned, the height is on both sides the same. In contrast to that, 
+:math:`hu` varies depending on :math:`x_\text{dis}`. Therefore, :math:`(hu)_r` equals :math:`-(hu)_l`, if :math:`x_i` > :math:`x_\text{dis}`.
+Otherwise :math:`(hu)_l` stays the same.
+
 
 .. code:: cpp
 
@@ -266,12 +291,21 @@ Shock-Shock Problem
     }
 
     tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
-                                                                         t_real      ) const {
+                                                                         t_real  ) const {
         return i_x <= m_xdis ? m_momentumLeft : -m_momentumLeft;
     }
 
 Rare-Rare Problem
 ^^^^^^^^^^^^^^^^^^^^
+
+Similarly to the problem before, the rare-rare problem has a setup for for accessing :math:`hu`.
+Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\text{dis}`.
+
+.. math:: 
+    \begin{split}\begin{cases}
+        Q_i = q_{r} \quad &\text{if } x_i \le x_\text{dis} \\
+        Q_i = q_{l} \quad &\text{if }   x_i > x_\text{dis}
+    \end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}
 
 .. code:: cpp
 
