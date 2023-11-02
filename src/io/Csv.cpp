@@ -6,9 +6,6 @@
  **/
 #include "Csv.h"
 #include <sstream>
-#include "../solvers/Fwave.h"
-
-tsunami_lab::t_real eigenvalueRoe_1 = 0, eigenvalueRoe_2 = 0;
 
 void tsunami_lab::io::Csv::write(t_real i_dxy,
                                  t_idx i_nx,
@@ -35,19 +32,10 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
     for (t_idx l_ix = 0; l_ix < i_nx; l_ix++)
     {
       // derive coordinates of cell center
-      t_real l_posX = (l_ix + 0.5) * i_dxy;
-      t_real l_posY = (l_iy + 0.5) * i_dxy;
+      t_real l_posX = (l_ix + t_real(0.5)) * i_dxy;
+      t_real l_posY = (l_iy + t_real(0.5)) * i_dxy;
 
       t_idx l_id = l_iy * i_stride + l_ix;
-
-      //compute Eigenvalues for wavespeed
-      void tsunami_lab::solvers::Fwave::computeEigenvalues( t_real i_hL,
-                                                            t_real i_hR,
-                                                            t_real i_uL,
-                                                            t_real i_uR,
-                                                            t_real &eigenvalueRoe_1,
-                                                            t_real &eigenvalueRoe_2)
-                        
 
       // write data
       io_stream << l_posX << "," << l_posY;
