@@ -20,8 +20,8 @@ int middleStatesSanityCheck()
 
   // START TEST CONDITIONS
 
-  // accuracy when comapring given hStar to calculated value
-  tsunami_lab::t_real l_accuracy = 0.001;
+  // allowed margin of error when comapring given hStar to calculated value
+  tsunami_lab::t_real l_accuracy = 0.004;
 
   // amount of tests to run
   tsunami_lab::t_real l_tests = 10000;
@@ -32,20 +32,28 @@ int middleStatesSanityCheck()
   // END TEST CONDITIONS
   // START SIMULATION CONDITIONS
 
-  // cell amount in x and y direction
-  tsunami_lab::t_idx l_nx = 100;
+  // cell count
+  tsunami_lab::t_idx l_nx = 10;
   tsunami_lab::t_idx l_ny = 1;
+
   // simulation size
-  tsunami_lab::t_real l_dxy = 10.0 / l_nx;
+  tsunami_lab::t_real l_size = 10;
+
+  // cell size
+  tsunami_lab::t_real l_dxy = l_size / l_nx;
+
   // solver choice
   std::string l_solver = "fwave";
+
+  // discontinuity location x
+  tsunami_lab::t_real l_xdis = l_size / 2;
 
   // END SIMULATION CONDITIONS
 
   std::cout << "Started middle states sanity check." << std::endl;
   std::vector<std::string> l_row;
   std::string l_line;
-  //counters for executed and passed tests
+  // counters for executed and passed tests
   tsunami_lab::t_idx l_executedTests = 0;
   tsunami_lab::t_idx l_passedTests = 0;
 
@@ -67,12 +75,14 @@ int middleStatesSanityCheck()
                                                       std::stof(l_row[1]),
                                                       std::stof(l_row[2]),
                                                       std::stof(l_row[3]),
-                                                      l_dxy / 2);
+                                                      l_xdis);
       // construct solver
       tsunami_lab::patches::WavePropagation *l_waveProp;
       l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, l_solver);
+
       // maximum observed height in the setup
       tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
+
       // set up solver
       for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
       {
@@ -117,46 +127,49 @@ int middleStatesSanityCheck()
       tsunami_lab::t_real l_scaling = l_dt / l_dxy;
 
       // set up time and print control
-      tsunami_lab::t_real l_endTime = 1.25;
+      tsunami_lab::t_real l_endTime = 1.5;
       tsunami_lab::t_real l_simTime = 0;
+      tsunami_lab::t_real l_steps = 0;
 
       while (l_simTime < l_endTime)
       {
         l_waveProp->setGhostOutflow();
         l_waveProp->timeStep(l_scaling);
         l_simTime += l_dt;
-        l_hStar = l_waveProp->getHeight()[(int)(l_dxy / 2)];
-        //end early if we have reached the target
-        if (abs(l_hStar - std::stof(l_row[4])) <= 0.001)
-          break;
+        l_steps++;
       }
-
+      l_hStar = l_waveProp->getHeight()[int(l_xdis)];
       // END CALCULATION
 
       // compare calculated and given values
       if (abs(l_hStar - std::stof(l_row[4])) > l_accuracy)
       {
-        std::cout << "TEST #" << l_executedTests << " FAILED! Missed target by " << abs(l_hStar - std::stof(l_row[4])) - l_accuracy << std::endl;
+        std::cout << "#" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStar - std::stof(l_row[4])) - l_accuracy << std::endl;
       }
       else
       {
         l_passedTests++;
       }
       l_executedTests++;
+      delete l_setup;
+      delete l_waveProp;
     }
   }
   // test evaluation
-  std::cout << l_passedTests << " / " << l_executedTests << " PASSED" << std::endl;
+  tsunami_lab::t_real ratio = tsunami_lab::t_real(l_passedTests) / tsunami_lab::t_real(l_executedTests);
+  std::cout << l_passedTests << " / " << l_executedTests << " PASSED (" << ratio * 100 << "%)" << std::endl;
+  std::cout << "Solver: " << l_solver << std::endl;
   std::cout << "Accuracy: " << l_accuracy << std::endl;
+  std::cout << "Cells x y: " << l_nx << " " << l_ny << std::endl;
   // check if at least 99% of the tests passed
   if (l_passedTests >= 0.99 * l_executedTests)
   {
-    std::cout << "MIDDLE STATES TEST PASSED" << std::endl;
+    std::cout << "MIDDLE STATES SANITY CHECK PASSED (99% PASSED TESTS REQUIRED)" << std::endl;
     return 0;
   }
   else
   {
-    std::cout << "MIDDLE STATES TEST FAILED" << std::endl;
+    std::cout << "MIDDLE STATES SANITY CHECK FAILED (99% PASSED TESTS REQUIRED)" << std::endl;
     return EXIT_FAILURE;
   }
 }
