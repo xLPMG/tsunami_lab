@@ -6,4 +6,4 @@ _templates/
 .DS_Store
 .vscode/
 
-*.csv
+solutions/
