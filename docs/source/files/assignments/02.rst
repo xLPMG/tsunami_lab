@@ -340,7 +340,7 @@ Input: :math:`h_l=40` and :math:`h_r=10`
     <video width="100%" height="auto" controls>
       <source src="../../_static/assets/DamBreak_hl40_hr10.mp4" type="video/mp4">
     </video> 
-    <br />
+
 |
 
 Input: :math:`h_l=40` and :math:`h_r=30`
@@ -350,7 +350,7 @@ Input: :math:`h_l=40` and :math:`h_r=30`
     <video width="100%" height="auto" controls>
       <source src="../../_static/assets/DamBreak_hl40_hr30.mp4" type="video/mp4">
     </video> 
-    <br />
+    
 |
 
 Input: :math:`h_l=20` and :math:`h_r=10`
@@ -360,7 +360,6 @@ Input: :math:`h_l=20` and :math:`h_r=10`
     <video width="100%" height="auto" controls>
       <source src="../../_static/assets/DamBreak_hl20_hr10.mp4" type="video/mp4">
     </video> 
-    <br />
 
 |
 
