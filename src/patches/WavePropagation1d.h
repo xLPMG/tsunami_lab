@@ -82,6 +82,16 @@ public:
     return m_h[m_step] + 1;
   }
 
+    /**
+   * Gets cells' water heights.
+   *
+   * @return water heights.
+   */
+  t_real getHeightAt(t_idx i_ix)
+  {
+    return m_h[m_step][i_ix + 1];
+  }
+
   /**
    * Gets the cells' momenta in x-direction.
    *

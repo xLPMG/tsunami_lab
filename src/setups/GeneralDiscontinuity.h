@@ -4,8 +4,8 @@
  * @section DESCRIPTION
  * Setup for the middle states sanity check
  **/
-#ifndef TSUNAMI_LAB_SETUPS_MIDDLE_STATES_H
-#define TSUNAMI_LAB_SETUPS_MIDDLE_STATES_H
+#ifndef TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_H
+#define TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_H
 
 #include "Setup.h"
 
@@ -13,11 +13,11 @@ namespace tsunami_lab
 {
   namespace setups
   {
-    class MiddleStates;
+    class GeneralDiscontinuity;
   }
 }
 
-class tsunami_lab::setups::MiddleStates : public Setup
+class tsunami_lab::setups::GeneralDiscontinuity : public Setup
 {
 private:
   //! height on the left side
@@ -40,11 +40,11 @@ public:
    * @param i_h water height of both sides
    * @param i_huL water momentum on the left side
    **/
-  MiddleStates(t_real i_hL,
-               t_real i_hR,
-               t_real i_huL,
-               t_real i_huR,
-               t_real i_xdis);
+  GeneralDiscontinuity(t_real i_hL,
+                       t_real i_hR,
+                       t_real i_huL,
+                       t_real i_huR,
+                       t_real i_xdis);
 
   /**
    * Gets the water height at a given point.

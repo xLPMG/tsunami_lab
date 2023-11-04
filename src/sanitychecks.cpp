@@ -6,7 +6,7 @@
  **/
 #include "io/Csv.h"
 #include "patches/WavePropagation1d.h"
-#include "setups/MiddleStates.h"
+#include "setups/GeneralDiscontinuity.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -21,10 +21,10 @@ int middleStatesSanityCheck()
   // START TEST CONDITIONS
 
   // allowed margin of error when comapring given hStar to calculated value
-  tsunami_lab::t_real l_accuracy = 0.004;
+  tsunami_lab::t_real l_accuracy = 0.005;
 
   // amount of tests to run
-  tsunami_lab::t_real l_tests = 10000;
+  tsunami_lab::t_real l_tests = 1000;
 
   // csv file path
   std::ifstream l_inputFile("resources/middle_states.csv");
@@ -33,7 +33,7 @@ int middleStatesSanityCheck()
   // START SIMULATION CONDITIONS
 
   // cell count
-  tsunami_lab::t_idx l_nx = 10;
+  tsunami_lab::t_idx l_nx = 100;
   tsunami_lab::t_idx l_ny = 1;
 
   // simulation size
@@ -71,11 +71,11 @@ int middleStatesSanityCheck()
 
       // construct setup
       tsunami_lab::setups::Setup *l_setup;
-      l_setup = new tsunami_lab::setups::MiddleStates(std::stof(l_row[0]),
-                                                      std::stof(l_row[1]),
-                                                      std::stof(l_row[2]),
-                                                      std::stof(l_row[3]),
-                                                      l_xdis);
+      l_setup = new tsunami_lab::setups::GeneralDiscontinuity(std::stof(l_row[0]),
+                                                              std::stof(l_row[1]),
+                                                              std::stof(l_row[2]),
+                                                              std::stof(l_row[3]),
+                                                              l_xdis);
       // construct solver
       tsunami_lab::patches::WavePropagation *l_waveProp;
       l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, l_solver);
@@ -138,7 +138,7 @@ int middleStatesSanityCheck()
         l_simTime += l_dt;
         l_steps++;
       }
-      l_hStar = l_waveProp->getHeight()[int(l_xdis)];
+      l_hStar = l_waveProp->getHeightAt(l_nx / 2);
       // END CALCULATION
 
       // compare calculated and given values

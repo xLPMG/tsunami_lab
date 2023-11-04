@@ -8,6 +8,7 @@
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
+#include "setups/GeneralDiscontinuity.h"
 #include "io/Csv.h"
 #include <cstdlib>
 #include <iostream>
@@ -77,9 +78,11 @@ int main(int i_argc,
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(40,
-                                                10,
-                                                5);
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity(14,
+                                                          3.5,
+                                                          0,
+                                                          0,
+                                                          5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, l_solver);
