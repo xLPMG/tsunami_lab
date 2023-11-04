@@ -324,3 +324,47 @@ Task 2.1.2 - Observations
 
 Task 2.2 - Dam-Break
 ======================
+
+Task 2.2.1 
+--------------------------
+
+Visualizations
+^^^^^^^^^^^^^^^^^
+
+Roe solver with input 100 (cells in x direction) 
+
+Input: :math:`h_l=40` and :math:`h_r=10`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl40_hr10.mp4" type="video/mp4">
+    </video> 
+    <br />
+|
+
+Input: :math:`h_l=40` and :math:`h_r=30`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl40_hr30.mp4" type="video/mp4">
+    </video> 
+    <br />
+|
+
+Input: :math:`h_l=20` and :math:`h_r=10`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl20_hr10.mp4" type="video/mp4">
+    </video> 
+    <br />
+
+|
+
+Observations
+^^^^^^^^^^^^^^^^^
+As seen in the simulations, the momentum is getting higher, as :math:`h_l` and the difference between :math:`h_l` and :math:`h_r` grow. 
+In the end, the water approaches a height between :math:`h_l` and :math:`h_r`

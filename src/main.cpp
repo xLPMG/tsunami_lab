@@ -77,7 +77,7 @@ int main(int i_argc,
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::RareRare1d(40,
+  l_setup = new tsunami_lab::setups::DamBreak1d(40,
                                                 10,
                                                 5);
   // construct solver
