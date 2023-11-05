@@ -1,4 +1,526 @@
 2. Finite Volume Discretization
-=================================
+*********************************
 
-TODO
+All project authors contributed to this assignment in equal parts.
+
+Task 2.0
+===============
+
+Task 2.0.1 - F-Wave solver integration
+-----------------------------------------
+
+To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:
+
+(**File: main.cpp**)
+
+.. code:: cpp
+
+    if(i_argc >= 3){
+        if(std::string(i_argv[2]) == "roe" || std::string(i_argv[2]) == "fwave"){
+            l_solver = i_argv[2];
+        }else {
+            std::cout << "invalid argument: solver parameter only accepts: roe, fwave" << std::endl;
+            return EXIT_FAILURE;
+        }
+    }else{
+        l_solver = "fwave";
+    }
+
+.. note:: 
+    The ``WavePropagation1d`` class depends on a set solver. 
+    Furthermore, the chosen solver will not change within one query. 
+    Therefore we decided on just passing the solver as a parameter to the ``WavePropagation1d`` class constructor.
+    This allows for an easy implementation without setters and getters:
+
+.. code:: cpp
+
+    tsunami_lab::patches::WavePropagation *l_waveProp;
+    l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
+                                                             l_solver);
+
+In the ``WavePropagation1d.cpp`` file, we make use of simple if-conditions to utilize the correct solver:
+
+(**File: WavePropagation1d.cpp**)
+
+.. code::
+
+    if(m_solver=="roe") { ... }
+    else if(m_solver=="fwave") { ... }
+
+Task 2.0.2 - Sanity check using middle_states.csv
+----------------------------------------------------
+
+Code documentation
+^^^^^^^^^^^^^^^^^^^
+
+Before we can start calculating and checking results, we need a way to read the data from the `csv` file.
+
+To do so, we started by extending the ``Csv.cpp`` file by a ``splitLine()`` function:
+
+(**File: Csv.cpp**)
+
+.. code:: cpp
+
+    std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line, 
+                                                             char separator)
+    {
+        std::vector<std::string> result;
+        std::string word;
+        while (getline(line, word, separator))
+            result.push_back(word);
+        return result;
+    }
+
+This function takes one line as a stringstream of the `csv` file as one input 
+and the character which separates the different values as another.
+The output is a vector of strings, which represents the, by the separator character, separated values of the `csv` file.
+
+.. note::
+    Because the middle_states sanity check is much more extensive code- and time consumption-wise, we decided to implement it 
+    in a new and separate executable: ``sanitychecks``. 
+
+In ``sanitychecks.cpp`` we run a Catch2 test using the ``middle_states.csv`` data.
+This test starts off with a few parameters, such as 
+
+* ``l_accuracy``: required accuracy when comparing our computed result with the given hStar
+* ``l_tests``: amount of tests to run
+* ``l_nx`` / ``l_ny``: cell amount
+* ``l_size``: simulation size
+* ``l_solver``: solver choice
+* ``l_xdis``: discontinuity location x coordinate (we used ``l_size / 2``)
+
+During the test, we keep track of how many tests actually passed using the variables ``l_executedTests`` and ``l_passedTests``.
+
+To read the ``middle_states.csv`` file, we iterate through the documents lines using a loop and get the respective values using the ``splitLine()`` function:
+
+**File: sanitychecks.cpp**
+
+.. code:: cpp
+
+    while (getline(l_inputFile, l_line) && l_executedTests < l_tests)
+    {
+        // ignore lines starting with #
+        if (l_line.substr(0, 1) != "#")
+        {
+        // extract data from csv line
+        l_row = tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',');
+
+        // construct setup
+        tsunami_lab::setups::Setup *l_setup;
+        l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(std::stof(l_row[0]),
+                                                                  std::stof(l_row[1]),
+                                                                  std::stof(l_row[2]),
+                                                                  std::stof(l_row[3]),
+                                                                  l_xdis);  
+
+        [...]
+
+        }
+    }
+
+We then setup the solver and calculate the waves exactly as done in the ``main.cpp``, just without printing the results to files.
+After the calculation has run a specified amount of time, we retrieve our hStar as the height of the cell located at ``l_xdis``:
+
+.. code:: cpp
+
+    l_hStarApproximation = l_waveProp->getHeight()[tsunami_lab::t_idx(l_xdis / l_dxy)];
+
+Next, we compare this value to the given hStar of the `csv` file:
+
+.. code:: cpp
+
+    if (abs(l_hStarApproximation - l_hStar) <= l_accuracy)
+    {
+        ++l_passedTests;
+    }
+    else
+    {
+        std::cout << "TEST #" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStarApproximation - l_hStar) << std::endl;
+    }
+    ++l_executedTests;
+
+.. note::
+    
+    The catch2 test only passes if at least 99% of all calculations were within the given accuracy margin:
+
+.. code:: cpp
+
+    REQUIRE(l_passedTests / static_cast<double>(l_executedTests) >= 0.99);
+
+To finish this task, we will take a brief look into the ``GeneralDiscontinuity1d`` setup:
+
+(You may view the inputs and outputs here: :ref:`ns-setups`)
+
+(**File: GeneralDiscontinuity1d.cpp**)
+
+.. code::
+
+    tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getHeight(t_real i_x,
+                                                                               t_real) const
+    {
+        return i_x < m_xdis ? m_heightLeft : m_heightRight;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getMomentumX(t_real i_x,
+                                                                                  t_real) const
+    {
+        return i_x < m_xdis ? m_momentumLeft : m_momentumRight;
+    }
+
+This setup is a simple 1d discontinuity problem, where values for left and right
+are returned on the basis of a given discontinuity location ``m_xdis``.
+
+.. note:: 
+    ``getMomentumY`` always returns 0.
+
+Usage
+^^^^^^^^^^
+
+To execute the ``sanitychecks`` file, simply run
+
+.. code:: bash
+
+    ./build/sanitychecks
+
+from inside the ``tsunami_lab`` folder.
+
+.. note::
+    Since the path of the ``middle_states.csv`` file is hard coded, it is imperative
+    to execute the ``sanitychecks`` executable from the root directoy of the project.
+
+Task 2.0.3 - Continuous Integration
+-------------------------------------
+
+The project code is automatically tested using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies to the `main` and `dev` branch. 
+View the ``.github/workflows/main.yml`` file for further information.
+
+The project documentation is automatically built using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies only to the `main` branch. 
+The compiled data is pushed into the `gh-pages` branch and from there hosted using GitHub pages.
+View the ``.github/workflows/docs.yml`` file for further information.
+
+Task 2.1 Shock and Rarefaction Waves
+=======================================
+
+Since :math:`h_l = h_r`, both setups only require one shared height input `i_h` for both sides. 
+And because of :math:`(hu)_r = -(hu)_l`, it suffices to either take :math:`(hu)_l` or :math:`(hu)_r` as the second input,
+as we can derive the other momentum easily. For further information see :ref:`ns-setups`.
+
+Since for both problems the `getMomentumY()` function returns 0 in all cases, we won't address it any further.
+
+Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
+-------------------------------------------------------------------
+Initial conditions are the following: 
+
+.. math:: 
+    \begin{split}q_l=
+        \begin{bmatrix}
+          h_l \\ (hu)_l
+    \end{bmatrix}, \quad
+      q_r =
+    \begin{bmatrix}
+          h_r \\ (hu)_r
+        \end{bmatrix} =
+        \begin{bmatrix}
+          h_l \\ -(hu)_l
+    \end{bmatrix}.\end{split}
+
+
+Shock-Shock Problem
+^^^^^^^^^^^^^^^^^^^^
+The following setup for the Shock Shock scenario determines the choice of :math:`hu` for either side.
+
+.. math:: 
+    \begin{split}\begin{cases}
+        Q_i = q_{l} \quad &\text{if } x_i \le x_\text{dis} \\
+        Q_i = q_{r} \quad &\text{if }   x_i > x_\text{dis}
+    \end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}
+
+As already mentioned, the height is on both sides the same. In contrast to that, 
+:math:`hu` varies depending on :math:`x_\text{dis}`. Therefore, :math:`(hu)_r` equals :math:`-(hu)_l`, if :math:`x_i` > :math:`x_\text{dis}`.
+Otherwise :math:`(hu)_l` stays the same.
+
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getHeight(t_real,
+                                                                     t_real) const {
+        return m_height;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX(t_real i_x,
+                                                                        t_real) const {
+        return i_x <= m_xdis ? m_momentumLeft : -m_momentumLeft;
+    }
+
+Rare-Rare Problem
+^^^^^^^^^^^^^^^^^^^^
+
+Similarly to the problem before, the rare-rare problem has a setup for for accessing :math:`hu`.
+Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\text{dis}`.
+
+.. math:: 
+    \begin{split}\begin{cases}
+        Q_i = q_{r} \quad &\text{if } x_i \le x_\text{dis} \\
+        Q_i = q_{l} \quad &\text{if }   x_i > x_\text{dis}
+    \end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight(t_real,
+                                                                   t_real) const {
+        return m_height;
+    }
+
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX(t_real i_x,
+                                                                      t_real) const {
+        return i_x <= m_xdis ? -m_momentumLeft : m_momentumLeft;
+    }
+
+Task 2.1.2 - Observations
+--------------------------
+
+Discontinuity location in this scenerio is 5
+
+..  list-table:: wave speeds
+    :widths: 25 25 25 25 25 25
+    :header-rows: 1
+
+    * - :math:`h_l` 
+      - :math:`hu_l` 
+      - :math:`u_l`
+      - setup
+      - :math:`\lambda_1`
+      - :math:`\lambda_2`
+    * - 10
+      - 5
+      - :math:`\frac{1}{2}`
+      - ShockShock
+      - -9.40285 
+      - 10.4029
+    * - 10
+      - 1
+      - :math:`\frac{1}{10}`
+      - ShockShock
+      - -9.80285
+      - 10.0029
+    * - 10
+      - 5
+      - :math:`\frac{1}{2}`
+      - RareRare
+      - -10.4029 
+      - 9.40285
+    * - 10
+      - 1
+      - :math:`\frac{1}{10}`
+      - RareRare
+      - -10.0029
+      - 9.80285
+    * - 50
+      - 5
+      - :math:`\frac{1}{10}`
+      - ShockShock
+      - -22.0435
+      - 22.2435
+    * - 50
+      - 20
+      - :math:`\frac{2}{5}`
+      - ShockShock
+      - -21.7435
+      - 22.5435
+    * - 50
+      - 5
+      - :math:`\frac{1}{10}`
+      - RareRare
+      - -22.2435
+      - 22.0435
+    * - 50
+      - 20
+      - :math:`\frac{2}{5}`
+      - RareRare
+      - -22.5435
+      - 21.7435
+    * - 100
+      - 5
+      - :math:`\frac{1}{20}`
+      - ShockShock
+      - -31.2656
+      - 31.3656
+    * - 100
+      - 60
+      - :math:`\frac{3}{5}`
+      - ShockShock
+      - -30.7156
+      - 31.9156
+    * - 100
+      - 5
+      - :math:`\frac{1}{20}`
+      - RareRare
+      - -31.3656
+      - 31.2656
+    * - 100
+      - 60
+      - :math:`\frac{3}{5}`
+      - RareRare
+      - -31.9156 
+      - 30.7156
+
+Observations
+^^^^^^^^^^^^^^^^^
+As shown in the table, the wave speeds are swapped around for the Shock-Shock and Rare-Rare problems.
+
+.. math::
+    \begin{split}\begin{aligned}
+        \lambda_{1/2} &= u \pm \sqrt{gh}
+    \end{aligned}\end{split}
+
+A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The larger u, the larger the wave speeds.   
+
+Task 2.2 - Dam-Break
+======================
+
+Task 2.2.1 
+--------------------------
+
+Visualizations
+^^^^^^^^^^^^^^^^^
+
+Roe solver with input 100 (cells in x direction) 
+
+Input: :math:`h_l=40` and :math:`h_r=10`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl40_hr10.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    The momentum is approximately 224
+
+Input: :math:`h_l=40` and :math:`h_r=30`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl40_hr30.mp4" type="video/mp4">
+    </video> 
+    
+.. note::
+    The momentum is approximately 92
+
+Input: :math:`h_l=20` and :math:`h_r=10`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/DamBreak_hl20_hr10.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    The momentum is approximately 60
+
+Observations
+^^^^^^^^^^^^^^^^^
+
+As seen in the simulations, the momentum is getting higher, as :math:`h_l` and the difference between :math:`h_l` and :math:`h_r` grow. 
+In the end, the water approaches a height between :math:`h_l` and :math:`h_r`.
+
+Impact of the particle velocity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, -7]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = -2`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_-2.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 8.5
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, 0]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = 0`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_0.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 7.75
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, 7]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = 2`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_2.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 6.9
+
+**Conclusion**
+
+We conclude that a negative :math:`u_r` increases :math:`h^*` while a positive :math:`u_r` decreases it.
+The larger the absolute value of :math:`u_r`, the stronger the corresponding impact.
+
+Task 2.2.2
+--------------------------
+
+We have given 
+
+.. math:: 
+    \begin{split}q=\begin{bmatrix}
+           h \\ u*h
+        \end{bmatrix}\quad
+        q_l=
+        \begin{bmatrix}
+           14 \\ 0
+        \end{bmatrix} \quad
+        q_r =
+        \begin{bmatrix}
+          3.5\\ 0.7
+        \end{bmatrix}
+    \end{split}
+
+and the equations
+
+.. math:: 
+    \begin{split}\begin{aligned}
+      h(q_l, q_r) &= \frac{1}{2} (h_l + h_r), \\
+      u(q_l, q_r) &=  \frac{u_l \sqrt{h_l} + u_r \sqrt{h_r}}{\sqrt{h_l}+\sqrt{h_r}}.
+    \end{aligned}\end{split}
+
+
+We aquire :math:`u_r` by computing 
+
+.. math::
+    \begin{split}
+    u_r=\frac{0.7}{h}=\frac{0.7}{3.5}=\frac{1}{5}\frac{m}{s}
+    \end{split}
+
+After inserting the numbers we get :math:`h = 8.75` m and :math:`u = \frac{1}{15} \frac{m}{s}` and use them to compute the wave speed
+
+.. math::
+    \begin{split}\begin{aligned}
+        \lambda_{1}(q_l, q_r) &= u(q_l, q_r) - \sqrt{gh(q_l, q_r)}, \\
+        \lambda_{2}(q_l, q_r) &= u(q_l, q_r) + \sqrt{gh(q_l, q_r)},
+    \end{aligned}\end{split}
+
+We are only interested in the wave speed going to the right, it suffices to compute :math:`\lambda_{2}`.
+After insertion we get :math:`\lambda_{2} = 9.46 \frac{m}{s}`.
+Multiplying it by 3.6 converts the speed in :math:`\lambda_{2} = 34.056 \frac{km}{h}`.
+To attain the time for evacuating the village, we have to divide the distance by the wave speed.
+As a final result, in our scenario, we have 44 minutes before the wave reaches the village.
+
+

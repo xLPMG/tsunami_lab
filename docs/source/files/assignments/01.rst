@@ -1,7 +1,7 @@
 1. Riemann Solver
 *******************
 
-All project authors worked on this assignment equally.
+All project authors contributed to this assignment in equal parts.
 
 Task 1.2 - Getting Started
 ============================
@@ -14,7 +14,7 @@ Roe solver with input 500 (cells in x direction)
 .. raw:: html
 
     <video width="100%" height="auto" controls>
-      <source src="../../_static/roe_solver_visualization.mp4" type="video/mp4">
+      <source src="../../_static/assets/roe_solver_visualization.mp4" type="video/mp4">
     </video> 
 
 Task 1.3 - F-wave Solver
@@ -37,7 +37,7 @@ First we compute the height and particle velocity
 
 .. code-block:: cpp
 
-  t_real l_hRoe = 0.5f * (i_hL + i_hR);
+  t_real l_hRoe = t_real(0.5) * (i_hL + i_hR);
   t_real l_uRoe = l_hSqrtL * i_uL + l_hSqrtR * i_uR;
   l_uRoe /= l_hSqrtL + l_hSqrtR;
 
@@ -55,7 +55,8 @@ Using those values, we can then compute the eigenvalues
   eigenvalueRoe_1 = l_uRoe - l_ghSqrtRoe;
   eigenvalueRoe_2 = l_uRoe + l_ghSqrtRoe;
 
-Note that `m_gSqrt` is the given square root of gravity.
+.. note::
+  ``m_gSqrt`` is the given square root of gravity.
 
 computeEigencoefficients()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,7 +73,7 @@ The task of this function is to compute
       \lambda^{\text{Roe}}_1 & \lambda^{\text{Roe}}_2
     \end{bmatrix}^{-1} \Delta f.\end{split}
 
-In order to do so, we start off by inverting the inverse of the right eigenvector-matrix
+In order to do so, we start off by inverting the right eigenvector-matrix
 
 .. code-block:: cpp
       
@@ -83,13 +84,16 @@ In order to do so, we start off by inverting the inverse of the right eigenvecto
   l_rInv[1][0] = -l_detInv * eigenvalueRoe_1;
   l_rInv[1][1] = l_detInv;
 
-Next, we need to calculate the jump in the flux function f, :math:`\Delta f := f(q_r) - f(q_l)`. Remember that :math:`f := [hu, hu^2 + \frac{1}{2}gh^2]^T`.
+Next, we need to calculate the jump in the flux function f, :math:`\Delta f := f(q_r) - f(q_l)`. 
+
+.. note::
+  Remember that :math:`f := [hu, hu^2 + \frac{1}{2}gh^2]^T`.
 
 .. code-block:: cpp
 
   t_real f_delta[2] = {0};
   f_delta[0] = i_huR - i_huL;
-  f_delta[1] = (i_huR * l_uR + 0.5 * m_g * i_hR * i_hR) - (i_huL * l_uL + 0.5 * m_g * i_hL * i_hL);
+  f_delta[1] = (i_huR * l_uR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * l_uL + t_real(0.5) * m_g * i_hL * i_hL);
 
 Finally, we can derive the desired output vector :math:`\alpha`:
 
@@ -120,7 +124,7 @@ With the help of the eigenvalues, we can derive the eigenvectors:
   t_real eigenvectorRoe_1[2] = {1, eigenvalueRoe_1};
   t_real eigenvectorRoe_2[2] = {1, eigenvalueRoe_2};
 
-Now that we have the eigenvalues and eigenvectors, we can compute the waves :math:`Z_{1/2}`:
+Now that we have the eigencoefficients :math:`\alpha_{1/2}` and eigenvectors :math:`r_{1/2}`, we can compute the waves :math:`Z_{1/2}`:
 
 .. math:: 
    Z_1 = \alpha_1 r_1, Z_2 = \alpha_2 r_2

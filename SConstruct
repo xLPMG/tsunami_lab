@@ -21,7 +21,7 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx')
+                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
               )
 )
 
@@ -77,6 +77,7 @@ VariantDir( variant_dir = 'build/src',
 
 env.sources = []
 env.tests = []
+env.sanitychecks = []
 
 Export('env')
 SConscript( 'build/src/SConscript' )
@@ -87,3 +88,6 @@ env.Program( target = 'build/tsunami_lab',
 
 env.Program( target = 'build/tests',
              source = env.sources + env.tests )
+
+env.Program( target = 'build/sanitychecks',
+             source = env.sources + env.sanitychecks )
