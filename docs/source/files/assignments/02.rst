@@ -375,7 +375,8 @@ As shown in the table, the wave speeds are swapped around for the Shock-Shock an
         \lambda_{1/2} &= u \pm \sqrt{gh}
     \end{aligned}\end{split}
 
-A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The larger u, the larger the wave speeds.   
+A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The size of u determines, what amount the wave speed on one side increases and on the other decreases.
+The sum of the wave speed stays the same.
 
 Task 2.2 - Dam-Break
 ======================
