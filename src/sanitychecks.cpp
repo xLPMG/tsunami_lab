@@ -12,19 +12,29 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <limits>
 #include <cmath>
 
-int middleStatesSanityCheck()
+#define CATCH_CONFIG_RUNNER
+#include <catch2/catch.hpp>
+#undef CATCH_CONFIG_RUNNER
+
+int main(int i_argc, char *i_argv[])
+{
+  std::cout << "Testing middle states.." << std::endl;
+  int l_result = Catch::Session().run(i_argc, i_argv);
+  return (l_result < 0xff ? l_result : 0xff);
+}
+
+TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]")
 {
 
   // START TEST CONDITIONS
 
   // allowed margin of error when comapring given hStar to calculated value
-  tsunami_lab::t_real l_accuracy = 0.003;
+  tsunami_lab::t_real l_accuracy = 0.00489;
 
   // amount of tests to run
-  tsunami_lab::t_real l_tests = 1000;
+  tsunami_lab::t_real l_tests = 500000;
 
   // csv file path
   std::ifstream l_inputFile("resources/middle_states.csv");
@@ -43,13 +53,10 @@ int middleStatesSanityCheck()
   tsunami_lab::t_real l_dxy = l_size / l_nx;
 
   // solver choice
-  std::string l_solver = "roe";
+  std::string l_solver = "fwave";
 
   // discontinuity location x
   tsunami_lab::t_real l_xdis = l_size / 2;
-
-    // discontinuity location cell
-  tsunami_lab::t_real l_xdisCell = l_nx / 2;
 
   // END SIMULATION CONDITIONS
 
@@ -59,8 +66,6 @@ int middleStatesSanityCheck()
   // counters for executed and passed tests
   tsunami_lab::t_idx l_executedTests = 0;
   tsunami_lab::t_idx l_passedTests = 0;
-
- std::cout << tsunami_lab::t_real(8899.12345678) << std::endl;
 
   while (getline(l_inputFile, l_line) && l_executedTests < l_tests)
   {
@@ -144,20 +149,19 @@ int middleStatesSanityCheck()
         l_simTime += l_dt;
         l_steps++;
       }
-
-      const tsunami_lab::t_real *heights = l_waveProp->getHeight();
-      l_hStarApproximation = heights[tsunami_lab::t_idx(l_xdisCell)];
+      // retrieve hStar as the height of the cell at the discontinuity location
+      l_hStarApproximation = l_waveProp->getHeight()[tsunami_lab::t_idx(l_xdis / l_dxy)];
 
       // END CALCULATION
 
       // compare calculated and given values
-      if (abs(l_hStarApproximation - l_hStar) > l_accuracy)
+      if (abs(l_hStarApproximation - l_hStar) <= l_accuracy)
       {
-        std::cout << "#" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStarApproximation - l_hStar) << std::endl;
+        ++l_passedTests;
       }
       else
       {
-        ++l_passedTests;
+        std::cout << "TEST #" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStarApproximation - l_hStar) << std::endl;
       }
       ++l_executedTests;
       delete l_setup;
@@ -171,21 +175,5 @@ int middleStatesSanityCheck()
   std::cout << "Accuracy: " << l_accuracy << std::endl;
   std::cout << "Cells x y: " << l_nx << " " << l_ny << std::endl;
   // check if at least 99% of the tests passed
-  if (l_passedTests >= 0.99 * l_executedTests)
-  {
-    std::cout << "MIDDLE STATES SANITY CHECK PASSED (99% PASSED TESTS REQUIRED)" << std::endl;
-    return 0;
-  }
-  else
-  {
-    std::cout << "MIDDLE STATES SANITY CHECK FAILED (99% PASSED TESTS REQUIRED)" << std::endl;
-    return EXIT_FAILURE;
-  }
-}
-
-int main()
-{
-  if (middleStatesSanityCheck() != 0)
-    return EXIT_FAILURE;
-  return 0;
+  REQUIRE(l_passedTests / static_cast<double>(l_executedTests) >= 0.99);
 }
