@@ -2,10 +2,10 @@
  * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * one-dimensional discontinuity problem
+ * One-dimensional discontinuity problem
  **/
-#ifndef TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY1D_H
-#define TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY1D_H
+#ifndef TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_1D_H
+#define TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_1D_H
 
 #include "Setup.h"
 
@@ -41,10 +41,10 @@ public:
    * @param i_huL water momentum on the left side
    **/
   GeneralDiscontinuity1d(t_real i_hL,
-                       t_real i_hR,
-                       t_real i_huL,
-                       t_real i_huR,
-                       t_real i_xdis);
+                         t_real i_hR,
+                         t_real i_huL,
+                         t_real i_huR,
+                         t_real i_xdis);
 
   /**
    * Gets the water height at a given point.

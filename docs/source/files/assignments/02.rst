@@ -35,7 +35,8 @@ To allow for an easy change of which solver will be used, we implemented another
 .. code:: cpp
 
     tsunami_lab::patches::WavePropagation *l_waveProp;
-    l_waveProp = new tsunami_lab::patches::WavePropagation1d( l_nx, l_solver );
+    l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
+                                                             l_solver);
 
 In the ``WavePropagation1d.cpp`` file, we make use of simple if-conditions to utilize the correct solver:
 
@@ -107,10 +108,10 @@ To read the ``middle_states.csv`` file, we iterate through the documents lines u
         // construct setup
         tsunami_lab::setups::Setup *l_setup;
         l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(std::stof(l_row[0]),
-                                                                std::stof(l_row[1]),
-                                                                std::stof(l_row[2]),
-                                                                std::stof(l_row[3]),
-                                                                l_xdis);  
+                                                                  std::stof(l_row[1]),
+                                                                  std::stof(l_row[2]),
+                                                                  std::stof(l_row[3]),
+                                                                  l_xdis);  
 
         [...]
 
@@ -155,13 +156,13 @@ To finish this task, we will take a brief look into the ``GeneralDiscontinuity1d
 .. code::
 
     tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getHeight(t_real i_x,
-                                                                 t_real) const
+                                                                               t_real) const
     {
         return i_x < m_xdis ? m_heightLeft : m_heightRight;
     }
 
     tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getMomentumX(t_real i_x,
-                                                                    t_real) const
+                                                                                  t_real) const
     {
         return i_x < m_xdis ? m_momentumLeft : m_momentumRight;
     }
@@ -243,13 +244,13 @@ Otherwise :math:`(hu)_l` stays the same.
 
 .. code:: cpp
 
-    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getHeight( t_real,
-                                                                      t_real  ) const {
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getHeight(t_real,
+                                                                     t_real) const {
         return m_height;
     }
 
-    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX( t_real i_x,
-                                                                         t_real  ) const {
+    tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumX(t_real i_x,
+                                                                        t_real) const {
         return i_x <= m_xdis ? m_momentumLeft : -m_momentumLeft;
     }
 
@@ -267,13 +268,13 @@ Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\tex
 
 .. code:: cpp
 
-    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight( t_real,
-                                                                    t_real  ) const {
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getHeight(t_real,
+                                                                   t_real) const {
         return m_height;
     }
 
-    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX( t_real i_x,
-                                                                       t_real  ) const {
+    tsunami_lab::t_real tsunami_lab::setups::RareRare1d::getMomentumX(t_real i_x,
+                                                                      t_real) const {
         return i_x <= m_xdis ? -m_momentumLeft : m_momentumLeft;
     }
 

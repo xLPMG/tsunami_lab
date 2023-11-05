@@ -78,10 +78,13 @@ int main(int i_argc,
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(100,10,5);
+  l_setup = new tsunami_lab::setups::DamBreak1d(100, 
+                                                10, 
+                                                5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, l_solver);
+  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
+                                                           l_solver);
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
