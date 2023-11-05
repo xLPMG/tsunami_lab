@@ -367,3 +367,54 @@ Observations
 ^^^^^^^^^^^^^^^^^
 As seen in the simulations, the momentum is getting higher, as :math:`h_l` and the difference between :math:`h_l` and :math:`h_r` grow. 
 In the end, the water approaches a height between :math:`h_l` and :math:`h_r`
+
+Task 2.2.2
+--------------------------
+
+We have given 
+
+.. math:: 
+    \begin{split}q=\begin{bmatrix}
+           h \\ u*h
+        \end{bmatrix}\quad
+        q_l=
+        \begin{bmatrix}
+           14 \\ 0
+        \end{bmatrix} \quad
+        q_r =
+        \begin{bmatrix}
+          3.5\\ 0.7
+        \end{bmatrix}
+    \end{split}
+
+and the equations
+
+.. math:: 
+    \begin{split}\begin{aligned}
+      h(q_l, q_r) &= \frac{1}{2} (h_l + h_r), \\
+      u(q_l, q_r) &=  \frac{u_l \sqrt{h_l} + u_r \sqrt{h_r}}{\sqrt{h_l}+\sqrt{h_r}}.
+    \end{aligned}\end{split}
+
+
+We aquire :math:`u_r` by computing 
+
+.. math::
+    \begin{split}
+    u_r=\frac{0.7}{h}=\frac{0.7}{3.5}=\frac{1}{5}\frac{m}{s}
+    \end{split}
+
+After inserting the numbers we get :math:`h = 8.75` m and :math:`u = \frac{1}{15} \frac{m}{s}` and use them to compute the wavespeed
+
+.. math::
+    \begin{split}\begin{aligned}
+        \lambda_{1}(q_l, q_r) &= u(q_l, q_r) - \sqrt{gh(q_l, q_r)}, \\
+        \lambda_{2}(q_l, q_r) &= u(q_l, q_r) + \sqrt{gh(q_l, q_r)},
+    \end{aligned}\end{split}
+
+We are only interested in the wavespeed going to the right, thus we only compute :math:`\lambda_{2}`.
+After insertion we get :math:`\lambda_{2} = 9.46 \frac{m}{s}`.
+Multiplying it by 3.6 converts the speed in :math:`\lambda_{2} = 34.056 \frac{km}{h}`.
+To attain the time for evacuating the village, we only have to devide the distance by the wavespeed.
+As a finally result, in our scenario, we have 44 minutes before the wave reaches the village.
+
+
