@@ -4,24 +4,29 @@
  * @section DESCRIPTION
  * Entry-point for sanity checks.
  **/
+
+#include "constants.h"
 #include "io/Csv.h"
 #include "patches/WavePropagation1d.h"
-#include "setups/GeneralDiscontinuity.h"
+#include "setups/GeneralDiscontinuity1d.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <limits>
 
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch.hpp>
 #undef CATCH_CONFIG_RUNNER
 
-int main(int i_argc, char *i_argv[])
+int main(int i_argc,
+         char *i_argv[])
 {
   std::cout << "Testing middle states.." << std::endl;
   int l_result = Catch::Session().run(i_argc, i_argv);
+
   return (l_result < 0xff ? l_result : 0xff);
 }
 
