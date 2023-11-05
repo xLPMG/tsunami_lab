@@ -21,7 +21,7 @@ int middleStatesSanityCheck()
   // START TEST CONDITIONS
 
   // allowed margin of error when comapring given hStar to calculated value
-  tsunami_lab::t_real l_accuracy = 0.005;
+  tsunami_lab::t_real l_accuracy = 0.003;
 
   // amount of tests to run
   tsunami_lab::t_real l_tests = 1000;
@@ -33,7 +33,7 @@ int middleStatesSanityCheck()
   // START SIMULATION CONDITIONS
 
   // cell count
-  tsunami_lab::t_idx l_nx = 100;
+  tsunami_lab::t_idx l_nx = 10;
   tsunami_lab::t_idx l_ny = 1;
 
   // simulation size
@@ -43,10 +43,13 @@ int middleStatesSanityCheck()
   tsunami_lab::t_real l_dxy = l_size / l_nx;
 
   // solver choice
-  std::string l_solver = "fwave";
+  std::string l_solver = "roe";
 
   // discontinuity location x
   tsunami_lab::t_real l_xdis = l_size / 2;
+
+    // discontinuity location cell
+  tsunami_lab::t_real l_xdisCell = l_nx / 2;
 
   // END SIMULATION CONDITIONS
 
@@ -56,6 +59,8 @@ int middleStatesSanityCheck()
   // counters for executed and passed tests
   tsunami_lab::t_idx l_executedTests = 0;
   tsunami_lab::t_idx l_passedTests = 0;
+
+ std::cout << tsunami_lab::t_real(8899.12345678) << std::endl;
 
   while (getline(l_inputFile, l_line) && l_executedTests < l_tests)
   {
@@ -67,7 +72,8 @@ int middleStatesSanityCheck()
 
       // START CALCULATION
 
-      tsunami_lab::t_real l_hStar = 0;
+      tsunami_lab::t_real l_hStar = std::stof(l_row[4]);
+      tsunami_lab::t_real l_hStarApproximation = 0;
 
       // construct setup
       tsunami_lab::setups::Setup *l_setup;
@@ -127,7 +133,7 @@ int middleStatesSanityCheck()
       tsunami_lab::t_real l_scaling = l_dt / l_dxy;
 
       // set up time and print control
-      tsunami_lab::t_real l_endTime = 1.5;
+      tsunami_lab::t_real l_endTime = 1.25;
       tsunami_lab::t_real l_simTime = 0;
       tsunami_lab::t_real l_steps = 0;
 
@@ -138,19 +144,22 @@ int middleStatesSanityCheck()
         l_simTime += l_dt;
         l_steps++;
       }
-      l_hStar = l_waveProp->getHeightAt(l_nx / 2);
+
+      const tsunami_lab::t_real *heights = l_waveProp->getHeight();
+      l_hStarApproximation = heights[tsunami_lab::t_idx(l_xdisCell)];
+
       // END CALCULATION
 
       // compare calculated and given values
-      if (abs(l_hStar - std::stof(l_row[4])) > l_accuracy)
+      if (abs(l_hStarApproximation - l_hStar) > l_accuracy)
       {
-        std::cout << "#" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStar - std::stof(l_row[4])) - l_accuracy << std::endl;
+        std::cout << "#" << l_executedTests << " (" << l_steps << " steps) FAILED! Missed target by " << abs(l_hStarApproximation - l_hStar) << std::endl;
       }
       else
       {
-        l_passedTests++;
+        ++l_passedTests;
       }
-      l_executedTests++;
+      ++l_executedTests;
       delete l_setup;
       delete l_waveProp;
     }

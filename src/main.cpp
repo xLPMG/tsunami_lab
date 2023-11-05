@@ -78,10 +78,10 @@ int main(int i_argc,
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::GeneralDiscontinuity(14,
-                                                          3.5,
-                                                          0,
-                                                          0,
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity(9894.065328676988,
+                                                          9894.065328676988,
+                                                          763.616897222239,
+                                                          -763.616897222239,
                                                           5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
