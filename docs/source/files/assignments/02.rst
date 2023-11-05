@@ -365,8 +365,56 @@ Input: :math:`h_l=20` and :math:`h_r=10`
 
 Observations
 ^^^^^^^^^^^^^^^^^
+
 As seen in the simulations, the momentum is getting higher, as :math:`h_l` and the difference between :math:`h_l` and :math:`h_r` grow. 
-In the end, the water approaches a height between :math:`h_l` and :math:`h_r`
+In the end, the water approaches a height between :math:`h_l` and :math:`h_r`.
+
+Impact of the particle velocity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, -7]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = -2`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_-2.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 8.5
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, 0]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = 0`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_0.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 7.75
+
+Input: :math:`q_l = [14, 0]^T` and :math:`q_r = [3.5, 7]^T`
+
+Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = 2`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/GeneralDis_ur_2.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    :math:`h^*` is approximately 6.9
+
+**Conclusion**
+
+We conclude that a negative :math:`u_r` increases :math:`h^*` while a positive :math:`u_r` decreases it.
+The larger the absolute value of :math:`u_r`, the stronger the corresponding impact.
 
 Task 2.2.2
 --------------------------
@@ -403,7 +451,7 @@ We aquire :math:`u_r` by computing
     u_r=\frac{0.7}{h}=\frac{0.7}{3.5}=\frac{1}{5}\frac{m}{s}
     \end{split}
 
-After inserting the numbers we get :math:`h = 8.75` m and :math:`u = \frac{1}{15} \frac{m}{s}` and use them to compute the wavespeed
+After inserting the numbers we get :math:`h = 8.75` m and :math:`u = \frac{1}{15} \frac{m}{s}` and use them to compute the wave speed
 
 .. math::
     \begin{split}\begin{aligned}
@@ -411,10 +459,10 @@ After inserting the numbers we get :math:`h = 8.75` m and :math:`u = \frac{1}{15
         \lambda_{2}(q_l, q_r) &= u(q_l, q_r) + \sqrt{gh(q_l, q_r)},
     \end{aligned}\end{split}
 
-We are only interested in the wavespeed going to the right, thus we only compute :math:`\lambda_{2}`.
+We are only interested in the wave speed going to the right, it suffices to compute :math:`\lambda_{2}`.
 After insertion we get :math:`\lambda_{2} = 9.46 \frac{m}{s}`.
 Multiplying it by 3.6 converts the speed in :math:`\lambda_{2} = 34.056 \frac{km}{h}`.
-To attain the time for evacuating the village, we only have to devide the distance by the wavespeed.
-As a finally result, in our scenario, we have 44 minutes before the wave reaches the village.
+To attain the time for evacuating the village, we have to divide the distance by the wave speed.
+As a final result, in our scenario, we have 44 minutes before the wave reaches the village.
 
 
