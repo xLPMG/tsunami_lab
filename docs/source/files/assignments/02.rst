@@ -322,6 +322,102 @@ Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\tex
 Task 2.1.2 - Observations
 --------------------------
 
+Discontinuity location in this scenerio is 5
+
+..  list-table:: wave speeds
+    :widths: 25 25 25 25 25 25
+    :header-rows: 1
+
+    * - :math:`h_l` 
+      - :math:`hu_l` 
+      - :math:`u_l`
+      - setup
+      - :math:`\lambda_1`
+      - :math:`\lambda_2`
+    * - 10
+      - 5
+      - :math:`\frac{1}{2}`
+      - ShockShock
+      - -9.40285 
+      - 10.4029
+    * - 10
+      - 1
+      - :math:`\frac{1}{10}`
+      - ShockShock
+      - -9.80285
+      - 10.0029
+    * - 10
+      - 5
+      - :math:`\frac{1}{2}`
+      - RareRare
+      - -10.4029 
+      - 9.40285
+    * - 10
+      - 1
+      - :math:`\frac{1}{10}`
+      - RareRare
+      - -10.0029
+      - 9.80285
+    * - 50
+      - 5
+      - :math:`\frac{1}{10}`
+      - ShockShock
+      - -22.0435
+      - 22.2435
+    * - 50
+      - 20
+      - :math:`\frac{2}{5}`
+      - ShockShock
+      - -21.7435
+      - 22.5435
+    * - 50
+      - 5
+      - :math:`\frac{1}{10}`
+      - RareRare
+      - -22.2435
+      - 22.0435
+    * - 50
+      - 20
+      - :math:`\frac{2}{5}`
+      - RareRare
+      - -22.5435
+      - 21.7435
+    * - 100
+      - 5
+      - :math:`\frac{1}{20}`
+      - ShockShock
+      - -31.2656
+      - 31.3656
+    * - 100
+      - 60
+      - :math:`\frac{3}{5}`
+      - ShockShock
+      - -30.7156
+      - 31.9156
+    * - 100
+      - 5
+      - :math:`\frac{1}{20}`
+      - RareRare
+      - -31.3656
+      - 31.2656
+    * - 100
+      - 60
+      - :math:`\frac{3}{5}`
+      - RareRare
+      - -31.9156 
+      - 30.7156
+
+Observations
+^^^^^^^^^^^^^^^^^
+As shown in the table, the wave speeds are swapped around for the Shock-Shock and Rare-Rare problems.
+
+.. math::
+    \begin{split}\begin{aligned}
+        \lambda_{1/2} &= u \pm \sqrt{gh}
+    \end{aligned}\end{split}
+
+A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The larger u, the larger the wave speeds.   
+
 Task 2.2 - Dam-Break
 ======================
 
@@ -341,7 +437,8 @@ Input: :math:`h_l=40` and :math:`h_r=10`
       <source src="../../_static/assets/DamBreak_hl40_hr10.mp4" type="video/mp4">
     </video> 
 
-|
+.. note::
+    The momentum is approximately 224
 
 Input: :math:`h_l=40` and :math:`h_r=30`
 
@@ -351,7 +448,8 @@ Input: :math:`h_l=40` and :math:`h_r=30`
       <source src="../../_static/assets/DamBreak_hl40_hr30.mp4" type="video/mp4">
     </video> 
     
-|
+.. note::
+    The momentum is approximately 92
 
 Input: :math:`h_l=20` and :math:`h_r=10`
 
@@ -361,7 +459,8 @@ Input: :math:`h_l=20` and :math:`h_r=10`
       <source src="../../_static/assets/DamBreak_hl20_hr10.mp4" type="video/mp4">
     </video> 
 
-|
+.. note::
+    The momentum is approximately 60
 
 Observations
 ^^^^^^^^^^^^^^^^^

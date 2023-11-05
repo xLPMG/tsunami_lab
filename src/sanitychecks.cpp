@@ -6,7 +6,7 @@
  **/
 #include "io/Csv.h"
 #include "patches/WavePropagation1d.h"
-#include "setups/GeneralDiscontinuity.h"
+#include "setups/GeneralDiscontinuity1d.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -82,7 +82,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
 
       // construct setup
       tsunami_lab::setups::Setup *l_setup;
-      l_setup = new tsunami_lab::setups::GeneralDiscontinuity(std::stof(l_row[0]),
+      l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(std::stof(l_row[0]),
                                                               std::stof(l_row[1]),
                                                               std::stof(l_row[2]),
                                                               std::stof(l_row[3]),

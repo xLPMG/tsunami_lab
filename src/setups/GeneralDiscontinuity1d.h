@@ -2,10 +2,10 @@
  * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * Setup for the middle states sanity check
+ * one-dimensional discontinuity problem
  **/
-#ifndef TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_H
-#define TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY_H
+#ifndef TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY1D_H
+#define TSUNAMI_LAB_SETUPS_GENERAL_DISCONTINUITY1D_H
 
 #include "Setup.h"
 
@@ -13,11 +13,11 @@ namespace tsunami_lab
 {
   namespace setups
   {
-    class GeneralDiscontinuity;
+    class GeneralDiscontinuity1d;
   }
 }
 
-class tsunami_lab::setups::GeneralDiscontinuity : public Setup
+class tsunami_lab::setups::GeneralDiscontinuity1d : public Setup
 {
 private:
   //! height on the left side
@@ -40,7 +40,7 @@ public:
    * @param i_h water height of both sides
    * @param i_huL water momentum on the left side
    **/
-  GeneralDiscontinuity(t_real i_hL,
+  GeneralDiscontinuity1d(t_real i_hL,
                        t_real i_hR,
                        t_real i_huL,
                        t_real i_huR,

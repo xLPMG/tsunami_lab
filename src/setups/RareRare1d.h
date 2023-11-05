@@ -35,6 +35,7 @@ public:
    *
    * @param i_h water height of both sides
    * @param i_huL water momentum on the left side
+   * @param i_xdis discontinuity location 
    **/
   RareRare1d(t_real i_h,
              t_real i_huL,
