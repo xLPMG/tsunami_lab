@@ -17,6 +17,7 @@
         <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -43,13 +44,35 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to tsunami_lab’s documentation!</a></li>
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Finite Volume Discretization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-2-0">Task 2.0</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-0-1-f-wave-solver-integration">Task 2.0.1 - F-Wave solver integration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-0-2-sanity-check-using-middle-states-csv">Task 2.0.2 - Sanity check using middle_states.csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-0-3-continuous-integration">Task 2.0.3 - Continuous Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-2-1-shock-and-rarefaction-waves">Task 2.1 Shock and Rarefaction Waves</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems">Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-1-2-observations">Task 2.1.2 - Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-2-2-dam-break">Task 2.2 - Dam-Break</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-2-1">Task 2.2.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-2-2-2">Task 2.2.2</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -82,7 +105,468 @@
              
   <section id="finite-volume-discretization">
 <h1>2. Finite Volume Discretization<a class="headerlink" href="#finite-volume-discretization" title="Link to this heading"></a></h1>
-<p>TODO</p>
+<p>All project authors contributed to this assignment in equal parts.</p>
+<section id="task-2-0">
+<h2>Task 2.0<a class="headerlink" href="#task-2-0" title="Link to this heading"></a></h2>
+<section id="task-2-0-1-f-wave-solver-integration">
+<h3>Task 2.0.1 - F-Wave solver integration<a class="headerlink" href="#task-2-0-1-f-wave-solver-integration" title="Link to this heading"></a></h3>
+<p>To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:</p>
+<p>(<strong>File: main.cpp</strong>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">i_argc</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">i_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;roe&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">i_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;fwave&quot;</span><span class="p">){</span>
+<span class="w">        </span><span class="n">l_solver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;invalid argument: solver parameter only accepts: roe, fwave&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">EXIT_FAILURE</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+<span class="w">    </span><span class="n">l_solver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;fwave&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">WavePropagation1d</span></code> class depends on a set solver.
+Furthermore, the chosen solver will not change within one query.
+Therefore we decided on just passing the solver as a parameter to the <code class="docutils literal notranslate"><span class="pre">WavePropagation1d</span></code> class constructor.
+This allows for an easy implementation without setters and getters:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">patches</span><span class="o">::</span><span class="n">WavePropagation</span><span class="w"> </span><span class="o">*</span><span class="n">l_waveProp</span><span class="p">;</span>
+<span class="n">l_waveProp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">patches</span><span class="o">::</span><span class="n">WavePropagation1d</span><span class="p">(</span><span class="n">l_nx</span><span class="p">,</span>
+<span class="w">                                                         </span><span class="n">l_solver</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">WavePropagation1d.cpp</span></code> file, we make use of simple if-conditions to utilize the correct solver:</p>
+<p>(<strong>File: WavePropagation1d.cpp</strong>)</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">m_solver</span><span class="o">==</span><span class="s">&quot;roe&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">m_solver</span><span class="o">==</span><span class="s">&quot;fwave&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="task-2-0-2-sanity-check-using-middle-states-csv">
+<h3>Task 2.0.2 - Sanity check using middle_states.csv<a class="headerlink" href="#task-2-0-2-sanity-check-using-middle-states-csv" title="Link to this heading"></a></h3>
+<section id="code-documentation">
+<h4>Code documentation<a class="headerlink" href="#code-documentation" title="Link to this heading"></a></h4>
+<p>Before we can start calculating and checking results, we need a way to read the data from the <cite>csv</cite> file.</p>
+<p>To do so, we started by extending the <code class="docutils literal notranslate"><span class="pre">Csv.cpp</span></code> file by a <code class="docutils literal notranslate"><span class="pre">splitLine()</span></code> function:</p>
+<p>(<strong>File: Csv.cpp</strong>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Csv</span><span class="o">::</span><span class="n">splitLine</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">                                                         </span><span class="kt">char</span><span class="w"> </span><span class="n">separator</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">separator</span><span class="p">))</span>
+<span class="w">        </span><span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">word</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This function takes one line as a stringstream of the <cite>csv</cite> file as one input
+and the character which separates the different values as another.
+The output is a vector of strings, which represents the, by the separator character, separated values of the <cite>csv</cite> file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because the middle_states sanity check is much more extensive code- and time consumption-wise, we decided to implement it
+in a new and separate executable: <code class="docutils literal notranslate"><span class="pre">sanitychecks</span></code>.</p>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">sanitychecks.cpp</span></code> we run a Catch2 test using the <code class="docutils literal notranslate"><span class="pre">middle_states.csv</span></code> data.
+This test starts off with a few parameters, such as</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">l_accuracy</span></code>: required accuracy when comparing our computed result with the given hStar</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l_tests</span></code>: amount of tests to run</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l_nx</span></code> / <code class="docutils literal notranslate"><span class="pre">l_ny</span></code>: cell amount</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l_size</span></code>: simulation size</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l_solver</span></code>: solver choice</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l_xdis</span></code>: discontinuity location x coordinate (we used <code class="docutils literal notranslate"><span class="pre">l_size</span> <span class="pre">/</span> <span class="pre">2</span></code>)</p></li>
+</ul>
+<p>During the test, we keep track of how many tests actually passed using the variables <code class="docutils literal notranslate"><span class="pre">l_executedTests</span></code> and <code class="docutils literal notranslate"><span class="pre">l_passedTests</span></code>.</p>
+<p>To read the <code class="docutils literal notranslate"><span class="pre">middle_states.csv</span></code> file, we iterate through the documents lines using a loop and get the respective values using the <code class="docutils literal notranslate"><span class="pre">splitLine()</span></code> function:</p>
+<p><strong>File: sanitychecks.cpp</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">l_inputFile</span><span class="p">,</span><span class="w"> </span><span class="n">l_line</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">l_executedTests</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_tests</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ignore lines starting with #</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_line</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;#&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// extract data from csv line</span>
+<span class="w">    </span><span class="n">l_row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Csv</span><span class="o">::</span><span class="n">splitLine</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="p">(</span><span class="n">l_line</span><span class="p">),</span><span class="w"> </span><span class="sc">&#39;,&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// construct setup</span>
+<span class="w">    </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">setups</span><span class="o">::</span><span class="n">Setup</span><span class="w"> </span><span class="o">*</span><span class="n">l_setup</span><span class="p">;</span>
+<span class="w">    </span><span class="n">l_setup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">setups</span><span class="o">::</span><span class="n">GeneralDiscontinuity1d</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stof</span><span class="p">(</span><span class="n">l_row</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="w">                                                              </span><span class="n">std</span><span class="o">::</span><span class="n">stof</span><span class="p">(</span><span class="n">l_row</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<span class="w">                                                              </span><span class="n">std</span><span class="o">::</span><span class="n">stof</span><span class="p">(</span><span class="n">l_row</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+<span class="w">                                                              </span><span class="n">std</span><span class="o">::</span><span class="n">stof</span><span class="p">(</span><span class="n">l_row</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+<span class="w">                                                              </span><span class="n">l_xdis</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">[...]</span>
+
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We then setup the solver and calculate the waves exactly as done in the <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code>, just without printing the results to files.
+After the calculation has run a specified amount of time, we retrieve our hStar as the height of the cell located at <code class="docutils literal notranslate"><span class="pre">l_xdis</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">l_hStarApproximation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()[</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_idx</span><span class="p">(</span><span class="n">l_xdis</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_dxy</span><span class="p">)];</span>
+</pre></div>
+</div>
+<p>Next, we compare this value to the given hStar of the <cite>csv</cite> file:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">l_hStarApproximation</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l_hStar</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">l_accuracy</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">++</span><span class="n">l_passedTests</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;TEST #&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_executedTests</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_steps</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; steps) FAILED! Missed target by &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">l_hStarApproximation</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l_hStar</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">++</span><span class="n">l_executedTests</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The catch2 test only passes if at least 99% of all calculations were within the given accuracy margin:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">REQUIRE</span><span class="p">(</span><span class="n">l_passedTests</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">l_executedTests</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0.99</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To finish this task, we will take a brief look into the <code class="docutils literal notranslate"><span class="pre">GeneralDiscontinuity1d</span></code> setup:</p>
+<p>(You may view the inputs and outputs here: <a class="reference internal" href="../namespaces/setups.html#ns-setups"><span class="std std-ref">Setups</span></a>)</p>
+<p>(<strong>File: GeneralDiscontinuity1d.cpp</strong>)</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::GeneralDiscontinuity1d::getHeight</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                           </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_xdis</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_heightLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m_heightRight</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::GeneralDiscontinuity1d::getMomentumX</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                              </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_xdis</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_momentumLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m_momentumRight</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This setup is a simple 1d discontinuity problem, where values for left and right
+are returned on the basis of a given discontinuity location <code class="docutils literal notranslate"><span class="pre">m_xdis</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">getMomentumY</span></code> always returns 0.</p>
+</div>
+</section>
+<section id="usage">
+<h4>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h4>
+<p>To execute the <code class="docutils literal notranslate"><span class="pre">sanitychecks</span></code> file, simply run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./build/sanitychecks
+</pre></div>
+</div>
+<p>from inside the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since the path of the <code class="docutils literal notranslate"><span class="pre">middle_states.csv</span></code> file is hard coded, it is imperative
+to execute the <code class="docutils literal notranslate"><span class="pre">sanitychecks</span></code> executable from the root directoy of the project.</p>
+</div>
+</section>
+</section>
+<section id="task-2-0-3-continuous-integration">
+<h3>Task 2.0.3 - Continuous Integration<a class="headerlink" href="#task-2-0-3-continuous-integration" title="Link to this heading"></a></h3>
+<p>The project code is automatically tested using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies to the <cite>main</cite> and <cite>dev</cite> branch.
+View the <code class="docutils literal notranslate"><span class="pre">.github/workflows/main.yml</span></code> file for further information.</p>
+<p>The project documentation is automatically built using GitHub actions on push and pull-requests, as well as
+every night at 12am. This applies only to the <cite>main</cite> branch.
+The compiled data is pushed into the <cite>gh-pages</cite> branch and from there hosted using GitHub pages.
+View the <code class="docutils literal notranslate"><span class="pre">.github/workflows/docs.yml</span></code> file for further information.</p>
+</section>
+</section>
+<section id="task-2-1-shock-and-rarefaction-waves">
+<h2>Task 2.1 Shock and Rarefaction Waves<a class="headerlink" href="#task-2-1-shock-and-rarefaction-waves" title="Link to this heading"></a></h2>
+<p>Since <span class="math notranslate nohighlight">\(h_l = h_r\)</span>, both setups only require one shared height input <cite>i_h</cite> for both sides.
+And because of <span class="math notranslate nohighlight">\((hu)_r = -(hu)_l\)</span>, it suffices to either take <span class="math notranslate nohighlight">\((hu)_l\)</span> or <span class="math notranslate nohighlight">\((hu)_r\)</span> as the second input,
+as we can derive the other momentum easily. For further information see <a class="reference internal" href="../namespaces/setups.html#ns-setups"><span class="std std-ref">Setups</span></a>.</p>
+<p>Since for both problems the <cite>getMomentumY()</cite> function returns 0 in all cases, we won’t address it any further.</p>
+<section id="task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems">
+<h3>Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems<a class="headerlink" href="#task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems" title="Link to this heading"></a></h3>
+<p>Initial conditions are the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}q_l=
+    \begin{bmatrix}
+      h_l \\ (hu)_l
+\end{bmatrix}, \quad
+  q_r =
+\begin{bmatrix}
+      h_r \\ (hu)_r
+    \end{bmatrix} =
+    \begin{bmatrix}
+      h_l \\ -(hu)_l
+\end{bmatrix}.\end{split}\end{split}\]</div>
+<section id="shock-shock-problem">
+<h4>Shock-Shock Problem<a class="headerlink" href="#shock-shock-problem" title="Link to this heading"></a></h4>
+<p>The following setup for the Shock Shock scenario determines the choice of <span class="math notranslate nohighlight">\(hu\)</span> for either side.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{cases}
+    Q_i = q_{l} \quad &amp;\text{if } x_i \le x_\text{dis} \\
+    Q_i = q_{r} \quad &amp;\text{if }   x_i &gt; x_\text{dis}
+\end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}\end{split}\]</div>
+<p>As already mentioned, the height is on both sides the same. In contrast to that,
+<span class="math notranslate nohighlight">\(hu\)</span> varies depending on <span class="math notranslate nohighlight">\(x_\text{dis}\)</span>. Therefore, <span class="math notranslate nohighlight">\((hu)_r\)</span> equals <span class="math notranslate nohighlight">\(-(hu)_l\)</span>, if <span class="math notranslate nohighlight">\(x_i\)</span> &gt; <span class="math notranslate nohighlight">\(x_\text{dis}\)</span>.
+Otherwise <span class="math notranslate nohighlight">\((hu)_l\)</span> stays the same.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::ShockShock1d::getHeight</span><span class="p">(</span><span class="n">t_real</span><span class="p">,</span>
+<span class="w">                                                                 </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::ShockShock1d::getMomentumX</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                    </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">m_xdis</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_momentumLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="n">m_momentumLeft</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="rare-rare-problem">
+<h4>Rare-Rare Problem<a class="headerlink" href="#rare-rare-problem" title="Link to this heading"></a></h4>
+<p>Similarly to the problem before, the rare-rare problem has a setup for for accessing <span class="math notranslate nohighlight">\(hu\)</span>.
+Only this time <span class="math notranslate nohighlight">\((hu)_r\)</span> equals <span class="math notranslate nohighlight">\(-(hu)_l\)</span>, when <span class="math notranslate nohighlight">\(x_i \le x_\text{dis}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{cases}
+    Q_i = q_{r} \quad &amp;\text{if } x_i \le x_\text{dis} \\
+    Q_i = q_{l} \quad &amp;\text{if }   x_i &gt; x_\text{dis}
+\end{cases} \qquad q_l \in \mathbb{R}^+ \times \mathbb{R}^+, \; q_r \in \mathbb{R}^+ \times \mathbb{R}^-,\end{split}\end{split}\]</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::RareRare1d::getHeight</span><span class="p">(</span><span class="n">t_real</span><span class="p">,</span>
+<span class="w">                                                               </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::RareRare1d::getMomentumX</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                  </span><span class="n">t_real</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">m_xdis</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="n">m_momentumLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m_momentumLeft</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task-2-1-2-observations">
+<h3>Task 2.1.2 - Observations<a class="headerlink" href="#task-2-1-2-observations" title="Link to this heading"></a></h3>
+<p>Discontinuity location in this scenerio is 5</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">wave speeds</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(h_l\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(hu_l\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(u_l\)</span></p></th>
+<th class="head"><p>setup</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda_2\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{2}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-9.40285</p></td>
+<td><p>10.4029</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>1</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{10}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-9.80285</p></td>
+<td><p>10.0029</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{2}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-10.4029</p></td>
+<td><p>9.40285</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>1</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{10}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-10.0029</p></td>
+<td><p>9.80285</p></td>
+</tr>
+<tr class="row-even"><td><p>50</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{10}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-22.0435</p></td>
+<td><p>22.2435</p></td>
+</tr>
+<tr class="row-odd"><td><p>50</p></td>
+<td><p>20</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{2}{5}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-21.7435</p></td>
+<td><p>22.5435</p></td>
+</tr>
+<tr class="row-even"><td><p>50</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{10}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-22.2435</p></td>
+<td><p>22.0435</p></td>
+</tr>
+<tr class="row-odd"><td><p>50</p></td>
+<td><p>20</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{2}{5}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-22.5435</p></td>
+<td><p>21.7435</p></td>
+</tr>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{20}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-31.2656</p></td>
+<td><p>31.3656</p></td>
+</tr>
+<tr class="row-odd"><td><p>100</p></td>
+<td><p>60</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{3}{5}\)</span></p></td>
+<td><p>ShockShock</p></td>
+<td><p>-30.7156</p></td>
+<td><p>31.9156</p></td>
+</tr>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>5</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{20}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-31.3656</p></td>
+<td><p>31.2656</p></td>
+</tr>
+<tr class="row-odd"><td><p>100</p></td>
+<td><p>60</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{3}{5}\)</span></p></td>
+<td><p>RareRare</p></td>
+<td><p>-31.9156</p></td>
+<td><p>30.7156</p></td>
+</tr>
+</tbody>
+</table>
+<section id="observations">
+<h4>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h4>
+<p>As shown in the table, the wave speeds are swapped around for the Shock-Shock and Rare-Rare problems.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \lambda_{1/2} &amp;= u \pm \sqrt{gh}
+\end{aligned}\end{split}\]</div>
+<p>A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The larger u, the larger the wave speeds.</p>
+</section>
+</section>
+</section>
+<section id="task-2-2-dam-break">
+<h2>Task 2.2 - Dam-Break<a class="headerlink" href="#task-2-2-dam-break" title="Link to this heading"></a></h2>
+<section id="task-2-2-1">
+<h3>Task 2.2.1<a class="headerlink" href="#task-2-2-1" title="Link to this heading"></a></h3>
+<section id="visualizations">
+<h4>Visualizations<a class="headerlink" href="#visualizations" title="Link to this heading"></a></h4>
+<p>Roe solver with input 100 (cells in x direction)</p>
+<p>Input: <span class="math notranslate nohighlight">\(h_l=40\)</span> and <span class="math notranslate nohighlight">\(h_r=10\)</span></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/DamBreak_hl40_hr10.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The momentum is approximately 224</p>
+</div>
+<p>Input: <span class="math notranslate nohighlight">\(h_l=40\)</span> and <span class="math notranslate nohighlight">\(h_r=30\)</span></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/DamBreak_hl40_hr30.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The momentum is approximately 92</p>
+</div>
+<p>Input: <span class="math notranslate nohighlight">\(h_l=20\)</span> and <span class="math notranslate nohighlight">\(h_r=10\)</span></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/DamBreak_hl20_hr10.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The momentum is approximately 60</p>
+</div>
+</section>
+<section id="id1">
+<h4>Observations<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>As seen in the simulations, the momentum is getting higher, as <span class="math notranslate nohighlight">\(h_l\)</span> and the difference between <span class="math notranslate nohighlight">\(h_l\)</span> and <span class="math notranslate nohighlight">\(h_r\)</span> grow.
+In the end, the water approaches a height between <span class="math notranslate nohighlight">\(h_l\)</span> and <span class="math notranslate nohighlight">\(h_r\)</span>.</p>
+</section>
+<section id="impact-of-the-particle-velocity">
+<h4>Impact of the particle velocity<a class="headerlink" href="#impact-of-the-particle-velocity" title="Link to this heading"></a></h4>
+<p>Input: <span class="math notranslate nohighlight">\(q_l = [14, 0]^T\)</span> and <span class="math notranslate nohighlight">\(q_r = [3.5, -7]^T\)</span></p>
+<p>Since <span class="math notranslate nohighlight">\(hu_r = h_r * u_r\)</span>, we get that <span class="math notranslate nohighlight">\(u_r = -2\)</span>.</p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/GeneralDis_ur_-2.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(h^*\)</span> is approximately 8.5</p>
+</div>
+<p>Input: <span class="math notranslate nohighlight">\(q_l = [14, 0]^T\)</span> and <span class="math notranslate nohighlight">\(q_r = [3.5, 0]^T\)</span></p>
+<p>Since <span class="math notranslate nohighlight">\(hu_r = h_r * u_r\)</span>, we get that <span class="math notranslate nohighlight">\(u_r = 0\)</span>.</p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/GeneralDis_ur_0.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(h^*\)</span> is approximately 7.75</p>
+</div>
+<p>Input: <span class="math notranslate nohighlight">\(q_l = [14, 0]^T\)</span> and <span class="math notranslate nohighlight">\(q_r = [3.5, 7]^T\)</span></p>
+<p>Since <span class="math notranslate nohighlight">\(hu_r = h_r * u_r\)</span>, we get that <span class="math notranslate nohighlight">\(u_r = 2\)</span>.</p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/GeneralDis_ur_2.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(h^*\)</span> is approximately 6.9</p>
+</div>
+<p><strong>Conclusion</strong></p>
+<p>We conclude that a negative <span class="math notranslate nohighlight">\(u_r\)</span> increases <span class="math notranslate nohighlight">\(h^*\)</span> while a positive <span class="math notranslate nohighlight">\(u_r\)</span> decreases it.
+The larger the absolute value of <span class="math notranslate nohighlight">\(u_r\)</span>, the stronger the corresponding impact.</p>
+</section>
+</section>
+<section id="task-2-2-2">
+<h3>Task 2.2.2<a class="headerlink" href="#task-2-2-2" title="Link to this heading"></a></h3>
+<p>We have given</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}q=\begin{bmatrix}
+       h \\ u*h
+    \end{bmatrix}\quad
+    q_l=
+    \begin{bmatrix}
+       14 \\ 0
+    \end{bmatrix} \quad
+    q_r =
+    \begin{bmatrix}
+      3.5\\ 0.7
+    \end{bmatrix}
+\end{split}\end{split}\]</div>
+<p>and the equations</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{aligned}
+  h(q_l, q_r) &amp;= \frac{1}{2} (h_l + h_r), \\
+  u(q_l, q_r) &amp;=  \frac{u_l \sqrt{h_l} + u_r \sqrt{h_r}}{\sqrt{h_l}+\sqrt{h_r}}.
+\end{aligned}\end{split}\end{split}\]</div>
+<p>We aquire <span class="math notranslate nohighlight">\(u_r\)</span> by computing</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u_r=\frac{0.7}{h}=\frac{0.7}{3.5}=\frac{1}{5}\frac{m}{s}
+\end{split}\]</div>
+<p>After inserting the numbers we get <span class="math notranslate nohighlight">\(h = 8.75\)</span> m and <span class="math notranslate nohighlight">\(u = \frac{1}{15} \frac{m}{s}\)</span> and use them to compute the wave speed</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{aligned}
+    \lambda_{1}(q_l, q_r) &amp;= u(q_l, q_r) - \sqrt{gh(q_l, q_r)}, \\
+    \lambda_{2}(q_l, q_r) &amp;= u(q_l, q_r) + \sqrt{gh(q_l, q_r)},
+\end{aligned}\end{split}\end{split}\]</div>
+<p>We are only interested in the wave speed going to the right, it suffices to compute <span class="math notranslate nohighlight">\(\lambda_{2}\)</span>.
+After insertion we get <span class="math notranslate nohighlight">\(\lambda_{2} = 9.46 \frac{m}{s}\)</span>.
+Multiplying it by 3.6 converts the speed in <span class="math notranslate nohighlight">\(\lambda_{2} = 34.056 \frac{km}{h}\)</span>.
+To attain the time for evacuating the village, we have to divide the distance by the wave speed.
+As a final result, in our scenario, we have 44 minutes before the wave reaches the village.</p>
+</section>
+</section>
 </section>
 
 

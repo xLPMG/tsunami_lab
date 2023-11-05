@@ -20,7 +20,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Assignments" href="assignments.html" />
+    <link rel="next" title="Usage" href="usage.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
 </head>
 
@@ -43,16 +43,21 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to tsunami_lab’s documentation!</a></li>
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#clone-the-repository-from-github">1. Clone the repository from GitHub</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#initialize-and-update-submodules">2. Initialize and update submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#install-scons">3. Install SCons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run-the-code">4. Run the code!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository-from-github">1. Cloning the repository from GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initializing-updating-submodules">2. Initializing &amp; updating submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-requirements">3. Installing requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-the-project">4. Building the project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-the-documentation">5. Building the documentation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="assignments.html">Assignments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="namespaces.html">Namespaces</a></li>
 </ul>
@@ -82,35 +87,59 @@
            <div itemprop="articleBody">
              
   <section id="setup">
-<h1>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h1>
-<section id="clone-the-repository-from-github">
-<h2>1. Clone the repository from GitHub<a class="headerlink" href="#clone-the-repository-from-github" title="Link to this heading"></a></h2>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">https</span><span class="o">:</span><span class="c1">//github.com/xLPMG/tsunami_lab.git</span>
+<span id="id1"></span><h1>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h1>
+<section id="cloning-the-repository-from-github">
+<h2>1. Cloning the repository from GitHub<a class="headerlink" href="#cloning-the-repository-from-github" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/xLPMG/tsunami_lab.git
 </pre></div>
 </div>
 </section>
-<section id="initialize-and-update-submodules">
-<h2>2. Initialize and update submodules<a class="headerlink" href="#initialize-and-update-submodules" title="Link to this heading"></a></h2>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">git</span><span class="w"> </span><span class="n">submodule</span><span class="w"> </span><span class="n">init</span>
-<span class="n">git</span><span class="w"> </span><span class="n">submodule</span><span class="w"> </span><span class="n">update</span>
+<section id="initializing-updating-submodules">
+<h2>2. Initializing &amp; updating submodules<a class="headerlink" href="#initializing-updating-submodules" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>submodule<span class="w"> </span>init
+git<span class="w"> </span>submodule<span class="w"> </span>update
 </pre></div>
 </div>
 </section>
-<section id="install-scons">
-<h2>3. Install SCons<a class="headerlink" href="#install-scons" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://scons.org/doc/production/HTML/scons-user/ch01.html">https://scons.org/doc/production/HTML/scons-user/ch01.html</a></p>
+<section id="installing-requirements">
+<h2>3. Installing requirements<a class="headerlink" href="#installing-requirements" title="Link to this heading"></a></h2>
+<p>To build this project, you will need <a class="reference external" href="https://scons.org/doc/production/HTML/scons-user/ch01.html">SCons</a>
+and <a class="reference external" href="https://gcc.gnu.org/install/">GCC</a>.</p>
+<p>On MacOS, you can use homebrew for both:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>scons
+brew<span class="w"> </span>install<span class="w"> </span>gcc
+</pre></div>
+</div>
 </section>
-<section id="run-the-code">
-<h2>4. Run the code!<a class="headerlink" href="#run-the-code" title="Link to this heading"></a></h2>
-<p>Navigate to the in step 1 created <cite>tsunami_lab</cite> folder and run</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span>
+<section id="building-the-project">
+<h2>4. Building the project<a class="headerlink" href="#building-the-project" title="Link to this heading"></a></h2>
+<p>Navigate to the in step 1 created <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder and run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons
 </pre></div>
 </div>
 <p>for Linux/Windows. If you are on MacOS, use</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span><span class="w"> </span><span class="n">mode</span><span class="o">=</span><span class="s">&quot;osx&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span><span class="s2">&quot;osx&quot;</span>
 </pre></div>
 </div>
 <p>For further run configurations view the SConstruct file at the root of the tsunami_lab directory.</p>
+</section>
+<section id="building-the-documentation">
+<h2>5. Building the documentation<a class="headerlink" href="#building-the-documentation" title="Link to this heading"></a></h2>
+<p>If you wish to build the documentation, you will need to install some requirements first.
+For the automatic code documentation, <a class="reference external" href="https://www.doxygen.nl/download.html">doxygen</a> is required.
+Furthermore, you will need <a class="reference external" href="https://www.python.org/downloads/">Python</a>. Using Python, you can install
+other requirements such as <a class="reference external" href="https://www.sphinx-doc.org/en/master/">Sphinx</a> and <a class="reference external" href="https://www.breathe-doc.org/">Breathe</a>,
+which can be found in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file located in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder.
+They can be installed easily by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>After everything has been installed, you can now run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>from inside the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory to build the documentation.
+To access it, open the <code class="docutils literal notranslate"><span class="pre">index.html</span></code> file located in <code class="docutils literal notranslate"><span class="pre">docs/build/html</span></code>.</p>
 </section>
 </section>
 
@@ -119,7 +148,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="assignments.html" class="btn btn-neutral float-right" title="Assignments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

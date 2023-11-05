@@ -43,15 +43,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to tsunami_lab’s documentation!</a></li>
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">I/O</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab2io11tsunami_lab2io3CsvE"><code class="docutils literal notranslate"><span class="pre">Csv</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab2io11tsunami_lab2io3Csv5writeE6t_real5t_idx5t_idx5t_idxPK6t_realPK6t_realPK6t_realRNSt7ostreamE"><code class="docutils literal notranslate"><span class="pre">Csv::write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab2io11tsunami_lab2io3Csv9splitLineENSt12stringstreamEc"><code class="docutils literal notranslate"><span class="pre">Csv::splitLine()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -122,6 +127,23 @@
 <li><p><strong>i_hv</strong> – momentum in y-direction of the cells; optional: use nullptr if not required. </p></li>
 <li><p><strong>io_stream</strong> – stream to which the CSV-data is written.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab2io11tsunami_lab2io3Csv9splitLineENSt12stringstreamEc">
+<span id="_CPPv3N11tsunami_lab2io11tsunami_lab2io3Csv9splitLineENSt12stringstreamEc"></span><span id="_CPPv2N11tsunami_lab2io11tsunami_lab2io3Csv9splitLineENSt12stringstreamEc"></span><span id="tsunami_lab::io::tsunami_lab::io::Csv::splitLine__std::stringstream.c"></span><span class="target" id="classtsunami__lab_1_1io_1_1_csv_1a31e8303e02181895ad22d5403bcd369e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">splitLine</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">stringstream</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">line</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">separator</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab2io11tsunami_lab2io3Csv9splitLineENSt12stringstreamEc" title="Link to this definition"></a><br /></dt>
+<dd><p>Splits a CSV-style line into a vector of strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> – input line as stringstream </p></li>
+<li><p><strong>separator</strong> – character which separates the words (will be used to split) </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns a vector of strings. Its values are the results of splitting the input line by the separator. </p>
 </dd>
 </dl>
 </dd></dl>

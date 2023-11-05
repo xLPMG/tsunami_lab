@@ -10,10 +10,12 @@ https://scalable.uni-jena.de/opt/tsunami/
 Documentation structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This documentation is divided into 4 major categories:
+This documentation is divided into different categories categories:
 
-* **Introduction** - provides a broad overview
-* **Setup** - requirements and explanations on how to put this repository into action
-* **Assignments** - divided into the different weekly steps, this category provides a detailed and manually written documentation of the source code
-* **Namespaces** -  automatically created code documentation using doxygen, divided into the namespaces
+* **First steps**
+    * **Introduction** - provides a broad overview
+    * **Setup** - requirements and explanations on how to put this repository into action
+* **Code documentation**
+    * **Assignments** - divided into the different weekly steps, this category provides a detailed and manually written documentation of the source code
+    * **Namespaces** -  automatically created code documentation using doxygen, divided into the namespaces
 
