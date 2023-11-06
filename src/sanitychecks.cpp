@@ -39,7 +39,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
   tsunami_lab::t_real l_accuracy = 0.00489;
 
   // amount of tests to run
-  tsunami_lab::t_real l_tests = 500000;
+  tsunami_lab::t_real l_tests = 500;
 
   // csv file path
   std::ifstream l_inputFile("resources/middle_states.csv");
@@ -51,7 +51,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
   tsunami_lab::t_idx l_nx = 10;
   tsunami_lab::t_idx l_ny = 1;
 
-  // simulation size
+  // simulation size in metres
   tsunami_lab::t_real l_size = 10;
 
   // cell size

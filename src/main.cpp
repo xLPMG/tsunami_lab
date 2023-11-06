@@ -26,6 +26,9 @@ int main(int i_argc,
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
 
+  // simulation size in metres
+  tsunami_lab::t_real l_size = 10;
+
   std::string l_solver = "";
 
   std::cout << "####################################" << std::endl;
@@ -50,7 +53,7 @@ int main(int i_argc,
       std::cerr << "invalid number of cells" << std::endl;
       return EXIT_FAILURE;
     }
-    l_dxy = 10.0 / l_nx;
+    l_dxy = l_size / l_nx;
   }
 
   if (i_argc >= 3)
