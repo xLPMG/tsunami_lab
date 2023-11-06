@@ -4,6 +4,8 @@
  * @section DESCRIPTION
  * Entry-point for simulations.
  **/
+
+#include <nlohmann/json.hpp>
 #include "patches/WavePropagation1d.h"
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
@@ -16,20 +18,28 @@
 #include <fstream>
 #include <limits>
 
-int main(int i_argc,
-         char *i_argv[])
+using json = nlohmann::json;
+
+int main()
 {
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 1;
 
+  //set simulation size in metres
+  tsunami_lab::t_real l_simulationSize = 10.0;
+
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
 
+<<<<<<< Updated upstream
   // simulation size in metres
   tsunami_lab::t_real l_size = 10;
 
   std::string l_solver = "";
+=======
+  std::string l_solver = "fwave";
+>>>>>>> Stashed changes
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -37,6 +47,7 @@ int main(int i_argc,
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
+<<<<<<< Updated upstream
   if (i_argc < 2)
   {
     std::cerr << "invalid number of arguments, usage:" << std::endl;
@@ -55,23 +66,17 @@ int main(int i_argc,
     }
     l_dxy = l_size / l_nx;
   }
+=======
+  //read configuration data from file
+  std::ifstream l_configFile("config.json");
+  json l_configData = json::parse(l_configFile);
+  
+  if (l_configData.contains("solver")) l_solver = l_configData["solver"];
+  if (l_configData.contains("nx")) l_nx = l_configData["nx"];
+  if (l_configData.contains("ny")) l_ny = l_configData["ny"];
+>>>>>>> Stashed changes
 
-  if (i_argc >= 3)
-  {
-    if (std::string(i_argv[2]) == "roe" || std::string(i_argv[2]) == "fwave")
-    {
-      l_solver = i_argv[2];
-    }
-    else
-    {
-      std::cout << "invalid argument: solver parameter only accepts: roe, fwave" << std::endl;
-      return EXIT_FAILURE;
-    }
-  }
-  else
-  {
-    l_solver = "fwave";
-  }
+  l_dxy = l_simulationSize / l_nx;
 
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
