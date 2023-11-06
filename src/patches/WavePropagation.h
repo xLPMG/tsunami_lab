@@ -51,8 +51,6 @@ public:
    */
   virtual t_real const *getHeight() = 0;
 
-  virtual t_real getHeightAt(t_idx i_ix) = 0;
-
   /**
    * Gets the cells' momensta in x-direction.
    *
