@@ -31,15 +31,9 @@ int main()
 
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
-
-<<<<<<< Updated upstream
-  // simulation size in metres
-  tsunami_lab::t_real l_size = 10;
-
-  std::string l_solver = "";
-=======
+  
+  //solver default
   std::string l_solver = "fwave";
->>>>>>> Stashed changes
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -47,26 +41,6 @@ int main()
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
-<<<<<<< Updated upstream
-  if (i_argc < 2)
-  {
-    std::cerr << "invalid number of arguments, usage:" << std::endl;
-    std::cerr << "  ./build/tsunami_lab N_CELLS_X" << std::endl;
-    std::cerr << "  ./build/tsunami_lab N_CELLS_X SOLVER" << std::endl;
-    std::cerr << "where N_CELLS_X is the number of cells in x-direction." << std::endl;
-    return EXIT_FAILURE;
-  }
-  else
-  {
-    l_nx = atoi(i_argv[1]);
-    if (l_nx < 1)
-    {
-      std::cerr << "invalid number of cells" << std::endl;
-      return EXIT_FAILURE;
-    }
-    l_dxy = l_size / l_nx;
-  }
-=======
   //read configuration data from file
   std::ifstream l_configFile("config.json");
   json l_configData = json::parse(l_configFile);
@@ -74,7 +48,6 @@ int main()
   if (l_configData.contains("solver")) l_solver = l_configData["solver"];
   if (l_configData.contains("nx")) l_nx = l_configData["nx"];
   if (l_configData.contains("ny")) l_ny = l_configData["ny"];
->>>>>>> Stashed changes
 
   l_dxy = l_simulationSize / l_nx;
 
