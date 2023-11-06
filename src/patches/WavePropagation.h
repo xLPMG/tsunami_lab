@@ -65,6 +65,15 @@ public:
    **/
   virtual t_real const *getMomentumY() = 0;
 
+
+  /**
+   * Gets cells bathymetry
+   *
+   * @return bathymetry.
+   */
+  virtual t_real const *getBathymetry() = 0;
+
+
   /**
    * Sets the height of the cell to the given value.
    *

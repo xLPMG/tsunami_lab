@@ -6,6 +6,7 @@
  **/
 #include "Fwave.h"
 #include <cmath>
+#include <iostream>
 
 void tsunami_lab::solvers::Fwave::computeEigenvalues(t_real i_hL,
                                                      t_real i_hR,
@@ -65,6 +66,8 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
                                              t_real i_hR,
                                              t_real i_huL,
                                              t_real i_huR,
+                                             t_real i_bl,
+                                             t_real i_br,
                                              t_real o_netUpdateL[2],
                                              t_real o_netUpdateR[2])
 {
@@ -110,6 +113,11 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
   z2[0] = eigencoefficientRoe_2 * eigenvectorRoe_2[0];
   z2[1] = eigencoefficientRoe_2 * eigenvectorRoe_2[1];
 
+  //computing dealtaX_phi
+  t_real x_phi[2];
+  x_phi[0] = 0;
+  x_phi[1] = -m_g * (i_br - i_bl) * ((i_hL + i_hR) / 2);
+
   // set net-updates depending on wave speeds
   for (unsigned short l_qt = 0; l_qt < 2; l_qt++)
   {
@@ -119,14 +127,17 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
 
     // wave 1
     if (eigenvalueRoe_1 < 0)
-      o_netUpdateL[l_qt] += z1[l_qt];
+      o_netUpdateL[l_qt] += z1[l_qt] - x_phi[l_qt];
+      
     else
-      o_netUpdateR[l_qt] += z1[l_qt];
+      o_netUpdateR[l_qt] += z1[l_qt] - x_phi[l_qt];
 
     // wave 2
-    if (eigenvalueRoe_2 < 0)
-      o_netUpdateL[l_qt] += z2[l_qt];
-    else
-      o_netUpdateR[l_qt] += z2[l_qt];
+    if (eigenvalueRoe_2 < 0){
+      o_netUpdateL[l_qt] += z2[l_qt] - x_phi[l_qt];
+      std::cout<< o_netUpdateL[l_qt]<<std::endl;}
+    else{
+      o_netUpdateR[l_qt] += z2[l_qt] - x_phi[l_qt];
+      std::cout<< o_netUpdateL[l_qt]<<std::endl;}
   }
 }

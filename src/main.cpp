@@ -34,6 +34,7 @@ int main()
   
   //solver default
   std::string l_solver = "fwave";
+  bool l_bathymetry = false;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -48,6 +49,7 @@ int main()
   if (l_configData.contains("solver")) l_solver = l_configData["solver"];
   if (l_configData.contains("nx")) l_nx = l_configData["nx"];
   if (l_configData.contains("ny")) l_ny = l_configData["ny"];
+  if (l_configData.contains("use_bathymetry")) l_bathymetry = l_configData["use_bathymetry"];
 
   l_dxy = l_simulationSize / l_nx;
 
@@ -59,7 +61,7 @@ int main()
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(100, 
+  l_setup = new tsunami_lab::setups::ShockShock1d(30, 
                                                 10, 
                                                 5);
   // construct solver
@@ -143,6 +145,7 @@ int main()
                                   l_waveProp->getHeight(),
                                   l_waveProp->getMomentumX(),
                                   nullptr,
+                                  l_waveProp->getBathymetry(),
                                   l_file);
       l_file.close();
       l_nOut++;

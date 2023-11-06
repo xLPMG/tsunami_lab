@@ -24,6 +24,7 @@ TEST_CASE( "Test the CSV-writer for 1D settings.", "[CsvWrite1d]" ) {
                                l_h+1,
                                l_hu+1,
                                nullptr,
+                               0,
                                l_stream0 );
 
   std::string l_ref0 = R"V0G0N(x,y,height,momentum_x
@@ -61,6 +62,7 @@ TEST_CASE( "Test the CSV-writer for 2D settings.", "[CsvWrite2d]" ) {
                                l_h+4+1,
                                l_hu+4+1,
                                l_hv+4+1,
+                               0,
                                l_stream1 );
 
   std::string l_ref1 = R"V0G0N(x,y,height,momentum_x,momentum_y

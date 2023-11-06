@@ -33,6 +33,9 @@ private:
   //! momenta for the current and next time step for all cells
   t_real *m_hu[2] = {nullptr, nullptr};
 
+  //! bathymetry for left and right
+  t_real *m_b = nullptr;
+
   //! selected solver (roe or fwave)
   std::string m_solver = "";
 
@@ -99,6 +102,17 @@ public:
   {
     return nullptr;
   }
+
+  /**
+   * Gets cells bathymetry
+   *
+   * @return bathymetry.
+   */
+  t_real const *getBathymetry()
+  {
+    return m_b;
+  }
+
 
   /**
    * Sets the height of the cell to the given value.

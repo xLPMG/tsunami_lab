@@ -111,6 +111,8 @@ TEST_CASE("Test the computation of the F-wave net-updates.", "[FWaveUpdates]")
                                           9,
                                           -30,
                                           27,
+                                          0,
+                                          0,
                                           l_netUpdatesL,
                                           l_netUpdatesR);
 
@@ -163,6 +165,8 @@ TEST_CASE("Test the computation of the F-wave net-updates.", "[FWaveUpdates]")
                                           8,
                                           0,
                                           0,
+                                          0,
+                                          0,
                                           l_netUpdatesL,
                                           l_netUpdatesR);
 
@@ -181,6 +185,8 @@ TEST_CASE("Test the computation of the F-wave net-updates.", "[FWaveUpdates]")
    */
   tsunami_lab::solvers::Fwave::netUpdates(10,
                                           10,
+                                          0,
+                                          0,
                                           0,
                                           0,
                                           l_netUpdatesL,

@@ -1,5 +1,6 @@
 {
     "solver": "fwave",
     "nx": 100,
-    "ny": 1
+    "ny": 1,
+    "use_bathymetry": true
 }

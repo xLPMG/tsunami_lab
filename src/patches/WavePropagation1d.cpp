@@ -8,7 +8,6 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
-#include <iostream>
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::string i_solver)
 {
@@ -21,7 +20,7 @@ tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::
     m_h[l_st] = new t_real[m_nCells + 2];
     m_hu[l_st] = new t_real[m_nCells + 2];
   }
-
+   m_b = new t_real[m_nCells + 2];
   // init to zero
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
@@ -29,8 +28,17 @@ tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::
     {
       m_h[l_st][l_ce] = 0;
       m_hu[l_st][l_ce] = 0;
+      m_b[l_ce] = 0;
     }
   }
+
+  //init 
+  for (t_idx l_ce = 0; l_ce < m_nCells/2; l_ce++)
+    {
+      m_b[l_ce] = -10;
+      m_b[l_ce+m_nCells*1/2] = -50;
+    }
+    
 }
 
 tsunami_lab::patches::WavePropagation1d::~WavePropagation1d()
@@ -39,30 +47,12 @@ tsunami_lab::patches::WavePropagation1d::~WavePropagation1d()
   {
     delete[] m_h[l_st];
     delete[] m_hu[l_st];
+    delete[] m_b;
   }
 }
 
 void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
 {
-
-  //choose the correct function based on the solver choice
-  void (*netUpdates)(t_real, 
-                     t_real, 
-                     t_real, 
-                     t_real, 
-                     t_real *, 
-                     t_real *);
-
-  if (m_solver == "roe")
-    netUpdates = solvers::Roe::netUpdates;
-  else if (m_solver == "fwave")
-    netUpdates = solvers::Fwave::netUpdates;
-  else
-  {
-    std::cout << "Error in WavePopagation1d: solver not found." << std::endl;
-    return;
-  }
-
   // pointers to old and new data
   t_real *l_hOld = m_h[m_step];
   t_real *l_huOld = m_hu[m_step];
@@ -78,29 +68,63 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
     l_huNew[l_ce] = l_huOld[l_ce];
   }
 
-  // iterate over edges and update with Riemann solutions
-  for (t_idx l_ed = 0; l_ed < m_nCells + 1; l_ed++)
+  // choose between Roe solver and Fwave solver
+  if (m_solver == "roe")
   {
-    // determine left and right cell-id
-    t_idx l_ceL = l_ed;
-    t_idx l_ceR = l_ed + 1;
 
-    // compute net-updates
-    t_real l_netUpdates[2][2];
+    // iterate over edges and update with Riemann solutions
+    for (t_idx l_ed = 0; l_ed < m_nCells + 1; l_ed++)
+    {
+      // determine left and right cell-id
+      t_idx l_ceL = l_ed;
+      t_idx l_ceR = l_ed + 1;
 
-    netUpdates(l_hOld[l_ceL],
-               l_hOld[l_ceR],
-               l_huOld[l_ceL],
-               l_huOld[l_ceR],
-               l_netUpdates[0],
-               l_netUpdates[1]);
+      // compute net-updates
+      t_real l_netUpdates[2][2];
 
-    // update the cells' quantities
-    l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
-    l_huNew[l_ceL] -= i_scaling * l_netUpdates[0][1];
+      solvers::Roe::netUpdates(l_hOld[l_ceL],
+                               l_hOld[l_ceR],
+                               l_huOld[l_ceL],
+                               l_huOld[l_ceR],
+                               l_netUpdates[0],
+                               l_netUpdates[1]);
 
-    l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
-    l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
+      // update the cells' quantities
+      l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
+      l_huNew[l_ceL] -= i_scaling * l_netUpdates[0][1];
+
+      l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
+      l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
+    }
+  }
+  else if (m_solver == "fwave")
+  {
+    // iterate over edges and update with Riemann solutions
+    for (t_idx l_ed = 0; l_ed < m_nCells + 1; l_ed++)
+    {
+      // determine left and right cell-id
+      t_idx l_ceL = l_ed;
+      t_idx l_ceR = l_ed + 1;
+
+      // compute net-updates
+      t_real l_netUpdates[2][2];
+
+      solvers::Fwave::netUpdates(l_hOld[l_ceL],
+                                 l_hOld[l_ceR],
+                                 l_huOld[l_ceL],
+                                 l_huOld[l_ceR],
+                                 m_b[l_ceL],
+                                 m_b[l_ceR],
+                                 l_netUpdates[0],
+                                 l_netUpdates[1]);
+
+      // update the cells' quantities
+      l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
+      l_huNew[l_ceL] -= i_scaling * l_netUpdates[0][1];
+
+      l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
+      l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
+    }
   }
 }
 
@@ -108,12 +132,15 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
 {
   t_real *l_h = m_h[m_step];
   t_real *l_hu = m_hu[m_step];
+  t_real *l_b = m_b;
 
   // set left boundary
   l_h[0] = l_h[1];
   l_hu[0] = l_hu[1];
+  l_b[0] = l_b[1];
 
   // set right boundary
   l_h[m_nCells + 1] = l_h[m_nCells];
   l_hu[m_nCells + 1] = l_hu[m_nCells];
+  l_b[m_nCells + 1] = l_b[m_nCells];
 }
