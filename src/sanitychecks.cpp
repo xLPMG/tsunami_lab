@@ -78,7 +78,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
     if (l_line.substr(0, 1) != "#")
     {
       // extract data from csv line
-      l_row = tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',');
+      tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
 
       // START CALCULATION
 

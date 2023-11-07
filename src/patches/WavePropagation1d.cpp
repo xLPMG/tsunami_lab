@@ -42,7 +42,7 @@ tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
   for (int l_ce = 1; l_ce < int(m_nCells) + 1; l_ce++)
   {
     if (l_ce % 25 == 0)
-      l_step -= 5;
+      l_step -= 2;
     m_b[l_ce] = l_step;
   }
 }

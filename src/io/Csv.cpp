@@ -57,12 +57,13 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
   io_stream << std::flush;
 }
 
-std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line,
-                                                         char separator)
+void tsunami_lab::io::Csv::splitLine(std::stringstream line,
+                                     char separator,
+                                     std::vector<std::string> &valuesVector)
 {
   std::vector<std::string> result;
   std::string word;
   while (getline(line, word, separator))
     result.push_back(word);
-  return result;
+  valuesVector = result;
 }
