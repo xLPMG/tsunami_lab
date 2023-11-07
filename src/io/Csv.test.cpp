@@ -87,7 +87,8 @@ TEST_CASE( "Test the CSV-line splitter using commas.", "[CsvSplitLineComma]" ) {
 char separator = ',';
 std::string line = "1,2,3,4,!!!!,JHD,2143.234342";
 std::vector<std::string> expectedResult = {"1","2","3","4","!!!!","JHD","2143.234342"};
-std::vector<std::string> actualResult = tsunami_lab::io::Csv::splitLine(std::stringstream(line),separator);
+std::vector<std::string> actualResult;
+tsunami_lab::io::Csv::splitLine(std::stringstream(line),separator,actualResult);
 REQUIRE(expectedResult == actualResult);
 }
 
@@ -95,6 +96,7 @@ TEST_CASE( "Test the CSV-line splitter using white space.", "[CsvSplitLineSpace]
 char separator = ' ';
 std::string line = "1 2 3 4 !!!! JHD 2143.234342";
 std::vector<std::string> expectedResult = {"1","2","3","4","!!!!","JHD","2143.234342"};
-std::vector<std::string> actualResult = tsunami_lab::io::Csv::splitLine(std::stringstream(line),separator);
+std::vector<std::string> actualResult;
+tsunami_lab::io::Csv::splitLine(std::stringstream(line),separator,actualResult);
 REQUIRE(expectedResult == actualResult);
 }
