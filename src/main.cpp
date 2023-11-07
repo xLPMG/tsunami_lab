@@ -35,6 +35,8 @@ int main()
   //solver default
   std::string l_solver = "fwave";
   bool l_bathymetry = false;
+  bool l_hasBoundaryL = false;
+  bool l_hasBoundaryR = false;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -50,6 +52,8 @@ int main()
   if (l_configData.contains("nx")) l_nx = l_configData["nx"];
   if (l_configData.contains("ny")) l_ny = l_configData["ny"];
   if (l_configData.contains("useBathymetry")) l_bathymetry = l_configData["useBathymetry"];
+  if (l_configData.contains("hasBoundaryL")) l_hasBoundaryL = l_configData["hasBoundaryL"];
+  if (l_configData.contains("hasBoundaryR")) l_hasBoundaryR = l_configData["hasBoundaryR"];
 
   l_dxy = l_simulationSize / l_nx;
 
@@ -67,7 +71,9 @@ int main()
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
-                                                           l_solver);
+                                                           l_solver,
+                                                           l_hasBoundaryL,
+                                                           l_hasBoundaryR);
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();

@@ -39,6 +39,12 @@ private:
   //! selected solver (roe or fwave)
   std::string m_solver = "";
 
+  //! true if there is a boundary on the left side
+  bool m_hasBoundaryL = false;
+
+  //! true if there is a boundary on the right side
+  bool m_hasBoundaryR = false;
+
 public:
   /**
    * Constructs the 1d wave propagation solver.
@@ -46,7 +52,10 @@ public:
    * @param i_nCells number of cells.
    * @param i_Solver selected solver.
    **/
-  WavePropagation1d(t_idx i_nCells, std::string i_Solver);
+  WavePropagation1d(t_idx i_nCells, 
+                    std::string i_Solver,
+                    bool i_hasBoundaryL,
+                    bool i_hasBoundaryR);
 
   /**
    * Destructor which frees all allocated memory.
@@ -112,7 +121,8 @@ public:
    */
   t_real const *getBathymetry()
   {
-    return m_b;
+    //add 1 to account for first ghost cell
+    return m_b + 1;
   }
 
   /**
@@ -147,6 +157,19 @@ public:
   void setMomentumY(t_idx,
                     t_idx,
                     t_real){};
+
+  /**
+   * Sets the bathymetry of the cell to the given value.
+   *
+   * @param i_ix id of the cell in x-direction.
+   * @param i_h bathymetry.
+   **/
+  void setBathymetry(t_idx i_ix,
+                     t_idx,
+                     t_real i_b)
+  {
+    m_b[i_ix + 1] = i_b;
+  }
 };
 
 #endif

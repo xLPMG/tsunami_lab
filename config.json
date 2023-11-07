@@ -2,5 +2,7 @@
     "solver": "fwave",
     "nx": 100,
     "ny": 1,
-    "useBathymetry": true
+    "useBathymetry": true,
+    "hasBoundaryL": false,
+    "hasBoundaryR": false
 }

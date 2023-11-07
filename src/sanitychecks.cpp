@@ -95,7 +95,9 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
       // construct solver
       tsunami_lab::patches::WavePropagation *l_waveProp;
       l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
-                                                               l_solver);
+                                                               l_solver,
+                                                               false,
+                                                               false);
 
       // maximum observed height in the setup
       tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();

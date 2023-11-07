@@ -9,10 +9,15 @@
 #include "../solvers/Fwave.h"
 #include <string>
 
-tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::string i_solver)
+tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
+                                                           std::string i_solver,
+                                                           bool i_hasBoundaryL,
+                                                           bool i_hasBoundaryR)
 {
   m_nCells = i_nCells;
   m_solver = i_solver;
+  m_hasBoundaryL = i_hasBoundaryL;
+  m_hasBoundaryR = i_hasBoundaryR;
 
   // allocate memory including a single ghost cell on each side
   for (unsigned short l_st = 0; l_st < 2; l_st++)
@@ -29,22 +34,15 @@ tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::
     {
       m_h[l_st][l_ce] = 0;
       m_hu[l_st][l_ce] = 0;
+      m_b[l_ce] = 0;
     }
   }
-  for (t_idx l_ce = 0; l_ce < m_nCells + 2; l_ce++)
+  // example bathymetry
+  int l_step = -1;
+  for (int l_ce = 1; l_ce < int(m_nCells) + 1; l_ce++)
   {
-    m_b[l_ce] = 0;
-  }
-
-  //init bathymetry example case
-  // for (t_idx l_ce = 1; l_ce < (m_nCells / 2) + 1; l_ce++)
-  // {
-  //   m_b[l_ce] = -20;
-  //   m_b[l_ce + (m_nCells / 2)] = -30;
-  // }
-  int l_step=-1;
-  for (int l_ce = 1; l_ce < int(m_nCells)+1; l_ce++){
-    if(l_ce%25==0) l_step-=5;
+    if (l_ce % 25 == 0)
+      l_step -= 5;
     m_b[l_ce] = l_step;
   }
 }
@@ -114,20 +112,6 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
       t_idx l_ceL = l_ed;
       t_idx l_ceR = l_ed + 1;
 
-      //check bathymetry dry and wet cells
-
-      // if(m_b[l_ceR]>0){
-      //   //right cell dry
-      //   l_hOld[l_ceR] = l_hOld[l_ceL];
-      //   l_huOld[l_ceR] = -l_huOld[l_ceL];
-      //   m_b[l_ceR] = m_b[l_ceL];
-      // }else if(m_b[l_ceL]>0){
-      //   //left cell dry
-      //   l_hOld[l_ceL] = l_hOld[l_ceR];
-      //   l_huOld[l_ceL] = -l_huOld[l_ceR];
-      //   m_b[l_ceL] = m_b[l_ceR];
-      // }
-
       // compute net-updates
       t_real l_netUpdates[2][2];
 
@@ -156,13 +140,27 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
   t_real *l_hu = m_hu[m_step];
   t_real *l_b = m_b;
 
-  // set left boundary
-  l_h[0] = l_h[1];
-  l_hu[0] = l_hu[1];
   l_b[0] = l_b[1];
+  if (m_hasBoundaryL)
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = -l_hu[1];
+  }
+  else
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = l_hu[1];
+  }
 
-  // set right boundary
-  l_h[m_nCells + 1] = l_h[m_nCells];
-  l_hu[m_nCells + 1] = l_hu[m_nCells];
   l_b[m_nCells + 1] = l_b[m_nCells];
+  if (m_hasBoundaryR)
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = -l_hu[m_nCells];
+  }
+  else
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+  }
 }
