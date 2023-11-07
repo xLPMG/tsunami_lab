@@ -73,6 +73,8 @@ TEST_CASE("Test the computation of the eigencoefficients.", "[Eigencoefficients]
                                                         9,
                                                         -30,
                                                         27,
+                                                        0,
+                                                        0,
                                                         -9.7311093998375095,
                                                         9.5731051658991654,
                                                         alpha_1,

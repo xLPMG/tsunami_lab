@@ -20,25 +20,33 @@ tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells, std::
     m_h[l_st] = new t_real[m_nCells + 2];
     m_hu[l_st] = new t_real[m_nCells + 2];
   }
-   m_b = new t_real[m_nCells + 2];
+  m_b = new t_real[m_nCells + 2];
+
   // init to zero
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
-    for (t_idx l_ce = 0; l_ce < m_nCells; l_ce++)
+    for (t_idx l_ce = 0; l_ce < m_nCells + 2; l_ce++)
     {
       m_h[l_st][l_ce] = 0;
       m_hu[l_st][l_ce] = 0;
-      m_b[l_ce] = 0;
     }
   }
+  for (t_idx l_ce = 0; l_ce < m_nCells + 2; l_ce++)
+  {
+    m_b[l_ce] = 0;
+  }
 
-  //init 
-  for (t_idx l_ce = 0; l_ce < m_nCells/2; l_ce++)
-    {
-      m_b[l_ce] = -10;
-      m_b[l_ce+m_nCells*1/2] = -50;
-    }
-    
+  //init bathymetry example case
+  // for (t_idx l_ce = 1; l_ce < (m_nCells / 2) + 1; l_ce++)
+  // {
+  //   m_b[l_ce] = -20;
+  //   m_b[l_ce + (m_nCells / 2)] = -30;
+  // }
+  int l_step=-1;
+  for (int l_ce = 1; l_ce < int(m_nCells)+1; l_ce++){
+    if(l_ce%25==0) l_step-=5;
+    m_b[l_ce] = l_step;
+  }
 }
 
 tsunami_lab::patches::WavePropagation1d::~WavePropagation1d()
@@ -47,8 +55,8 @@ tsunami_lab::patches::WavePropagation1d::~WavePropagation1d()
   {
     delete[] m_h[l_st];
     delete[] m_hu[l_st];
-    delete[] m_b;
   }
+  delete[] m_b;
 }
 
 void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
@@ -105,6 +113,20 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
       // determine left and right cell-id
       t_idx l_ceL = l_ed;
       t_idx l_ceR = l_ed + 1;
+
+      //check bathymetry dry and wet cells
+
+      // if(m_b[l_ceR]>0){
+      //   //right cell dry
+      //   l_hOld[l_ceR] = l_hOld[l_ceL];
+      //   l_huOld[l_ceR] = -l_huOld[l_ceL];
+      //   m_b[l_ceR] = m_b[l_ceL];
+      // }else if(m_b[l_ceL]>0){
+      //   //left cell dry
+      //   l_hOld[l_ceL] = l_hOld[l_ceR];
+      //   l_huOld[l_ceL] = -l_huOld[l_ceR];
+      //   m_b[l_ceL] = m_b[l_ceR];
+      // }
 
       // compute net-updates
       t_real l_netUpdates[2][2];

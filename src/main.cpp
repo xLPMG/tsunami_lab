@@ -49,7 +49,7 @@ int main()
   if (l_configData.contains("solver")) l_solver = l_configData["solver"];
   if (l_configData.contains("nx")) l_nx = l_configData["nx"];
   if (l_configData.contains("ny")) l_ny = l_configData["ny"];
-  if (l_configData.contains("use_bathymetry")) l_bathymetry = l_configData["use_bathymetry"];
+  if (l_configData.contains("useBathymetry")) l_bathymetry = l_configData["useBathymetry"];
 
   l_dxy = l_simulationSize / l_nx;
 
@@ -61,7 +61,7 @@ int main()
 
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::ShockShock1d(30, 
+  l_setup = new tsunami_lab::setups::DamBreak1d(50, 
                                                 10, 
                                                 5);
   // construct solver
@@ -118,7 +118,7 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 1.25;
+  tsunami_lab::t_real l_endTime = 5.25;
   tsunami_lab::t_real l_simTime = 0;
 
   std::cout << "entering time loop" << std::endl;

@@ -82,6 +82,7 @@ public:
    */
   t_real const *getHeight()
   {
+    //add 1 to account for first ghost cell
     return m_h[m_step] + 1;
   }
 
@@ -92,6 +93,7 @@ public:
    **/
   t_real const *getMomentumX()
   {
+    //add 1 to account for first ghost cell
     return m_hu[m_step] + 1;
   }
 
@@ -112,7 +114,6 @@ public:
   {
     return m_b;
   }
-
 
   /**
    * Sets the height of the cell to the given value.
