@@ -62,12 +62,13 @@ int main()
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
-
+  std::cout << "  using bathymetry?:              " << l_bathymetry << std::endl;
+  std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
   l_setup = new tsunami_lab::setups::DamBreak1d(50, 
-                                                10, 
-                                                5);
+                                                  10, 
+                                                  5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
