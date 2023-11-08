@@ -54,6 +54,8 @@ int main()
     l_nx = l_configData["nx"];
   if (l_configData.contains("ny"))
     l_ny = l_configData["ny"];
+  if (l_configData.contains("simulationSize"))
+    l_simulationSize = l_configData["simulationSize"];
   if (l_configData.contains("useBathymetry"))
     l_bathymetry = l_configData["useBathymetry"];
   if (l_configData.contains("hasBoundaryL"))
@@ -66,15 +68,16 @@ int main()
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
+  std::cout << "  simulation size:                " << l_simulationSize << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
   std::cout << "  using bathymetry?:              " << l_bathymetry << std::endl;
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::ShockShock1d(5,
-                                                  20,
-                                                  5);
+  l_setup = new tsunami_lab::setups::DamBreak1d(10,
+                                                25,
+                                                15);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -86,8 +89,6 @@ int main()
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
 
   // set up solver
-  // example bathymetry
-  int l_step = -1;
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
     tsunami_lab::t_real l_y = l_cy * l_dxy;
@@ -106,8 +107,6 @@ int main()
       tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
                                                        l_y);
 
-      // some example bathymetry values
-      if (l_cx % 25 == 0) l_step -= 2;
       // set initial values in wave propagation solver
       l_waveProp->setHeight(l_cx,
                             l_cy,
@@ -120,12 +119,40 @@ int main()
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
-
-      l_waveProp->setBathymetry(l_cx,
-                                l_cy,
-                                l_step);
     }
   }
+  l_waveProp->setBathymetry(9,0,45);
+  l_waveProp->setBathymetry(10,0,45);
+  l_waveProp->setBathymetry(11,0,45);
+  l_waveProp->setBathymetry(12,0,45);
+
+  l_waveProp->setBathymetry(20,0,-1);
+  l_waveProp->setBathymetry(21,0,-2);
+  l_waveProp->setBathymetry(22,0,-3);
+  l_waveProp->setBathymetry(23,0,-3);
+  l_waveProp->setBathymetry(24,0,-2);
+  l_waveProp->setBathymetry(25,0,-1);
+
+  l_waveProp->setBathymetry(50,0,-1);
+  l_waveProp->setBathymetry(51,0,-4);
+  l_waveProp->setBathymetry(52,0,-6);
+  l_waveProp->setBathymetry(53,0,-7);
+  l_waveProp->setBathymetry(54,0,-7);
+  l_waveProp->setBathymetry(55,0,-7);
+  l_waveProp->setBathymetry(56,0,-8);
+  l_waveProp->setBathymetry(57,0,-9);
+  l_waveProp->setBathymetry(58,0,-8);
+  l_waveProp->setBathymetry(59,0,-4);
+
+  l_waveProp->setBathymetry(497,0,35);
+  l_waveProp->setBathymetry(498,0,35);
+  l_waveProp->setBathymetry(499,0,35);
+  l_waveProp->setBathymetry(500,0,35);
+
+
+  l_waveProp->setBathymetry(24,0,-1);
+  l_waveProp->setBathymetry(25,0,-1);
+  l_waveProp->setBathymetry(26,0,-1);
 
   l_waveProp->adjustWaterHeight();
 
@@ -141,7 +168,7 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 5.25;
+  tsunami_lab::t_real l_endTime = 10;
   tsunami_lab::t_real l_simTime = 0;
 
   std::cout << "entering time loop" << std::endl;

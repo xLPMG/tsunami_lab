@@ -70,9 +70,3 @@ void tsunami_lab::io::Csv::splitLine(std::stringstream line,
     result.push_back(word);
   valuesVector = result;
 }
-
-// void tsunami_lab::io::Csv::read(t_real &bathymetry,
-//                                   std::ifstream &io_stream)
-// {
-
-// }

@@ -8,6 +8,7 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
+#include <iostream>
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
                                                            std::string i_solver,
@@ -104,16 +105,17 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
       t_idx l_ceL = l_ed;
       t_idx l_ceR = l_ed + 1;
 
-      t_real l_hL;
-			t_real l_hR;
-			t_real l_huL;
-			t_real l_huR;
-      t_real l_bL;
-			t_real l_bR;
+      t_real l_hL = l_hOld[l_ceL];
+      t_real l_hR = l_hOld[l_ceR];
+      t_real l_huL = l_huOld[l_ceL];
+      t_real l_huR = l_huOld[l_ceR];
+      t_real l_bL = m_b[l_ceL];
+      t_real l_bR = m_b[l_ceR];
 
       // handle reflections
       handleReflections(l_hOld,
                         l_huOld,
+                        m_b,
                         l_ceL,
                         l_ceR,
                         l_hL,
@@ -136,21 +138,26 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
                                  l_netUpdates[1]);
 
       // update the cells' quantities
-      tsunami_lab::t_real margin = 0.001;
-      if(l_hL > margin){
-      l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
-      l_huNew[l_ceL] -= i_scaling * l_netUpdates[0][1];
-      } else {
-        l_huNew[l_ceL] = 0;
+      if (l_hOld[l_ceL] > 0)
+      {
+        l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
+        l_huNew[l_ceL] -= i_scaling * l_netUpdates[0][1];
+      }
+      else
+      {
         l_hNew[l_ceL] = 0;
+        l_huNew[l_ceL] = 0;
       }
 
-      if(l_hR > margin){
-      l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
-      l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
-      } else {
-        l_huNew[l_ceR] = 0;
+      if (l_hOld[l_ceR] > 0)
+      {
+        l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
+        l_huNew[l_ceR] -= i_scaling * l_netUpdates[1][1];
+      }
+      else
+      {
         l_hNew[l_ceR] = 0;
+        l_huNew[l_ceR] = 0;
       }
     }
   }
@@ -162,21 +169,26 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
   t_real *l_hu = m_hu[m_step];
   t_real *l_b = m_b;
 
-	// set left boundary
-  if(m_hasBoundaryL) l_h[0] = 0;
-	else l_h[0] = l_h[1];
-	l_hu[0] = l_hu[1];
-	m_b[0] = m_b[1];
+  // left boundary
+  if (m_hasBoundaryL)
+    l_h[0] = 0;
+  else
+    l_h[0] = l_h[1];
+  l_hu[0] = l_hu[1];
+  l_b[0] = l_b[1];
 
-	// set right boundary
-	if(m_hasBoundaryR) l_h[m_nCells + 1] = 0;
-  else l_h[m_nCells + 1] = l_h[m_nCells];
-	l_hu[m_nCells + 1] = l_hu[m_nCells];
-	m_b[m_nCells + 1] = m_b[m_nCells];
+  // right boundary
+  if (m_hasBoundaryR)
+    l_h[m_nCells + 1] = 0;
+  else
+    l_h[m_nCells + 1] = l_h[m_nCells];
+  l_hu[m_nCells + 1] = l_hu[m_nCells];
+  l_b[m_nCells + 1] = l_b[m_nCells];
 }
 
 void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
                                                                 t_real *i_hu,
+                                                                t_real *i_b,
                                                                 t_idx i_ceL,
                                                                 t_idx i_ceR,
                                                                 t_real &o_hL,
@@ -186,40 +198,20 @@ void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
                                                                 t_real &o_bL,
                                                                 t_real &o_bR)
 {
-  // comparing a float to 0.0f is bad practice because of possible rounding errors
+  // use margin for comparison in case of rounding errors
   tsunami_lab::t_real margin = 0.001;
-  // left cell is dry
-  // if (i_h[i_ceL] <= margin)
-  // {
-  //   o_hL = i_h[i_ceR];
-  //   o_huL = -i_hu[i_ceR];
-  //   o_bL = m_b[i_ceR];
-  // }
-  // else
-  // {
-  //   o_hL = i_h[i_ceL];
-  //   o_huL = -i_hu[i_ceL];
-  //   o_bL = m_b[i_ceL];
-  // }
-
-  // // right cell is dry
-  // if (i_h[i_ceR] <= margin)
-  // {
-  //   o_hR = i_h[i_ceL];
-  //   o_huR = -i_hu[i_ceL];
-  //   o_bR = m_b[i_ceL];
-  // }
-  // else
-  // {
-  //   o_hR = i_h[i_ceR];
-  //   o_huR = -i_hu[i_ceR];
-  //   o_bR = m_b[i_ceR];
-  // }
-
-    o_hL = i_h[i_ceL];
-    o_huL = i_hu[i_ceL];
-    o_bL = m_b[i_ceL];
-    o_hR = i_h[i_ceR];
-    o_huR = i_hu[i_ceR];
-    o_bR = m_b[i_ceR];
+  if (i_h[i_ceR] <= margin)
+  {
+    // right cell dry
+    o_hR = i_h[i_ceL];
+    o_bR = m_b[i_ceL];
+    o_huR = -i_hu[i_ceL];
+  }
+  else if (i_h[i_ceL] <= margin)
+  {
+    // left cell dry
+    o_hL = i_h[i_ceR];
+    o_bL = m_b[i_ceR];
+    o_huL = -i_hu[i_ceR];
+  }
 }

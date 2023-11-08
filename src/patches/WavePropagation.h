@@ -118,6 +118,10 @@ public:
                              t_idx i_iy,
                              t_real i_b) = 0;
 
+  /**
+   * Corrects the water height based on the bathymetry
+   *
+   **/
   virtual void adjustWaterHeight() = 0;
 };
 
