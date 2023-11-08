@@ -26,13 +26,13 @@ int main()
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 1;
 
-  //set simulation size in metres
+  // set simulation size in metres
   tsunami_lab::t_real l_simulationSize = 10.0;
 
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
-  
-  //solver default
+
+  // solver default
   std::string l_solver = "fwave";
   bool l_bathymetry = false;
   bool l_hasBoundaryL = false;
@@ -44,16 +44,22 @@ int main()
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
-  //read configuration data from file
+  // read configuration data from file
   std::ifstream l_configFile("config.json");
   json l_configData = json::parse(l_configFile);
-  
-  if (l_configData.contains("solver")) l_solver = l_configData["solver"];
-  if (l_configData.contains("nx")) l_nx = l_configData["nx"];
-  if (l_configData.contains("ny")) l_ny = l_configData["ny"];
-  if (l_configData.contains("useBathymetry")) l_bathymetry = l_configData["useBathymetry"];
-  if (l_configData.contains("hasBoundaryL")) l_hasBoundaryL = l_configData["hasBoundaryL"];
-  if (l_configData.contains("hasBoundaryR")) l_hasBoundaryR = l_configData["hasBoundaryR"];
+
+  if (l_configData.contains("solver"))
+    l_solver = l_configData["solver"];
+  if (l_configData.contains("nx"))
+    l_nx = l_configData["nx"];
+  if (l_configData.contains("ny"))
+    l_ny = l_configData["ny"];
+  if (l_configData.contains("useBathymetry"))
+    l_bathymetry = l_configData["useBathymetry"];
+  if (l_configData.contains("hasBoundaryL"))
+    l_hasBoundaryL = l_configData["hasBoundaryL"];
+  if (l_configData.contains("hasBoundaryR"))
+    l_hasBoundaryR = l_configData["hasBoundaryR"];
 
   l_dxy = l_simulationSize / l_nx;
 
@@ -66,12 +72,12 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(50, 
-                                                  10, 
+  l_setup = new tsunami_lab::setups::ShockShock1d(5,
+                                                  20,
                                                   5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
+  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
                                                            l_solver,
                                                            l_hasBoundaryL,
                                                            l_hasBoundaryR);
@@ -80,6 +86,8 @@ int main()
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
 
   // set up solver
+  // example bathymetry
+  int l_step = -1;
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
     tsunami_lab::t_real l_y = l_cy * l_dxy;
@@ -98,6 +106,8 @@ int main()
       tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
                                                        l_y);
 
+      // some example bathymetry values
+      if (l_cx % 25 == 0) l_step -= 2;
       // set initial values in wave propagation solver
       l_waveProp->setHeight(l_cx,
                             l_cy,
@@ -110,8 +120,14 @@ int main()
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
+
+      l_waveProp->setBathymetry(l_cx,
+                                l_cy,
+                                l_step);
     }
   }
+
+  l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -144,7 +160,6 @@ int main()
 
       std::ofstream l_file;
       l_file.open(l_path);
-
       tsunami_lab::io::Csv::write(l_dxy,
                                   l_nx,
                                   1,

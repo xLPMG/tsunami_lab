@@ -45,6 +45,17 @@ private:
   //! true if there is a boundary on the right side
   bool m_hasBoundaryR = false;
 
+  void handleReflections(t_real *i_h,
+                         t_real *i_hu,
+                         t_idx i_ceL,
+                         t_idx i_ceR,
+                         t_real &o_hL,
+                         t_real &o_hR,
+                         t_real &o_huL,
+                         t_real &o_huR,
+                         t_real &o_bL,
+                         t_real &o_bR);
+
 public:
   /**
    * Constructs the 1d wave propagation solver.
@@ -52,7 +63,7 @@ public:
    * @param i_nCells number of cells.
    * @param i_Solver selected solver.
    **/
-  WavePropagation1d(t_idx i_nCells, 
+  WavePropagation1d(t_idx i_nCells,
                     std::string i_Solver,
                     bool i_hasBoundaryL,
                     bool i_hasBoundaryR);
@@ -91,7 +102,7 @@ public:
    */
   t_real const *getHeight()
   {
-    //add 1 to account for first ghost cell
+    // add 1 to account for first ghost cell
     return m_h[m_step] + 1;
   }
 
@@ -102,7 +113,7 @@ public:
    **/
   t_real const *getMomentumX()
   {
-    //add 1 to account for first ghost cell
+    // add 1 to account for first ghost cell
     return m_hu[m_step] + 1;
   }
 
@@ -121,7 +132,7 @@ public:
    */
   t_real const *getBathymetry()
   {
-    //add 1 to account for first ghost cell
+    // add 1 to account for first ghost cell
     return m_b + 1;
   }
 
@@ -169,6 +180,16 @@ public:
                      t_real i_b)
   {
     m_b[i_ix + 1] = i_b;
+  }
+
+  void adjustWaterHeight()
+  {
+    for (t_idx i = 1; i < m_nCells + 1; i++)
+    {
+      m_h[m_step][i] -= m_b[i];
+      if (m_h[m_step][i] < 0)
+        m_h[m_step][i] = 0;
+    }
   }
 };
 
