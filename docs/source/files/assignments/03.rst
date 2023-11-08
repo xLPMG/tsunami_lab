@@ -1,14 +1,14 @@
 3. Bathymetry & Boundary Conditions
-*******************
+**************************************
 
 All project authors contributed to this assignment in equal parts.
 
 Task 3.1 - Non-zero Source Term
-============================
+==================================
 TODO
 
-3.2. Reflecting Boundary Conditions
-============================
+3.2. Reflecting Boundary Conditions
+======================================
 
 Task 3.2.1 
 --------------------------
@@ -20,7 +20,7 @@ Following setup has to be implemented
     (hu)_{i} &:= -(hu)_{i-1} \\
     b_{i} &:= b_{i-1}\end{split}
 
-In :ref:`WavePropagation1d`
+In WavePropagation1d
 
 .. code:: cpp
 
@@ -57,10 +57,10 @@ Following simulation has a reflecting boundary conditions at the right boundary,
 We have set :math:`q_l` initially for the value ????.
 
 
-3.3. Hydraulic Jumps
+3.3. Hydraulic Jumps
 ============================
 TODO
 
-3.4. 1D Tsunami Simulation
-============================
+3.4. 1D Tsunami Simulation
+================================
 TODO
