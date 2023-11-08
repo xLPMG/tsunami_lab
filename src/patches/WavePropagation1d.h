@@ -50,7 +50,6 @@ private:
   * 
   * @param i_h water height
   * @param i_hu water momentum
-  * @param i_b bathymetry
   * @param i_ceL left cell
   * @param i_ceR right cell
   * @param o_hL water height on the left side
