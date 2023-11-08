@@ -115,7 +115,6 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
       // handle reflections
       handleReflections(l_hOld,
                         l_huOld,
-                        m_b,
                         l_ceL,
                         l_ceR,
                         l_hL,

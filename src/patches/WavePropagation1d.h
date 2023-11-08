@@ -79,7 +79,7 @@ public:
    * @param i_Solver selected solver.
    **/
   WavePropagation1d(t_idx i_nCells,
-                    std::string i_Solver,
+                    std::string i_solver,
                     bool i_hasBoundaryL,
                     bool i_hasBoundaryR);
 
