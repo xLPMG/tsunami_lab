@@ -48,7 +48,7 @@ class tsunami_lab::io::Csv {
        * 
        * 
        **/
-       static void read();
+      // static void read();
 
     /**
      * Splits a CSV-style line into a vector of strings.
