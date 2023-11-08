@@ -1,8 +1,66 @@
-1. Bathymetry & Boundary Conditions
+3. Bathymetry & Boundary Conditions
 *******************
 
 All project authors contributed to this assignment in equal parts.
 
 Task 3.1 - Non-zero Source Term
+============================
+TODO
+
+3.2. Reflecting Boundary Conditions
+============================
+
+Task 3.2.1 
+--------------------------
+
+Following setup has to be implemented 
+
+.. math::
+    \begin{split}h_{i} &:= h_{i-1} \\
+    (hu)_{i} &:= -(hu)_{i-1} \\
+    b_{i} &:= b_{i-1}\end{split}
+
+In :ref:`WavePropagation1d`
+
+.. code:: cpp
+
+  t_real *l_b = m_b;
+
+  l_b[0] = l_b[1];
+  if (m_hasBoundaryL)
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = -l_hu[1];
+  }
+  else
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = l_hu[1];
+  }
+
+  l_b[m_nCells + 1] = l_b[m_nCells];
+  if (m_hasBoundaryR)
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = -l_hu[m_nCells];
+  }
+  else
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+  }
+
+Task 3.2.2
+--------------------------
+
+Following simulation has a reflecting boundary conditions at the right boundary, and outflow boundary conditions at the left boundary.
+We have set :math:`q_l` initially for the value ????.
+
+
+3.3. Hydraulic Jumps
+============================
+TODO
+
+3.4. 1D Tsunami Simulation
 ============================
 TODO
