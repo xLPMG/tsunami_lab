@@ -47,7 +47,6 @@ private:
 
   void handleReflections(t_real *i_h,
                          t_real *i_hu,
-                         t_real *i_b,
                          t_idx i_ceL,
                          t_idx i_ceR,
                          t_real &o_hL,
