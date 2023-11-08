@@ -45,6 +45,21 @@ private:
   //! true if there is a boundary on the right side
   bool m_hasBoundaryR = false;
 
+ /**
+  * Compute the reflection effect
+  * 
+  * @param i_h water height
+  * @param i_hu water momentum
+  * @param i_b bathymetry
+  * @param i_ceL left cell
+  * @param i_ceR right cell
+  * @param o_hL water height on the left side
+  * @param o_hR water height on the right side
+  * @param o_huL water momentum on the left side
+  * @param o_huR water momentum on the right side
+  * @param o_bl bathymetry on the left side 
+  * @param o_bR bathymetry on the right side
+  */
   void handleReflections(t_real *i_h,
                          t_real *i_hu,
                          t_real *i_b,
