@@ -29,7 +29,6 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
     io_stream << ",bathymetry";
   io_stream << "\n";
 
-
   // iterate over all cells
   for (t_idx l_iy = 0; l_iy < i_ny; l_iy++)
   {
@@ -67,3 +66,8 @@ void tsunami_lab::io::Csv::splitLine(std::stringstream line,
     result.push_back(word);
   valuesVector = result;
 }
+
+// void tsunami_lab::io::Csv::read()
+// {
+
+// }
