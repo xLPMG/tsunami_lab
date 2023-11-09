@@ -25,7 +25,6 @@ author = 'Luca-Philipp Grumbach & Richard Hofmann'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.autosectionlabel',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
@@ -33,7 +32,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx_sitemap',
     'sphinx.ext.inheritance_diagram',
-    'breathe'
+    'breathe',
 ]
 
 autodoc_default_options = {
@@ -74,6 +73,10 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+
+html_baseurl = 'https://xlpmg.github.io/tsunami_lab/'
+
+
 # html_logo = ''
 # github_url = ''
 # html_baseurl = ''
