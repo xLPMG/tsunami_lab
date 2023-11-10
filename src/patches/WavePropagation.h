@@ -119,14 +119,6 @@ public:
                              t_real i_b) = 0;
 
   /**
-   * Sets the bathymetry of the cell from a file
-   *
-   * @param i_filepath 
-   **/
-  virtual void setBathymetryFromFile(std::string i_filepath) = 0;
-  
-
-  /**
    * Corrects the water height based on the bathymetry
    *
    **/

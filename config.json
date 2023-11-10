@@ -1,8 +1,8 @@
 {
     "solver": "fwave",
-    "nx": 500,
+    "nx": 1762,
     "ny": 1,
-    "simulationSize": 25,
+    "simulationSize": 500,
     "useBathymetry": true,
     "hasBoundaryL": false,
     "hasBoundaryR": false

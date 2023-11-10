@@ -1,5 +1,5 @@
 /**
- * @author Luca Grombacher, Richard Hofmann
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * Implementation of One-dimensional Tsunami event
@@ -9,9 +9,10 @@
 #define TSUNAMI_LAB_SETUPS_TSUNAMI_EVENT_1D_H
 
 #include "Setup.h"
-#include "constants.h"
+#include "../constants.h"
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 namespace tsunami_lab
 {
@@ -33,7 +34,11 @@ private:
   //! position where waves interact
   t_real m_xdis = 0;
 
-  t_real *m_bathymetry = nullptr;
+  //! stores the bathymetry data from the file
+  std::vector<tsunami_lab::t_real> *m_bathymetry = nullptr;
+
+  //! keeps track of the bathymetry data vector size
+  int m_bathymetryDataSize = 0;
 
   static t_real constexpr m_pi = 3.14159265358979323846;
 
@@ -69,6 +74,14 @@ public:
   t_real getMomentumY(t_real,
                       t_real) const;
 
+  /**
+   * Gets the bathymetry
+   *
+   * @param i_x x-coordinate of the queried point.
+   * @return bathymetry.
+   **/
+  t_real getBathymetry(t_real i_x,
+                       t_real) const;
 
   /**
    * computes 

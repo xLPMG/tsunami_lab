@@ -13,6 +13,7 @@
 #include "setups/Subcritical1d.h"
 #include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
+#include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
 #include <iostream>
@@ -78,7 +79,7 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(30, 10, 12);
+  l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv");
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -129,18 +130,6 @@ int main()
     }
   }
 
-  l_waveProp->setBathymetry(400, 0, -2);
-  l_waveProp->setBathymetry(401, 0, -4);
-  l_waveProp->setBathymetry(402, 0, -6);
-  l_waveProp->setBathymetry(403, 0, -8);
-  l_waveProp->setBathymetry(404, 0, -6);
-  l_waveProp->setBathymetry(405, 0, -8);
-  l_waveProp->setBathymetry(406, 0, -4);
-
-  l_waveProp->setBathymetry(480, 0, 60);
-  l_waveProp->setBathymetry(481, 0, 60);
-  l_waveProp->setBathymetry(482, 0, 60);
-
   l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
@@ -155,7 +144,7 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 200;
+  tsunami_lab::t_real l_endTime = 20;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder
