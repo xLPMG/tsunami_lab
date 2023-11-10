@@ -4,6 +4,6 @@
     "ny": 1,
     "simulationSize": 50,
     "useBathymetry": true,
-    "hasBoundaryL": true,
-    "hasBoundaryR": true
+    "hasBoundaryL": false,
+    "hasBoundaryR": false
 }

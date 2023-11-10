@@ -2,10 +2,10 @@
  * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * One-dimensional subcritical problem
+ * One-dimensional supercritical problem
  **/
-#ifndef TSUNAMI_LAB_SETUPS_SUBCRITICAL_1D_H
-#define TSUNAMI_LAB_SETUPS_SUBCRITICAL_1D_H
+#ifndef TSUNAMI_LAB_SETUPS_SUPERCRITICAL_1D_H
+#define TSUNAMI_LAB_SETUPS_SUPERCRITICAL_1D_H
 
 #include "Setup.h"
 
@@ -13,11 +13,11 @@ namespace tsunami_lab
 {
   namespace setups
   {
-    class Subcritical1d;
+    class Supercritical1d;
   }
 }
 
-class tsunami_lab::setups::Subcritical1d : public Setup
+class tsunami_lab::setups::Supercritical1d : public Setup
 {
 private:
   //! height
@@ -33,7 +33,7 @@ public:
    * @param i_h water height
    * @param i_hu water momentum
    **/
-  Subcritical1d(t_real i_h,
+  Supercritical1d(t_real i_h,
                 t_real i_hu);
 
   /**

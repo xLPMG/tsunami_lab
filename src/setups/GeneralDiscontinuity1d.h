@@ -38,9 +38,9 @@ public:
    * Constructor.
    *
    * @param i_hL water height on the left
-   * @param i_hR water height on the left
+   * @param i_hR water height on the right
    * @param i_huL water momentum on the left side
-   * @param i_huR water momentum on the left side
+   * @param i_huR water momentum on the right side
    * @param i_xdis position of discontinuity
    **/
   GeneralDiscontinuity1d(t_real i_hL,
@@ -74,6 +74,15 @@ public:
    **/
   t_real getMomentumY(t_real,
                       t_real) const;
+
+  /**
+   * Gets the bathymetry
+   *
+   * @param i_x x-coordinate of the queried point.
+   * @return bathymetry.
+   **/
+  t_real getBathymetry(t_real i_x,
+                       t_real) const;
 };
 
 #endif

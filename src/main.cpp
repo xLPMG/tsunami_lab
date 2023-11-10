@@ -10,6 +10,8 @@
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
+#include "setups/Subcritical1d.h"
+#include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
@@ -75,9 +77,7 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(10,
-                                                25,
-                                                15);
+  l_setup = new tsunami_lab::setups::DamBreak1d(30,10,25);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -106,6 +106,8 @@ int main()
                                                        l_y);
       tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
                                                        l_y);
+      tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
+                                                       l_y);
 
       // set initial values in wave propagation solver
       l_waveProp->setHeight(l_cx,
@@ -119,40 +121,12 @@ int main()
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
+      
+      l_waveProp->setBathymetry(l_cx,
+                                l_cy,
+                                l_b);
     }
   }
-  l_waveProp->setBathymetry(9,0,45);
-  l_waveProp->setBathymetry(10,0,45);
-  l_waveProp->setBathymetry(11,0,45);
-  l_waveProp->setBathymetry(12,0,45);
-
-  l_waveProp->setBathymetry(20,0,-1);
-  l_waveProp->setBathymetry(21,0,-2);
-  l_waveProp->setBathymetry(22,0,-3);
-  l_waveProp->setBathymetry(23,0,-3);
-  l_waveProp->setBathymetry(24,0,-2);
-  l_waveProp->setBathymetry(25,0,-1);
-
-  l_waveProp->setBathymetry(50,0,-1);
-  l_waveProp->setBathymetry(51,0,-4);
-  l_waveProp->setBathymetry(52,0,-6);
-  l_waveProp->setBathymetry(53,0,-7);
-  l_waveProp->setBathymetry(54,0,-7);
-  l_waveProp->setBathymetry(55,0,-7);
-  l_waveProp->setBathymetry(56,0,-8);
-  l_waveProp->setBathymetry(57,0,-9);
-  l_waveProp->setBathymetry(58,0,-8);
-  l_waveProp->setBathymetry(59,0,-4);
-
-  l_waveProp->setBathymetry(497,0,35);
-  l_waveProp->setBathymetry(498,0,35);
-  l_waveProp->setBathymetry(499,0,35);
-  l_waveProp->setBathymetry(500,0,35);
-
-
-  l_waveProp->setBathymetry(24,0,-1);
-  l_waveProp->setBathymetry(25,0,-1);
-  l_waveProp->setBathymetry(26,0,-1);
 
   l_waveProp->adjustWaterHeight();
 
