@@ -8,8 +8,19 @@
 #include "TsunamiEvent1d.h"
 #include <math.h>    
 
-tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::ifstream &i_file)
+tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::string i_file)
 {
+    std::ifstream l_inputFile(i_file);
+
+    std::string l_line;
+    while(getline(l_inputFile, l_line) == " "){
+        
+    };
+}
+
+tsunami_lab::setups::TsunamiEvent1d::~TsunamiEvent1d()
+{
+ delete[] m_bathymetry;
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,

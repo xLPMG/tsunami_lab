@@ -106,6 +106,7 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
     }
     else if (m_solver == "fwave")
     {
+
       solvers::Fwave::netUpdates(l_hL,
                                  l_hR,
                                  l_huL,
@@ -190,3 +191,10 @@ void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
     o_huL = -i_hu[i_ceR];
   }
 }
+
+void setBathymetryFromFile(std::string i_filepath){
+
+  std::ifstream l_inputFile();
+  
+};
+  

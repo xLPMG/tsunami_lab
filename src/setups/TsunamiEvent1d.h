@@ -9,6 +9,7 @@
 #define TSUNAMI_LAB_SETUPS_TSUNAMI_EVENT_1D_H
 
 #include "Setup.h"
+#include "constants.h"
 #include <fstream>
 #include <sstream>
 
@@ -32,6 +33,8 @@ private:
   //! position where waves interact
   t_real m_xdis = 0;
 
+  t_real *m_bathymetry = nullptr;
+
   static t_real constexpr m_pi = 3.14159265358979323846;
 
 public:
@@ -39,7 +42,7 @@ public:
    * Constructor
    *
    **/
-  TsunamiEvent1d(std::ifstream &i_file);
+  TsunamiEvent1d(std::string i_file);
 
   /**
    * Gets the water height at a given point.
