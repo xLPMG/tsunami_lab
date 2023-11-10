@@ -19,6 +19,7 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <filesystem>
 
 using json = nlohmann::json;
 
@@ -77,7 +78,7 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::Subcritical1d(1,1);
+  l_setup = new tsunami_lab::setups::DamBreak1d(30, 10, 12);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -121,12 +122,24 @@ int main()
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
-      
+
       l_waveProp->setBathymetry(l_cx,
                                 l_cy,
                                 l_b);
     }
   }
+
+  l_waveProp->setBathymetry(400, 0, -2);
+  l_waveProp->setBathymetry(401, 0, -4);
+  l_waveProp->setBathymetry(402, 0, -6);
+  l_waveProp->setBathymetry(403, 0, -8);
+  l_waveProp->setBathymetry(404, 0, -6);
+  l_waveProp->setBathymetry(405, 0, -8);
+  l_waveProp->setBathymetry(406, 0, -4);
+
+  l_waveProp->setBathymetry(480, 0, 60);
+  l_waveProp->setBathymetry(481, 0, 60);
+  l_waveProp->setBathymetry(482, 0, 60);
 
   l_waveProp->adjustWaterHeight();
 
@@ -142,8 +155,14 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 10;
+  tsunami_lab::t_real l_endTime = 200;
   tsunami_lab::t_real l_simTime = 0;
+
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+    
+  std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;
 
@@ -155,7 +174,6 @@ int main()
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-      // TODO: create solutions folder automatically or at least check if it exists
       std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
       std::cout << "  writing wave field to " << l_path << std::endl;
 
