@@ -106,32 +106,6 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
     }
     else if (m_solver == "fwave")
     {
-      // determine left and right cell-id
-      t_idx l_ceL = l_ed;
-      t_idx l_ceR = l_ed + 1;
-
-      t_real l_hL = l_hOld[l_ceL];
-      t_real l_hR = l_hOld[l_ceR];
-      t_real l_huL = l_huOld[l_ceL];
-      t_real l_huR = l_huOld[l_ceR];
-      t_real l_bL = m_b[l_ceL];
-      t_real l_bR = m_b[l_ceR];
-
-      // handle reflections
-      handleReflections(l_hOld,
-                        l_huOld,
-                        l_ceL,
-                        l_ceR,
-                        l_hL,
-                        l_hR,
-                        l_huL,
-                        l_huR,
-                        l_bL,
-                        l_bR);
-
-      // compute net-updates
-      t_real l_netUpdates[2][2];
-
       solvers::Fwave::netUpdates(l_hL,
                                  l_hR,
                                  l_huL,
