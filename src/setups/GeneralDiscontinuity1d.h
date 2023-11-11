@@ -37,8 +37,8 @@ public:
   /**
    * Constructor.
    *
-   * @param i_hL water height on the left
-   * @param i_hR water height on the right
+   * @param i_hL water height on the left side
+   * @param i_hR water height on the right side
    * @param i_huL water momentum on the left side
    * @param i_huR water momentum on the right side
    * @param i_xdis position of discontinuity

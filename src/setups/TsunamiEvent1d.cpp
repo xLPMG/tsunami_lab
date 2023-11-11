@@ -1,5 +1,5 @@
 /**
- * @author Luca Grombacher, Richard Hofmann
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * Implementation of One-dimensional Tsunami event

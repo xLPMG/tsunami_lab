@@ -1,5 +1,5 @@
 // /**
-//  * @author Maximilian Grumbacher & Richard Hofmann
+//  * @author Luca-Philipp Grumbach & Richard Hofmann
 //  *
 //  * @section DESCRIPTION
 //  * Test for the implementation of TsunamiEvent1d
