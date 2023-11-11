@@ -11,7 +11,7 @@
 #include <iostream>
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
-                                                           std::string i_solver,
+                                                           const std::string &i_solver,
                                                            bool i_hasBoundaryL,
                                                            bool i_hasBoundaryR)
 {

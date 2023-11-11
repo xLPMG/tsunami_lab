@@ -10,8 +10,13 @@
 #include <vector>
 #include "../io/Csv.h"
 
-tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::string i_file)
+tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file, 
+                                                    t_real i_h,
+                                                    t_real i_hu)
 {
+    m_height = i_h;
+    m_momentum = i_hu;
+
     std::ifstream l_inputFile(i_file);
     m_bathymetry = new std::vector<tsunami_lab::t_real>;
 

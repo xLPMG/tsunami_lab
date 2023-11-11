@@ -79,7 +79,9 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv");
+  l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv",
+                                                    0,
+                                                    0);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
