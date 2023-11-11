@@ -10,14 +10,19 @@
 #include <vector>
 #include "../io/Csv.h"
 #include <iostream>
+#include <filesystem>
 
 tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file,
                                                     t_real i_h,
                                                     t_real i_hu)
 {
+    if(!std::filesystem::exists(i_file)){
+        std::cout << "Error: File not found " << "(TsunamiEvent1d.cpp)" << std::endl;
+        exit(1);
+    }
+
     m_height = i_h;
     m_momentum = i_hu;
-
     std::ifstream l_inputFile(i_file);
     m_bathymetry = new std::vector<tsunami_lab::t_real>;
 

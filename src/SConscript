@@ -34,7 +34,7 @@ l_tests = [ 'tests.cpp',
             'setups/RareRare1d.test.cpp',
             'setups/ShockShock1d.test.cpp',
             'setups/GeneralDiscontinuity1d.test.cpp',
-            # 'setups/TsuanmiEvent1d.test.cpp'
+            'setups/TsunamiEvent1d.test.cpp'
             ]
 
 for l_te in l_tests:
