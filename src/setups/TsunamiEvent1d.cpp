@@ -24,7 +24,6 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::string i_file)
         if (l_line.substr(0, 1) == "#")
             continue;
         tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
-        std::cout << l_row[3] << std::endl;
         m_bathymetry->push_back(std::stof(l_row[3]));
         rowData.clear();
         ++l_rowCount;

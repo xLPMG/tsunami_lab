@@ -40,7 +40,11 @@ private:
   //! keeps track of the bathymetry data vector size
   int m_bathymetryDataSize = 0;
 
+  //! constant for pi
   static t_real constexpr m_pi = 3.14159265358979323846;
+
+  //
+  static t_real constexpr m_delta = 20;
 
 public:
   /**
