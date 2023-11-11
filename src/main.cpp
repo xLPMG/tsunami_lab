@@ -80,7 +80,7 @@ int main()
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
   l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv",
-                                                    0,
+                                                    5540,
                                                     0);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
