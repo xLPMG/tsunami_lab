@@ -57,14 +57,14 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
     }
     else
     {
-        return m_height;
+        return 0;
     }
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumX(t_real,
                                                                       t_real) const
 {
-    return m_momentum;
+    return 0;
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumY(t_real,

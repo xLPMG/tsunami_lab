@@ -5,13 +5,55 @@ All project authors contributed to this assignment in equal parts.
 
 Task 3.1 - Non-zero Source Term
 ==================================
+
+For introducing the bathymetry into our f-wave-solver we have got the following setting
+
+.. math:: 
+  \Delta f - \Delta x \Psi_{i-1/2} =  \sum_{p=1}^2 Z_p.
+
+.. math:: 
+  \begin{split}\Delta x \Psi_{i-1/2} := \begin{bmatrix}
+                                0 \\
+                                -g (b_r - b_l) \frac{h_l+h_r}{2}
+                              \end{bmatrix}.\end{split}
+
+.. Note::
+  :math:`\Delta x \Psi_{i-1/2}` summarizes the effect of the bathymetry:
+
+Task 3.1.1
+----------------
+
+**File: Fwave.cpp**
+
+Inside the computeEigencoefficients function we compute :math:`\Delta x \Psi_{i-1/2}`
+
+.. code::
+
+  t_real l_xPsi;
+  l_xPsi = -m_g * (i_bR - i_bL) * (t_real(0.5) *(i_hL + i_hR));
+  l_fDelta[1] -= l_xPsi;
+
+After that we substract the :math:`\Delta x \Psi_{i-1/2}` from :math:`\Delta f`.
+
+.. code:: 
+
+    alpha_1 = l_rInv[0][0] * l_fDelta[0] + l_rInv[0][1] * l_fDelta[1];
+    alpha_2 = l_rInv[1][0] * l_fDelta[0] + l_rInv[1][1] * l_fDelta[1];
+
+
+3.1.2
+-----------
 TODO
+
 
 3.2. Reflecting Boundary Conditions
 ======================================
 
+
+
 Task 3.2.1 
 --------------------------
+
 
 Following setup has to be implemented 
 
@@ -63,4 +105,195 @@ TODO
 
 3.4. 1D Tsunami Simulation
 ================================
-TODO
+
+Task 3.4.1
+--------------------------
+We have used the `GEBCO grid<https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`_ from 2021 to collect the bathymetry data.
+With `the Generic Mapping<https://www.generic-mapping-tools.org>`_ we cut data and trasnformed it onto a csv file. 
+
+Task 3.4.2
+--------------------------
+For this task we used the function *splitline* that we implemented last week and modified it.
+
+(**File: Csv.cpp**)
+
+.. code:: cpp
+
+    std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line, 
+                                                             char separator,
+                                                             std::vector<std::string> &valuesVector)
+    {
+        std::vector<std::string> result;
+        std::string word;
+        while (getline(line, word, separator))
+            result.push_back(word);
+        valuesVector result;
+    }
+
+This function takes one line as a stringstream of the `csv` file as one input 
+and the character which separates the different values as another.
+There is a pointer to the vector of strings, which represents the, by the separator character, separated values of the `csv` file.
+
+
+Task 3.4.3
+--------------------------
+
+Following setup is given 
+
+.. math::
+  \begin{split}\begin{split}
+    h  &= \begin{cases}
+            \max( -b_\text{in}, \delta), &\text{if } b_\text{in} < 0 \\
+            0, &\text{else}
+          \end{cases}\\
+    hu &= 0\\
+    b  &= \begin{cases}
+            \min(b_\text{in}, -\delta) + d, & \text{ if } b_\text{in} < 0\\
+            \max(b_\text{in}, \delta) + d, & \text{ else}.
+          \end{cases}
+    \end{split}\end{split}
+
+To compute the values above we need the vertical displacement for the location x.
+
+
+.. math:: 
+  \begin{split}d(x) = \begin{cases}
+       10\cdot\sin(\frac{x-175000}{37500} \pi + \pi), & \text{ if } 175000 < x < 250000 \\
+       0, &\text{else}.
+  \end{cases}\end{split}
+
+**Constructor**
+
+.. code::
+
+    tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::computeD(t_real i_x,
+                                                                    t_real) const
+    {
+      i_x *= 250;
+      if (i_x < 250000 && 175000 < i_x)
+      {
+          return 10 * sin(((i_x - 175000) / 37500) * m_pi + m_pi);
+      }
+      else
+      {
+          return 0;
+      }
+    }
+  
+We have to multiple the location of x by 250, because one point is sampled every 250 meters.
+
+.. note:: :math:`\delta` is the constant to avoid running into numerical issues. It is set to 20.
+
+**splitLine**
+
+.. code:: cpp
+
+  void tsunami_lab::io::Csv::splitLine(std::stringstream line,
+                                     char separator,
+                                     std::vector<std::string> &valuesVector){
+    std::ifstream l_inputFile(i_file);
+      m_bathymetry = new std::vector<tsunami_lab::t_real>;
+
+      std::string l_line;
+      std::vector<std::string> l_row;
+      int l_rowCount = 0;
+      while (getline(l_inputFile, l_line))
+      {
+          if (l_line.substr(0, 1) == "#")
+              continue;
+          tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
+          m_bathymetry->push_back(std::stof(l_row[3]));
+          ++l_rowCount;
+      }
+      l_inputFile.close();
+      m_bathymetryDataSize = l_rowCount;
+    }
+
+The constructor gets a filepath, height and the momentum as input.
+As long as there is a new line in the csv file the loop continues and writes the bathymetry into the vector.
+There is also a count for the amount of elements inside the vector to guarantee proper access.
+  
+The momentem functions always return 0.
+
+**getBathymetry**
+
+.. code:: cpp
+  
+    tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_x,
+                                                                        t_real) const{
+      if (i_x <= (m_bathymetryDataSize - 1))
+        {
+            t_real l_currBath = m_bathymetry->at(int(i_x));
+            if (l_currBath < 0)
+            {
+                if (l_currBath < -m_delta)
+                {
+                    return l_currBath + computeD(i_x, 0);
+                }
+                else
+                {
+                    return -m_delta + computeD(i_x, 0);
+                }
+            }
+            else
+            {
+                if (l_currBath > m_delta)
+                {
+                    return l_currBath + computeD(i_x, 0);
+                }
+                else
+                {
+                    return m_delta + computeD(i_x, 0);
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+      }
+
+For the bathymetry we first check if there is a legal access for the vector. After that, we check the min and max cases for either
+:math:`b_{in}` < 0 or the else case. In both sceanrios we have to add the vertical displacement.
+
+**getHeight**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
+                                                                   t_real) const
+  {
+    if (i_x <= (m_bathymetryDataSize - 1) && m_bathymetry->at(int(i_x)) < 0)
+    {
+        if (-(m_bathymetry->at(int(i_x))) < m_delta)
+        {
+            return m_delta;
+        }
+        else
+        {
+            return -(m_bathymetry->at(int(i_x)));
+        }
+    }
+    else
+    {
+        return 0;
+    }
+  }
+
+Similar to getBathymetry we check for the access also for the case whether :math:`b_{in}` < 0 or not.
+Depending on that, we return the maximum of either :math:`-b_{in}` and :math:`\delta` or 0.
+
+Task 3.4.4
+--------------------------
+
+*Visualisation*
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="" type="video/mp4">
+    </video> 
+
+    TODO Video!!!!!!!
+
+As we can see, the wave propagates over time.

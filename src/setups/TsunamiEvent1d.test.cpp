@@ -37,39 +37,39 @@ TEST_CASE("Test the one-dimensional TsunamiEvent setup.", "[TsunamiEvent1d]")
   //test inside specified bathymetry area
   REQUIRE(l_TsunamiEvent1d.getHeight(2, 0) == tsunami_lab::t_real(20));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(2, 0) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(2, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(2, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getHeight(2, 4) == tsunami_lab::t_real(20));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(2, 4) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(2, 4) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(2, 4) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getHeight(3, 0) == tsunami_lab::t_real(25));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(3, 0) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(3, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(3, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getHeight(3, 4) == tsunami_lab::t_real(25));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(3, 4) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(3, 4) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(3, 4) == tsunami_lab::t_real(0));
 
   //bathymetry > 0
-  REQUIRE(l_TsunamiEvent1d.getHeight(5, 0) == tsunami_lab::t_real(8));
+  REQUIRE(l_TsunamiEvent1d.getHeight(5, 0) == tsunami_lab::t_real(0));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(5, 0) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(5, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(5, 0) == tsunami_lab::t_real(0));
 
   //test outside specified bathymetry area
   REQUIRE(l_TsunamiEvent1d.getHeight(10, 0) == tsunami_lab::t_real(8));
 
-  REQUIRE(l_TsunamiEvent1d.getMomentumX(10, 0) == tsunami_lab::t_real(9));
+  REQUIRE(l_TsunamiEvent1d.getMomentumX(10, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(10, 0) == tsunami_lab::t_real(0));
 }
