@@ -88,9 +88,9 @@ public:
                        t_real) const;
 
   /**
-   * computes 
+   * computes vertical displacement
    *
-   * @return momentum in y-direction.
+   * @return vertical displacement
    **/
   t_real computeD(t_real i_x,
                   t_real) const;

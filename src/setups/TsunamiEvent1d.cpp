@@ -24,7 +24,7 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::string i_file)
         if (l_line.substr(0, 1) == "#")
             continue;
         tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
-        m_bathymetry->push_back(std::stof(l_row[3]));
+         m_bathymetry->push_back(std::stof(l_row[3]));
         rowData.clear();
         ++l_rowCount;
     }
@@ -32,10 +32,18 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(std::string i_file)
     m_bathymetryDataSize = l_rowCount;
 }
 
-tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real,
+tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
                                                                    t_real) const
 {
-    return 10;
+    if(m_bathymetry->at(int(i_x)) < 0){
+        if(-(m_bathymetry->at(int(i_x))) < m_delta){
+            return m_delta;
+        } else {
+            return -(m_bathymetry->at(int(i_x)));
+        }
+    } else {
+        return 0;
+    }
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumX(t_real,
@@ -53,12 +61,41 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumY(t_real,
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_x,
                                                                        t_real) const
 {
-    return i_x <= (m_bathymetryDataSize - 1) ? m_bathymetry->at(int(i_x)) : tsunami_lab::t_real(0);
+    if(i_x <= (m_bathymetryDataSize - 1))
+    {
+        if(m_bathymetry->at(int(i_x)) < 0)
+        {
+           if(m_bathymetry->at(int(i_x)) < -m_delta)
+           {    
+                return m_bathymetry->at(int(i_x)) + computeD(i_x,0);
+           }
+           else
+           {
+            return -m_delta+computeD(i_x,0);
+           }
+        } 
+        else 
+        {
+           if(m_bathymetry->at(int(i_x)) > m_delta)
+           {    
+                return m_bathymetry->at(int(i_x)) + computeD(i_x,0);
+           }
+           else
+           {
+            return m_delta+computeD(i_x,0);
+           }
+        }
+    }
+    else
+    {
+        return tsunami_lab::t_real(0);
+    }
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::computeD(t_real i_x,
                                                                   t_real) const
 {
+    i_x*=250;
     if (i_x < 250000 && 175000 < i_x)
     {
         return 10 * sin(((i_x - 175000) / 37500) * m_pi + m_pi);
