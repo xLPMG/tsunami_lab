@@ -41,6 +41,35 @@ and then subtract it from :math:`\Delta f`.
 
 3.1.2
 -----------
+Inside setGhostOutflow we have set the first and last cell as follows:
+When there is no boundary on a side, the according cell is set like: :math:`b_0 = b_1` or :math:`b_{n+1} = b_1`.
+If there has to be one, the bathymetry is set to 0,
+
+.. code::
+  
+  // left boundary
+  if (m_hasBoundaryL)
+  {
+    l_h[0] = 0;
+  }
+  else
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = l_hu[1];
+    l_b[0] = l_b[1];
+  }
+  // right boundary
+  if (m_hasBoundaryR)
+  {
+    l_h[m_nCells + 1] = 0;
+  }
+  else
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+    l_b[m_nCells + 1] = l_b[m_nCells];
+  }
+
 
 We decide to hard code a simple example:
 
@@ -148,6 +177,20 @@ Task 3.2.2
 Following simulation has a reflecting boundary conditions at the right boundary, and outflow boundary conditions at the left boundary.
 We have set :math:`q_l` initially for the value ????.
 
+We added a get- and setBathymetry and adjustWaterHeight function
+
+.. code:: cpp
+
+  void adjustWaterHeight()
+  {
+    for (t_idx i = 1; i < m_nCells + 1; i++)
+    {
+      m_h[m_step][i] -= m_b[i];
+      if (m_h[m_step][i] < 0)
+        m_h[m_step][i] = 0;
+    }
+  }
+
 
 3.3. Hydraulic Jumps
 ============================
@@ -159,7 +202,7 @@ TODO
 Task 3.4.1
 --------------------------
 We have used the `GEBCO grid <https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`__ from 2021 to collect the bathymetry data.
-With `the Generic Mapping <https://www.generic-mapping-tools.org>`__ we cut data and transformed it into a `csv` file. 
+With `the Generic Mapping Tool <https://www.generic-mapping-tools.org>`__ we cut data and transformed it into a `csv` file. 
 
 Task 3.4.2
 --------------------------
@@ -211,7 +254,7 @@ To compute the values above we need the vertical displacement for the location x
        0, &\text{else}.
   \end{cases}\end{split}
 
-**computeD()**
+**Constructor**
 
 .. code:: cpp
 
@@ -233,7 +276,8 @@ We have to multiply the location of x by 250, because one point is sampled every
 
 .. note:: :math:`\delta` is the constant to avoid running into numerical issues. It is set to 20.
 
-**splitLine()**
+
+**Constructor**
 
 .. code:: cpp
 

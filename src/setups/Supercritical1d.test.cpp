@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * Test for the implementation of shock-shock Riemann problems
+ * Test for the implementation of Supercritical1d setup
  **/
 
 #include <catch2/catch.hpp>
