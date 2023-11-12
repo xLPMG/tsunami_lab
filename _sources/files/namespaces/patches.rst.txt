@@ -7,3 +7,4 @@ Patches
     :project: tsunami_lab
     :private-members:
     :content-only:
+    :no-link:
