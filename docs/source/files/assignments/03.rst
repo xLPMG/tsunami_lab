@@ -181,23 +181,17 @@ Following setup has to be implemented
 Task 3.2.2
 --------------------------
 
-Following simulation has a reflecting boundary conditions at the right boundary, and outflow boundary conditions at the left boundary.
-We have set :math:`q_l` initially for the value ????.
+The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
+We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`.
 
-We added a get- and setBathymetry and adjustWaterHeight function
+.. raw:: html
 
-.. code:: cpp
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-2-1_oneSidedShock.mp4" type="video/mp4">
+    </video> 
 
-  void adjustWaterHeight()
-  {
-    for (t_idx i = 1; i < m_nCells + 1; i++)
-    {
-      m_h[m_step][i] -= m_b[i];
-      if (m_h[m_step][i] < 0)
-        m_h[m_step][i] = 0;
-    }
-  }
 
+To be seen is the reflected wave propagating towards left side.
 
 3.3. Hydraulic Jumps
 ============================

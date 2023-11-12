@@ -8,7 +8,6 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
-#include <iostream>
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
                                                            const std::string &i_solver,
