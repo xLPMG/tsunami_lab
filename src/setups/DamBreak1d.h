@@ -68,6 +68,15 @@ public:
    **/
   t_real getMomentumY(t_real,
                       t_real) const;
+
+  /**
+   * Gets the bathymetry
+   *
+   * @param i_x x-coordinate of the queried point.
+   * @return bathymetry.
+   **/
+  t_real getBathymetry(t_real i_x,
+                       t_real) const;
 };
 
 #endif

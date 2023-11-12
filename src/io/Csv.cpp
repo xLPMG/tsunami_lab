@@ -14,6 +14,7 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
                                  t_real const *i_h,
                                  t_real const *i_hu,
                                  t_real const *i_hv,
+                                 t_real const *i_b,
                                  std::ostream &io_stream)
 {
   // write the CSV header
@@ -24,6 +25,10 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
     io_stream << ",momentum_x";
   if (i_hv != nullptr)
     io_stream << ",momentum_y";
+  if (i_b != nullptr)
+    io_stream << ",bathymetry";
+  if (i_h != nullptr && i_b != nullptr)
+    io_stream << ",totalHeight";
   io_stream << "\n";
 
   // iterate over all cells
@@ -45,18 +50,23 @@ void tsunami_lab::io::Csv::write(t_real i_dxy,
         io_stream << "," << i_hu[l_id];
       if (i_hv != nullptr)
         io_stream << "," << i_hv[l_id];
+      if (i_b != nullptr)
+        io_stream << "," << i_b[l_id];
+      if (i_h != nullptr && i_b != nullptr)
+        io_stream << "," << i_h[l_id]+i_b[l_id];
       io_stream << "\n";
     }
   }
   io_stream << std::flush;
 }
 
-std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line,
-                                                         char separator)
+void tsunami_lab::io::Csv::splitLine(std::stringstream line,
+                                     char separator,
+                                     std::vector<std::string> &valuesVector)
 {
   std::vector<std::string> result;
   std::string word;
   while (getline(line, word, separator))
     result.push_back(word);
-  return result;
+  valuesVector = result;
 }

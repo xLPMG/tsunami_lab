@@ -4,29 +4,42 @@
  * @section DESCRIPTION
  * Entry-point for simulations.
  **/
+
+#include <nlohmann/json.hpp>
 #include "patches/WavePropagation1d.h"
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
+#include "setups/Subcritical1d.h"
+#include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
+#include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <filesystem>
 
-int main(int i_argc,
-         char *i_argv[])
+using json = nlohmann::json;
+
+int main()
 {
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 1;
 
+  // set simulation size in metres
+  tsunami_lab::t_real l_simulationSize = 10.0;
+
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
 
-  std::string l_solver = "";
+  // solver default
+  std::string l_solver = "fwave";
+  bool l_hasBoundaryL = false;
+  bool l_hasBoundaryR = false;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -34,57 +47,41 @@ int main(int i_argc,
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
-  if (i_argc < 2)
-  {
-    std::cerr << "invalid number of arguments, usage:" << std::endl;
-    std::cerr << "  ./build/tsunami_lab N_CELLS_X" << std::endl;
-    std::cerr << "  ./build/tsunami_lab N_CELLS_X SOLVER" << std::endl;
-    std::cerr << "where N_CELLS_X is the number of cells in x-direction." << std::endl;
-    return EXIT_FAILURE;
-  }
-  else
-  {
-    l_nx = atoi(i_argv[1]);
-    if (l_nx < 1)
-    {
-      std::cerr << "invalid number of cells" << std::endl;
-      return EXIT_FAILURE;
-    }
-    l_dxy = 10.0 / l_nx;
-  }
+  // read configuration data from file
+  std::ifstream l_configFile("config.json");
+  json l_configData = json::parse(l_configFile);
 
-  if (i_argc >= 3)
-  {
-    if (std::string(i_argv[2]) == "roe" || std::string(i_argv[2]) == "fwave")
-    {
-      l_solver = i_argv[2];
-    }
-    else
-    {
-      std::cout << "invalid argument: solver parameter only accepts: roe, fwave" << std::endl;
-      return EXIT_FAILURE;
-    }
-  }
-  else
-  {
-    l_solver = "fwave";
-  }
+  if (l_configData.contains("solver"))
+    l_solver = l_configData["solver"];
+  if (l_configData.contains("nx"))
+    l_nx = l_configData["nx"];
+  if (l_configData.contains("ny"))
+    l_ny = l_configData["ny"];
+  if (l_configData.contains("simulationSize"))
+    l_simulationSize = l_configData["simulationSize"];
+  if (l_configData.contains("hasBoundaryL"))
+    l_hasBoundaryL = l_configData["hasBoundaryL"];
+  if (l_configData.contains("hasBoundaryR"))
+    l_hasBoundaryR = l_configData["hasBoundaryR"];
+
+  l_dxy = l_simulationSize / l_nx;
 
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
+  std::cout << "  simulation size:                " << l_simulationSize << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
-
+  std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(100, 
-                                                10, 
-                                                5);
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, 10, 25);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
-                                                           l_solver);
+  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
+                                                           l_solver,
+                                                           l_hasBoundaryL,
+                                                           l_hasBoundaryR);
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -107,6 +104,8 @@ int main(int i_argc,
                                                        l_y);
       tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
                                                        l_y);
+      tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
+                                                       l_y);
 
       // set initial values in wave propagation solver
       l_waveProp->setHeight(l_cx,
@@ -120,8 +119,14 @@ int main(int i_argc,
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
+
+      l_waveProp->setBathymetry(l_cx,
+                                l_cy,
+                                l_b);
     }
   }
+
+  // l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -135,8 +140,14 @@ int main(int i_argc,
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 1.25;
+  tsunami_lab::t_real l_endTime = 7;
   tsunami_lab::t_real l_simTime = 0;
+
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+
+  std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;
 
@@ -148,13 +159,11 @@ int main(int i_argc,
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-      // TODO: create solutions folder automatically or at least check if it exists
       std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
       std::cout << "  writing wave field to " << l_path << std::endl;
 
       std::ofstream l_file;
       l_file.open(l_path);
-
       tsunami_lab::io::Csv::write(l_dxy,
                                   l_nx,
                                   1,
@@ -162,6 +171,7 @@ int main(int i_argc,
                                   l_waveProp->getHeight(),
                                   l_waveProp->getMomentumX(),
                                   nullptr,
+                                  l_waveProp->getBathymetry(),
                                   l_file);
       l_file.close();
       l_nOut++;

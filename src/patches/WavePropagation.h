@@ -65,6 +65,15 @@ public:
    **/
   virtual t_real const *getMomentumY() = 0;
 
+
+  /**
+   * Gets cells bathymetry
+   *
+   * @return bathymetry.
+   */
+  virtual t_real const *getBathymetry() = 0;
+
+
   /**
    * Sets the height of the cell to the given value.
    *
@@ -97,6 +106,23 @@ public:
   virtual void setMomentumY(t_idx i_ix,
                             t_idx i_iy,
                             t_real i_hv) = 0;
+
+  /**
+   * Sets the bathymetry of the cell to the given value.
+   *
+   * @param i_ix id of the cell in x-direction.
+   * @param i_iy id of the cell in y-direction.
+   * @param i_b bathymetry.
+   **/
+  virtual void setBathymetry(t_idx i_ix,
+                             t_idx i_iy,
+                             t_real i_b) = 0;
+
+  /**
+   * Corrects the water height based on the bathymetry
+   *
+   **/
+  virtual void adjustWaterHeight() = 0;
 };
 
 #endif

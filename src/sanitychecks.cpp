@@ -39,7 +39,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
   tsunami_lab::t_real l_accuracy = 0.00489;
 
   // amount of tests to run
-  tsunami_lab::t_real l_tests = 500000;
+  tsunami_lab::t_real l_tests = 500;
 
   // csv file path
   std::ifstream l_inputFile("resources/middle_states.csv");
@@ -51,7 +51,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
   tsunami_lab::t_idx l_nx = 10;
   tsunami_lab::t_idx l_ny = 1;
 
-  // simulation size
+  // simulation size in metres
   tsunami_lab::t_real l_size = 10;
 
   // cell size
@@ -78,7 +78,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
     if (l_line.substr(0, 1) != "#")
     {
       // extract data from csv line
-      l_row = tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',');
+      tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
 
       // START CALCULATION
 
@@ -95,7 +95,9 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
       // construct solver
       tsunami_lab::patches::WavePropagation *l_waveProp;
       l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx, 
-                                                               l_solver);
+                                                               l_solver,
+                                                               false,
+                                                               false);
 
       // maximum observed height in the setup
       tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();

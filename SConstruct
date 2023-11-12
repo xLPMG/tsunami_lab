@@ -38,11 +38,11 @@ Help( vars.GenerateHelpText( env ) )
 
 # add default flags
 if 'osx' in env['mode']:
-  env.Append( CXXFLAGS = [ '-std=c++11',
+  env.Append( CXXFLAGS = [ '-std=c++17',
                          '-Wall',
                          '-Wextra' ] )
 else:
-  env.Append( CXXFLAGS = [ '-std=c++11',
+  env.Append( CXXFLAGS = [ '-std=c++17',
                         '-Wall',
                         '-Wextra',
                         '-Werror',
@@ -70,6 +70,9 @@ if 'san' in  env['mode']:
 
 # add Catch2
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
+
+# add json
+env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 
 # get source files
 VariantDir( variant_dir = 'build/src',

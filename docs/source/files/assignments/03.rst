@@ -1,0 +1,600 @@
+3. Bathymetry & Boundary Conditions
+**************************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 3.1 - Non-zero Source Term
+==================================
+
+For introducing the bathymetry into our f-wave-solver we have got the following setting
+
+.. math:: 
+  \Delta f - \Delta x \Psi_{i-1/2} =  \sum_{p=1}^2 Z_p.
+
+.. math:: 
+  \begin{split}\Delta x \Psi_{i-1/2} := \begin{bmatrix}
+                                0 \\
+                                -g (b_r - b_l) \frac{h_l+h_r}{2}
+                              \end{bmatrix}.\end{split}
+
+.. Note::
+  :math:`\Delta x \Psi_{i-1/2}` summarizes the effect of the bathymetry:
+
+Task 3.1.1
+----------------
+
+**File: Fwave.cpp**
+
+Inside the computeEigencoefficients function we compute :math:`\Delta x \Psi_{i-1/2}`
+
+.. code::
+
+  t_real l_xPsi;
+  l_xPsi = -m_g * (i_bR - i_bL) * (t_real(0.5) *(i_hL + i_hR));
+
+and then subtract it from :math:`\Delta f`.
+
+.. code:: 
+
+    l_fDelta[1] -= l_xPsi;
+
+
+3.1.2
+-----------
+
+We decide to hard code a simple example:
+
+.. code:: cpp
+
+  l_waveProp->setBathymetry(9,0,45);
+  l_waveProp->setBathymetry(10,0,45);
+  l_waveProp->setBathymetry(11,0,45);
+  l_waveProp->setBathymetry(12,0,45);
+
+  l_waveProp->setBathymetry(20,0,-1);
+  l_waveProp->setBathymetry(21,0,-2);
+  l_waveProp->setBathymetry(22,0,-3);
+  l_waveProp->setBathymetry(23,0,-3);
+  l_waveProp->setBathymetry(24,0,-2);
+  l_waveProp->setBathymetry(25,0,-1);
+
+  l_waveProp->setBathymetry(50,0,-1);
+  l_waveProp->setBathymetry(51,0,-4);
+  l_waveProp->setBathymetry(52,0,-6);
+  l_waveProp->setBathymetry(53,0,-7);
+  l_waveProp->setBathymetry(54,0,-7);
+  l_waveProp->setBathymetry(55,0,-7);
+  l_waveProp->setBathymetry(56,0,-10);
+  l_waveProp->setBathymetry(57,0,-12);
+  l_waveProp->setBathymetry(58,0,-12);
+  l_waveProp->setBathymetry(59,0,-13);
+  l_waveProp->setBathymetry(60,0,-18);
+  l_waveProp->setBathymetry(61,0,-19);
+  l_waveProp->setBathymetry(62,0,-20);
+  l_waveProp->setBathymetry(63,0,-24);
+  l_waveProp->setBathymetry(64,0,-26);
+  l_waveProp->setBathymetry(65,0,-28);
+  l_waveProp->setBathymetry(66,0,-20);
+  l_waveProp->setBathymetry(67,0,-15);
+  l_waveProp->setBathymetry(68,0,-10);
+  l_waveProp->setBathymetry(69,0,-4);
+
+  l_waveProp->setBathymetry(497,0,35);
+  l_waveProp->setBathymetry(498,0,35);
+  l_waveProp->setBathymetry(499,0,35);
+  l_waveProp->setBathymetry(500,0,35);
+
+On the left and right side we have areas with positive bathymetry values, acting like a barrier.
+Towards the left side there is a trench. The effects can be seen in the following video:
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/boundaryExample1d.mp4" type="video/mp4">
+    </video> 
+
+
+
+When the shock wave coming from the right side first passes over the trench, first a dip and then some spikes can be seen,
+causing another wave going back to the right. The original wave continues until it hits the wall and reflects to the right.
+On its way, it catches up with the previously above the trench created wave and swallows it. 
+The wave then continues its path to the right side until it gets reflected at the wall. 
+The whole phenomenon then repeats itself, but with much less momentun, 
+until it eventually flattens out with zero momentum.
+
+.. note::
+
+  Due to its repetitive nature, we did not include the whole process until it reaches zero momentum.
+  One can easily assume the rest of the video.
+
+**Boundaries**
+
+We introduced two boolean parameters ``l_hasBoundaryL`` and ``l_hasBoundaryR`` which are passed onto the ``WavePropagation1d``
+class. The names are pretty self-explanatory.
+
+
+Inside ``setGhostOutflow`` we have set the first and last cell as follows:
+When there is no boundary on a side, the according cell is set like: :math:`b_0 = b_1` or :math:`b_{n+1} = b_1`.
+If there has to be one, the bathymetry is set to 0,
+
+.. code:: cpp
+  
+  // left boundary
+  if (m_hasBoundaryL)
+  {
+    l_h[0] = 0;
+  }
+  else
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = l_hu[1];
+    l_b[0] = l_b[1];
+  }
+  // right boundary
+  if (m_hasBoundaryR)
+  {
+    l_h[m_nCells + 1] = 0;
+  }
+  else
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+    l_b[m_nCells + 1] = l_b[m_nCells];
+  }
+
+
+
+3.2. Reflecting Boundary Conditions
+======================================
+
+Task 3.2.1 
+--------------------------
+
+Following setup has to be implemented 
+
+.. math::
+    \begin{split}h_{i} &:= h_{i-1} \\
+    (hu)_{i} &:= -(hu)_{i-1} \\
+    b_{i} &:= b_{i-1}\end{split}
+
+**File: WavePropagation1d.cpp**
+
+.. code:: cpp
+
+  // use margin for comparison in case of rounding errors
+  tsunami_lab::t_real margin = 0.001;
+  if (i_h[i_ceR] <= margin)
+  {
+    // right cell dry
+    o_hR = i_h[i_ceL];
+    o_bR = m_b[i_ceL];
+    o_huR = -i_hu[i_ceL];
+  }
+  else if (i_h[i_ceL] <= margin)
+  {
+    // left cell dry
+    o_hL = i_h[i_ceR];
+    o_bL = m_b[i_ceR];
+    o_huL = -i_hu[i_ceR];
+  }
+
+Task 3.2.2
+--------------------------
+
+The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
+We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`.
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-2-2_oneSidedShock1d.mp4" type="video/mp4">
+    </video> 
+
+It can be seen that this is indeed the one-sided version of the Shock-Shock problem:
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-2-2_shockShock1d.mp4" type="video/mp4">
+    </video> 
+
+
+
+
+3.3. Hydraulic Jumps
+============================
+
+Task 3.3.1
+--------------
+The following equation is given for the Froude number
+
+.. math::
+  F := \frac{u}{\sqrt{gh}}.
+
+There are two individual setups for each subcritical and supercritical flow.
+
+**subcritical flow**
+
+.. math:: 
+  \begin{split}\begin{aligned}
+      b(x) &=
+        \begin{cases}
+          -1.8 - 0.05 (x-10)^2 \quad   &\text{if } x \in (8,12) \\
+          -2 \quad &\text{else}
+        \end{cases}\\
+      h(x, 0) &= -b(x) \quad \text{if } x \in [0,25] \\
+      hu(x, 0) &= 4.42 \quad \text{if } x \in [0,25].
+    \end{aligned}\end{split}
+
+
+**supercritical flow**
+
+.. math::
+  \begin{split}\begin{aligned}
+      b(x) &=
+        \begin{cases}
+          -0.13 - 0.05 (x-10)^2 \quad   &\text{if } x \in (8,12) \\
+          -0.33 \quad &\text{else}
+        \end{cases}\\
+      h(x, 0) &= -b(x) \quad \text{if } x \in [0,25] \\
+      hu(x, 0) &= 0.18 \quad \text{if } x \in [0,25].
+    \end{aligned}\end{split}
+
+
+For computing the maximum Froude number and its position we implemented ``setMaxFroude`` in both setups of the following task and used their functions.
+
+.. code:: cpp
+
+    t_real l_maxFroude = 0;
+    t_real l_posFroude = 0;
+    for (t_real l_i = 0; l_i < 25; l_i += 0.1)
+    {
+        if (0 < l_i &&  l_i < 25)
+        {
+            t_real l_u = getMomentumX(l_i, 0) / getHeight(l_i, 0);
+            t_real i_sqrt_m_h = t_real(std::sqrt(m_g * getHeight(l_i, 0)));
+            t_real l_result = l_u / i_sqrt_m_h;
+            if (l_result > l_maxFroude)
+            {
+                l_maxFroude = l_result;
+                l_posFroude = l_i;
+            }
+        }
+    }
+
+Within the function we iterate over the full interval (0,25). The Froude number gets computed for every position.
+The maximum value and its positions gets updated everytime a value is larger than the current one.
+
+As a result, we get the value of 0.584458 for the subcritical and 1.2263 for the supercritical flow. Both at position 10.
+
+Task 3.3.2
+------------
+
+For the implementation of the setups we used the statements from above.
+
+Supercritical
+^^^^^^^^^^^^^^^
+
+**(File: Supercritical1d.cpp)**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getHeight(t_real i_x,
+                                                                    t_real) const
+  {
+    if (i_x <= 25 && i_x >= 0)
+    {
+        return -getBathymetry(i_x, 0);
+    }
+    else{
+        return m_height;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumX(t_real i_x,
+                                                                       t_real) const
+  {
+    if (i_x <= 25 && i_x >= 0)
+    {
+        return 0.18;
+    }else
+    {
+        return m_momentum;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumY(t_real,
+                                                                       t_real) const
+  {
+    return 0;
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getBathymetry(t_real i_x,
+                                                                        t_real) const
+  {
+    if (i_x < 12 && i_x > 8){
+        return -0.13 - (0.05 * (i_x - 10) * (i_x - 10));
+    }
+    else
+    {
+        return -0.33;
+    }
+  } 
+
+
+**Visualisation**
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-3-2_supercritical1d.mp4" type="video/mp4">
+    </video> 
+
+
+**Task 3.3.3**
+
+The hydraulic jump can be seen between cell 110 and cell 120. 
+Since ``l_simulationSize`` is 25 and ``l_nx`` is 250, the hydraulic jump lies between 11 and 12 metres.
+Note that the center of the rise in bathymetry is located at 10 metres.
+It can also be seen that the momentum is not constant over the entire domain.
+
+
+Subcritical
+^^^^^^^^^^^^^^^
+
+**(File: Subcritical1d.cpp)**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getHeight(t_real i_x,
+                                                                  t_real) const
+  {   
+    if(i_x <= 25 && i_x >= 0) 
+    {
+        return -getBathymetry(i_x, 0);
+    }
+    else
+    {
+        return m_height;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getMomentumX(t_real i_x,
+                                                                     t_real) const
+  {
+    if(i_x <= 25 && i_x >= 0) {
+        return 4.42;
+    }
+    else
+    {
+        return m_momentum;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getMomentumY(t_real,
+                                                                     t_real) const
+  {
+    return 0;
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getBathymetry(t_real i_x,
+                                                                      t_real) const
+  {
+    if(i_x < 12 && i_x > 8)
+    {
+        return -1.8 - (0.05 * (i_x - 10) * (i_x - 10));
+    }
+    else
+    {
+        return -2;
+    }
+  }
+
+
+**Visualisation**
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-3-2_subcritical1d.mp4" type="video/mp4">
+    </video> 
+
+3.4. 1D Tsunami Simulation
+================================
+
+Task 3.4.1
+--------------------------
+We have used the `GEBCO grid <https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`__ from 2021 to collect the bathymetry data.
+With `the Generic Mapping Tool <https://www.generic-mapping-tools.org>`__ we cut data and transformed it into a `csv` file. 
+
+Task 3.4.2
+--------------------------
+For this task we used the function *splitline()* that we implemented last week.
+
+(**File: Csv.cpp**)
+
+.. code:: cpp
+
+    std::vector<std::string> tsunami_lab::io::Csv::splitLine(std::stringstream line, 
+                                                             char separator,
+                                                             std::vector<std::string> &valuesVector)
+    {
+        std::vector<std::string> result;
+        std::string word;
+        while (getline(line, word, separator))
+            result.push_back(word);
+        valuesVector result;
+    }
+
+This function takes one line as a stringstream of the `csv` file as one input 
+and the character which separates the different values as another.
+There is a pointer to the vector of strings, which represents the, by the separator character, separated values of the `csv` file.
+
+Task 3.4.3
+--------------------------
+
+Following setup is given 
+
+.. math::
+  \begin{split}\begin{split}
+    h  &= \begin{cases}
+            \max( -b_\text{in}, \delta), &\text{if } b_\text{in} < 0 \\
+            0, &\text{else}
+          \end{cases}\\
+    hu &= 0\\
+    b  &= \begin{cases}
+            \min(b_\text{in}, -\delta) + d, & \text{ if } b_\text{in} < 0\\
+            \max(b_\text{in}, \delta) + d, & \text{ else}.
+          \end{cases}
+    \end{split}\end{split}
+
+To compute the values above we need the vertical displacement for the location x.
+
+
+.. math:: 
+  \begin{split}d(x) = \begin{cases}
+       10\cdot\sin(\frac{x-175000}{37500} \pi + \pi), & \text{ if } 175000 < x < 250000 \\
+       0, &\text{else}.
+  \end{cases}\end{split}
+
+**Constructor**
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::computeD(t_real i_x,
+                                                                      t_real) const
+    {
+      i_x *= 250;
+      if (i_x < 250000 && 175000 < i_x)
+      {
+          return 10 * sin(((i_x - 175000) / 37500) * m_pi + m_pi);
+      }
+      else
+      {
+          return 0;
+      }
+    }
+  
+We have to multiply the location of x by 250, because one point is sampled every 250 meters.
+
+.. note:: :math:`\delta` is the constant to avoid running into numerical issues. It is set to 20.
+
+
+**Constructor**
+
+.. code:: cpp
+
+  tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
+  {
+    if(!std::filesystem::exists(i_file)){
+        std::cout << "Error: File not found " << "(TsunamiEvent1d.cpp)" << std::endl;
+        exit(1);
+    }
+
+    std::ifstream l_inputFile(i_file);
+    m_bathymetry = new std::vector<tsunami_lab::t_real>;
+
+    std::string l_line;
+    std::vector<std::string> l_row;
+    while (getline(l_inputFile, l_line))
+    {
+        if (l_line.substr(0, 1) == "#")
+            continue;
+        tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
+        m_bathymetry->push_back(std::stof(l_row[3]));
+    }
+    l_inputFile.close();
+    m_bathymetryDataSize = m_bathymetry->size();
+  }
+
+The constructor gets the path to a bathymetry csv file as its input.
+As long as there is a new line in the csv file, the loop continues and writes the bathymetry into the vector.
+  
+The momentum functions always return 0.
+
+**getBathymetry()**
+
+.. code:: cpp
+  
+    tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_x,
+                                                                        t_real) const{
+      if (i_x <= (m_bathymetryDataSize - 1))
+        {
+            t_real l_currBath = m_bathymetry->at(int(i_x));
+            if (l_currBath < 0)
+            {
+                if (l_currBath < -m_delta)
+                {
+                    return l_currBath + computeD(i_x, 0);
+                }
+                else
+                {
+                    return -m_delta + computeD(i_x, 0);
+                }
+            }
+            else
+            {
+                if (l_currBath > m_delta)
+                {
+                    return l_currBath + computeD(i_x, 0);
+                }
+                else
+                {
+                    return m_delta + computeD(i_x, 0);
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+      }
+
+For the bathymetry we first check if there is a legal access for the vector. After that, we check the min and max cases for either
+:math:`b_{in}` < 0 or the else case. In both scenarios we have to add the vertical displacement.
+
+**getHeight()**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
+                                                                   t_real) const
+  {
+    if (i_x <= (m_bathymetryDataSize - 1) && m_bathymetry->at(int(i_x)) < 0)
+    {
+        if (-(m_bathymetry->at(int(i_x))) < m_delta)
+        {
+            return m_delta;
+        }
+        else
+        {
+            return -(m_bathymetry->at(int(i_x)));
+        }
+    }
+    else
+    {
+        return 0;
+    }
+  }
+
+Similar to ``getBathymetry()`` we check for the access and also whether :math:`b_{in}` < 0 or not.
+Depending on that, we return the maximum of either :math:`-b_{in}` and :math:`\delta` or 0.
+
+Task 3.4.4
+--------------------------
+
+*Visualisation*
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/tsunamiEvent1d_01.mp4" type="video/mp4">
+    </video> 
+
+As we can see, the wave propagates over time. 
+The shock wave speed going towards the shore increases with decreasing water depth.
+
+.. note::
+
+  The wave reflecting from the left side happens because of the given condition
+  ``Cells which are initially dry stay dry for the entire simulation``.
