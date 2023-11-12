@@ -41,7 +41,71 @@ and then subtract it from :math:`\Delta f`.
 
 3.1.2
 -----------
-TODO
+
+We decide to hard code a simple example:
+
+.. code:: cpp
+
+  l_waveProp->setBathymetry(9,0,45);
+  l_waveProp->setBathymetry(10,0,45);
+  l_waveProp->setBathymetry(11,0,45);
+  l_waveProp->setBathymetry(12,0,45);
+
+  l_waveProp->setBathymetry(20,0,-1);
+  l_waveProp->setBathymetry(21,0,-2);
+  l_waveProp->setBathymetry(22,0,-3);
+  l_waveProp->setBathymetry(23,0,-3);
+  l_waveProp->setBathymetry(24,0,-2);
+  l_waveProp->setBathymetry(25,0,-1);
+
+  l_waveProp->setBathymetry(50,0,-1);
+  l_waveProp->setBathymetry(51,0,-4);
+  l_waveProp->setBathymetry(52,0,-6);
+  l_waveProp->setBathymetry(53,0,-7);
+  l_waveProp->setBathymetry(54,0,-7);
+  l_waveProp->setBathymetry(55,0,-7);
+  l_waveProp->setBathymetry(56,0,-10);
+  l_waveProp->setBathymetry(57,0,-12);
+  l_waveProp->setBathymetry(58,0,-12);
+  l_waveProp->setBathymetry(59,0,-13);
+  l_waveProp->setBathymetry(60,0,-18);
+  l_waveProp->setBathymetry(61,0,-19);
+  l_waveProp->setBathymetry(62,0,-20);
+  l_waveProp->setBathymetry(63,0,-24);
+  l_waveProp->setBathymetry(64,0,-26);
+  l_waveProp->setBathymetry(65,0,-28);
+  l_waveProp->setBathymetry(66,0,-20);
+  l_waveProp->setBathymetry(67,0,-15);
+  l_waveProp->setBathymetry(68,0,-10);
+  l_waveProp->setBathymetry(69,0,-4);
+
+  l_waveProp->setBathymetry(497,0,35);
+  l_waveProp->setBathymetry(498,0,35);
+  l_waveProp->setBathymetry(499,0,35);
+  l_waveProp->setBathymetry(500,0,35);
+
+On the left and right side we have areas with positive bathymetry values, acting like a barrier.
+Towards the left side there is a trench. The effects can be seen in the following video:
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/boundaryExample1d.mp4" type="video/mp4">
+    </video> 
+
+
+
+When the shock wave coming from the right side first passes over the trench, first a dip and then some spikes can be seen,
+causing another wave going back to the right. The original wave continues until it hits the wall and reflects to the right.
+On its way, it catches up with the previously above the trench created wave and swallows it. 
+The wave then continues its path to the right side until it gets reflected at the wall. 
+The whole phenomenon then repeats itself, but with much less momentun, 
+until it eventually flattens out with zero momentum.
+
+.. note::
+
+  Due to its repetitive nature, we did not include the whole process until it reaches zero momentum.
+  One can easily assume the rest of the video.
 
 
 3.2. Reflecting Boundary Conditions
@@ -147,9 +211,9 @@ To compute the values above we need the vertical displacement for the location x
        0, &\text{else}.
   \end{cases}\end{split}
 
-**Constructor**
+**computeD()**
 
-.. code::
+.. code:: cpp
 
     tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::computeD(t_real i_x,
                                                                       t_real) const
