@@ -1,0 +1,8 @@
+{
+    "solver": "fwave",
+    "nx": 3524,
+    "ny": 1,
+    "simulationSize": 1762,
+    "hasBoundaryL": false,
+    "hasBoundaryR": false
+}

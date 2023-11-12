@@ -12,33 +12,27 @@
 #include <iostream>
 #include <filesystem>
 
-tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file,
-                                                    t_real i_h,
-                                                    t_real i_hu)
+tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
 {
     if(!std::filesystem::exists(i_file)){
         std::cout << "Error: File not found " << "(TsunamiEvent1d.cpp)" << std::endl;
         exit(1);
     }
 
-    m_height = i_h;
-    m_momentum = i_hu;
     std::ifstream l_inputFile(i_file);
     m_bathymetry = new std::vector<tsunami_lab::t_real>;
 
     std::string l_line;
     std::vector<std::string> l_row;
-    int l_rowCount = 0;
     while (getline(l_inputFile, l_line))
     {
         if (l_line.substr(0, 1) == "#")
             continue;
         tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
         m_bathymetry->push_back(std::stof(l_row[3]));
-        ++l_rowCount;
     }
     l_inputFile.close();
-    m_bathymetryDataSize = l_rowCount;
+    m_bathymetryDataSize = m_bathymetry->size();
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,

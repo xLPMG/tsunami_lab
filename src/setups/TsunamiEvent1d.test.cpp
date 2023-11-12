@@ -10,9 +10,7 @@
 
 TEST_CASE("Test the one-dimensional TsunamiEvent setup.", "[TsunamiEvent1d]")
 {
-  tsunami_lab::setups::TsunamiEvent1d l_TsunamiEvent1d("resources/tsunamiEvent1dTest.csv",
-                                                       8,
-                                                       9);
+  tsunami_lab::setups::TsunamiEvent1d l_TsunamiEvent1d("resources/tsunamiEvent1dTest.csv");
     /*
      * Test csv file:
      * 0,0,0,-1

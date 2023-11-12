@@ -25,12 +25,6 @@ namespace tsunami_lab
 class tsunami_lab::setups::TsunamiEvent1d : public Setup
 {
 private:
-  //! water height
-  t_real m_height = 0;
-
-  //! water momentum
-  t_real m_momentum = 0;
-
   //! stores the bathymetry data from the file
   std::vector<tsunami_lab::t_real> *m_bathymetry = nullptr;
 
@@ -48,12 +42,8 @@ public:
    * Constructor
    *
    * @param i_file csv file path containing bathymetry data.
-   * @param i_h water height.
-   * @param i_hu water momentum.
    **/
-  TsunamiEvent1d(const std::string &i_file,
-                t_real i_h,
-                t_real i_hu);
+  TsunamiEvent1d(const std::string &i_file);
 
   /**
    * Gets the water height at a given point.
