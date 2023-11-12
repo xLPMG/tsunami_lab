@@ -591,7 +591,8 @@ Task 3.4.4
       <source src="../../_static/assets/tsunamiEvent1d_01.mp4" type="video/mp4">
     </video> 
 
-As we can see, the wave propagates over time.
+As we can see, the wave propagates over time. 
+The shock wave speed going towards the shore increases with decreasing water depth.
 
 .. note::
 
