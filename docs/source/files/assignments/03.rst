@@ -336,6 +336,7 @@ Supercritical
 The hydraulic jump can be seen between cell 110 and cell 120. 
 Since ``l_simulationSize`` is 25 and ``l_nx`` is 250, the hydraulic jump lies between 11 and 12 metres.
 Note that the center of the rise in bathymetry is located at 10 metres.
+It can also be seen that the momentum is not constant over the entire domain.
 
 
 Subcritical
