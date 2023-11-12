@@ -107,7 +107,11 @@ until it eventually flattens out with zero momentum.
   Due to its repetitive nature, we did not include the whole process until it reaches zero momentum.
   One can easily assume the rest of the video.
 
-Inside setGhostOutflow we have set the first and last cell as follows:
+**Boundaries**
+
+We introduced two boolean parameters ``l_hasBoundaryL`` and ``l_hasBoundaryR`` which are passed onto the WavePropagation1d
+class. The names are pretty self-explanatory.
+Inside ``setGhostOutflow`` we have set the first and last cell as follows:
 When there is no boundary on a side, the according cell is set like: :math:`b_0 = b_1` or :math:`b_{n+1} = b_1`.
 If there has to be one, the bathymetry is set to 0,
 
