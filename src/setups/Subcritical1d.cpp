@@ -53,7 +53,7 @@ tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getBathymetry(t_real i_x
 {
     if(i_x < 12 && i_x > 8)
     {
-        return -1.8 - 0.05 * (i_x - 10) * (i_x - 10);
+        return -1.8 - (0.05 * (i_x - 10) * (i_x - 10));
     }
     else
     {
