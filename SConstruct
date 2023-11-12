@@ -38,11 +38,11 @@ Help( vars.GenerateHelpText( env ) )
 
 # add default flags
 if 'osx' in env['mode']:
-  env.Append( CXXFLAGS = [ '-std=c++11',
+  env.Append( CXXFLAGS = [ '-std=c++17',
                          '-Wall',
                          '-Wextra' ] )
 else:
-  env.Append( CXXFLAGS = [ '-std=c++11',
+  env.Append( CXXFLAGS = [ '-std=c++17',
                         '-Wall',
                         '-Wextra',
                         '-Werror',

@@ -37,3 +37,9 @@ tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getMomentumY(t_
 {
     return 0;
 }
+
+tsunami_lab::t_real tsunami_lab::setups::GeneralDiscontinuity1d::getBathymetry(t_real,
+                                                                               t_real) const
+{
+    return 0;
+}

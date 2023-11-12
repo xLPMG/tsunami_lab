@@ -1,5 +1,5 @@
 /**
- * @author Maximilian Grumbacher & Richard Hofmann
+ * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
  * Implementation of shock-shock Riemann problems
@@ -32,4 +32,10 @@ tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getMomentumY(t_real,
                                                                     t_real) const
 {
   return 0;
+}
+
+tsunami_lab::t_real tsunami_lab::setups::ShockShock1d::getBathymetry(t_real,
+                                                                     t_real) const
+{
+    return 0;
 }

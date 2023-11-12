@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * One-dimensional discontinuity problem
+ * One-dimensional subcritical problem
  **/
 #ifndef TSUNAMI_LAB_SETUPS_SUBCRITICAL_1D_H
 #define TSUNAMI_LAB_SETUPS_SUBCRITICAL_1D_H
@@ -20,30 +20,24 @@ namespace tsunami_lab
 class tsunami_lab::setups::Subcritical1d : public Setup
 {
 private:
-  //! height on the left side
-  t_real m_heightLeft = 0;
-  //! height on the right side
-  t_real m_heightRight = 0;
+  //! height
+  t_real m_height = 0;
 
-  //! momentum on the left side
-  t_real m_momentumLeft = 0;
-  //! momentum on the right side
-  t_real m_momentumRight = 0;
+  //! momentum
+  t_real m_momentum = 0;
 
-  //! wave discontinuity location on the x-axis
-  t_real m_xdis = 0;
+  //!gravity
+  static t_real constexpr m_g = 9.80665;
 
 public:
   /**
    * Constructor.
    *
-   * @param i_hL water height on the left
-   * @param i_hR water height on the left
-   * @param i_huL water momentum on the left side
-   * @param i_huR water momentum on the left side
-   * @param i_xdis position of discontinuity
+   * @param i_h water height
+   * @param i_hu water momentum
    **/
-  Subcritical1d(t_real i_x);
+  Subcritical1d(t_real i_h,
+                t_real i_hu);
 
   /**
    * Gets the water height at a given point.
@@ -74,9 +68,18 @@ public:
   /**
    * Gets the bathymetry
    *
-   * @return bathymetry 
+   * @param i_x x-coordinate of the queried point.
+   * @return bathymetry.
    **/
-  t_real getBathymetry(t_real i_x) const;
+  t_real getBathymetry(t_real i_x,
+                       t_real) const;
+
+
+  /**
+   * sets the maximum Froude number and the position and prints it at the end
+   **/
+  void setMaxFroude() const;
+  
 };
 
 #endif

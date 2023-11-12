@@ -33,7 +33,7 @@ private:
   //! momenta for the current and next time step for all cells
   t_real *m_hu[2] = {nullptr, nullptr};
 
-  //! bathymetry for left and right
+  //! bathymetry 
   t_real *m_b = nullptr;
 
   //! selected solver (roe or fwave)
@@ -75,10 +75,10 @@ public:
    * Constructs the 1d wave propagation solver.
    *
    * @param i_nCells number of cells.
-   * @param i_Solver selected solver.
+   * @param i_solver selected solver.
    **/
   WavePropagation1d(t_idx i_nCells,
-                    std::string i_solver,
+                    const std::string &i_solver,
                     bool i_hasBoundaryL,
                     bool i_hasBoundaryR);
 

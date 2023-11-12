@@ -10,13 +10,17 @@
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
+#include "setups/Subcritical1d.h"
+#include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
+#include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <filesystem>
 
 using json = nlohmann::json;
 
@@ -34,7 +38,6 @@ int main()
 
   // solver default
   std::string l_solver = "fwave";
-  bool l_bathymetry = false;
   bool l_hasBoundaryL = false;
   bool l_hasBoundaryR = false;
 
@@ -56,8 +59,6 @@ int main()
     l_ny = l_configData["ny"];
   if (l_configData.contains("simulationSize"))
     l_simulationSize = l_configData["simulationSize"];
-  if (l_configData.contains("useBathymetry"))
-    l_bathymetry = l_configData["useBathymetry"];
   if (l_configData.contains("hasBoundaryL"))
     l_hasBoundaryL = l_configData["hasBoundaryL"];
   if (l_configData.contains("hasBoundaryR"))
@@ -71,13 +72,10 @@ int main()
   std::cout << "  simulation size:                " << l_simulationSize << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
-  std::cout << "  using bathymetry?:              " << l_bathymetry << std::endl;
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::DamBreak1d(10,
-                                                25,
-                                                15);
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10,10,10,10,25);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -106,6 +104,8 @@ int main()
                                                        l_y);
       tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
                                                        l_y);
+      tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
+                                                       l_y);
 
       // set initial values in wave propagation solver
       l_waveProp->setHeight(l_cx,
@@ -119,42 +119,14 @@ int main()
       l_waveProp->setMomentumY(l_cx,
                                l_cy,
                                l_hv);
+
+      l_waveProp->setBathymetry(l_cx,
+                                l_cy,
+                                l_b);
     }
   }
-  l_waveProp->setBathymetry(9,0,45);
-  l_waveProp->setBathymetry(10,0,45);
-  l_waveProp->setBathymetry(11,0,45);
-  l_waveProp->setBathymetry(12,0,45);
 
-  l_waveProp->setBathymetry(20,0,-1);
-  l_waveProp->setBathymetry(21,0,-2);
-  l_waveProp->setBathymetry(22,0,-3);
-  l_waveProp->setBathymetry(23,0,-3);
-  l_waveProp->setBathymetry(24,0,-2);
-  l_waveProp->setBathymetry(25,0,-1);
-
-  l_waveProp->setBathymetry(50,0,-1);
-  l_waveProp->setBathymetry(51,0,-4);
-  l_waveProp->setBathymetry(52,0,-6);
-  l_waveProp->setBathymetry(53,0,-7);
-  l_waveProp->setBathymetry(54,0,-7);
-  l_waveProp->setBathymetry(55,0,-7);
-  l_waveProp->setBathymetry(56,0,-8);
-  l_waveProp->setBathymetry(57,0,-9);
-  l_waveProp->setBathymetry(58,0,-8);
-  l_waveProp->setBathymetry(59,0,-4);
-
-  l_waveProp->setBathymetry(497,0,35);
-  l_waveProp->setBathymetry(498,0,35);
-  l_waveProp->setBathymetry(499,0,35);
-  l_waveProp->setBathymetry(500,0,35);
-
-
-  l_waveProp->setBathymetry(24,0,-1);
-  l_waveProp->setBathymetry(25,0,-1);
-  l_waveProp->setBathymetry(26,0,-1);
-
-  l_waveProp->adjustWaterHeight();
+  //l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -168,8 +140,14 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 10;
+  tsunami_lab::t_real l_endTime = 7;
   tsunami_lab::t_real l_simTime = 0;
+
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+    
+  std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;
 
@@ -181,7 +159,6 @@ int main()
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-      // TODO: create solutions folder automatically or at least check if it exists
       std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
       std::cout << "  writing wave field to " << l_path << std::endl;
 

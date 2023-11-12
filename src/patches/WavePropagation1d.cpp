@@ -8,10 +8,9 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
-#include <iostream>
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
-                                                           std::string i_solver,
+                                                           const std::string &i_solver,
                                                            bool i_hasBoundaryL,
                                                            bool i_hasBoundaryR)
 {
@@ -147,19 +146,26 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
 
   // left boundary
   if (m_hasBoundaryL)
+  {
     l_h[0] = 0;
+  }
   else
+  {
     l_h[0] = l_h[1];
-  l_hu[0] = l_hu[1];
-  l_b[0] = l_b[1];
-
+    l_hu[0] = l_hu[1];
+    l_b[0] = l_b[1];
+  }
   // right boundary
   if (m_hasBoundaryR)
+  {
     l_h[m_nCells + 1] = 0;
+  }
   else
+  {
     l_h[m_nCells + 1] = l_h[m_nCells];
-  l_hu[m_nCells + 1] = l_hu[m_nCells];
-  l_b[m_nCells + 1] = l_b[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+    l_b[m_nCells + 1] = l_b[m_nCells];
+  }
 }
 
 void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
@@ -174,7 +180,7 @@ void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
                                                                 t_real &o_bR)
 {
   // use margin for comparison in case of rounding errors
-  tsunami_lab::t_real margin = 0.001;
+  tsunami_lab::t_real margin = 0.00001;
   if (i_h[i_ceR] <= margin)
   {
     // right cell dry
