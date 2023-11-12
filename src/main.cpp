@@ -48,7 +48,7 @@ int main()
   std::cout << "####################################" << std::endl;
 
   // read configuration data from file
-  std::ifstream l_configFile("tsunamiEvent1d.json");
+  std::ifstream l_configFile("config.json");
   json l_configData = json::parse(l_configFile);
 
   if (l_configData.contains("solver"))
@@ -75,7 +75,7 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv");
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10,10,10,10,25);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -126,7 +126,7 @@ int main()
     }
   }
 
-  l_waveProp->adjustWaterHeight();
+  //l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -140,7 +140,7 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 10;
+  tsunami_lab::t_real l_endTime = 7;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder

@@ -182,21 +182,156 @@ Task 3.2.2
 --------------------------
 
 The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
-We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`
-and :math:`q_r` initially to :math:`\begin{bmatrix} 1 \\ 0 \end{bmatrix}` just so that the cells are not dry.
+We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`.
 
 .. raw:: html
 
     <video width="100%" height="auto" controls>
-      <source src="../../_static/assets/task_3-2-1_oneSidedShock1d.mp4" type="video/mp4">
+      <source src="../../_static/assets/task_3-2-2_oneSidedShock1d.mp4" type="video/mp4">
+    </video> 
+
+It can be seen that this is indeed the one-sided version of the Shock-Shock problem:
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-2-2_shockShock1d.mp4" type="video/mp4">
     </video> 
 
 
-To be seen is the reflected wave propagating towards left side.
+
 
 3.3. Hydraulic Jumps
 ============================
-TODO
+
+Task 3.3.2
+------------
+
+Supercritical
+^^^^^^^^^^^^^^^
+
+**(File: Supercritical1d.cpp)**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getHeight(t_real i_x,
+                                                                    t_real) const
+  {
+    if (i_x <= 25 && i_x >= 0)
+    {
+        return -getBathymetry(i_x, 0);
+    }
+    else{
+        return m_height;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumX(t_real i_x,
+                                                                       t_real) const
+  {
+    if (i_x <= 25 && i_x >= 0)
+    {
+        return 0.18;
+    }else
+    {
+        return m_momentum;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumY(t_real,
+                                                                       t_real) const
+  {
+    return 0;
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getBathymetry(t_real i_x,
+                                                                        t_real) const
+  {
+    if (i_x < 12 && i_x > 8){
+        return -0.13 - (0.05 * (i_x - 10) * (i_x - 10));
+    }
+    else
+    {
+        return -0.33;
+    }
+  } 
+
+
+**Visualisation**
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-3-2_supercritical1d.mp4" type="video/mp4">
+    </video> 
+
+
+**Task 3.3.3**
+
+The hydraulic jump can be seen between cell 110 and cell 120. 
+Since ``l_simulationSize`` is 25 and ``l_nx`` is 250, the hydraulic jump lies between 11 and 12 metres.
+Note that the center of the rise in bathymetry is located at 10 metres.
+
+
+Subcritical
+^^^^^^^^^^^^^^^
+
+**(File: Subcritical1d.cpp)**
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getHeight(t_real i_x,
+                                                                  t_real) const
+  {   
+    if(i_x <= 25 && i_x >= 0) 
+    {
+        return -getBathymetry(i_x, 0);
+    }
+    else
+    {
+        return m_height;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getMomentumX(t_real i_x,
+                                                                     t_real) const
+  {
+    if(i_x <= 25 && i_x >= 0) {
+        return 4.42;
+    }
+    else
+    {
+        return m_momentum;
+    }
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getMomentumY(t_real,
+                                                                     t_real) const
+  {
+    return 0;
+  }
+
+  tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getBathymetry(t_real i_x,
+                                                                      t_real) const
+  {
+    if(i_x < 12 && i_x > 8)
+    {
+        return -1.8 - (0.05 * (i_x - 10) * (i_x - 10));
+    }
+    else
+    {
+        return -2;
+    }
+  }
+
+
+**Visualisation**
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_3-3-2_subcritical1d.mp4" type="video/mp4">
+    </video> 
 
 3.4. 1D Tsunami Simulation
 ================================

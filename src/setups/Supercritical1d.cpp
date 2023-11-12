@@ -48,7 +48,7 @@ tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getBathymetry(t_real i
                                                                         t_real) const
 {
     if (i_x < 12 && i_x > 8){
-        return -0.13 - 0.05 * (i_x - 10) * (i_x - 10);
+        return -0.13 - (0.05 * (i_x - 10) * (i_x - 10));
     }
     else
     {

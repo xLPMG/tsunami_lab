@@ -181,7 +181,7 @@ void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
                                                                 t_real &o_bR)
 {
   // use margin for comparison in case of rounding errors
-  tsunami_lab::t_real margin = 0.001;
+  tsunami_lab::t_real margin = 0.00001;
   if (i_h[i_ceR] <= margin)
   {
     // right cell dry
