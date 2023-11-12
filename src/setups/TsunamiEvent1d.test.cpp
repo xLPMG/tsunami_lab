@@ -70,4 +70,8 @@ TEST_CASE("Test the one-dimensional TsunamiEvent setup.", "[TsunamiEvent1d]")
   REQUIRE(l_TsunamiEvent1d.getMomentumX(10, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumY(10, 0) == tsunami_lab::t_real(0));
+
+
+  //test computeD
+  REQUIRE(l_TsunamiEvent1d.computeD(800, 0) == Approx(-8.6602));
 }

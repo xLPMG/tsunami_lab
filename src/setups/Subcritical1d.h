@@ -26,6 +26,9 @@ private:
   //! momentum
   t_real m_momentum = 0;
 
+  //!gravity
+  static t_real constexpr m_g = 9.80665;
+
 public:
   /**
    * Constructor.
@@ -70,6 +73,12 @@ public:
    **/
   t_real getBathymetry(t_real i_x,
                        t_real) const;
+
+
+  /**
+   * sets the maximum Froude number and the position and prints it at the end
+   **/
+  void setMax() const;
 };
 
 #endif
