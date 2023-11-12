@@ -41,35 +41,6 @@ and then subtract it from :math:`\Delta f`.
 
 3.1.2
 -----------
-Inside setGhostOutflow we have set the first and last cell as follows:
-When there is no boundary on a side, the according cell is set like: :math:`b_0 = b_1` or :math:`b_{n+1} = b_1`.
-If there has to be one, the bathymetry is set to 0,
-
-.. code::
-  
-  // left boundary
-  if (m_hasBoundaryL)
-  {
-    l_h[0] = 0;
-  }
-  else
-  {
-    l_h[0] = l_h[1];
-    l_hu[0] = l_hu[1];
-    l_b[0] = l_b[1];
-  }
-  // right boundary
-  if (m_hasBoundaryR)
-  {
-    l_h[m_nCells + 1] = 0;
-  }
-  else
-  {
-    l_h[m_nCells + 1] = l_h[m_nCells];
-    l_hu[m_nCells + 1] = l_hu[m_nCells];
-    l_b[m_nCells + 1] = l_b[m_nCells];
-  }
-
 
 We decide to hard code a simple example:
 
@@ -135,6 +106,36 @@ until it eventually flattens out with zero momentum.
 
   Due to its repetitive nature, we did not include the whole process until it reaches zero momentum.
   One can easily assume the rest of the video.
+
+Inside setGhostOutflow we have set the first and last cell as follows:
+When there is no boundary on a side, the according cell is set like: :math:`b_0 = b_1` or :math:`b_{n+1} = b_1`.
+If there has to be one, the bathymetry is set to 0,
+
+.. code:: cpp
+  
+  // left boundary
+  if (m_hasBoundaryL)
+  {
+    l_h[0] = 0;
+  }
+  else
+  {
+    l_h[0] = l_h[1];
+    l_hu[0] = l_hu[1];
+    l_b[0] = l_b[1];
+  }
+  // right boundary
+  if (m_hasBoundaryR)
+  {
+    l_h[m_nCells + 1] = 0;
+  }
+  else
+  {
+    l_h[m_nCells + 1] = l_h[m_nCells];
+    l_hu[m_nCells + 1] = l_hu[m_nCells];
+    l_b[m_nCells + 1] = l_b[m_nCells];
+  }
+
 
 
 3.2. Reflecting Boundary Conditions
