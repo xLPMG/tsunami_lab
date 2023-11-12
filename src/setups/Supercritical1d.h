@@ -77,7 +77,7 @@ public:
   /**
    * sets the maximum Froude number and the position and prints it at the end
    **/
-  void setMax() const;
+  void setMaxFroude() const;
 };
 
 #endif

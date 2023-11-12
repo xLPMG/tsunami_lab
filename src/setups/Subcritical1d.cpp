@@ -14,7 +14,7 @@ tsunami_lab::setups::Subcritical1d::Subcritical1d(t_real i_h,
 {
     m_height = i_h;
     m_momentum = i_hu;
-    setMax();
+    setMaxFroude();
 }
 
 tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getHeight(t_real i_x,
@@ -62,7 +62,7 @@ tsunami_lab::t_real tsunami_lab::setups::Subcritical1d::getBathymetry(t_real i_x
     
 }
 
-void tsunami_lab::setups::Subcritical1d::setMax() const
+void tsunami_lab::setups::Subcritical1d::setMaxFroude() const
 {
     t_real l_maxFroude = 0;
     t_real l_posFroude = 0;
