@@ -182,12 +182,13 @@ Task 3.2.2
 --------------------------
 
 The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
-We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`.
+We have set :math:`q_l` initially to :math:`\begin{bmatrix} 10 \\ 10 \end{bmatrix}`
+and :math:`q_r` initially to :math:`\begin{bmatrix} 1 \\ 0 \end{bmatrix}` just so that the cells are not dry.
 
 .. raw:: html
 
     <video width="100%" height="auto" controls>
-      <source src="../../_static/assets/task_3-2-1_oneSidedShock.mp4" type="video/mp4">
+      <source src="../../_static/assets/task_3-2-1_oneSidedShock1d.mp4" type="video/mp4">
     </video> 
 
 
