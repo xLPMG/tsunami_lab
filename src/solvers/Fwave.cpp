@@ -53,12 +53,11 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients(t_real i_hL,
   // compute f delta
   t_real l_fDelta[2] = {0};
   l_fDelta[0] = i_huR - i_huL;
-  l_fDelta[1] = (i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) 
-              - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL);
+  l_fDelta[1] = (i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL);
 
   // computing delta x psi
   t_real l_xPsi;
-  l_xPsi = -m_g * (i_bR - i_bL) * (t_real(0.5) *(i_hL + i_hR));
+  l_xPsi = -m_g * (i_bR - i_bL) * (t_real(0.5) * (i_hL + i_hR));
   l_fDelta[1] -= l_xPsi;
 
   // compute alpha

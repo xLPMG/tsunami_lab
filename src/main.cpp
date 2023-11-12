@@ -75,7 +75,7 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10,10,10,10,25);
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, 10, 25);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -126,7 +126,7 @@ int main()
     }
   }
 
-  //l_waveProp->adjustWaterHeight();
+  // l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -146,7 +146,7 @@ int main()
   // clean solutions folder
   if (std::filesystem::exists("solutions"))
     std::filesystem::remove_all("solutions");
-    
+
   std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;

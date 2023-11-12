@@ -14,8 +14,10 @@
 
 tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
 {
-    if(!std::filesystem::exists(i_file)){
-        std::cout << "Error: File not found " << "(TsunamiEvent1d.cpp)" << std::endl;
+    if (!std::filesystem::exists(i_file))
+    {
+        std::cout << "Error: File not found "
+                  << "(TsunamiEvent1d.cpp)" << std::endl;
         exit(1);
     }
 
@@ -33,6 +35,11 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
     }
     l_inputFile.close();
     m_bathymetryDataSize = m_bathymetry->size();
+}
+
+tsunami_lab::setups::TsunamiEvent1d::~TsunamiEvent1d()
+{
+    delete m_bathymetry;
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,

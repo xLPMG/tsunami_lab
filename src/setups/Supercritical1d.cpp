@@ -68,7 +68,7 @@ void tsunami_lab::setups::Supercritical1d::setMaxFroude() const
     t_real l_posFroude = 0;
     for (t_real l_i = 0; l_i < 25; l_i += 0.1)
     {
-        if (0 < l_i &&  l_i < 25)
+        if (0 < l_i && l_i < 25)
         {
             t_real l_u = getMomentumX(l_i, 0) / getHeight(l_i, 0);
             t_real i_sqrt_m_h = t_real(std::sqrt(m_g * getHeight(l_i, 0)));

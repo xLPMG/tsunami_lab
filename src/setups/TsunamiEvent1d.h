@@ -46,6 +46,11 @@ public:
   TsunamiEvent1d(const std::string &i_file);
 
   /**
+   * Destructor which frees all allocated memory.
+   **/
+  ~TsunamiEvent1d();
+
+  /**
    * Gets the water height at a given point.
    *
    * @param i_x x-coordinate of the queried point.
