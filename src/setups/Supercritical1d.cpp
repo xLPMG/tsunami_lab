@@ -18,16 +18,24 @@ tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getHeight(t_real i_x,
                                                                     t_real) const
 {
     if (i_x <= 25 && i_x >= 0)
+    {
         return -getBathymetry(i_x, 0);
-    return m_height;
+    }
+    else{
+        return m_height;
+    }
 }
 
 tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumX(t_real i_x,
                                                                        t_real) const
 {
     if (i_x <= 25 && i_x >= 0)
+    {
         return 0.18;
-    return m_momentum;
+    }else
+    {
+        return m_momentum;
+    }
 }
 
 tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumY(t_real,
@@ -39,7 +47,11 @@ tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getMomentumY(t_real,
 tsunami_lab::t_real tsunami_lab::setups::Supercritical1d::getBathymetry(t_real i_x,
                                                                         t_real) const
 {
-    if (i_x < 12 && i_x > 8)
+    if (i_x < 12 && i_x > 8){
         return -0.13 - 0.05 * (i_x - 10) * (i_x - 10);
-    return -0.33;
+    }
+    else
+    {
+        return -0.33;
+    }
 }

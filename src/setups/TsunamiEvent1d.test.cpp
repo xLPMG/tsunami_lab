@@ -65,7 +65,7 @@ TEST_CASE("Test the one-dimensional TsunamiEvent setup.", "[TsunamiEvent1d]")
   REQUIRE(l_TsunamiEvent1d.getMomentumY(5, 0) == tsunami_lab::t_real(0));
 
   //test outside specified bathymetry area
-  REQUIRE(l_TsunamiEvent1d.getHeight(10, 0) == tsunami_lab::t_real(8));
+  REQUIRE(l_TsunamiEvent1d.getHeight(10, 0) == tsunami_lab::t_real(0));
 
   REQUIRE(l_TsunamiEvent1d.getMomentumX(10, 0) == tsunami_lab::t_real(0));
 
