@@ -1,7 +1,7 @@
 {
     "solver": "fwave",
     "nx": 500,
-    "ny": 1,
+    "ny": 500,
     "simulationSize": 50,
     "useBathymetry": true,
     "hasBoundaryL": false,
