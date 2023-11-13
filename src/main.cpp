@@ -41,6 +41,9 @@ int main()
   bool l_hasBoundaryL = false;
   bool l_hasBoundaryR = false;
 
+  //dimension choice
+  int l_dimension = 1;
+
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
   std::cout << "###                              ###" << std::endl;
@@ -63,6 +66,8 @@ int main()
     l_hasBoundaryL = l_configData["hasBoundaryL"];
   if (l_configData.contains("hasBoundaryR"))
     l_hasBoundaryR = l_configData["hasBoundaryR"];
+  if (l_configData.contains("dimension"))
+    l_dimension = l_configData["dimension"];
 
   l_dxy = l_simulationSize / l_nx;
 
