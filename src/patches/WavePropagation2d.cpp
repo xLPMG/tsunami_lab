@@ -15,16 +15,16 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            const std::string &i_solver,
                                                            bool i_hasBoundaryL,
                                                            bool i_hasBoundaryR,
-                                                           bool l_hasBoundaryU,
-                                                           bool l_hasBoundaryD)
+                                                           bool i_hasBoundaryU,
+                                                           bool i_hasBoundaryD)
 {
   m_nCellsX = i_nCellsX;
   m_nCellsY = i_nCellsY;
   m_solver = i_solver;
   m_hasBoundaryL = i_hasBoundaryL;
   m_hasBoundaryR = i_hasBoundaryR;
-  m_hasBoundaryL = i_hasBoundaryL;
-  m_hasBoundaryR = i_hasBoundaryR;
+  m_hasBoundaryU = i_hasBoundaryU;
+  m_hasBoundaryD = i_hasBoundaryD;
 
   // allocate memory including a single ghost cell on each side
   for (unsigned short l_st = 0; l_st < 2; l_st++)

@@ -34,15 +34,18 @@ int main()
 
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 10.0;
-    tsunami_lab::t_real l_simulationSizeY = 10.0;
+  tsunami_lab::t_real l_simulationSizeY = 10.0;
 
   // set cell size
-  tsunami_lab::t_real l_dxy = 1;
+  tsunami_lab::t_real l_dx = 1;
+  tsunami_lab::t_real l_dy = 1;
 
   // solver default
   std::string l_solver = "fwave";
   bool l_hasBoundaryL = false;
   bool l_hasBoundaryR = false;
+  bool l_hasBoundaryU = false;
+  bool l_hasBoundaryD = false;
 
   //dimension choice
   int l_dimension = 1;
@@ -65,20 +68,29 @@ int main()
     l_ny = l_configData["ny"];
   if (l_configData.contains("l_simulationSizeX"))
     l_simulationSizeX = l_configData["l_simulationSizeX"];
+  if (l_configData.contains("l_simulationSizeY"))
+    l_simulationSizeX = l_configData["l_simulationSizeY"];
   if (l_configData.contains("hasBoundaryL"))
     l_hasBoundaryL = l_configData["hasBoundaryL"];
   if (l_configData.contains("hasBoundaryR"))
     l_hasBoundaryR = l_configData["hasBoundaryR"];
+  if (l_configData.contains("hasBoundaryU"))
+    l_hasBoundaryU = l_configData["hasBoundaryU"];
+  if (l_configData.contains("hasBoundaryD"))
+    l_hasBoundaryD = l_configData["hasBoundaryD"];
   if (l_configData.contains("dimension"))
     l_dimension = l_configData["dimension"];
 
-  l_dxy = l_simulationSizeX / l_nx;
+  l_dx = l_simulationSizeX / l_nx;
+  l_dy = l_simulationSizeY / l_ny;
 
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
   std::cout << "  simulation size in x-direction: " << l_simulationSizeX << std::endl;
-  std::cout << "  cell size:                      " << l_dxy << std::endl;
+  std::cout << "  simulation size in y-direction: " << l_simulationSizeY << std::endl;
+  std::cout << "  cell size in x-direction:       " << l_dx << std::endl;
+  std::cout << "  cell size in y-direction:       " << l_dx << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
@@ -91,8 +103,8 @@ int main()
                                                            l_solver,
                                                            l_hasBoundaryL,
                                                            l_hasBoundaryR,
-                                                           l_hasBoundaryL,
-                                                           l_hasBoundaryR);
+                                                           l_hasBoundaryU,
+                                                           l_hasBoundaryD);
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -100,11 +112,11 @@ int main()
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
-    tsunami_lab::t_real l_y = l_cy * l_dxy;
+    tsunami_lab::t_real l_y = l_cy * l_dy;
 
     for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
     {
-      tsunami_lab::t_real l_x = l_cx * l_dxy;
+      tsunami_lab::t_real l_x = l_cx * l_dx;
 
       // get initial values of the setup
       tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
@@ -143,10 +155,12 @@ int main()
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
   // derive constant time step; changes at simulation time are ignored
-  tsunami_lab::t_real l_dt = 0.5 * l_dxy / l_speedMax;
+  tsunami_lab::t_real l_dtx = 0.5 * l_dx / l_speedMax;
+  tsunami_lab::t_real l_dty = 0.5 * l_dy / l_speedMax;
+  tsunami_lab::t_real l_dt = std::min(l_dtx, l_dty);
 
   // derive scaling for a time step
-  tsunami_lab::t_real l_scaling = l_dt / l_dxy;
+  tsunami_lab::t_real l_scaling = l_dt / (l_dx+l_dy)*tsunami_lab::t_real(0.5);
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
@@ -175,10 +189,11 @@ int main()
 
       std::ofstream l_file;
       l_file.open(l_path);
-      tsunami_lab::io::Csv::write(l_dxy,
+      tsunami_lab::io::Csv::write(l_dx,
+                                  l_dy,
                                   l_nx,
-                                  1,
-                                  1,
+                                  l_ny,
+                                  l_waveProp->getStride(),
                                   l_waveProp->getHeight(),
                                   l_waveProp->getMomentumX(),
                                   l_waveProp->getMomentumY(),
