@@ -4,9 +4,9 @@
     "ny": 50,
     "simulationSizeX": 100,
     "simulationSizeY": 100,
-    "hasBoundaryL": true,
-    "hasBoundaryR": true,
-    "hasBoundaryU": true,
-    "hasBoundaryD": true,
+    "hasBoundaryL": false,
+    "hasBoundaryR": false,
+    "hasBoundaryU": false,
+    "hasBoundaryD": false,
     "dimension": 2
 }

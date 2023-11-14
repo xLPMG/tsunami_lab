@@ -38,15 +38,12 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   // init to zero
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
-    for (t_idx l_ce = 0; l_ce < m_nCellsX + 2; l_ce++)
+    for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2)*(m_nCellsY + 2); l_ce++)
     {
-      for (t_idx l_de = 0; l_de < m_nCellsY + 2; l_de++)
-      {
-        m_h[l_st][l_ce + l_de] = 0;
-        m_huX[l_st][l_ce + l_de] = 0;
-        m_huY[l_st][l_ce + l_de] = 0;
-        m_b[l_ce + l_de] = 0;
-      }
+        m_h[l_st][l_ce] = 0;
+        m_huX[l_st][l_ce] = 0;
+        m_huY[l_st][l_ce] = 0;
+        m_b[l_ce] = 0;
     }
   }
 }
@@ -76,14 +73,11 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
   t_real *l_huNewY = m_huY[m_step];
 
   // init new cell quantities
-  for (t_idx l_ce = 1; l_ce < m_nCellsX + 1; l_ce++)
+  for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2)*(m_nCellsY + 2); l_ce++)
   {
-    for (t_idx l_de = 1; l_de < m_nCellsY + 1; l_de++)
-    {
-      l_hNew[l_ce] = l_hOld[l_ce + l_de];
-      l_huNewX[l_ce] = l_huOldX[l_ce + l_de];
-      l_huNewY[l_ce] = l_huOldY[l_ce + l_de];
-    }
+      l_hNew[l_ce] = l_hOld[l_ce];
+      l_huNewX[l_ce] = l_huOldX[l_ce];
+      l_huNewY[l_ce] = l_huOldY[l_ce];
   }
 
   // iterate over edges and update with Riemann solutions
