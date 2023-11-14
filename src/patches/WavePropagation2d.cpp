@@ -8,6 +8,7 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
+#include <iostream>
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
@@ -39,12 +40,13 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   {
     for (t_idx l_ce = 0; l_ce < m_nCellsX + 2; l_ce++)
     {
-      for(t_idx l_de = 0; l_de < m_nCellsY + 2; l_de++){
-        m_h[l_st][l_ce + l_de ] = 0;
+      for (t_idx l_de = 0; l_de < m_nCellsY + 2; l_de++)
+      {
+        m_h[l_st][l_ce + l_de] = 0;
         m_huX[l_st][l_ce + l_de] = 0;
         m_huY[l_st][l_ce + l_de] = 0;
         m_b[l_ce + l_de] = 0;
-     }
+      }
     }
   }
 }
@@ -73,180 +75,181 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
   t_real *l_huNewY = m_huY[m_step];
 
   // init new cell quantities
-  for (t_idx l_ce = 1; l_ce < m_nCellsX +1 ; l_ce++)
+  for (t_idx l_ce = 1; l_ce < m_nCellsX + 1; l_ce++)
   {
-    for(t_idx l_de = 1; l_de < m_nCellsY +1 ; l_de++){
-        l_hNew[l_ce] = l_hOld[l_ce + l_de];
-        l_huNewX[l_ce] = l_huOldX[l_ce + l_de];
-        l_huNewY[l_ce] = l_huOldY[l_ce + l_de];
+    for (t_idx l_de = 1; l_de < m_nCellsY + 1; l_de++)
+    {
+      l_hNew[l_ce] = l_hOld[l_ce + l_de];
+      l_huNewX[l_ce] = l_huOldX[l_ce + l_de];
+      l_huNewY[l_ce] = l_huOldY[l_ce + l_de];
     }
   }
 
   // iterate over edges and update with Riemann solutions
-  //first loop for x sweep
+  // first loop for x sweep
   for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
   {
-    for(t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
+    for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
     {
-    // determine left and right cell-id
-    t_idx l_ceL = l_ec +l_ed;
-    t_idx l_ceR = l_ec + 1 +l_ed;
+      // determine left and right cell-id
+      t_idx l_ceL = l_ec + l_ed;
+      t_idx l_ceR = l_ec + 1 + l_ed;
 
-    t_real l_hL = l_hOld[l_ceL];
-    t_real l_hR = l_hOld[l_ceR];
-    t_real l_huL = l_huOldX[l_ceL];
-    t_real l_huR = l_huOldX[l_ceR];
-    t_real l_bL = m_b[l_ceL];
-    t_real l_bR = m_b[l_ceR];
+      t_real l_hL = l_hOld[l_ceL];
+      t_real l_hR = l_hOld[l_ceR];
+      t_real l_huL = l_huOldX[l_ceL];
+      t_real l_huR = l_huOldX[l_ceR];
+      t_real l_bL = m_b[l_ceL];
+      t_real l_bR = m_b[l_ceR];
 
-    // handle reflections
-    handleReflections(l_hOld,
-                      l_huOldX,
-                      l_ceL,
-                      l_ceR,
-                      l_hL,
-                      l_hR,
-                      l_huL,
-                      l_huR,
-                      l_bL,
-                      l_bR);
+      // handle reflections
+      handleReflections(l_hOld,
+                        l_huOldX,
+                        l_ceL,
+                        l_ceR,
+                        l_hL,
+                        l_hR,
+                        l_huL,
+                        l_huR,
+                        l_bL,
+                        l_bR);
 
-    // compute net-updates
-    t_real l_netUpdates[2][2];
-    
-   
-    solvers::Fwave::netUpdates(l_hL,
-                                l_hR,
-                                l_huL,
-                                l_huR,
-                                l_bL,
-                                l_bR,
-                                l_netUpdates[0],
-                                l_netUpdates[1]);
-    
-    if (l_hOld[l_ceL] > 0)
-    {
-      l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
-      l_huNewX[l_ceL] -= i_scaling * l_netUpdates[0][1];
-    }
-    else
-    {
-      l_hNew[l_ceL] = 0;
-      l_huNewX[l_ceL] = 0;
-    }
+      // compute net-updates
+      t_real l_netUpdates[2][2];
 
-    if (l_hOld[l_ceR] > 0)
-    {
-      l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
-      l_huNewX[l_ceR] -= i_scaling * l_netUpdates[1][1];
-    }
-    else
-    {
-      l_hNew[l_ceR] = 0;
-      l_huNewX[l_ceR] = 0;
+      solvers::Fwave::netUpdates(l_hL,
+                                 l_hR,
+                                 l_huL,
+                                 l_huR,
+                                 l_bL,
+                                 l_bR,
+                                 l_netUpdates[0],
+                                 l_netUpdates[1]);
+
+      if (l_hOld[l_ceL] > 0)
+      {
+        l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
+        l_huNewX[l_ceL] -= i_scaling * l_netUpdates[0][1];
+      }
+      else
+      {
+        l_hNew[l_ceL] = 0;
+        l_huNewX[l_ceL] = 0;
+      }
+
+      if (l_hOld[l_ceR] > 0)
+      {
+        l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
+        l_huNewX[l_ceR] -= i_scaling * l_netUpdates[1][1];
+      }
+      else
+      {
+        l_hNew[l_ceR] = 0;
+        l_huNewX[l_ceR] = 0;
+      }
     }
   }
-  }
-  //second loop for y sweep
+  // second loop for y sweep
   for (t_idx l_ec = 1; l_ec < m_nCellsY; l_ec++)
   {
-    for(t_idx l_ed = 1; l_ed < m_nCellsX ; l_ed++)
+    for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
     {
-    // determine left and right cell-id
-    t_idx l_ceL = l_ec +l_ed;
-    t_idx l_ceR = l_ec + 1 +l_ed;
+      // determine left and right cell-id
+      t_idx l_ceL = l_ec + l_ed;
+      t_idx l_ceR = l_ec + 1 + l_ed;
 
-    t_real l_hL = l_hOld[l_ceL];
-    t_real l_hR = l_hOld[l_ceR];
-    t_real l_huL = l_huOldY[l_ceL];
-    t_real l_huR = l_huOldY[l_ceR];
-    t_real l_bL = m_b[l_ceL];
-    t_real l_bR = m_b[l_ceR];
+      t_real l_hL = l_hOld[l_ceL];
+      t_real l_hR = l_hOld[l_ceR];
+      t_real l_huL = l_huOldY[l_ceL];
+      t_real l_huR = l_huOldY[l_ceR];
+      t_real l_bL = m_b[l_ceL];
+      t_real l_bR = m_b[l_ceR];
 
-    // handle reflections
-    handleReflections(l_hOld,
-                      l_huOldY,
-                      l_ceL,
-                      l_ceR,
-                      l_hL,
-                      l_hR,
-                      l_huL,
-                      l_huR,
-                      l_bL,
-                      l_bR);
+      // handle reflections
+      handleReflections(l_hOld,
+                        l_huOldY,
+                        l_ceL,
+                        l_ceR,
+                        l_hL,
+                        l_hR,
+                        l_huL,
+                        l_huR,
+                        l_bL,
+                        l_bR);
 
-    // compute net-updates
-    t_real l_netUpdates[2][2];
-    
-   
-    solvers::Fwave::netUpdates(l_hL,
-                                l_hR,
-                                l_huL,
-                                l_huR,
-                                l_bL,
-                                l_bR,
-                                l_netUpdates[0],
-                                l_netUpdates[1]);
-    
-    if (l_hOld[l_ceL] > 0)
-    {
-      l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
-      l_huNewX[l_ceL] -= i_scaling * l_netUpdates[0][1];
-    }
-    else
-    {
-      l_hNew[l_ceL] = 0;
-      l_huNewX[l_ceL] = 0;
-    }
+      // compute net-updates
+      t_real l_netUpdates[2][2];
 
-    if (l_hOld[l_ceR] > 0)
-    {
-      l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
-      l_huNewX[l_ceR] -= i_scaling * l_netUpdates[1][1];
+      solvers::Fwave::netUpdates(l_hL,
+                                 l_hR,
+                                 l_huL,
+                                 l_huR,
+                                 l_bL,
+                                 l_bR,
+                                 l_netUpdates[0],
+                                 l_netUpdates[1]);
+
+      if (l_hOld[l_ceL] > 0)
+      {
+        l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
+        l_huNewX[l_ceL] -= i_scaling * l_netUpdates[0][1];
+      }
+      else
+      {
+        l_hNew[l_ceL] = 0;
+        l_huNewX[l_ceL] = 0;
+      }
+
+      if (l_hOld[l_ceR] > 0)
+      {
+        l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
+        l_huNewX[l_ceR] -= i_scaling * l_netUpdates[1][1];
+      }
+      else
+      {
+        l_hNew[l_ceR] = 0;
+        l_huNewX[l_ceR] = 0;
+      }
     }
-    else
-    {
-      l_hNew[l_ceR] = 0;
-      l_huNewX[l_ceR] = 0;
-    }
-  }
   }
 }
 
-void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
+void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
 {
   t_real *l_h = m_h[m_step];
-  t_real *l_hu = m_hu[m_step];
+  t_real *l_huX = m_huX[m_step];
+  t_real *l_huY = m_huY[m_step];
   t_real *l_b = m_b;
 
-  // left boundary
-  if (m_hasBoundaryL)
+  for (t_idx i = 0; i < m_nCellsY + 2; i++)
   {
-    l_h[0] = 0;
+    t_idx ceL = getStride() * i;
+    t_idx ceR = m_nCellsX + 1 + ceL;
+    // left column
+    l_h[ceL] = m_hasBoundaryL ? 0 : l_h[ceL + 1];
+    l_huX[ceL] = l_huX[ceL + 1];
+    l_b[ceL] = l_b[ceL + 1];
+    // right column
+    l_h[ceR] = m_hasBoundaryR ? 0 : l_h[ceR - 1];
+    l_huX[ceR] = l_huX[ceR - 1];
+    l_b[ceR] = l_b[ceR - 1];
   }
-  else
+  for (t_idx i = 0; i < m_nCellsX + 2; i++)
   {
-    l_h[0] = l_h[1];
-    l_hu[0] = l_hu[1];
-    l_b[0] = l_b[1];
+    t_idx ceD = i;
+    t_idx ceU = (m_nCellsY + 1) * getStride() + ceD;
+    // bottom row
+    l_h[ceD] = m_hasBoundaryD ? 0 : l_h[ceD - getStride()];
+    l_huY[ceD] = l_huY[ceD - getStride()];
+    l_b[ceD] = l_b[ceD - getStride()];
+    // top row
+    l_h[ceU] = m_hasBoundaryU ? 0 : l_h[ceU - getStride()];
+    l_huY[ceU] = l_huY[ceU - getStride()];
+    l_b[ceU] = l_b[ceU - getStride()];
   }
-  // right boundary
-  if (m_hasBoundaryR)
-  {
-    l_h[m_nCells + 1] = 0;
-  }
-  else
-  {
-    l_h[m_nCells + 1] = l_h[m_nCells];
-    l_hu[m_nCells + 1] = l_hu[m_nCells];
-    l_b[m_nCells + 1] = l_b[m_nCells];
-  }
-
-
-
 }
 
-void tsunami_lab::patches::WavePropagation1d::handleReflections(t_real *i_h,
+void tsunami_lab::patches::WavePropagation2d::handleReflections(t_real *i_h,
                                                                 t_real *i_hu,
                                                                 t_idx i_ceL,
                                                                 t_idx i_ceR,

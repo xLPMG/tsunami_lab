@@ -219,9 +219,9 @@ public:
    **/
   void adjustWaterHeight()
   {
-    for (t_idx ix = 1; ix < m_nCells + 1; ix++)
+    for (t_idx ix = 1; ix < m_nCellsX + 1; ix++)
     {
-         for (t_idx iy = 1; iy < m_nCells + 1; iy++)
+         for (t_idx iy = 1; iy < m_nCellsY + 1; iy++)
          {
                 m_h[m_step][ix + iy * getStride()] -= m_b[ix + iy * getStride()];
                 if (m_h[m_step][ix + iy * getStride()] < 0)

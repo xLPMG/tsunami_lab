@@ -7,12 +7,14 @@
 
 #include <nlohmann/json.hpp>
 #include "patches/WavePropagation1d.h"
+#include "patches/WavePropagation2d.h"
 #include "setups/DamBreak1d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
 #include "setups/Subcritical1d.h"
 #include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
+#include "setups/GeneralDiscontinuity2d.h"
 #include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
@@ -31,7 +33,8 @@ int main()
   tsunami_lab::t_idx l_ny = 1;
 
   // set simulation size in metres
-  tsunami_lab::t_real l_simulationSize = 10.0;
+  tsunami_lab::t_real l_simulationSizeX = 10.0;
+    tsunami_lab::t_real l_simulationSizeY = 10.0;
 
   // set cell size
   tsunami_lab::t_real l_dxy = 1;
@@ -51,7 +54,7 @@ int main()
   std::cout << "####################################" << std::endl;
 
   // read configuration data from file
-  std::ifstream l_configFile("tsunamiEvent1d.json");
+  std::ifstream l_configFile("config.json");
   json l_configData = json::parse(l_configFile);
 
   if (l_configData.contains("solver"))
@@ -60,8 +63,8 @@ int main()
     l_nx = l_configData["nx"];
   if (l_configData.contains("ny"))
     l_ny = l_configData["ny"];
-  if (l_configData.contains("simulationSize"))
-    l_simulationSize = l_configData["simulationSize"];
+  if (l_configData.contains("l_simulationSizeX"))
+    l_simulationSizeX = l_configData["l_simulationSizeX"];
   if (l_configData.contains("hasBoundaryL"))
     l_hasBoundaryL = l_configData["hasBoundaryL"];
   if (l_configData.contains("hasBoundaryR"))
@@ -69,22 +72,25 @@ int main()
   if (l_configData.contains("dimension"))
     l_dimension = l_configData["dimension"];
 
-  l_dxy = l_simulationSize / l_nx;
+  l_dxy = l_simulationSizeX / l_nx;
 
   std::cout << "runtime configuration" << std::endl;
   std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
   std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
-  std::cout << "  simulation size:                " << l_simulationSize << std::endl;
+  std::cout << "  simulation size in x-direction: " << l_simulationSizeX << std::endl;
   std::cout << "  cell size:                      " << l_dxy << std::endl;
   std::cout << "  selected solver:                " << l_solver << std::endl;
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::TsunamiEvent1d("resources/dem.csv");
+  l_setup = new tsunami_lab::setups::GeneralDiscontinuity2d(5,10,0,0,0,0,5,5);
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
+  l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
+                                                           l_ny,
                                                            l_solver,
+                                                           l_hasBoundaryL,
+                                                           l_hasBoundaryR,
                                                            l_hasBoundaryL,
                                                            l_hasBoundaryR);
 
@@ -145,7 +151,7 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 2500;
+  tsunami_lab::t_real l_endTime = 20;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder
@@ -175,7 +181,7 @@ int main()
                                   1,
                                   l_waveProp->getHeight(),
                                   l_waveProp->getMomentumX(),
-                                  nullptr,
+                                  l_waveProp->getMomentumY(),
                                   l_waveProp->getBathymetry(),
                                   l_file);
       l_file.close();

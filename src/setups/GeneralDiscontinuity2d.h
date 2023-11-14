@@ -37,6 +37,9 @@ private:
   //! wave discontinuity location on the x-axis
   t_real m_xdis = 0;
 
+    //! wave discontinuity location on the y-axis
+  t_real m_ydis = 0;
+
 public:
   /**
    * Constructor.
@@ -47,7 +50,8 @@ public:
    * @param i_huXR water momentum on the right side in x-direction
    * @param i_huYL water momentum on the left side in y-direction
    * @param i_huYR water momentum on the right sidein y-direction
-   * @param i_xdis position of discontinuity
+   * @param i_xdis x position of discontinuity
+   * @param i_ydis y position of discontinuity
    **/
   GeneralDiscontinuity2d(t_real i_hL,
                          t_real i_hR,
@@ -55,42 +59,48 @@ public:
                          t_real i_huXR,
                          t_real i_huYL,
                          t_real i_huYR,
-                         t_real i_xdis);
+                         t_real i_xdis,
+                         t_real m_ydis);
 
   /**
    * Gets the water height at a given point.
    *
    * @param i_x x-coordinate of the queried point.
+   * @param i_y y-coordinate of the queried point.
    * @return height at the given point.
    **/
   t_real getHeight(t_real i_x,
-                   t_real) const;
+                   t_real i_y) const;
 
   /**
    * Gets the momentum in x-direction.
    *
    * @param i_x x-coordinate of the queried point.
+   * @param i_y y-coordinate of the queried point.
    * @return momentum in x-direction.
    **/
   t_real getMomentumX(t_real i_x,
-                      t_real) const;
+                      t_real i_y) const;
 
   /**
    * Gets the momentum in y-direction.
    *
+   * @param i_x x-coordinate of the queried point.
+   * @param i_y y-coordinate of the queried point.
    * @return momentum in y-direction.
    **/
-  t_real getMomentumY(t_real,
-                      t_real) const;
+  t_real getMomentumY(t_real i_x,
+                      t_real i_y) const;
 
   /**
    * Gets the bathymetry
    *
    * @param i_x x-coordinate of the queried point.
+   * @param i_y y-coordinate of the queried point.
    * @return bathymetry.
    **/
   t_real getBathymetry(t_real i_x,
-                       t_real) const;
+                       t_real i_y) const;
 };
 
 #endif
