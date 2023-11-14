@@ -29,9 +29,9 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   // allocate memory including a single ghost cell on each side
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
-    m_h[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY * 2)];
-    m_huX[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY * 2)];
-    m_huY[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY * 2)];
+    m_h[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
+    m_huX[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
+    m_huY[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
   }
   m_b = new t_real[(m_nCellsX + 2) * (m_nCellsY * 2)];
 
@@ -87,7 +87,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
 
   // iterate over edges and update with Riemann solutions
   // first loop for x sweep
-  for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
+  for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)  //start withh 0, not 1?
   {
     for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
     {
@@ -149,66 +149,67 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
       }
     }
   }
+
   // second loop for y sweep
-  for (t_idx l_ec = 1; l_ec < m_nCellsY; l_ec++)
+  for (t_idx l_ec = 0; l_ec < m_nCellsY; l_ec++)
   {
     for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
     {
-      // determine left and right cell-id
-      t_idx l_ceL = l_ec + l_ed;
-      t_idx l_ceR = l_ec + 1 + l_ed;
+      // determine upper and lower cell-id
+      t_idx l_ceD = l_ec + l_ed;
+      t_idx l_ceU = l_ec * getStride() + l_ed ;
 
-      t_real l_hL = l_hOld[l_ceL];
-      t_real l_hR = l_hOld[l_ceR];
-      t_real l_huL = l_huOldY[l_ceL];
-      t_real l_huR = l_huOldY[l_ceR];
-      t_real l_bL = m_b[l_ceL];
-      t_real l_bR = m_b[l_ceR];
+      t_real l_hD = l_hOld[l_ceD];
+      t_real l_hU = l_hOld[l_ceU];
+      t_real l_huD = l_huOldY[l_ceD];
+      t_real l_huU = l_huOldY[l_ceU];
+      t_real l_bD = m_b[l_ceD];
+      t_real l_bU = m_b[l_ceU];
 
       // handle reflections
       handleReflections(l_hOld,
                         l_huOldY,
-                        l_ceL,
-                        l_ceR,
-                        l_hL,
-                        l_hR,
-                        l_huL,
-                        l_huR,
-                        l_bL,
-                        l_bR);
+                        l_ceD,
+                        l_ceU,
+                        l_hD,
+                        l_hU,
+                        l_huD,
+                        l_huU,
+                        l_bD,
+                        l_bU);
 
       // compute net-updates
       t_real l_netUpdates[2][2];
 
-      solvers::Fwave::netUpdates(l_hL,
-                                 l_hR,
-                                 l_huL,
-                                 l_huR,
-                                 l_bL,
-                                 l_bR,
+      solvers::Fwave::netUpdates(l_hD,
+                                 l_hU,
+                                 l_huD,
+                                 l_huU,
+                                 l_bD,
+                                 l_bU,
                                  l_netUpdates[0],
                                  l_netUpdates[1]);
 
-      if (l_hOld[l_ceL] > 0)
+      if (l_hOld[l_ceD] > 0)
       {
-        l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];
-        l_huNewX[l_ceL] -= i_scaling * l_netUpdates[0][1];
+        l_hNew[l_ceD] -= i_scaling * l_netUpdates[0][0];
+        l_huNewX[l_ceD] -= i_scaling * l_netUpdates[0][1];
       }
       else
       {
-        l_hNew[l_ceL] = 0;
-        l_huNewX[l_ceL] = 0;
+        l_hNew[l_ceD] = 0;
+        l_huNewX[l_ceD] = 0;
       }
 
-      if (l_hOld[l_ceR] > 0)
+      if (l_hOld[l_ceU] > 0)
       {
-        l_hNew[l_ceR] -= i_scaling * l_netUpdates[1][0];
-        l_huNewX[l_ceR] -= i_scaling * l_netUpdates[1][1];
+        l_hNew[l_ceU] -= i_scaling * l_netUpdates[1][0];
+        l_huNewX[l_ceU] -= i_scaling * l_netUpdates[1][1];
       }
       else
       {
-        l_hNew[l_ceR] = 0;
-        l_huNewX[l_ceR] = 0;
+        l_hNew[l_ceU] = 0;
+        l_huNewX[l_ceU] = 0;
       }
     }
   }
