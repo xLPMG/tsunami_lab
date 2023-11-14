@@ -28,9 +28,11 @@ public:
   /**
    * Performs a time step.
    *
-   * @param i_scaling scaling of the time step.
+   * @param i_scalingX scaling of the time step.
+   * @param i_scalingY scaling of the time step.
    **/
-  virtual void timeStep(t_real i_scaling) = 0;
+  virtual void timeStep(t_real i_scalingX, 
+                        t_real i_scalingY) = 0;
 
   /**
    * Sets the values of the ghost cells according to outflow boundary conditions.

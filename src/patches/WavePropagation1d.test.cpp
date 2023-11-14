@@ -53,7 +53,7 @@ TEST_CASE("Test the 1d wave propagation solver using roe.", "[WaveProp1d],[Roe]"
   m_waveProp.setGhostOutflow();
 
   // perform a time step
-  m_waveProp.timeStep(0.1);
+  m_waveProp.timeStep(0.1, 0);
 
   // steady state
   for (std::size_t l_ce = 0; l_ce < 49; l_ce++)
@@ -122,7 +122,7 @@ TEST_CASE("Test the 1d wave propagation solver using fwave.", "[WaveProp1d],[Fwa
   m_waveProp.setGhostOutflow();
 
   // perform a time step
-  m_waveProp.timeStep(0.1);
+  m_waveProp.timeStep(0.1, 0);
 
   // steady state
   for (std::size_t l_ce = 0; l_ce < 49; l_ce++)

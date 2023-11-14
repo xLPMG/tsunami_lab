@@ -153,7 +153,7 @@ TEST_CASE("Middle states sanity check using middle_states.csv", "[MiddleStates]"
       while (l_simTime < l_endTime)
       {
         l_waveProp->setGhostOutflow();
-        l_waveProp->timeStep(l_scaling);
+        l_waveProp->timeStep(l_scaling, 0);
         l_simTime += l_dt;
         l_steps++;
       }

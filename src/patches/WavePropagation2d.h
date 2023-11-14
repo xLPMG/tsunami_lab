@@ -104,9 +104,11 @@ public:
   /**
    * Performs a time step.
    *
-   * @param i_scaling scaling of the time step (dt / dx).
+   * @param i_scalingX scaling of the time step (dt / dx).
+   * @param i_scalingY scaling of the time step (dt / dy).
    **/
-  void timeStep(t_real i_scaling);
+  void timeStep(t_real i_scalingX,
+                t_real i_scalingY);
 
   /**
    * Sets the values of the ghost cells according to outflow boundary conditions.
@@ -131,7 +133,7 @@ public:
   t_real const *getHeight()
   {
     // add 1 to account for first ghost cell
-    return m_h[m_step] + 1;
+    return m_h[m_step] + 1 + getStride();
   }
 
   /**
@@ -142,7 +144,7 @@ public:
   t_real const *getMomentumX()
   {
     // add 1 to account for first ghost cell
-    return m_huX[m_step] + 1;
+    return m_huX[m_step] + 1 + getStride();
   }
 
   /**
@@ -150,7 +152,7 @@ public:
    **/
   t_real const *getMomentumY()
   {
-    return m_huY[m_step] + 1;
+    return m_huY[m_step] + 1 + getStride();
   }
 
   /**
@@ -161,7 +163,7 @@ public:
   t_real const *getBathymetry()
   {
     // add 1 to account for first ghost cell
-    return m_b + 1;
+    return m_b + 1 + getStride();
   }
 
   /**
@@ -174,7 +176,7 @@ public:
                  t_idx i_iy,
                  t_real i_h)
   {
-    m_h[m_step][i_ix + 1 +i_iy * getStride()] = i_h;
+    m_h[m_step][i_ix + 1 + (i_iy+1) * getStride()] = i_h;
   }
 
   /**
@@ -187,7 +189,7 @@ public:
                     t_idx i_iy,
                     t_real i_huX)
   {
-    m_huX[m_step][i_ix + 1 +i_iy * getStride()] = i_huX;
+    m_huX[m_step][i_ix + 1 + (i_iy+1) * getStride()] = i_huX;
   }
 
   /**
@@ -197,7 +199,7 @@ public:
                     t_idx i_iy,
                     t_real i_huY)
   {
-    m_huY[m_step][i_ix + 1 +i_iy * getStride()] = i_huY;
+    m_huY[m_step][i_ix + 1 + (i_iy+1) * getStride()] = i_huY;
   };
 
   /**
@@ -210,7 +212,7 @@ public:
                      t_idx i_iy,
                      t_real i_b)
   {
-    m_b[i_ix + 1 +i_iy * getStride()] = i_b;
+    m_b[i_ix + 1 + (i_iy+1) * getStride()] = i_b;
   }
 
   /**

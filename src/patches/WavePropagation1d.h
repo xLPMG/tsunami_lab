@@ -92,7 +92,8 @@ public:
    *
    * @param i_scaling scaling of the time step (dt / dx).
    **/
-  void timeStep(t_real i_scaling);
+  void timeStep(t_real i_scaling,
+                t_real);
 
   /**
    * Sets the values of the ghost cells according to outflow boundary conditions.

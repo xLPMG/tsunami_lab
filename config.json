@@ -4,8 +4,9 @@
     "ny": 50,
     "simulationSizeX": 100,
     "simulationSizeY": 100,
-    "useBathymetry": true,
-    "hasBoundaryL": false,
+    "hasBoundaryL": true,
     "hasBoundaryR": true,
+    "hasBoundaryU": true,
+    "hasBoundaryD": true,
     "dimension": 2
 }

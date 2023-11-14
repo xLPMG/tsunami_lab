@@ -15,7 +15,6 @@
 #include "setups/Subcritical1d.h"
 #include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
-#include "setups/GeneralDiscontinuity2d.h"
 #include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
 #include <cstdlib>
@@ -166,17 +165,19 @@ int main()
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
   // derive constant time step; changes at simulation time are ignored
-  tsunami_lab::t_real l_dtx = 0.5 * l_dx / l_speedMax;
-  tsunami_lab::t_real l_dty = 0.5 * l_dy / l_speedMax;
-  tsunami_lab::t_real l_dt = std::min(l_dtx, l_dty);
+  // tsunami_lab::t_real l_dtx = 0.5 * l_dx / l_speedMax;
+  // tsunami_lab::t_real l_dty = 0.5 * l_dy / l_speedMax;
+  // tsunami_lab::t_real l_dt = std::min(l_dtx, l_dty);
+  tsunami_lab::t_real l_dt = 0.5 * std::min(l_dx, l_dy) / l_speedMax;
 
   // derive scaling for a time step
-  tsunami_lab::t_real l_scaling = l_dt / (l_dx + l_dy) * tsunami_lab::t_real(0.5);
+  tsunami_lab::t_real l_scalingX = l_dt / l_dx;
+  tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 20;
+  tsunami_lab::t_real l_endTime = 200;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder
@@ -215,7 +216,7 @@ int main()
     }
 
     l_waveProp->setGhostOutflow();
-    l_waveProp->timeStep(l_scaling);
+    l_waveProp->timeStep(l_scalingX, l_scalingY);
 
     l_timeStep++;
     l_simTime += l_dt;
