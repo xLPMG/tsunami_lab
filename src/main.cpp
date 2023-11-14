@@ -9,6 +9,7 @@
 #include "patches/WavePropagation1d.h"
 #include "patches/WavePropagation2d.h"
 #include "setups/DamBreak1d.h"
+#include "setups/CircularDamBreak2d.h"
 #include "setups/RareRare1d.h"
 #include "setups/ShockShock1d.h"
 #include "setups/Subcritical1d.h"
@@ -47,7 +48,7 @@ int main()
   bool l_hasBoundaryU = false;
   bool l_hasBoundaryD = false;
 
-  //dimension choice
+  // dimension choice
   int l_dimension = 1;
 
   std::cout << "####################################" << std::endl;
@@ -66,10 +67,10 @@ int main()
     l_nx = l_configData["nx"];
   if (l_configData.contains("ny"))
     l_ny = l_configData["ny"];
-  if (l_configData.contains("l_simulationSizeX"))
-    l_simulationSizeX = l_configData["l_simulationSizeX"];
-  if (l_configData.contains("l_simulationSizeY"))
-    l_simulationSizeX = l_configData["l_simulationSizeY"];
+  if (l_configData.contains("simulationSizeX"))
+    l_simulationSizeX = l_configData["simulationSizeX"];
+  if (l_configData.contains("simulationSizeY"))
+    l_simulationSizeY = l_configData["simulationSizeY"];
   if (l_configData.contains("hasBoundaryL"))
     l_hasBoundaryL = l_configData["hasBoundaryL"];
   if (l_configData.contains("hasBoundaryR"))
@@ -95,16 +96,26 @@ int main()
   std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::GeneralDiscontinuity2d(5,10,0,0,0,0,5,5);
+  l_setup = new tsunami_lab::setups::CircularDamBreak2d();
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
-                                                           l_ny,
-                                                           l_solver,
-                                                           l_hasBoundaryL,
-                                                           l_hasBoundaryR,
-                                                           l_hasBoundaryU,
-                                                           l_hasBoundaryD);
+  if (l_dimension == 1)
+  {
+    l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
+                                                             l_solver,
+                                                             l_hasBoundaryL,
+                                                             l_hasBoundaryR);
+  }
+  else
+  {
+    l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
+                                                             l_ny,
+                                                             l_solver,
+                                                             l_hasBoundaryL,
+                                                             l_hasBoundaryR,
+                                                             l_hasBoundaryU,
+                                                             l_hasBoundaryD);
+  }
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -149,7 +160,7 @@ int main()
     }
   }
 
-  // l_waveProp->adjustWaterHeight();
+  l_waveProp->adjustWaterHeight();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
@@ -160,7 +171,7 @@ int main()
   tsunami_lab::t_real l_dt = std::min(l_dtx, l_dty);
 
   // derive scaling for a time step
-  tsunami_lab::t_real l_scaling = l_dt / (l_dx+l_dy)*tsunami_lab::t_real(0.5);
+  tsunami_lab::t_real l_scaling = l_dt / (l_dx + l_dy) * tsunami_lab::t_real(0.5);
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;

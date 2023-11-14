@@ -1,10 +1,11 @@
 {
     "solver": "fwave",
-    "nx": 100,
-    "ny": 100,
-    "simulationSizeX": 10,
-    "simulationSizeY": 10,
+    "nx": 50,
+    "ny": 50,
+    "simulationSizeX": 100,
+    "simulationSizeY": 100,
     "useBathymetry": true,
     "hasBoundaryL": false,
-    "hasBoundaryR": true
+    "hasBoundaryR": true,
+    "dimension": 2
 }
