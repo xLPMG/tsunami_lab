@@ -153,9 +153,18 @@ int main()
                                l_cy,
                                l_hv);
 
-      l_waveProp->setBathymetry(l_cx,
-                                l_cy,
-                                l_b);
+      // l_waveProp->setBathymetry(l_cx,
+      //                           l_cy,
+      //                           l_b);
+
+        for(tsunami_lab::t_idx i = 0; i < l_simulationSizeX; i++){
+     l_waveProp->setBathymetry(i,
+                               i,
+                              -500);
+    // l_waveProp->setBathymetry(i+l_simulationSizeX/2,
+    //                            i+l_simulationSizeX/2,
+    //                           -100);
+  }
     }
   }
 
@@ -171,13 +180,13 @@ int main()
   tsunami_lab::t_real l_dt = 0.5 * std::min(l_dx, l_dy) / l_speedMax;
 
   // derive scaling for a time step
-  tsunami_lab::t_real l_scalingX = l_dt / l_dx;
-  tsunami_lab::t_real l_scalingY = l_dt / l_dy;
+  tsunami_lab::t_real l_scalingX =0.01* l_dt / l_dx;
+  tsunami_lab::t_real l_scalingY = 0.01* l_dt / l_dy;
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 200;
+  tsunami_lab::t_real l_endTime = 300;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder
