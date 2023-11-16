@@ -46,12 +46,6 @@ class tsunami_lab::io::Csv {
                        t_real       const *i_b,
                        std::ostream       &io_stream);
 
-      /**
-       * 
-       * 
-       **/
-      // static void read();
-
     /**
      * Splits a CSV-style line into a vector of strings.
      *

@@ -1,8 +1,8 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
- * One-dimensional wave propagation patch.
+ * Two-dimensional wave propagation patch.
  **/
 #ifndef TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D
 #define TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D
@@ -83,10 +83,15 @@ private:
 
 public:
   /**
-   * Constructs the 1d wave propagation solver.
+   * Constructs the 2d wave propagation solver.
    *
-   * @param i_nCells number of cells.
+   * @param i_nCellsX number of cells in x direction.
+   * @param i_nCellsY number of cells in y direction.
    * @param i_solver selected solver.
+   * @param i_hasBoundaryL has boundary on the left side
+   * @param i_hasBoundaryR has boundary on the left side
+   * @param i_hasBoundaryU has boundary on the left side
+   * @param i_hasBoundaryD has boundary on the left side
    **/
   WavePropagation2d(t_idx i_nCellsX,
                     t_idx i_nCellsY,
@@ -148,7 +153,7 @@ public:
   }
 
   /**
-   * Dummy function which returns a nullptr.
+   * @return momenta in y-direction.
    **/
   t_real const *getMomentumY()
   {
@@ -170,6 +175,7 @@ public:
    * Sets the height of the cell to the given value.
    *
    * @param i_ix id of the cell in x-direction.
+   * @param i_iy id of the cell in y-direction.
    * @param i_h water height.
    **/
   void setHeight(t_idx i_ix,
@@ -183,6 +189,7 @@ public:
    * Sets the momentum in x-direction to the given value.
    *
    * @param i_ix id of the cell in x-direction.
+   * @param i_iy id of the cell in y-direction.
    * @param i_hu momentum in x-direction.
    **/
   void setMomentumX(t_idx i_ix,
@@ -193,7 +200,10 @@ public:
   }
 
   /**
-   * Dummy function since there is no y-momentum in the 1d solver.
+   * Sets the momentum in y-direction to the given value.
+   * @param i_ix id of the cell in x-direction.
+   * @param i_iy id of the cell in y-direction.
+   * @param i_hu momentum in y-direction.
    **/
   void setMomentumY(t_idx i_ix,
                     t_idx i_iy,
@@ -206,6 +216,7 @@ public:
    * Sets the bathymetry of the cell to the given value.
    *
    * @param i_ix id of the cell in x-direction.
+   * @param i_iy id of the cell in y-direction.
    * @param i_h bathymetry.
    **/
   void setBathymetry(t_idx i_ix,
