@@ -27,8 +27,15 @@
 
 using json = nlohmann::json;
 
-int main()
+int main(int   i_argc,
+         char *i_argv[])
 {
+  // config file path
+  std::string l_configFilePath = "config.json";
+
+  // setup choice
+  std::string l_setupChoice = "CIRCULARDAMBREAK2D";
+
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 1;
@@ -49,7 +56,13 @@ int main()
   bool l_hasBoundaryD = false;
 
   // dimension choice
-  int l_dimension = 1;
+  int l_dimension = 2;
+
+  //bathymetry file path
+  std::string l_bathymetryFilePath = "";
+
+  // simulation time limit
+  tsunami_lab::t_real l_endTime = 20;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -57,10 +70,15 @@ int main()
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
+  if( i_argc == 2 ) l_configFilePath = i_argv[1];
+  std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
+
   // read configuration data from file
-  std::ifstream l_configFile("config.json");
+  std::ifstream l_configFile(l_configFilePath);
   json l_configData = json::parse(l_configFile);
 
+  if (l_configData.contains("setup"))
+    l_setupChoice = l_configData["setup"];
   if (l_configData.contains("solver"))
     l_solver = l_configData["solver"];
   if (l_configData.contains("nx"))
@@ -81,22 +99,58 @@ int main()
     l_hasBoundaryD = l_configData["hasBoundaryD"];
   if (l_configData.contains("dimension"))
     l_dimension = l_configData["dimension"];
+  if (l_configData.contains("bathymetry"))
+    l_bathymetryFilePath = l_configData["bathymetry"];
+  if (l_configData.contains("endTime"))
+    l_endTime = l_configData["endTime"];
 
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
 
-  std::cout << "runtime configuration" << std::endl;
-  std::cout << "  number of cells in x-direction: " << l_nx << std::endl;
-  std::cout << "  number of cells in y-direction: " << l_ny << std::endl;
-  std::cout << "  simulation size in x-direction: " << l_simulationSizeX << std::endl;
-  std::cout << "  simulation size in y-direction: " << l_simulationSizeY << std::endl;
-  std::cout << "  cell size in x-direction:       " << l_dx << std::endl;
-  std::cout << "  cell size in y-direction:       " << l_dx << std::endl;
-  std::cout << "  selected solver:                " << l_solver << std::endl;
-  std::cout << "  has boundary <left> <right>?:   " << l_hasBoundaryL << " " << l_hasBoundaryR << std::endl;
   // construct setup
+  /**
+   * note: switch statement was not feasible because the string from the json
+   * would have needed to be converted into an enum using if-statements anyway
+   **/
   tsunami_lab::setups::Setup *l_setup;
-  l_setup = new tsunami_lab::setups::CircularDamBreak2d();
+  if (l_setupChoice == "GENERALDISCONTINUITY1D")
+  {
+    l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, -10, l_simulationSizeX / 2);
+  }
+  else if (l_setupChoice == "DAMBREAK1D")
+  {
+    l_setup = new tsunami_lab::setups::DamBreak1d(50, 10, l_simulationSizeX / 2);
+  }
+  else if (l_setupChoice == "CIRCULARDAMBREAK2D")
+  {
+    l_setup = new tsunami_lab::setups::CircularDamBreak2d();
+  }
+  else if (l_setupChoice == "RARERARE1D")
+  {
+    l_setup = new tsunami_lab::setups::RareRare1d(10, 5, l_simulationSizeX / 2);
+  }
+  else if (l_setupChoice == "SHOCKSHOCK1D")
+  {
+    l_setup = new tsunami_lab::setups::ShockShock1d(10, 5, l_simulationSizeX / 2);
+  }
+  else if (l_setupChoice == "SUBCRITICAL1D")
+  {
+    l_setup = new tsunami_lab::setups::Subcritical1d(10, 5);
+  }
+  else if (l_setupChoice == "SUPERCRITICAL1D")
+  {
+    l_setup = new tsunami_lab::setups::Supercritical1d(10, 5);
+  }
+  else if (l_setupChoice == "TSUNAMIEVENT1D")
+  {
+    l_setup = new tsunami_lab::setups::TsunamiEvent1d(l_bathymetryFilePath);
+  }
+  else
+  {
+    std::cout << "ERROR: No valid setup specified. Terminating..." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
   if (l_dimension == 1)
@@ -204,7 +258,6 @@ int main()
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 20;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder

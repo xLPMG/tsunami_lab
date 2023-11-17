@@ -7,6 +7,5 @@
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
-    "hasBoundaryD": false,
-    "dimension": 2
+    "hasBoundaryD": false
 }
