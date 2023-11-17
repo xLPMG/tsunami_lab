@@ -154,56 +154,57 @@ int main()
                                l_cy,
                                l_hv);
 
-      // l_waveProp->setBathymetry(l_cx,
-      //                           l_cy,
-      //                           l_b);
-
-      for (tsunami_lab::t_idx i = 0; i < l_simulationSizeX; i++)
-      {
-        l_waveProp->setBathymetry(i,
-                                  i,
-                                  -500);
-        // l_waveProp->setBathymetry(i+l_simulationSizeX/2,
-        //                            i+l_simulationSizeX/2,
-        //                           -100);
-      }
+      l_waveProp->setBathymetry(l_cx,
+                                l_cy,
+                                l_b);
     }
   }
 
+  l_waveProp->setBathymetry(17, 15, 30);
+  l_waveProp->setBathymetry(18, 15, 30);
+  l_waveProp->setBathymetry(19, 15, 30);
+  l_waveProp->setBathymetry(20, 15, 30);
+  l_waveProp->setBathymetry(21, 15, 30);
+  l_waveProp->setBathymetry(22, 15, 30);
+  l_waveProp->setBathymetry(23, 15, 30);
+
+  l_waveProp->setBathymetry(27, 15, 30);
+  l_waveProp->setBathymetry(28, 15, 30);
+  l_waveProp->setBathymetry(29, 15, 30);
+  l_waveProp->setBathymetry(30, 15, 30);
+  l_waveProp->setBathymetry(31, 15, 30);
+  l_waveProp->setBathymetry(32, 15, 30);
+  l_waveProp->setBathymetry(33, 15, 30);
+
   l_waveProp->adjustWaterHeight();
 
-
-
-  //instantiation stations
-  tsunami_lab::io::Station* station1 = new tsunami_lab::io::Station(0,0,"dawd",0,0);
+  // instantiation stations
+  tsunami_lab::io::Station *station1 = new tsunami_lab::io::Station(0, 0, "dawd", 0, 0);
   station1->setHeight(14);
   station1->setBathymetry(67);
-  tsunami_lab::t_idx count= 0;
+  tsunami_lab::t_idx count = 0;
   std::string l_station_path = "station/station_" + std::to_string(count) + ".csv";
   std::ofstream l_station_file;
   l_station_file.open(l_station_path);
-  l_station_file<<station1->getBathymetry() <<" height: "<<station1->getHeight();
-  
-  l_station_file.close();
+  l_station_file << station1->getBathymetry() << " height: " << station1->getHeight();
 
+  l_station_file.close();
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
   // derive constant time step; changes at simulation time are ignored
-  // tsunami_lab::t_real l_dtx = 0.5 * l_dx / l_speedMax;
-  // tsunami_lab::t_real l_dty = 0.5 * l_dy / l_speedMax;
-  // tsunami_lab::t_real l_dt = std::min(l_dtx, l_dty);
-  tsunami_lab::t_real l_dt = 0.5 * std::min(l_dx, l_dy) / l_speedMax;
+  tsunami_lab::t_real l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
+  l_dt *= 0.3;
 
   // derive scaling for a time step
-  tsunami_lab::t_real l_scalingX = 0.01 * l_dt / l_dx;
-  tsunami_lab::t_real l_scalingY = 0.01 * l_dt / l_dy;
+  tsunami_lab::t_real l_scalingX = l_dt / l_dx;
+  tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_endTime = 300;
+  tsunami_lab::t_real l_endTime = 20;
   tsunami_lab::t_real l_simTime = 0;
 
   // clean solutions folder

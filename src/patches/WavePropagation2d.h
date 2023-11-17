@@ -137,7 +137,6 @@ public:
    */
   t_real const *getHeight()
   {
-    // add 1 to account for first ghost cell
     return m_h[m_step] + 1 + getStride();
   }
 
@@ -148,7 +147,6 @@ public:
    **/
   t_real const *getMomentumX()
   {
-    // add 1 to account for first ghost cell
     return m_huX[m_step] + 1 + getStride();
   }
 
@@ -167,7 +165,6 @@ public:
    */
   t_real const *getBathymetry()
   {
-    // add 1 to account for first ghost cell
     return m_b + 1 + getStride();
   }
 

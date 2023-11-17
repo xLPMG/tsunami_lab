@@ -87,8 +87,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
     {
       // determine left and right cell-id
-      t_idx l_ceL = l_ec + l_ed * getStride();
-      t_idx l_ceR = l_ec + (l_ed + 1) * getStride();
+      t_idx l_ceL = getStride() * l_ec + l_ed;
+      t_idx l_ceR = getStride() * l_ec + l_ed + 1;
 
       t_real l_hL = l_hOld[l_ceL];
       t_real l_hR = l_hOld[l_ceR];
@@ -151,8 +151,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
     {
       // determine upper and lower cell-id
-      t_idx l_ceD = getStride() * l_ec + l_ed;
-      t_idx l_ceU = getStride() * l_ec + l_ed + 1;
+      t_idx l_ceD = l_ec + l_ed * getStride();
+      t_idx l_ceU = l_ec + (l_ed + 1) * getStride();
 
       t_real l_hD = l_hOld[l_ceD];
       t_real l_hU = l_hOld[l_ceU];

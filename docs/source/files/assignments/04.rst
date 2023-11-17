@@ -1,0 +1,182 @@
+4. Two-Dimensional Solver
+****************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 4.1 - Dimensional Splitting
+==================================
+
+4.1.1 - 2D support
+-------------------
+
+We started by splitting ``l_dxy`` into two variables ``l_dx`` and ``l_dy``:
+
+**(File: main.cpp)**
+
+.. code:: cpp
+
+  l_dx = l_simulationSizeX / l_nx;
+  l_dy = l_simulationSizeY / l_ny;
+
+And adjusted the time step accordingly:
+
+.. code:: cpp
+
+    // derive constant time step; changes at simulation time are ignored
+    tsunami_lab::t_real l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
+
+    // derive scaling for a time step
+    tsunami_lab::t_real l_scalingX = l_dt / l_dx;
+    tsunami_lab::t_real l_scalingY = l_dt / l_dy;
+
+This matches the given requirement
+
+.. math::
+    \Delta t < \frac{1}{2} \cdot \frac{\Delta x}{\lambda_x^\text{max}}\quad \wedge \quad \Delta t < \frac{1}{2} \cdot \frac{\Delta y}{\lambda_y^\text{max}}.
+
+We also had to adjust the inputs for the ``Csv.cpp`` file:
+
+.. code:: cpp
+
+    tsunami_lab::io::Csv::write(l_dx,
+                                l_dy,
+                                l_nx,
+                                l_ny,
+                                l_waveProp->getStride(),
+                                l_waveProp->getHeight(),
+                                l_waveProp->getMomentumX(),
+                                l_waveProp->getMomentumY(),
+                                l_waveProp->getBathymetry(),
+                                l_file);
+
+To create the ``WavePropagation2d`` cpp and header files, we used the `1d`-files as a starting point.
+For the header, we had to adjust most functions to make use of the ``stride`` parameter. 
+We also decided on storing the momenta for the x- and y-directions in two different arrays:
+
+**(File: WavePropagation2d.h)**
+
+.. code:: cpp
+
+    t_real const *getHeight()
+    {
+        return m_h[m_step] + 1 + getStride();
+    }
+
+    t_real const *getMomentumX()
+    {
+        return m_huX[m_step] + 1 + getStride();
+    }
+
+    t_real const *getMomentumY()
+    {
+        return m_huY[m_step] + 1 + getStride();
+    }
+
+    t_real const *getBathymetry()
+    {
+        return m_b + 1 + getStride();
+    }
+
+In the `.cpp` file, we duplicated the whole cell update process with different for-loops,
+to execute the x- and y-sweep:
+
+**(File: WavePropagation2d.cpp)**
+
+.. code:: cpp
+
+    // X-SWEEP
+    for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
+    {
+        for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
+        {
+        // determine left and right cell-id
+        t_idx l_ceL = getStride() * l_ec + l_ed;
+        t_idx l_ceR = getStride() * l_ec + l_ed + 1;
+
+        //cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewX and l_huOldX
+        [...]
+        }
+    }
+
+matching
+
+.. math::
+    Q_{i,j}^* = Q_{i,j}^n - \frac{\Delta t}{\Delta x} \left( A^+ \Delta Q_{i-1/2,j} + A^- \Delta Q_{i+1/2,j} \right)  \quad \forall i \in \{ 1, .., n \}, \; j \in \{ 0, .., n+1 \}
+
+and 
+
+.. code:: cpp
+
+    // Y-SWEEP
+    for (t_idx l_ec = 0; l_ec < m_nCellsY + 1; l_ec++)
+    {
+        for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
+        {
+        // determine upper and lower cell-id
+        t_idx l_ceD = l_ec + l_ed * getStride();
+        t_idx l_ceU = l_ec + (l_ed + 1) * getStride();
+
+        //cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewY and l_huOldY
+        [...]
+        }
+    }
+
+matching
+
+.. math::
+    Q_{i,j}^{n+1} = Q_{i,j}^* - \frac{\Delta t}{\Delta y} \left( B^+ \Delta Q^*_{i,j-1/2} + B^- \Delta Q^*_{i,j+1/2} \right)  \quad \forall i,j \in \{ 1, .., n \}.
+
+Lastly, we had to adjust the ghost outflow. Instead of setting only 2 cells for a 1d row, 
+we now had to set the bottom & top rows, as well as the left and right most columns.
+We implemented this using for-loops.
+
+4.1.2 - Circular Dam Break
+---------------------------
+
+Since the momenta of this setup are always 0, we won't mention them any further here.
+
+The height however, is given by the following function:
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::CircularDamBreak2d::getHeight(t_real i_x,
+                                                                           t_real i_y) const
+    {
+        i_x-=50;
+        i_y-=50;
+        tsunami_lab::t_real sumOfSquares = i_x * i_x + i_y * i_y;
+        return std::sqrt(sumOfSquares) < 10 ? 10 : 5;
+    }
+
+We subtract 50 from both input parameters to realize the domain size of :math:`[-50, 50]^2` 
+while using a simulation size of 100 and only positive numbers inside the main class.
+
+4.1.2 - Bathymetry and Visualization
+-------------------------------------
+
+Once again, we went for hard-coding a simple example just for demonstration purposes:
+
+.. code:: cpp
+
+    l_waveProp->setBathymetry(20, 15, 30);
+    l_waveProp->setBathymetry(21, 15, 30);
+    l_waveProp->setBathymetry(22, 15, 30);
+    l_waveProp->setBathymetry(23, 15, 30);
+    l_waveProp->setBathymetry(24, 15, 30);
+    l_waveProp->setBathymetry(25, 15, 30);
+    l_waveProp->setBathymetry(26, 15, 30);
+    l_waveProp->setBathymetry(27, 15, 30);
+    l_waveProp->setBathymetry(28, 15, 30);
+    l_waveProp->setBathymetry(29, 15, 30);
+    l_waveProp->setBathymetry(30, 15, 30);
+
+This creates a wall which can be seen clearly in the following animation:
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task-4.1.3-circularDamBreakWithObstacle.mp4" type="video/mp4">
+    </video> 
+
+.. note::
+    The visualisation was created with ParaView using the `TableToPoints`and `Delaunay2d` filters.
