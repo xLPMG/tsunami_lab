@@ -16,7 +16,7 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
 {
     if (!std::filesystem::exists(i_file))
     {
-        std::cout << "Error: File not found "
+        std::cerr << "Error: File not found "
                   << "(TsunamiEvent1d.cpp)" << std::endl;
         exit(1);
     }

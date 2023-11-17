@@ -147,7 +147,7 @@ int main(int   i_argc,
   }
   else
   {
-    std::cout << "ERROR: No valid setup specified. Terminating..." << std::endl;
+    std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
     exit(EXIT_FAILURE);
   }
 

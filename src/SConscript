@@ -8,7 +8,7 @@ Import('env')
 
 # gather sources
 l_sources = [ 'solvers/Roe.cpp',
-             'solvers/Fwave.cpp',
+              'solvers/Fwave.cpp',
               'patches/WavePropagation1d.cpp',
               'patches/WavePropagation2d.cpp',
               'setups/DamBreak1d.cpp',
@@ -20,7 +20,8 @@ l_sources = [ 'solvers/Roe.cpp',
               'setups/Supercritical1d.cpp',
               'setups/TsunamiEvent1d.cpp',
               'io/Csv.cpp',
-              'io/Station.cpp']
+              'io/Station.cpp',
+              'calculations/Froude.cpp']
 
 for l_so in l_sources:
   env.sources.append( env.Object( l_so ) )
@@ -41,8 +42,8 @@ l_tests = [ 'tests.cpp',
             'setups/Supercritical1d.test.cpp',
             'setups/Subcritical1d.test.cpp',
             'setups/CircularDamBreak2d.test.cpp',
-            'patches/WavePropagation2d.test.cpp'
-            ]
+            'patches/WavePropagation2d.test.cpp',
+            'calculations/Froude.test.cpp']
 
 for l_te in l_tests:
   env.tests.append( env.Object( l_te ) )

@@ -76,6 +76,8 @@ public:
    *
    * @param i_nCells number of cells.
    * @param i_solver selected solver.
+   * @param i_hasBoundaryL true if there is a reflecting boundary on the left side
+   * @param i_hasBoundaryR true if there is a reflecting boundary on the right side
    **/
   WavePropagation1d(t_idx i_nCells,
                     const std::string &i_solver,
