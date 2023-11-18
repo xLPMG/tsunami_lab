@@ -56,7 +56,7 @@ int main(int i_argc,
   // simulation time limit
   tsunami_lab::t_real l_endTime = 20;
   // keep track of all stations
-  std::vector<tsunami_lab::io::Station> l_stations;
+  std::vector<tsunami_lab::io::Station *> l_stations;
   tsunami_lab::t_real l_stationFrequency = 1;
 
   std::cout << "####################################" << std::endl;
@@ -160,20 +160,24 @@ int main(int i_argc,
   std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
   if (l_configData.contains("stations"))
   {
-    for (auto elem : l_configData["stations"])
+    for (json &elem : l_configData["stations"])
     {
       tsunami_lab::t_real l_x = elem.at("locX");
       tsunami_lab::t_real l_y = elem.at("locY");
-      tsunami_lab::io::Station l_stationToAdd(l_x,
-                                              l_y,
-                                              elem.at("name"),
-                                              l_stationFrequency,
-                                              l_waveProp);
-      l_stations.push_back(l_stationToAdd);
+      // tsunami_lab::io::Station l_stationToAdd(l_x,
+      //                                         l_y,
+      //                                         elem.at("name"),
+      //                                         l_stationFrequency,
+      //                                         l_waveProp);
+      l_stations.push_back(new tsunami_lab::io::Station(l_x,
+                                                        l_y,
+                                                        elem.at("name"),
+                                                        l_stationFrequency,
+                                                        l_waveProp));
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-  // set up stattions folder for stations to save their data in
+  // set up stations folder for stations to save their data in
   if (std::filesystem::exists("stations"))
     std::filesystem::remove_all("stations");
 
@@ -294,17 +298,17 @@ int main(int i_argc,
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
 
-    for (tsunami_lab::io::Station l_s : l_stations)
+    for (tsunami_lab::io::Station *l_s : l_stations)
     {
-      l_s.update(l_simTime);
+      l_s->update(l_simTime);
     }
 
     l_timeStep++;
     l_simTime += l_dt;
   }
-  for (tsunami_lab::io::Station l_s : l_stations)
+  for (tsunami_lab::io::Station *l_s : l_stations)
   {
-    l_s.write();
+    l_s->write();
   }
 
   std::cout << "finished time loop" << std::endl;
@@ -313,6 +317,10 @@ int main(int i_argc,
   std::cout << "freeing memory" << std::endl;
   delete l_setup;
   delete l_waveProp;
+  for (tsunami_lab::io::Station *l_s : l_stations)
+  {
+    delete l_s;
+  }
 
   std::cout << "finished, exiting" << std::endl;
 
