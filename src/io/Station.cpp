@@ -36,6 +36,8 @@ void tsunami_lab::io::Station::capture(t_real i_time)
     capturedData.push_back(m_waveProp->getMomentumX()[t_idx(m_x + m_y * m_stride)]);
     capturedData.push_back(m_waveProp->getMomentumY()[t_idx(m_x + m_y * m_stride)]);
     capturedData.push_back(m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
+    capturedData.push_back(m_waveProp->getHeight()[t_idx(m_x + m_y * m_stride)] +
+                           m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
     m_data->push_back(capturedData);
 }
 
@@ -44,7 +46,7 @@ void tsunami_lab::io::Station::write()
     std::string l_path = m_filepath + "/" + m_name + ".csv";
     std::ofstream l_file;
     l_file.open(l_path);
-    l_file << "time,height,momentum_x,momentum_y,bathymetry"
+    l_file << "time,height,momentum_x,momentum_y,bathymetry,totalHeight"
            << "\n";
     for (std::vector<t_real> elem : *m_data)
     {
@@ -52,7 +54,8 @@ void tsunami_lab::io::Station::write()
         l_file << elem[1] << ",";
         l_file << elem[2] << ",";
         l_file << elem[3] << ",";
-        l_file << elem[4] << "\n";
+        l_file << elem[4] << ",";
+        l_file << elem[5] << "\n";
     }
     l_file.close();
 }
