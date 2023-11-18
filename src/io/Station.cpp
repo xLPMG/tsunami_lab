@@ -44,8 +44,7 @@ void tsunami_lab::io::Station::write()
     std::string l_path = m_filepath + "/" + m_name + ".csv";
     std::ofstream l_file;
     l_file.open(l_path);
-    l_file << "# STATION: " << m_name << "\n";
-    l_file << "# time,height,momentum_x,momentum_y,bathymetry"
+    l_file << "time,height,momentum_x,momentum_y,bathymetry"
            << "\n";
     for (std::vector<t_real> elem : *m_data)
     {
