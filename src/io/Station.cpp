@@ -72,7 +72,7 @@ void tsunami_lab::io::Station::write()
         {
             l_file << elem[i] << ",";
         }
-        l_file << elem[elem.size()];
+        l_file << elem[elem.size()-1];
         l_file << "\n";
     }
     l_file.close();
