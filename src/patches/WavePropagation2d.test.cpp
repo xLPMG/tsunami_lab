@@ -6,7 +6,6 @@
  **/
 #include <catch2/catch.hpp>
 #include "WavePropagation2d.h"
-#include "../io/Csv.h"
 
 TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwave]")
 {
@@ -28,31 +27,39 @@ TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwa
    */
 
   // construct solver and setup a dambreak problem
-  tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, "fwave", false, false, false, false);
+  tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, "fwave", false, false, true, true);
+
+  std::size_t stride = 100 + 2;
 
   for (std::size_t l_ce = 0; l_ce < 50; l_ce++)
   {
-    m_waveProp.setHeight(l_ce,
-                         0,
-                         10);
-    m_waveProp.setMomentumX(l_ce,
-                            0,
-                            0);
-    m_waveProp.setMomentumY(l_ce,
-                            0,
-                            0);
+    for (std::size_t l_de = 0; l_de < 100; l_de++)
+    {
+      m_waveProp.setHeight(l_ce,
+                           l_de,
+                           10);
+      m_waveProp.setMomentumX(l_ce,
+                              l_de,
+                              0);
+      m_waveProp.setMomentumY(l_ce,
+                              l_de,
+                              0);
+    }
   }
   for (std::size_t l_ce = 50; l_ce < 100; l_ce++)
   {
-    m_waveProp.setHeight(l_ce,
-                         0,
-                         8);
-    m_waveProp.setMomentumX(l_ce,
-                            0,
-                            0);
-    m_waveProp.setMomentumY(l_ce,
-                            0,
-                            0);
+    for (std::size_t l_de = 0; l_de < 100; l_de++)
+    {
+      m_waveProp.setHeight(l_ce,
+                           l_de,
+                           8);
+      m_waveProp.setMomentumX(l_ce,
+                              l_de,
+                              0);
+      m_waveProp.setMomentumY(l_ce,
+                              l_de,
+                              0);
+    }
   }
 
   // set outflow boundary condition
@@ -61,28 +68,39 @@ TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwa
   // perform a time step
   m_waveProp.timeStep(0.1, 0.1);
 
+  // testing only the middle of the simulation [25, 75] because of outflow at the edges
+  // and it also makes the tests faster (we don't need to test the same situation 100 times anyway)
+
   // steady state
   for (std::size_t l_ce = 0; l_ce < 49; l_ce++)
   {
-    REQUIRE(m_waveProp.getHeight()[l_ce] == Approx(10));
-    REQUIRE(m_waveProp.getMomentumX()[l_ce] == Approx(0));
-    REQUIRE(m_waveProp.getMomentumY()[l_ce] == Approx(0));
+    for (std::size_t l_de = 0; l_de < 100; l_de++)
+    {
+      REQUIRE(m_waveProp.getHeight()[l_ce + l_de * stride] == Approx(10));
+      REQUIRE(m_waveProp.getMomentumX()[l_ce + l_de * stride] == Approx(0));
+      REQUIRE(m_waveProp.getMomentumY()[l_ce + l_de * stride] == Approx(0));
+    }
   }
 
   // dam-break
-  REQUIRE(m_waveProp.getHeight()[49] == Approx(10 - 0.1 * 9.394671362));
-  REQUIRE(m_waveProp.getMomentumX()[49] == Approx(0 + 0.1 * 88.25985));
-  REQUIRE(m_waveProp.getMomentumY()[49] == Approx(0));
+  for (std::size_t l_de = 0; l_de < 100; l_de++)
+  {
+    REQUIRE(m_waveProp.getHeight()[49 + l_de * stride] == Approx(10 - 0.1 * 9.394671362));
+    REQUIRE(m_waveProp.getMomentumX()[49 + l_de * stride] == Approx(0 + 0.1 * 88.25985));
+    REQUIRE(m_waveProp.getMomentumY()[49 + l_de * stride] == Approx(0));
 
-  REQUIRE(m_waveProp.getHeight()[50] == Approx(8 + 0.1 * 9.394671362));
-  REQUIRE(m_waveProp.getMomentumX()[50] == Approx(0 + 0.1 * 88.25985));
-  REQUIRE(m_waveProp.getMomentumY()[50] == Approx(0));
-
+    REQUIRE(m_waveProp.getHeight()[50 + l_de * stride] == Approx(8 + 0.1 * 9.394671362));
+    REQUIRE(m_waveProp.getMomentumX()[50 + l_de * stride] == Approx(0 + 0.1 * 88.25985));
+    REQUIRE(m_waveProp.getMomentumY()[50 + l_de * stride] == Approx(0));
+  }
   // steady state
   for (std::size_t l_ce = 51; l_ce < 100; l_ce++)
   {
-    REQUIRE(m_waveProp.getHeight()[l_ce] == Approx(8));
-    REQUIRE(m_waveProp.getMomentumX()[l_ce] == Approx(0));
-    REQUIRE(m_waveProp.getMomentumY()[l_ce] == Approx(0));
+    for (std::size_t l_de = 0; l_de < 100; l_de++)
+    {
+      REQUIRE(m_waveProp.getHeight()[l_ce + l_de * stride] == Approx(8));
+      REQUIRE(m_waveProp.getMomentumX()[l_ce + l_de * stride] == Approx(0));
+      REQUIRE(m_waveProp.getMomentumY()[l_ce + l_de * stride] == Approx(0));
+    }
   }
 }

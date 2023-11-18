@@ -35,7 +35,7 @@ TEST_CASE("Test of the maximum Froude number calculator using the Supercritical1
      * i_x in [0, 25]
      * -> for max F, u needs to be maximized and h minimized
      * -> hu is the same for all i_x, hu = 0.18
-     * froude(x) = (0.18 / height(x)) / sqrt(height(x) * 9.80665) 
+     * froude(x) = (0.18 / height(x)) / sqrt(height(x) * 9.80665)
      * -> calculate extrema using geogebra (define functions as seen above)
      * -> maximum at (10, 1.2263011593719)
      */

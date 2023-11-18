@@ -43,6 +43,7 @@ l_tests = [ 'tests.cpp',
             'setups/Subcritical1d.test.cpp',
             'setups/CircularDamBreak2d.test.cpp',
             'patches/WavePropagation2d.test.cpp',
+            'io/Station.test.cpp',
             'calculations/Froude.test.cpp']
 
 for l_te in l_tests:

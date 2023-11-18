@@ -2,13 +2,12 @@
  * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
- * Stations
+ * A station which can capture data in a specified location on demand and also save it to a csv file
  **/
 
 #include "Station.h"
 #include <sstream>
 #include <fstream>
-#include <iostream>
 
 tsunami_lab::io::Station::Station(t_real i_x,
                                   t_real i_y,

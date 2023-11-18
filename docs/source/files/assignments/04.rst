@@ -27,7 +27,15 @@ And adjusted the time step accordingly:
 .. code:: cpp
 
     // derive constant time step; changes at simulation time are ignored
-    tsunami_lab::t_real l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
+    tsunami_lab::t_real l_dt = 0;
+    if (l_ny == 1)
+    {
+        l_dt = 0.5 * l_dx / l_speedMax;
+    }
+    else
+    {
+        l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
+    }
 
     // derive scaling for a time step
     tsunami_lab::t_real l_scalingX = l_dt / l_dx;
@@ -183,4 +191,4 @@ This creates a wall which can be seen clearly in the following animation:
     </video> 
 
 .. note::
-    The visualisation was created with ParaView using the `TableToPoints`and `Delaunay2d` filters.
+    The visualisation was created with ParaView using the `TableToPoints` and `Delaunay2d` filters.
