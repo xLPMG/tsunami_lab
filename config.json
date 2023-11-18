@@ -9,6 +9,7 @@
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
+    "endTime":20,
     "stations":[
         { "name":"station_1", "locX":10, "locY":0 },
         { "name":"station_2", "locX":15, "locY":0 },
