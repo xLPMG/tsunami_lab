@@ -27,7 +27,7 @@
 
 using json = nlohmann::json;
 
-int main(int   i_argc,
+int main(int i_argc,
          char *i_argv[])
 {
   // config file path
@@ -51,12 +51,13 @@ int main(int   i_argc,
   bool l_hasBoundaryD = false;
   // dimension choice
   int l_dimension = 2;
-  //bathymetry file path
+  // bathymetry file path
   std::string l_bathymetryFilePath = "";
   // simulation time limit
   tsunami_lab::t_real l_endTime = 20;
-  //keep track of all stations
+  // keep track of all stations
   std::vector<tsunami_lab::io::Station> l_stations;
+  tsunami_lab::t_real l_stationFrequency = 1;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -64,7 +65,8 @@ int main(int   i_argc,
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
-  if( i_argc == 2 ) l_configFilePath = i_argv[1];
+  if (i_argc == 2)
+    l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
 
   // read configuration data from file
@@ -131,21 +133,6 @@ int main(int   i_argc,
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
     exit(EXIT_FAILURE);
   }
-  // set up stations
-  std::cout << "Setting up station..." << std::endl;
-  if(l_configData.contains("stations")){
-    for (auto &elem : l_configData["stations"]){
-      tsunami_lab::t_real l_x = elem.at("locX");
-      tsunami_lab::t_real l_y = elem.at("locY");
-      tsunami_lab::io::Station l_stationToAdd(l_x, 
-                                              l_y,
-                                              elem.at("name"),
-                                              l_setup->getHeight(l_x, l_y),
-                                              l_setup->getBathymetry(l_x, l_y));
-      l_stations.push_back(l_stationToAdd);
-      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
-    }
-  }
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
@@ -166,6 +153,31 @@ int main(int   i_argc,
                                                              l_hasBoundaryU,
                                                              l_hasBoundaryD);
   }
+
+  // set up stations
+  std::cout << "Setting up station..." << std::endl;
+  l_stationFrequency = l_configData.value("stationFrequency", 1);
+  std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
+  if (l_configData.contains("stations"))
+  {
+    for (auto elem : l_configData["stations"])
+    {
+      tsunami_lab::t_real l_x = elem.at("locX");
+      tsunami_lab::t_real l_y = elem.at("locY");
+      tsunami_lab::io::Station l_stationToAdd(l_x,
+                                              l_y,
+                                              elem.at("name"),
+                                              l_stationFrequency,
+                                              l_waveProp);
+      l_stations.push_back(l_stationToAdd);
+      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
+    }
+  }
+  // set up stattions folder for stations to save their data in
+  if (std::filesystem::exists("stations"))
+    std::filesystem::remove_all("stations");
+
+  std::filesystem::create_directory("stations");
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -228,18 +240,6 @@ int main(int   i_argc,
 
   l_waveProp->adjustWaterHeight();
 
-  // instantiation stations
-  tsunami_lab::io::Station *station1 = new tsunami_lab::io::Station(0, 0, "dawd", 0, 0);
-  station1->setHeight(14);
-  station1->setBathymetry(67);
-  tsunami_lab::t_idx count = 0;
-  std::string l_station_path = "station/station_" + std::to_string(count) + ".csv";
-  std::ofstream l_station_file;
-  l_station_file.open(l_station_path);
-  l_station_file << station1->getBathymetry() << " height: " << station1->getHeight();
-
-  l_station_file.close();
-
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
@@ -294,8 +294,17 @@ int main(int   i_argc,
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
 
+    for (tsunami_lab::io::Station l_s : l_stations)
+    {
+      l_s.update(l_simTime);
+    }
+
     l_timeStep++;
     l_simTime += l_dt;
+  }
+  for (tsunami_lab::io::Station l_s : l_stations)
+  {
+    l_s.write();
   }
 
   std::cout << "finished time loop" << std::endl;
