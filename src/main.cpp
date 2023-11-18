@@ -80,7 +80,7 @@ int main(int i_argc,
   l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
   l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
   l_hasBoundaryU = l_configData.value("hasBoundaryU", false);
-  l_hasBoundaryD = l_configData.value("hasBoundaryR", false);
+  l_hasBoundaryD = l_configData.value("hasBoundaryD", false);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
