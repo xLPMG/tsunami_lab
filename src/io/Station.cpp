@@ -32,12 +32,17 @@ void tsunami_lab::io::Station::capture(t_real i_time)
 {
     std::vector<t_real> capturedData;
     capturedData.push_back(i_time);
-    capturedData.push_back(m_waveProp->getHeight()[t_idx(m_x + m_y * m_stride)]);
-    capturedData.push_back(m_waveProp->getMomentumX()[t_idx(m_x + m_y * m_stride)]);
-    capturedData.push_back(m_waveProp->getMomentumY()[t_idx(m_x + m_y * m_stride)]);
-    capturedData.push_back(m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
-    capturedData.push_back(m_waveProp->getHeight()[t_idx(m_x + m_y * m_stride)] +
-                           m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
+    if (m_waveProp->getHeight() != nullptr)
+        capturedData.push_back(m_waveProp->getHeight()[t_idx(m_x + m_y * m_stride)]);
+    if (m_waveProp->getMomentumX() != nullptr)
+        capturedData.push_back(m_waveProp->getMomentumX()[t_idx(m_x + m_y * m_stride)]);
+    if (m_waveProp->getMomentumY() != nullptr)
+        capturedData.push_back(m_waveProp->getMomentumY()[t_idx(m_x + m_y * m_stride)]);
+    if (m_waveProp->getBathymetry() != nullptr)
+        capturedData.push_back(m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
+    if (m_waveProp->getHeight() != nullptr && m_waveProp->getBathymetry() != nullptr)
+        capturedData.push_back(m_waveProp->getHeight()[t_idx(m_x + m_y * m_stride)] +
+                               m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
     m_data->push_back(capturedData);
 }
 
@@ -46,16 +51,28 @@ void tsunami_lab::io::Station::write()
     std::string l_path = m_filepath + "/" + m_name + ".csv";
     std::ofstream l_file;
     l_file.open(l_path);
-    l_file << "time,height,momentum_x,momentum_y,bathymetry,totalHeight"
-           << "\n";
+    // write the CSV header
+    l_file << "time";
+    if (m_waveProp->getHeight() != nullptr)
+        l_file << ",height";
+    if (m_waveProp->getMomentumX() != nullptr)
+        l_file << ",momentum_x";
+    if (m_waveProp->getMomentumY() != nullptr)
+        l_file << ",momentum_y";
+    if (m_waveProp->getBathymetry() != nullptr)
+        l_file << ",bathymetry";
+    if (m_waveProp->getHeight() != nullptr && m_waveProp->getBathymetry() != nullptr)
+        l_file << ",totalHeight";
+    l_file << "\n";
+
+    // write data
     for (std::vector<t_real> elem : *m_data)
     {
-        l_file << elem[0] << ",";
-        l_file << elem[1] << ",";
-        l_file << elem[2] << ",";
-        l_file << elem[3] << ",";
-        l_file << elem[4] << ",";
-        l_file << elem[5] << "\n";
+        for (t_idx i = 0; i < elem.size(); i++)
+        {
+            l_file << elem[i];
+        }
     }
+    l_file << "\n";
     l_file.close();
 }
