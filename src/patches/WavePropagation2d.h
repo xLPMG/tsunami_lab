@@ -50,11 +50,11 @@ private:
   //! true if there is a boundary on the right side
   bool m_hasBoundaryR = false;
 
-  //! true if there is a boundary on the left side
-  bool m_hasBoundaryU = false;
+  //! true if there is a boundary on the top side
+  bool m_hasBoundaryT = false;
 
-  //! true if there is a boundary on the right side
-  bool m_hasBoundaryD = false;
+  //! true if there is a boundary on the bottom side
+  bool m_hasBoundaryB = false;
 
  /**
   * Compute the reflection effect
@@ -90,16 +90,16 @@ public:
    * @param i_solver selected solver.
    * @param i_hasBoundaryL has boundary on the left side
    * @param i_hasBoundaryR has boundary on the left side
-   * @param i_hasBoundaryU has boundary on the left side
-   * @param i_hasBoundaryD has boundary on the left side
+   * @param i_hasBoundaryT has boundary on the top side
+   * @param i_hasBoundaryB has boundary on the bottom side
    **/
   WavePropagation2d(t_idx i_nCellsX,
                     t_idx i_nCellsY,
                     const std::string &i_solver,
                     bool i_hasBoundaryL,
                     bool i_hasBoundaryR,
-                    bool i_hasBoundaryU,
-                    bool i_hasBoundaryD);
+                    bool i_hasBoundaryT,
+                    bool i_hasBoundaryB);
 
   /**
    * Destructor which frees all allocated memory.

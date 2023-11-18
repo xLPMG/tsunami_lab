@@ -8,37 +8,37 @@
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
 #include <string>
-#include <iostream>
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
                                                            const std::string &i_solver,
                                                            bool i_hasBoundaryL,
                                                            bool i_hasBoundaryR,
-                                                           bool i_hasBoundaryU,
-                                                           bool i_hasBoundaryD)
+                                                           bool i_hasBoundaryT,
+                                                           bool i_hasBoundaryB)
 {
   m_nCellsX = i_nCellsX;
   m_nCellsY = i_nCellsY;
   m_solver = i_solver;
   m_hasBoundaryL = i_hasBoundaryL;
   m_hasBoundaryR = i_hasBoundaryR;
-  m_hasBoundaryU = i_hasBoundaryU;
-  m_hasBoundaryD = i_hasBoundaryD;
+  m_hasBoundaryT = i_hasBoundaryT;
+  m_hasBoundaryB = i_hasBoundaryB;
 
   // allocate memory including a single ghost cell on each side
+  t_idx l_totalCells = (m_nCellsX + 2) * (m_nCellsY + 2);
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
-    m_h[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
-    m_huX[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
-    m_huY[l_st] = new t_real[(m_nCellsX + 2) * (m_nCellsY + 2)];
+    m_h[l_st] = new t_real[l_totalCells];
+    m_huX[l_st] = new t_real[l_totalCells];
+    m_huY[l_st] = new t_real[l_totalCells];
   }
-  m_b = new t_real[(m_nCellsX + 2) * (m_nCellsY * 2)];
+  m_b = new t_real[l_totalCells];
 
   // init to zero
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
-    for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2)*(m_nCellsY + 2); l_ce++)
+    for (t_idx l_ce = 0; l_ce < l_totalCells; l_ce++)
     {
         m_h[l_st][l_ce] = 0;
         m_huX[l_st][l_ce] = 0;
@@ -56,7 +56,7 @@ tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
     delete[] m_huX[l_st];
     delete[] m_huY[l_st];
   }
-  delete[] m_b;
+  delete m_b;
 }
 
 void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
@@ -87,8 +87,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
     {
       // determine left and right cell-id
-      t_idx l_ceL = getStride() * l_ec + l_ed;
-      t_idx l_ceR = getStride() * l_ec + l_ed + 1;
+      t_idx l_ceL = l_ec + getStride() * l_ed;
+      t_idx l_ceR = l_ceL + 1;
 
       t_real l_hL = l_hOld[l_ceL];
       t_real l_hR = l_hOld[l_ceR];
@@ -151,21 +151,21 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
     {
       // determine upper and lower cell-id
-      t_idx l_ceD = l_ec + l_ed * getStride();
-      t_idx l_ceU = l_ec + (l_ed + 1) * getStride();
+      t_idx l_ceB = l_ec * getStride() + l_ed;
+      t_idx l_ceT = l_ceB + getStride();
 
-      t_real l_hD = l_hOld[l_ceD];
-      t_real l_hU = l_hOld[l_ceU];
-      t_real l_huD = l_huOldY[l_ceD];
-      t_real l_huU = l_huOldY[l_ceU];
-      t_real l_bD = m_b[l_ceD];
-      t_real l_bU = m_b[l_ceU];
+      t_real l_hD = l_hOld[l_ceB];
+      t_real l_hU = l_hOld[l_ceT];
+      t_real l_huD = l_huOldY[l_ceB];
+      t_real l_huU = l_huOldY[l_ceT];
+      t_real l_bD = m_b[l_ceB];
+      t_real l_bU = m_b[l_ceT];
 
       // handle reflections
       handleReflections(l_hOld,
                         l_huOldY,
-                        l_ceD,
-                        l_ceU,
+                        l_ceB,
+                        l_ceT,
                         l_hD,
                         l_hU,
                         l_huD,
@@ -185,26 +185,26 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
                                  l_netUpdates[0],
                                  l_netUpdates[1]);
 
-      if (l_hOld[l_ceD] > 0)
+      if (l_hOld[l_ceB] > 0)
       {
-        l_hNew[l_ceD] -= i_scalingY * l_netUpdates[0][0];
-        l_huNewY[l_ceD] -= i_scalingY * l_netUpdates[0][1];
+        l_hNew[l_ceB] -= i_scalingY * l_netUpdates[0][0];
+        l_huNewY[l_ceB] -= i_scalingY * l_netUpdates[0][1];
       }
       else
       {
-        l_hNew[l_ceD] = 0;
-        l_huNewY[l_ceD] = 0;
+        l_hNew[l_ceB] = 0;
+        l_huNewY[l_ceB] = 0;
       }
 
-      if (l_hOld[l_ceU] > 0)
+      if (l_hOld[l_ceT] > 0)
       {
-        l_hNew[l_ceU] -= i_scalingY * l_netUpdates[1][0];
-        l_huNewY[l_ceU] -= i_scalingY * l_netUpdates[1][1];
+        l_hNew[l_ceT] -= i_scalingY * l_netUpdates[1][0];
+        l_huNewY[l_ceT] -= i_scalingY * l_netUpdates[1][1];
       }
       else
       {
-        l_hNew[l_ceU] = 0;
-        l_huNewY[l_ceU] = 0;
+        l_hNew[l_ceT] = 0;
+        l_huNewY[l_ceT] = 0;
       }
     }
   }
@@ -217,7 +217,7 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
   t_real *l_huY = m_huY[m_step];
   t_real *l_b = m_b;
 
-  for (t_idx i = 0; i < m_nCellsY + 2; i++)
+  for (t_idx i = 1; i < m_nCellsY; i++)
   {
     t_idx ceL = getStride() * i;
     t_idx ceR = ceL + m_nCellsX + 1;
@@ -234,18 +234,18 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
   }
   for (t_idx i = 0; i < m_nCellsX + 2; i++)
   {
-    t_idx ceD = i;
-    t_idx ceU = ceD + (m_nCellsY + 1) * getStride();
+    t_idx ceB = i;
+    t_idx ceT = i + (m_nCellsY + 1) * getStride();
     // bottom row
-    l_h[ceD] = m_hasBoundaryD ? 0 : l_h[ceD + getStride()];
-    l_huX[ceD] = l_huX[ceD + getStride()];
-    l_huY[ceD] = l_huY[ceD + getStride()];
-    l_b[ceD] = l_b[ceD + getStride()];
+    l_h[ceB] = m_hasBoundaryB ? 0 : l_h[ceB + getStride()];
+    l_huX[ceB] = l_huX[ceB + getStride()];
+    l_huY[ceB] = l_huY[ceB + getStride()];
+    l_b[ceB] = l_b[ceB + getStride()];
     // top row
-    l_h[ceU] = m_hasBoundaryU ? 0 : l_h[ceU - getStride()];
-    l_huX[ceU] = l_huX[ceU - getStride()];
-    l_huY[ceU] = l_huY[ceU - getStride()];
-    l_b[ceU] = l_b[ceU - getStride()];
+    l_h[ceT] = m_hasBoundaryT ? 0 : l_h[ceT - getStride()];
+    l_huX[ceT] = l_huX[ceT - getStride()];
+    l_huY[ceT] = l_huY[ceT - getStride()];
+    l_b[ceT] = l_b[ceT - getStride()];
   }
 }
 

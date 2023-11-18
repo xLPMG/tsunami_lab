@@ -68,9 +68,6 @@ TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwa
   // perform a time step
   m_waveProp.timeStep(0.1, 0.1);
 
-  // testing only the middle of the simulation [25, 75] because of outflow at the edges
-  // and it also makes the tests faster (we don't need to test the same situation 100 times anyway)
-
   // steady state
   for (std::size_t l_ce = 0; l_ce < 49; l_ce++)
   {

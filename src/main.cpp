@@ -47,8 +47,8 @@ int main(int i_argc,
   std::string l_solver = "";
   bool l_hasBoundaryL = false;
   bool l_hasBoundaryR = false;
-  bool l_hasBoundaryU = false;
-  bool l_hasBoundaryD = false;
+  bool l_hasBoundaryT = false;
+  bool l_hasBoundaryB = false;
   // bathymetry file path
   std::string l_bathymetryFilePath = "";
   // simulation time limit
@@ -79,8 +79,8 @@ int main(int i_argc,
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
   l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
   l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
-  l_hasBoundaryU = l_configData.value("hasBoundaryU", false);
-  l_hasBoundaryD = l_configData.value("hasBoundaryD", false);
+  l_hasBoundaryT = l_configData.value("hasBoundaryT", false);
+  l_hasBoundaryB = l_configData.value("hasBoundaryB", false);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
@@ -148,8 +148,8 @@ int main(int i_argc,
                                                              l_solver,
                                                              l_hasBoundaryL,
                                                              l_hasBoundaryR,
-                                                             l_hasBoundaryU,
-                                                             l_hasBoundaryD);
+                                                             l_hasBoundaryT,
+                                                             l_hasBoundaryB);
   }
 
   // set up stations

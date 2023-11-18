@@ -69,11 +69,11 @@ As of now, these are:
      - is there a boundary on the right?
      - boolean
      - true or false
-   * - hasBoundaryU
+   * - hasBoundaryT
      - is there a boundary at the top?
      - boolean
      - true or false
-   * - hasBoundaryD
+   * - hasBoundaryB
      - is there a boundary at the bottom?
      - boolean
      - true or false
