@@ -27,6 +27,10 @@
 
 using json = nlohmann::json;
 
+void updateStations()
+{
+}
+
 int main(int i_argc,
          char *i_argv[])
 {
@@ -86,6 +90,7 @@ int main(int i_argc,
   l_dimension = l_configData.value("dimension", 1);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_dimension = l_configData.value("endTime", 20);
+  l_stationFrequency = l_configData.value("stationFrequency", 1);
 
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
@@ -156,7 +161,6 @@ int main(int i_argc,
 
   // set up stations
   std::cout << "Setting up station..." << std::endl;
-  l_stationFrequency = l_configData.value("stationFrequency", 1);
   std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
   if (l_configData.contains("stations"))
   {
@@ -164,15 +168,9 @@ int main(int i_argc,
     {
       tsunami_lab::t_real l_x = elem.at("locX");
       tsunami_lab::t_real l_y = elem.at("locY");
-      // tsunami_lab::io::Station l_stationToAdd(l_x,
-      //                                         l_y,
-      //                                         elem.at("name"),
-      //                                         l_stationFrequency,
-      //                                         l_waveProp);
       l_stations.push_back(new tsunami_lab::io::Station(l_x,
                                                         l_y,
                                                         elem.at("name"),
-                                                        l_stationFrequency,
                                                         l_waveProp));
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
@@ -259,6 +257,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
+  tsunami_lab::t_idx l_captureCount = 0;
 
   // clean solutions folder
   if (std::filesystem::exists("solutions"))
@@ -298,9 +297,13 @@ int main(int i_argc,
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
 
-    for (tsunami_lab::io::Station *l_s : l_stations)
+    if (l_simTime >= l_stationFrequency * l_captureCount)
     {
-      l_s->update(l_simTime);
+      for (tsunami_lab::io::Station *l_s : l_stations)
+      {
+        l_s->capture(l_simTime);
+      }
+      ++l_captureCount;
     }
 
     l_timeStep++;

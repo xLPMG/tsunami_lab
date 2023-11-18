@@ -13,13 +13,11 @@
 tsunami_lab::io::Station::Station(t_real i_x,
                                   t_real i_y,
                                   std::string i_name,
-                                  t_real i_frequency,
                                   tsunami_lab::patches::WavePropagation *i_waveProp)
 {
     m_x = i_x;
     m_y = i_y;
     m_name = i_name;
-    m_frequency = i_frequency;
     m_waveProp = i_waveProp;
     m_stride = i_waveProp->getStride();
     m_data = new std::vector<std::vector<t_real>>;
@@ -39,15 +37,6 @@ void tsunami_lab::io::Station::capture(t_real i_time)
     capturedData.push_back(m_waveProp->getMomentumY()[t_idx(m_x + m_y * m_stride)]);
     capturedData.push_back(m_waveProp->getBathymetry()[t_idx(m_x + m_y * m_stride)]);
     m_data->push_back(capturedData);
-}
-
-void tsunami_lab::io::Station::update(t_real i_time)
-{
-    if (i_time >= m_time + m_frequency)
-    {
-        capture(i_time);
-        m_time = i_time;
-    }
 }
 
 void tsunami_lab::io::Station::write()
