@@ -1,5 +1,5 @@
 /**
- * @author Luca Gru,bachh, Richard Hofmann
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  * Stations 

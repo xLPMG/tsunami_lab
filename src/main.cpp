@@ -32,37 +32,31 @@ int main(int   i_argc,
 {
   // config file path
   std::string l_configFilePath = "config.json";
-
   // setup choice
-  std::string l_setupChoice = "CIRCULARDAMBREAK2D";
-
+  std::string l_setupChoice = "";
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 1;
-
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 10.0;
   tsunami_lab::t_real l_simulationSizeY = 10.0;
-
   // set cell size
   tsunami_lab::t_real l_dx = 1;
   tsunami_lab::t_real l_dy = 1;
-
   // solver default
-  std::string l_solver = "fwave";
+  std::string l_solver = "";
   bool l_hasBoundaryL = false;
   bool l_hasBoundaryR = false;
   bool l_hasBoundaryU = false;
   bool l_hasBoundaryD = false;
-
   // dimension choice
   int l_dimension = 2;
-
   //bathymetry file path
   std::string l_bathymetryFilePath = "";
-
   // simulation time limit
   tsunami_lab::t_real l_endTime = 20;
+  //keep track of all stations
+  std::vector<tsunami_lab::io::Station> l_stations;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -77,32 +71,19 @@ int main(int   i_argc,
   std::ifstream l_configFile(l_configFilePath);
   json l_configData = json::parse(l_configFile);
 
-  if (l_configData.contains("setup"))
-    l_setupChoice = l_configData["setup"];
-  if (l_configData.contains("solver"))
-    l_solver = l_configData["solver"];
-  if (l_configData.contains("nx"))
-    l_nx = l_configData["nx"];
-  if (l_configData.contains("ny"))
-    l_ny = l_configData["ny"];
-  if (l_configData.contains("simulationSizeX"))
-    l_simulationSizeX = l_configData["simulationSizeX"];
-  if (l_configData.contains("simulationSizeY"))
-    l_simulationSizeY = l_configData["simulationSizeY"];
-  if (l_configData.contains("hasBoundaryL"))
-    l_hasBoundaryL = l_configData["hasBoundaryL"];
-  if (l_configData.contains("hasBoundaryR"))
-    l_hasBoundaryR = l_configData["hasBoundaryR"];
-  if (l_configData.contains("hasBoundaryU"))
-    l_hasBoundaryU = l_configData["hasBoundaryU"];
-  if (l_configData.contains("hasBoundaryD"))
-    l_hasBoundaryD = l_configData["hasBoundaryD"];
-  if (l_configData.contains("dimension"))
-    l_dimension = l_configData["dimension"];
-  if (l_configData.contains("bathymetry"))
-    l_bathymetryFilePath = l_configData["bathymetry"];
-  if (l_configData.contains("endTime"))
-    l_endTime = l_configData["endTime"];
+  l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  l_solver = l_configData.value("solver", "fwave");
+  l_nx = l_configData.value("nx", 1);
+  l_ny = l_configData.value("ny", 1);
+  l_simulationSizeX = l_configData.value("simulationSizeX", 1);
+  l_simulationSizeY = l_configData.value("simulationSizeY", 1);
+  l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
+  l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
+  l_hasBoundaryU = l_configData.value("hasBoundaryU", false);
+  l_hasBoundaryD = l_configData.value("hasBoundaryR", false);
+  l_dimension = l_configData.value("dimension", 1);
+  l_bathymetryFilePath = l_configData.value("bathymetry", "");
+  l_dimension = l_configData.value("endTime", 20);
 
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
@@ -149,6 +130,21 @@ int main(int   i_argc,
   {
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
     exit(EXIT_FAILURE);
+  }
+  // set up stations
+  std::cout << "Setting up station..." << std::endl;
+  if(l_configData.contains("stations")){
+    for (auto &elem : l_configData["stations"]){
+      tsunami_lab::t_real l_x = elem.at("locX");
+      tsunami_lab::t_real l_y = elem.at("locY");
+      tsunami_lab::io::Station l_stationToAdd(l_x, 
+                                              l_y,
+                                              elem.at("name"),
+                                              l_setup->getHeight(l_x, l_y),
+                                              l_setup->getBathymetry(l_x, l_y));
+      l_stations.push_back(l_stationToAdd);
+      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
+    }
   }
 
   // construct solver

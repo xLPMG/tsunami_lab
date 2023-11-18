@@ -43,7 +43,7 @@ private:
   std::vector<Station> station_vector;
 
   //! output frequency
-  t_real m_frequency = 0;
+  //t_real m_frequency = 0;
 
   //! filepath
   std::string m_filepath = "";
