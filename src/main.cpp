@@ -27,10 +27,6 @@
 
 using json = nlohmann::json;
 
-void updateStations()
-{
-}
-
 int main(int i_argc,
          char *i_argv[])
 {
@@ -160,7 +156,7 @@ int main(int i_argc,
   }
 
   // set up stations
-  std::cout << "Setting up station..." << std::endl;
+  std::cout << "Setting up stations..." << std::endl;
   std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
   if (l_configData.contains("stations"))
   {
