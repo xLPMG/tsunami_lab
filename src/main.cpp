@@ -49,8 +49,6 @@ int main(int i_argc,
   bool l_hasBoundaryR = false;
   bool l_hasBoundaryU = false;
   bool l_hasBoundaryD = false;
-  // dimension choice
-  int l_dimension = 2;
   // bathymetry file path
   std::string l_bathymetryFilePath = "";
   // simulation time limit
@@ -83,9 +81,8 @@ int main(int i_argc,
   l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
   l_hasBoundaryU = l_configData.value("hasBoundaryU", false);
   l_hasBoundaryD = l_configData.value("hasBoundaryR", false);
-  l_dimension = l_configData.value("dimension", 1);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
-  l_dimension = l_configData.value("endTime", 20);
+  l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
 
   l_dx = l_simulationSizeX / l_nx;
@@ -137,7 +134,7 @@ int main(int i_argc,
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
-  if (l_dimension == 1)
+  if (l_ny == 1)
   {
     l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
                                                              l_solver,
@@ -220,21 +217,21 @@ int main(int i_argc,
     }
   }
 
-  l_waveProp->setBathymetry(17, 15, 30);
-  l_waveProp->setBathymetry(18, 15, 30);
-  l_waveProp->setBathymetry(19, 15, 30);
-  l_waveProp->setBathymetry(20, 15, 30);
-  l_waveProp->setBathymetry(21, 15, 30);
-  l_waveProp->setBathymetry(22, 15, 30);
-  l_waveProp->setBathymetry(23, 15, 30);
+  // l_waveProp->setBathymetry(17, 15, 30);
+  // l_waveProp->setBathymetry(18, 15, 30);
+  // l_waveProp->setBathymetry(19, 15, 30);
+  // l_waveProp->setBathymetry(20, 15, 30);
+  // l_waveProp->setBathymetry(21, 15, 30);
+  // l_waveProp->setBathymetry(22, 15, 30);
+  // l_waveProp->setBathymetry(23, 15, 30);
 
-  l_waveProp->setBathymetry(27, 15, 30);
-  l_waveProp->setBathymetry(28, 15, 30);
-  l_waveProp->setBathymetry(29, 15, 30);
-  l_waveProp->setBathymetry(30, 15, 30);
-  l_waveProp->setBathymetry(31, 15, 30);
-  l_waveProp->setBathymetry(32, 15, 30);
-  l_waveProp->setBathymetry(33, 15, 30);
+  // l_waveProp->setBathymetry(27, 15, 30);
+  // l_waveProp->setBathymetry(28, 15, 30);
+  // l_waveProp->setBathymetry(29, 15, 30);
+  // l_waveProp->setBathymetry(30, 15, 30);
+  // l_waveProp->setBathymetry(31, 15, 30);
+  // l_waveProp->setBathymetry(32, 15, 30);
+  // l_waveProp->setBathymetry(33, 15, 30);
 
   l_waveProp->adjustWaterHeight();
 
@@ -242,8 +239,16 @@ int main(int i_argc,
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
   // derive constant time step; changes at simulation time are ignored
-  tsunami_lab::t_real l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-  l_dt *= 0.3;
+  tsunami_lab::t_real l_dt = 0;
+  if (l_ny == 1)
+  {
+    l_dt = 0.5 * l_dx / l_speedMax;
+  }
+  else
+  {
+    l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
+    l_dt *= 0.3;
+  }
 
   // derive scaling for a time step
   tsunami_lab::t_real l_scalingX = l_dt / l_dx;
@@ -289,10 +294,8 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
     }
-
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
-
     if (l_simTime >= l_stationFrequency * l_captureCount)
     {
       for (tsunami_lab::io::Station *l_s : l_stations)
@@ -301,7 +304,6 @@ int main(int i_argc,
       }
       ++l_captureCount;
     }
-
     l_timeStep++;
     l_simTime += l_dt;
   }

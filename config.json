@@ -1,18 +1,19 @@
 {
     "solver": "fwave",
     "nx": 50,
-    "ny": 50,
+    "ny": 1,
     "simulationSizeX": 100,
-    "simulationSizeY": 100,
+    "simulationSizeY": 1,
+    "setup":"DAMBREAK1D",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
     "stations":[
-        { "name":"station_1", "locX":10, "locY":10 },
-        { "name":"station_2", "locX":15, "locY":10 },
-        { "name":"station_3", "locX":20, "locY":10 },
-        { "name":"station_4", "locX":25, "locY":10 }
+        { "name":"station_1", "locX":10, "locY":0 },
+        { "name":"station_2", "locX":15, "locY":0 },
+        { "name":"station_3", "locX":20, "locY":0 },
+        { "name":"station_4", "locX":25, "locY":0 }
       ],
     "stationFrequency": 1
 }
