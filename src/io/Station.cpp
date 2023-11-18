@@ -68,11 +68,12 @@ void tsunami_lab::io::Station::write()
     // write data
     for (std::vector<t_real> elem : *m_data)
     {
-        for (t_idx i = 0; i < elem.size(); i++)
+        for (t_idx i = 0; i < elem.size()-1; i++)
         {
-            l_file << elem[i];
+            l_file << elem[i] << ",";
         }
+        l_file << elem[elem.size()];
+        l_file << "\n";
     }
-    l_file << "\n";
     l_file.close();
 }
