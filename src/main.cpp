@@ -243,6 +243,7 @@ int main(int i_argc,
   if (l_ny == 1)
   {
     l_dt = 0.5 * l_dx / l_speedMax;
+    l_dt *= 0.8;
   }
   else
   {
