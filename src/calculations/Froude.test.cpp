@@ -49,4 +49,6 @@ TEST_CASE("Test of the maximum Froude number calculator using the Supercritical1
                                                     l_maxFroudeNumberPosition);
     REQUIRE(l_maxFroudeNumber == Approx(1.2263011593719));
     REQUIRE(l_maxFroudeNumberPosition == Approx(10.0).margin(0.001));
+
+    delete l_setup;
 }
