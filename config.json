@@ -1,9 +1,14 @@
 {
     "solver": "fwave",
-    "nx": 500,
-    "ny": 1,
-    "simulationSize": 50,
-    "useBathymetry": true,
+    "nx": 50,
+    "ny": 50,
+    "simulationSizeX": 100,
+    "simulationSizeY": 100,
+    "setup":"CIRCULARDAMBREAK2D",
+    "bathymetry":"resources/bathymetry/singleWall2d_100x100.csv",
     "hasBoundaryL": false,
-    "hasBoundaryR": true
+    "hasBoundaryR": false,
+    "hasBoundaryU": false,
+    "hasBoundaryD": false,
+    "endTime":20
 }

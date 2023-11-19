@@ -19,6 +19,7 @@ TEST_CASE( "Test the CSV-writer for 1D settings.", "[CsvWrite1d]" ) {
 
   std::stringstream l_stream0;
   tsunami_lab::io::Csv::write( 0.5,
+                               0.5,
                                5,
                                1,
                                7,
@@ -61,6 +62,7 @@ TEST_CASE( "Test the CSV-writer for 2D settings.", "[CsvWrite2d]" ) {
 
   std::stringstream l_stream1;
   tsunami_lab::io::Csv::write( 10,
+                               10,
                                2,
                                2,
                                4,

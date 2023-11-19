@@ -8,16 +8,21 @@ Import('env')
 
 # gather sources
 l_sources = [ 'solvers/Roe.cpp',
-             'solvers/Fwave.cpp',
+              'solvers/Fwave.cpp',
               'patches/WavePropagation1d.cpp',
+              'patches/WavePropagation2d.cpp',
               'setups/DamBreak1d.cpp',
+              'setups/CircularDamBreak2d.cpp',
               'setups/RareRare1d.cpp',
               'setups/ShockShock1d.cpp',
               'setups/GeneralDiscontinuity1d.cpp',
               'setups/Subcritical1d.cpp',
               'setups/Supercritical1d.cpp',
               'setups/TsunamiEvent1d.cpp',
-              'io/Csv.cpp' ]
+              'io/Csv.cpp',
+              'io/BathymetryLoader.cpp',
+              'io/Station.cpp',
+              'calculations/Froude.cpp']
 
 for l_so in l_sources:
   env.sources.append( env.Object( l_so ) )
@@ -30,14 +35,18 @@ l_tests = [ 'tests.cpp',
             'solvers/Fwave.test.cpp',
             'patches/WavePropagation1d.test.cpp',
             'io/Csv.test.cpp',
+            'io/BathymetryLoader.test.cpp',
             'setups/DamBreak1d.test.cpp',
             'setups/RareRare1d.test.cpp',
             'setups/ShockShock1d.test.cpp',
             'setups/GeneralDiscontinuity1d.test.cpp',
             'setups/TsunamiEvent1d.test.cpp',
             'setups/Supercritical1d.test.cpp',
-            'setups/Subcritical1d.test.cpp'
-            ]
+            'setups/Subcritical1d.test.cpp',
+            'setups/CircularDamBreak2d.test.cpp',
+            'patches/WavePropagation2d.test.cpp',
+            'io/Station.test.cpp',
+            'calculations/Froude.test.cpp']
 
 for l_te in l_tests:
   env.tests.append( env.Object( l_te ) )

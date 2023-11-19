@@ -76,6 +76,8 @@ public:
    *
    * @param i_nCells number of cells.
    * @param i_solver selected solver.
+   * @param i_hasBoundaryL true if there is a reflecting boundary on the left side
+   * @param i_hasBoundaryR true if there is a reflecting boundary on the right side
    **/
   WavePropagation1d(t_idx i_nCells,
                     const std::string &i_solver,
@@ -92,7 +94,8 @@ public:
    *
    * @param i_scaling scaling of the time step (dt / dx).
    **/
-  void timeStep(t_real i_scaling);
+  void timeStep(t_real i_scaling,
+                t_real);
 
   /**
    * Sets the values of the ghost cells according to outflow boundary conditions.
