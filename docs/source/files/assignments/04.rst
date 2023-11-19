@@ -196,7 +196,7 @@ This creates a wall which can be seen clearly in the following animation:
 Task 4.2 - Stations
 ==================================
 
-4.2.1 - station setup
+4.2.1/2 - station setup
 -------------------------
 
 Inside the config.json file we introduced an stations-array where the user can assign multiple stations. 
@@ -207,6 +207,7 @@ The mandatory variables are: station name, x-position and y-position.
 **Constructor**
 
 .. code:: cpp
+
     tsunami_lab::io::Station::Station(t_real i_x,
                                       t_real i_y,
                                       std::string i_name,
@@ -226,7 +227,8 @@ Also a vector for the data vectorsis getting created.
 
 **capture**
 
-.. code::
+.. code:: cpp
+
     void tsunami_lab::io::Station::capture(t_real i_time)
     {
         std::vector<t_real> capturedData;
@@ -249,7 +251,9 @@ The capture function only gets the time as input and puts the values height, Mom
 In the end this vector gets pushed into the m_data vector we created in the constructor.
 
 **write**
-.. code::
+
+.. code:: cpp
+
     void tsunami_lab::io::Station::write()
     {
         std::string l_path = m_filepath + "/" + m_name + ".csv";
@@ -268,7 +272,6 @@ In the end this vector gets pushed into the m_data vector we created in the cons
         if (m_waveProp->getHeight() != nullptr && m_waveProp->getBathymetry() != nullptr)
             l_file << ",totalHeight";
         l_file << "\n";
-
         // write data
         for (std::vector<t_real> elem : *m_data)
         {
@@ -289,42 +292,45 @@ The write function is getting called for every station inside the given config f
 
 Inside the main function we introduce the l_stations vector and set it up with the folowing code:
 
-.. code::
-    if (l_configData.contains("stations"))
-  {
-    for (json &elem : l_configData["stations"])
-    {
-      tsunami_lab::t_real l_x = elem.at("locX");
-      tsunami_lab::t_real l_y = elem.at("locY");
-      l_stations.push_back(new tsunami_lab::io::Station(l_x,
-                                                        l_y,
-                                                        elem.at("name"),
-                                                        l_waveProp));
-      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
-    }
-  }
+.. code:: cpp
 
-.. code::
+    if (l_configData.contains("stations"))
+    {
+        for (json &elem : l_configData["stations"])
+        {
+            tsunami_lab::t_real l_x = elem.at("locX");
+            tsunami_lab::t_real l_y = elem.at("locY");
+            l_stations.push_back(new tsunami_lab::io::Station(l_x,
+                                                                l_y,
+                                                                elem.at("name"),
+                                                                l_waveProp));
+            std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
+        }
+    }
+
+.. code:: cpp
+
     ...
     if (l_simTime >= l_stationFrequency * l_captureCount)
     {
-      for (tsunami_lab::io::Station *l_s : l_stations)
-      {
-        l_s->capture(l_simTime);
-      }
-      ++l_captureCount;
+        for (tsunami_lab::io::Station *l_s : l_stations)
+        {
+            l_s->capture(l_simTime);
+        }
+        ++l_captureCount;
+        }
+        l_timeStep++;
+        l_simTime += l_dt;
     }
-    l_timeStep++;
-    l_simTime += l_dt;
-  }
+ 
+The stations output frequency determines how often the capture function for each station is called.
 
-The stations output frequency determines how often the capture function for each sttaion is called.
+.. code:: cpp
 
-.. code::
-  for (tsunami_lab::io::Station *l_s : l_stations)
-  {
-    l_s->write();
-  }
+    for (tsunami_lab::io::Station *l_s : l_stations)
+    {
+        l_s->write();
+    }
 
 Now the csv files are getting written.
 
