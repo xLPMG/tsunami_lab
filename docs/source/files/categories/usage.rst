@@ -114,11 +114,14 @@ the bathymetry will be set to 0. A valid file may look like this:
 
   #dimensions
   DIM,100,100
-  #x,y,height
+  #x,y,bathymetry
   37, 25, 30
   38, 25, 30
   39, 25, 30
   40, 25, 30
+
+.. note::
+  You may include comments by starting the line with a ``#``
 
 .. warning::
 
