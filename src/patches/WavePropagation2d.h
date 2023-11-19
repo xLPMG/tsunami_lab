@@ -41,9 +41,6 @@ private:
   //! bathymetry 
   t_real *m_b = nullptr;
 
-  //! selected solver (roe or fwave)
-  std::string m_solver = "";
-
   //! true if there is a boundary on the left side
   bool m_hasBoundaryL = false;
 
@@ -87,7 +84,6 @@ public:
    *
    * @param i_nCellsX number of cells in x direction.
    * @param i_nCellsY number of cells in y direction.
-   * @param i_solver selected solver.
    * @param i_hasBoundaryL has boundary on the left side
    * @param i_hasBoundaryR has boundary on the left side
    * @param i_hasBoundaryT has boundary on the top side
@@ -95,7 +91,6 @@ public:
    **/
   WavePropagation2d(t_idx i_nCellsX,
                     t_idx i_nCellsY,
-                    const std::string &i_solver,
                     bool i_hasBoundaryL,
                     bool i_hasBoundaryR,
                     bool i_hasBoundaryT,

@@ -75,8 +75,8 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
                                              t_real o_netUpdateR[2])
 {
   // compute particle velocities
-  t_real l_uL = i_huL / i_hL;
-  t_real l_uR = i_huR / i_hR;
+  t_real l_uL = i_hL != 0 ? (i_huL / i_hL) : 0;
+  t_real l_uR = i_hR != 0 ? (i_huR / i_hR) : 0;
 
   // compute eigenvalues
   t_real eigenvalueRoe_1 = 0;

@@ -146,7 +146,6 @@ int main(int i_argc,
   {
     l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
                                                              l_ny,
-                                                             l_solver,
                                                              l_hasBoundaryL,
                                                              l_hasBoundaryR,
                                                              l_hasBoundaryT,

@@ -11,7 +11,6 @@
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
-                                                           const std::string &i_solver,
                                                            bool i_hasBoundaryL,
                                                            bool i_hasBoundaryR,
                                                            bool i_hasBoundaryT,
@@ -19,7 +18,6 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
 {
   m_nCellsX = i_nCellsX;
   m_nCellsY = i_nCellsY;
-  m_solver = i_solver;
   m_hasBoundaryL = i_hasBoundaryL;
   m_hasBoundaryR = i_hasBoundaryR;
   m_hasBoundaryT = i_hasBoundaryT;
