@@ -114,15 +114,11 @@ the bathymetry will be set to 0. A valid file may look like this:
 
   #dimensions
   DIM,100,100
-  #x,y,bathymetry
+  #x,y,height
   37, 25, 30
   38, 25, 30
   39, 25, 30
   40, 25, 30
-
-.. note::
-
-  You may include comments by starting the line with a ``#``
 
 .. warning::
 
@@ -139,6 +135,9 @@ the bathymetry will be set to 0. A valid file may look like this:
 * "SUBCRITICAL1D"
 * "SUPERCRITICAL1D"
 * "TSUNAMIEVENT1D"
+
+.. note:: 
+    In order to use the one-dimensional setups **ny** has to be set to 1 in the config.json.
 
 Specifying **stations** is done using the following syntax: 
 

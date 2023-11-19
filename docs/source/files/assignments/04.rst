@@ -163,7 +163,18 @@ The height however, is given by the following function:
 We subtract 50 from both input parameters to realize the domain size of :math:`[-50, 50]^2` 
 while using a simulation size of 100 and only positive numbers inside the main class.
 
-4.1.2 - Bathymetry and Visualization
+Visualization
+----------------
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task-4.1.2-circularDamBreak.mp4" type="video/mp4">
+    </video> 
+    
+|
+
+4.1.3 - Bathymetry and Visualization
 -------------------------------------
 
 Once again, we went for hard-coding a simple example just for demonstration purposes:
@@ -202,6 +213,16 @@ Task 4.2 - Stations
 Inside the config.json file we introduced an stations-array where the user can assign multiple stations. 
 The mandatory variables are: station name, x-position and y-position.
 
+e.g.
+
+.. code:: cpp
+
+    "stations":[
+        { "name":"station_1", "locX":0, "locY":10 },
+        { "name":"station_2", "locX":5, "locY":10 },
+        { "name":"station_3", "locX":10, "locY":10 }
+    ]
+
 **(File: Station.cpp)**
 
 **Constructor**
@@ -223,7 +244,7 @@ The mandatory variables are: station name, x-position and y-position.
 
 The constructor gets the postion and name of the station and additionally the Wavepropagation patch.
 With the latter we can use the functions of Wavepropagation2d for the following functions.  
-Also a vector for the data vectorsis getting created.
+Also a vector for the data vectors is getting created.
 
 **capture**
 
@@ -286,9 +307,9 @@ In the end this vector gets pushed into the m_data vector we created in the cons
     }
 
 The write function is getting called for every station inside the given config file.
+The for-loop is getting executed as long as there are captured data vectors inside the m_data vector.
 
-
-**(File: Station.cpp)**
+**(File: main.cpp)**
 
 Inside the main function we introduce the l_stations vector and set it up with the folowing code:
 
@@ -301,9 +322,9 @@ Inside the main function we introduce the l_stations vector and set it up with t
             tsunami_lab::t_real l_x = elem.at("locX");
             tsunami_lab::t_real l_y = elem.at("locY");
             l_stations.push_back(new tsunami_lab::io::Station(l_x,
-                                                                l_y,
-                                                                elem.at("name"),
-                                                                l_waveProp));
+                                                              l_y,
+                                                              elem.at("name"),
+                                                              l_waveProp));
             std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
         }
     }
@@ -318,7 +339,7 @@ Inside the main function we introduce the l_stations vector and set it up with t
             l_s->capture(l_simTime);
         }
         ++l_captureCount;
-        }
+    }
         l_timeStep++;
         l_simTime += l_dt;
     }
@@ -333,9 +354,6 @@ The stations output frequency determines how often the capture function for each
     }
 
 Now the csv files are getting written.
-
-4.2.2 -
----------------------------
 
 4.2.3 - 1d vs 2d dambreak 
 -----------------------------
