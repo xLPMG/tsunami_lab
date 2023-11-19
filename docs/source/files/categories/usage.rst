@@ -110,7 +110,7 @@ In a bathymetry file, you need to specify the dimensions first.
 This is because for all other coordinates for which you dont specify any bathymetry data,
 the bathymetry will be set to 0. A valid file may look like this:
 
-.. code:: csv
+.. code::
 
   #dimensions
   DIM,100,100
@@ -119,6 +119,11 @@ the bathymetry will be set to 0. A valid file may look like this:
   38, 25, 30
   39, 25, 30
   40, 25, 30
+
+.. warning::
+
+  Loading bathymetry from a file means that ALL bathymetry data from 
+  the selected setup will be overwritten.
 
 **setup** takes the following parameters:
 
