@@ -7,7 +7,7 @@
 #include <catch2/catch.hpp>
 #include "WavePropagation2d.h"
 
-TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwave]")
+TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d]")
 {
   /*
    * Test case:
@@ -27,7 +27,7 @@ TEST_CASE("Test the 2d wave propagation solver using fwave.", "[WaveProp2d],[Fwa
    */
 
   // construct solver and setup a dambreak problem
-  tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, "fwave", false, false, true, true);
+  tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, false, false, true, true);
 
   std::size_t stride = 100 + 2;
 
