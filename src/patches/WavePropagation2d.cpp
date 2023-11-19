@@ -54,7 +54,7 @@ tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
     delete[] m_huX[l_st];
     delete[] m_huY[l_st];
   }
-  delete m_b;
+  delete[] m_b;
 }
 
 void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
