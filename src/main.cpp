@@ -101,7 +101,7 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "DAMBREAK1D")
   {
-    l_setup = new tsunami_lab::setups::DamBreak1d(50, 10, l_simulationSizeX / 2);
+    l_setup = new tsunami_lab::setups::DamBreak1d(10, 5, l_simulationSizeX / 2);
   }
   else if (l_setupChoice == "CIRCULARDAMBREAK2D")
   {

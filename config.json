@@ -1,27 +1,19 @@
 {
     "solver": "fwave",
     "nx": 100,
-    "ny": 100,
+    "ny": 1,
     "simulationSizeX": 100,
-    "simulationSizeY": 100,
-    "setup":"CIRCULARDAMBREAK2D",
+    "simulationSizeY": 1,
+    "setup":"DAMBREAK1D",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
     "stations":[
-        { "name":"station_1", "locX":50, "locY":0 },
-        { "name":"station_2", "locX":55, "locY":0 },
-        { "name":"station_3", "locX":60, "locY":0 },
-        { "name":"station_4", "locX":65, "locY":0 },
-        { "name":"station_5", "locX":70, "locY":0 },
-        { "name":"station_6", "locX":75, "locY":0 },
-        { "name":"station_7", "locX":80, "locY":0 },
-        { "name":"station_8", "locX":95, "locY":0 },
-        { "name":"station_9", "locX":90, "locY":0 },
-        { "name":"station_10", "locX":95, "locY":0 },
-        { "name":"station_11", "locX":100, "locY":0 }
+        { "name":"station_1", "locX":0, "locY":0 },
+        { "name":"station_2", "locX":49, "locY":0 },
+        { "name":"station_3", "locX":99, "locY":0 }
     ],
    "stationFrequency": 1,
-    "endTime":10
+    "endTime":20
 }

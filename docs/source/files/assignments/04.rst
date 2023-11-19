@@ -358,3 +358,61 @@ Now the csv files are getting written.
 4.2.3 - 1d vs 2d dambreak 
 -----------------------------
 
+
+We positioned the stations can be seen in the following images of the initial setups:
+
+
+.. |station1| image:: ../../_static/assets/1dDamBreakStationLocation.png
+   :scale: 25%
+   
+.. |station2| image:: ../../_static/assets/2dDamBreakStationLocation.png
+   :scale: 25%
+
+.. list-table:: 
+    :widths: 200 200
+ 
+    * - |station1|
+      - |station2|
+
+
+.. |graphic1| image:: ../../_static/assets/Station1_1d.png  
+   :scale: 25%
+   
+.. |graphic2| image:: ../../_static/assets/Station1_2d.png  
+   :scale: 25%
+
+.. |graphic3| image:: ../../_static/assets/Station2_1d.png  
+   :scale: 25%
+   
+.. |graphic4| image:: ../../_static/assets/Station2_2d.png  
+   :scale: 25%
+
+.. |graphic5| image:: ../../_static/assets/Station3_1d.png  
+   :scale: 25%
+   
+.. |graphic6| image:: ../../_static/assets/Station3_2d.png  
+   :scale: 25%
+
+The following images show the relation of height and time at one particular position. Each station collects data once every second.
+
+.. list-table:: stations
+    :widths: 200 200
+    :header-rows: 1
+
+    * - 1d
+      - 2d
+    * - |graphic1|
+      - |graphic2|
+    * - |graphic3|
+      - |graphic4|
+    * - |graphic5|
+      - |graphic6|
+
+**Observation**
+
+In the 1d case the wave starts at height 10 and propagates to the right. There is a constant middle state around 7.2 meters. 
+In the third image is shown that on the right side the height increases to the end.
+
+In contrast, the height of the initial high water area decreases much faster in the 2d case. It also dips below the final height which is approximately 5 meters. 
+The final height in the 2d case is lower than the one in the 1d case.
+Additionally, in picture 3 is the shockwave visible.

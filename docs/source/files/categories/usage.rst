@@ -140,7 +140,7 @@ the bathymetry will be set to 0. A valid file may look like this:
 * "TSUNAMIEVENT1D"
 
 .. note:: 
-    In order to use the one-dimensional setups **ny** has to be set to 1 in the config.json.
+    In order to use the one-dimensional setups **ny** and **simulationSizeY** has to be set to 1 in the config.json.
 
 Specifying **stations** is done using the following syntax: 
 
