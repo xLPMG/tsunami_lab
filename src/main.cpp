@@ -17,6 +17,7 @@
 #include "setups/GeneralDiscontinuity1d.h"
 #include "setups/TsunamiEvent1d.h"
 #include "io/Csv.h"
+#include "io/BathymetryLoader.h"
 #include "io/Station.h"
 #include <cstdlib>
 #include <iostream>
@@ -116,11 +117,11 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "SUBCRITICAL1D")
   {
-    l_setup = new tsunami_lab::setups::Subcritical1d(10, 5);
+    l_setup = new tsunami_lab::setups::Subcritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "SUPERCRITICAL1D")
   {
-    l_setup = new tsunami_lab::setups::Supercritical1d(10, 5);
+    l_setup = new tsunami_lab::setups::Supercritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "TSUNAMIEVENT1D")
   {
@@ -217,23 +218,26 @@ int main(int i_argc,
     }
   }
 
-  // l_waveProp->setBathymetry(17, 15, 30);
-  // l_waveProp->setBathymetry(18, 15, 30);
-  // l_waveProp->setBathymetry(19, 15, 30);
-  // l_waveProp->setBathymetry(20, 15, 30);
-  // l_waveProp->setBathymetry(21, 15, 30);
-  // l_waveProp->setBathymetry(22, 15, 30);
-  // l_waveProp->setBathymetry(23, 15, 30);
-
-  // l_waveProp->setBathymetry(27, 15, 30);
-  // l_waveProp->setBathymetry(28, 15, 30);
-  // l_waveProp->setBathymetry(29, 15, 30);
-  // l_waveProp->setBathymetry(30, 15, 30);
-  // l_waveProp->setBathymetry(31, 15, 30);
-  // l_waveProp->setBathymetry(32, 15, 30);
-  // l_waveProp->setBathymetry(33, 15, 30);
-
-  l_waveProp->adjustWaterHeight();
+  // load bathymetry from file
+  if (l_bathymetryFilePath.length() > 0)
+  {
+    tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
+    l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
+    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    {
+      tsunami_lab::t_real l_y = l_cy * l_dy;
+      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      {
+        tsunami_lab::t_real l_x = l_cx * l_dx;
+        tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
+        l_waveProp->setBathymetry(l_cx,
+                                  l_cy,
+                                  l_b);
+      }
+    }
+    l_waveProp->adjustWaterHeight();
+    delete l_bathymetryLoader;
+  }
 
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);

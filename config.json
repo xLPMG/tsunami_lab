@@ -5,6 +5,7 @@
     "simulationSizeX": 100,
     "simulationSizeY": 100,
     "setup":"CIRCULARDAMBREAK2D",
+    "bathymetry":"resources/bathymetry/splitWall2d_100x100.csv",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
@@ -16,5 +17,5 @@
         { "name":"station_4", "locX":25, "locY":0 }
       ],
     "stationFrequency": 1,
-    "endTime":50
+    "endTime":10
 }

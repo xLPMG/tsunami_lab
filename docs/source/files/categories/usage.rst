@@ -77,10 +77,6 @@ As of now, these are:
      - is there a boundary at the bottom?
      - boolean
      - true or false
-   * - bathymetryFilePath
-     - file path to a bathymetry csv File
-     - string
-     -
    * - endTime
      - how much time will be simulated
      - float
@@ -94,6 +90,10 @@ as well as another two with more complicated parameters:
 
 .. list-table::
 
+   * - bathymetryFilePath
+     - file path to a bathymetry csv File
+     - string
+     - see below
    * - setup
      - which setup to use
      - string
@@ -103,7 +103,24 @@ as well as another two with more complicated parameters:
      - string array
      - see below
 
-``setup`` takes the following parameters:
+You may provide a **bathymetryFilePath** to read bathymetry data from a file.
+
+
+In a bathymetry file, you need to specify the dimensions first. 
+This is because for all other coordinates for which you dont specify any bathymetry data,
+the bathymetry will be set to 0. A valid file may look like this:
+
+.. code:: csv
+
+  #dimensions
+  DIM,100,100
+  #x,y,height
+  37, 25, 30
+  38, 25, 30
+  39, 25, 30
+  40, 25, 30
+
+**setup** takes the following parameters:
 
 * "GENERALDISCONTINUITY1D"
 * "DAMBREAK1D"
@@ -114,7 +131,7 @@ as well as another two with more complicated parameters:
 * "SUPERCRITICAL1D"
 * "TSUNAMIEVENT1D"
 
-Specifying ``stations`` is done using the following syntax: 
+Specifying **stations** is done using the following syntax: 
 
 .. code:: json
 
