@@ -31,49 +31,50 @@ TEST_CASE("1D test of the station implementation", "[Station], [WavePropagation1
      */
 
     std::vector<tsunami_lab::io::Station *> m_stations;
-    tsunami_lab::patches::WavePropagation1d m_waveProp(100, "fwave", false, false);
+    tsunami_lab::patches::WavePropagation2d *m_waveProp;
+    m_waveProp = new tsunami_lab::patches::WavePropagation2d(100, 100, false, false, false, false);
 
     for (std::size_t l_ce = 0; l_ce < 50; l_ce++)
     {
-        m_waveProp.setHeight(l_ce,
+        m_waveProp->setHeight(l_ce,
                              0,
                              10);
-        m_waveProp.setMomentumX(l_ce,
+        m_waveProp->setMomentumX(l_ce,
                                 0,
                                 0);
     }
     for (std::size_t l_ce = 50; l_ce < 100; l_ce++)
     {
-        m_waveProp.setHeight(l_ce,
+        m_waveProp->setHeight(l_ce,
                              0,
                              8);
-        m_waveProp.setMomentumX(l_ce,
+        m_waveProp->setMomentumX(l_ce,
                                 0,
                                 0);
     }
 
     // set outflow boundary condition
-    m_waveProp.setGhostOutflow();
+    m_waveProp->setGhostOutflow();
 
     // initialize stations
     m_stations.push_back(new tsunami_lab::io::Station(10,
                                                       0,
                                                       "station_left",
-                                                      &m_waveProp));
+                                                      m_waveProp));
     m_stations.push_back(new tsunami_lab::io::Station(49,
                                                       0,
                                                       "station_middleLeft",
-                                                      &m_waveProp));
+                                                      m_waveProp));
     m_stations.push_back(new tsunami_lab::io::Station(50,
                                                       0,
                                                       "station_middleRight",
-                                                      &m_waveProp));
+                                                      m_waveProp));
     m_stations.push_back(new tsunami_lab::io::Station(90,
                                                       0,
                                                       "station_right",
-                                                      &m_waveProp));
+                                                      m_waveProp));
     // perform a time step
-    m_waveProp.timeStep(0.1, 0);
+    m_waveProp->timeStep(0.1, 0);
     for (tsunami_lab::io::Station *l_s : m_stations)
     {
         l_s->capture(0.1);
@@ -93,6 +94,8 @@ TEST_CASE("1D test of the station implementation", "[Station], [WavePropagation1
     // steady state
     REQUIRE(m_stations[3]->getData()[0][1] == Approx(8)); // height
     REQUIRE(m_stations[3]->getData()[0][2] == Approx(0)); // momentum x
+
+    delete m_waveProp;
 }
 
 TEST_CASE("2D test of the station implementation", "[Station],[WavePropagation2d]")
