@@ -102,8 +102,8 @@ to execute the x- and y-sweep:
         for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
         {
         // determine left and right cell-id
-        t_idx l_ceL = getStride() * l_ec + l_ed;
-        t_idx l_ceR = getStride() * l_ec + l_ed + 1;
+        t_idx l_ceL = l_ec + getStride() * l_ed;
+        t_idx l_ceR = l_ceL + 1;
 
         //cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewX and l_huOldX
         [...]
@@ -125,8 +125,8 @@ and
         for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
         {
         // determine upper and lower cell-id
-        t_idx l_ceD = l_ec + l_ed * getStride();
-        t_idx l_ceU = l_ec + (l_ed + 1) * getStride();
+        t_idx l_ceB = l_ec * getStride() + l_ed;
+        t_idx l_ceT = l_ceB + getStride();
 
         //cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewY and l_huOldY
         [...]
