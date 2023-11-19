@@ -13,7 +13,7 @@
 
 tsunami_lab::io::BathymetryLoader::~BathymetryLoader()
 {
-    delete m_b;
+    delete[] m_b;
 }
 
 void tsunami_lab::io::BathymetryLoader::loadBathymetry(const std::string &i_file)
