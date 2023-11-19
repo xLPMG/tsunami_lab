@@ -90,7 +90,7 @@ as well as another two with more complicated parameters:
 
 .. list-table::
 
-   * - bathymetryFilePath
+   * - bathymetry
      - file path to a bathymetry csv File
      - string
      - see below
@@ -103,7 +103,7 @@ as well as another two with more complicated parameters:
      - string array
      - see below
 
-You may provide a **bathymetryFilePath** to read bathymetry data from a file.
+You may provide a **bathymetry** file path to read bathymetry data from a file.
 
 
 In a bathymetry file, you need to specify the dimensions first. 

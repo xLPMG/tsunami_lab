@@ -1,19 +1,14 @@
 {
     "solver": "fwave",
-    "nx": 100,
-    "ny": 1,
+    "nx": 50,
+    "ny": 50,
     "simulationSizeX": 100,
-    "simulationSizeY": 1,
-    "setup":"DAMBREAK1D",
+    "simulationSizeY": 100,
+    "setup":"CIRCULARDAMBREAK2D",
+    "bathymetry":"resources/bathymetry/singleWall2d_100x100.csv",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
-    "stations":[
-        { "name":"station_1", "locX":0, "locY":0 },
-        { "name":"station_2", "locX":49, "locY":0 },
-        { "name":"station_3", "locX":99, "locY":0 }
-    ],
-   "stationFrequency": 1,
     "endTime":20
 }

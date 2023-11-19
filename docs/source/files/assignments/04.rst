@@ -177,21 +177,33 @@ Visualization
 4.1.3 - Bathymetry and Visualization
 -------------------------------------
 
-Once again, we went for hard-coding a simple example just for demonstration purposes:
+We implemented a bathymetry reader to provide the bathymetry data using a csv file:
 
-.. code:: cpp
+.. code::
 
-    l_waveProp->setBathymetry(20, 15, 30);
-    l_waveProp->setBathymetry(21, 15, 30);
-    l_waveProp->setBathymetry(22, 15, 30);
-    l_waveProp->setBathymetry(23, 15, 30);
-    l_waveProp->setBathymetry(24, 15, 30);
-    l_waveProp->setBathymetry(25, 15, 30);
-    l_waveProp->setBathymetry(26, 15, 30);
-    l_waveProp->setBathymetry(27, 15, 30);
-    l_waveProp->setBathymetry(28, 15, 30);
-    l_waveProp->setBathymetry(29, 15, 30);
-    l_waveProp->setBathymetry(30, 15, 30);
+    #dimensions
+    DIM,100,100
+    #x,y,bathymetry
+    40,30,30
+    41,30,30
+    42,30,30
+    43,30,30
+    44,30,30
+    45,30,30
+    46,30,30
+    47,30,30
+    48,30,30
+    49,30,30
+    50,30,30
+    51,30,30
+    52,30,30
+    53,30,30
+    54,30,30
+    55,30,30
+    56,30,30
+    57,30,30
+    58,30,30
+    59,30,30
 
 This creates a wall which can be seen clearly in the following animation:
 
@@ -204,14 +216,33 @@ This creates a wall which can be seen clearly in the following animation:
 .. note::
     The visualisation was created with ParaView using the `TableToPoints` and `Delaunay2d` filters.
 
-Task 4.2 - Stations
-==================================
+The shown example can be replicated by running the project with the following configuration:
 
-4.2.1/2 - station setup
+.. code:: json
+
+    {
+    "solver": "fwave",
+    "nx": 50,
+    "ny": 50,
+    "simulationSizeX": 100,
+    "simulationSizeY": 100,
+    "setup":"CIRCULARDAMBREAK2D",
+    "bathymetry":"resources/bathymetry/singleWall2d_100x100.csv",
+    "hasBoundaryL": false,
+    "hasBoundaryR": false,
+    "hasBoundaryU": false,
+    "hasBoundaryD": false,
+    "endTime":20
+    }
+
+Task 4.2 - Stations
+=========================
+
+4.2.1/2 - Station setup
 -------------------------
 
-Inside the config.json file we introduced an stations-array where the user can assign multiple stations. 
-The mandatory variables are: station name, x-position and y-position.
+Inside the config.json file we introduced a stations array where the user can provide multiple stations. 
+The mandatory variables are: name, x-position and y-position.
 
 e.g.
 
@@ -242,11 +273,10 @@ e.g.
         m_data = new std::vector<std::vector<t_real>>;
     }
 
-The constructor gets the postion and name of the station and additionally the Wavepropagation patch.
-With the latter we can use the functions of Wavepropagation2d for the following functions.  
-Also a vector for the data vectors is getting created.
+The constructor reiceives the position and name of the station and additionally the WavePropagation patch.
+We use the latter to access the simulation data.
 
-**capture**
+**capture()**
 
 .. code:: cpp
 
@@ -268,10 +298,10 @@ Also a vector for the data vectors is getting created.
         m_data->push_back(capturedData);
     }
 
-The capture function only gets the time as input and puts the values height, Momentum X/Y and Bathymetry into a captured data vector.
-In the end this vector gets pushed into the m_data vector we created in the constructor.
+The capture function only receives the time as input and puts the values height, momentum X/Y and bathymetry into a captured data vector.
+In the end this vector gets pushed into the m_data vector which we created in the constructor.
 
-**write**
+**write()**
 
 .. code:: cpp
 
@@ -306,12 +336,11 @@ In the end this vector gets pushed into the m_data vector we created in the cons
         l_file.close();
     }
 
-The write function is getting called for every station inside the given config file.
-The for-loop is getting executed as long as there are captured data vectors inside the m_data vector.
+The write function saves all captured data into a station-csv-file.
 
 **(File: main.cpp)**
 
-Inside the main function we introduce the l_stations vector and set it up with the folowing code:
+Inside the main function we introduce the l_stations vector and set it up with the following code:
 
 .. code:: cpp
 
@@ -359,8 +388,7 @@ Now the csv files are getting written.
 -----------------------------
 
 
-We positioned the stations can be seen in the following images of the initial setups:
-
+The positions of the stations can be seen in the following images of the initial setups:
 
 .. |station1| image:: ../../_static/assets/1dDamBreakStationLocation.png
    :scale: 25%
@@ -393,7 +421,8 @@ We positioned the stations can be seen in the following images of the initial se
 .. |graphic6| image:: ../../_static/assets/Station3_2d.png  
    :scale: 25%
 
-The following images show the relation of height and time at one particular position. Each station collects data once every second.
+The following images show the water height in relation to the time at one particular position. 
+Each station collected data with a frequency of 1 Hz.
 
 .. list-table:: stations
     :widths: 200 200
