@@ -40,7 +40,7 @@ void tsunami_lab::io::BathymetryLoader::loadBathymetry(const std::string &i_file
             m_sizeX = std::stof(l_row[1]);
             m_sizeY = std::stof(l_row[1]);
             // initialize bathymetry array
-            m_b = new t_real[m_sizeX * m_sizeY]{0};
+            m_b = new t_real[t_idx(m_sizeX * m_sizeY)]{0};
             break;
         }
     }

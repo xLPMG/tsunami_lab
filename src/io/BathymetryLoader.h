@@ -56,7 +56,7 @@ public:
                        t_real i_y)
   {
     t_idx l_coordinate = i_x + i_y * m_sizeX;
-    if (l_coordinate > (m_sizeX * m_sizeY) - 1 || l_coordinate<0)
+    if (l_coordinate > (m_sizeX * m_sizeY) - 1)
       return 0;
     return m_b[t_idx(i_x + i_y * m_sizeX)];
   }
