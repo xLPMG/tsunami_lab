@@ -54,6 +54,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Setups</a></li>
@@ -89,6 +90,76 @@
              
   <section id="setups">
 <span id="ns-setups"></span><h1>Setups<a class="headerlink" href="#setups" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CircularDamBreak2d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;CircularDamBreak2d.h&gt;</em></div>
+<p>2d dam break setup. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="sig-name descname"><span class="n"><span class="pre">CircularDamBreak2d</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Constructor.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
+</dd>
+</dl>
+</p>
+<section id="namespacetsunami__lab_1DESCRIPTION">
+<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<p>Two-dimensional circular dam break problem. </p>
+</section>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the water height at a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>height at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumX</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in x-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in x-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in y-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in y-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBathymetry</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the bathymetry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bathymetry. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
 <dl class="cpp class">
 <dt class="sig sig-object cpp">
 <span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DamBreak1d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><br /></dt>
@@ -428,7 +499,7 @@
 <dd><div class="docutils container">
 <em>#include &lt;Setup.h&gt;</em></div>
 <p>Base setup. </p>
-<p>Subclassed by tsunami_lab::setups::DamBreak1d, tsunami_lab::setups::GeneralDiscontinuity1d, tsunami_lab::setups::RareRare1d, tsunami_lab::setups::ShockShock1d, tsunami_lab::setups::Subcritical1d, tsunami_lab::setups::Supercritical1d, tsunami_lab::setups::TsunamiEvent1d</p>
+<p>Subclassed by tsunami_lab::setups::CircularDamBreak2d, tsunami_lab::setups::DamBreak1d, tsunami_lab::setups::GeneralDiscontinuity1d, tsunami_lab::setups::RareRare1d, tsunami_lab::setups::ShockShock1d, tsunami_lab::setups::Subcritical1d, tsunami_lab::setups::Supercritical1d, tsunami_lab::setups::TsunamiEvent1d</p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -696,12 +767,6 @@
 </dl>
 </dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setMaxFroude</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
-<dd><p>sets the maximum Froude number and the position and prints it at the end </p>
-</dd></dl>
-
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
@@ -715,15 +780,6 @@
 <dt class="sig sig-object cpp">
 <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_momentum</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
 <dd><p>momentum </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_g</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">9.80665</span></span><br /></dt>
-<dd><p>gravity </p>
 </dd></dl>
 
 </div>
@@ -812,12 +868,6 @@
 </dl>
 </dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setMaxFroude</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
-<dd><p>sets the maximum Froude number and the position and prints it at the end </p>
-</dd></dl>
-
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
@@ -831,15 +881,6 @@
 <dt class="sig sig-object cpp">
 <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_momentum</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
 <dd><p>momentum </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_g</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">9.80665</span></span><br /></dt>
-<dd><p>gravity </p>
 </dd></dl>
 
 </div>

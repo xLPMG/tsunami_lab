@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4. Two-Dimensional Solver &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/04.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="3. Bathymetry &amp; Boundary Conditions" href="03.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. Two-Dimensional Solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-4-1-dimensional-splitting">Task 4.1 - Dimensional Splitting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#d-support">4.1.1 - 2D support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#circular-dam-break">4.1.2 - Circular Dam Break</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualization">Visualization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bathymetry-and-visualization">4.1.3 - Bathymetry and Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-4-2-stations">Task 4.2 - Stations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#station-setup">4.2.1/2 - Station setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#d-vs-2d-dambreak">4.2.3 - 1d vs 2d dambreak</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">4. Two-Dimensional Solver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/04.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="two-dimensional-solver">
+<h1>4. Two-Dimensional Solver<a class="headerlink" href="#two-dimensional-solver" title="Link to this heading"></a></h1>
+<p>All project authors contributed to this assignment in equal parts.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The projects <a class="reference internal" href="../categories/usage.html#usage"><span class="std std-ref">Usage</span></a> has undergone major changes during this assignment.
+We strongly advice to visit that page (again).</p>
+</div>
+<section id="task-4-1-dimensional-splitting">
+<h2>Task 4.1 - Dimensional Splitting<a class="headerlink" href="#task-4-1-dimensional-splitting" title="Link to this heading"></a></h2>
+<section id="d-support">
+<h3>4.1.1 - 2D support<a class="headerlink" href="#d-support" title="Link to this heading"></a></h3>
+<p>We started by splitting <code class="docutils literal notranslate"><span class="pre">l_dxy</span></code> into two variables <code class="docutils literal notranslate"><span class="pre">l_dx</span></code> and <code class="docutils literal notranslate"><span class="pre">l_dy</span></code>:</p>
+<p><strong>(File: main.cpp)</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">l_dx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_simulationSizeX</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_nx</span><span class="p">;</span>
+<span class="n">l_dy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_simulationSizeY</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_ny</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>And adjusted the time step accordingly:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// derive constant time step; changes at simulation time are ignored</span>
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">l_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_ny</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">l_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_dx</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_speedMax</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">l_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.45</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">l_dx</span><span class="p">,</span><span class="w"> </span><span class="n">l_dy</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_speedMax</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// derive scaling for a time step</span>
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">l_scalingX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_dt</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_dx</span><span class="p">;</span>
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">l_scalingY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_dt</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">l_dy</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This matches the given requirement</p>
+<div class="math notranslate nohighlight">
+\[\Delta t &lt; \frac{1}{2} \cdot \frac{\Delta x}{\lambda_x^\text{max}}\quad \wedge \quad \Delta t &lt; \frac{1}{2} \cdot \frac{\Delta y}{\lambda_y^\text{max}}.\]</div>
+<p>We also had to adjust the inputs for the <code class="docutils literal notranslate"><span class="pre">Csv.cpp</span></code> file:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Csv</span><span class="o">::</span><span class="n">write</span><span class="p">(</span><span class="n">l_dx</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_dy</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_nx</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_ny</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getStride</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumX</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumY</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">l_file</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To create the <code class="docutils literal notranslate"><span class="pre">WavePropagation2d</span></code> cpp and header files, we used the <cite>1d</cite>-files as a starting point.
+For the header, we had to adjust most functions to make use of the <code class="docutils literal notranslate"><span class="pre">stride</span></code> parameter.
+We also decided on storing the momenta for the x- and y-directions in two different arrays:</p>
+<p><strong>(File: WavePropagation2d.h)</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">getHeight</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_h</span><span class="p">[</span><span class="n">m_step</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">getMomentumX</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_huX</span><span class="p">[</span><span class="n">m_step</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">getMomentumY</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_huY</span><span class="p">[</span><span class="n">m_step</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">getBathymetry</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the <cite>.cpp</cite> file, we duplicated the whole cell update process with different for-loops,
+to execute the x- and y-sweep:</p>
+<p><strong>(File: WavePropagation2d.cpp)</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// X-SWEEP</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nCellsX</span><span class="p">;</span><span class="w"> </span><span class="n">l_ec</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_ed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nCellsY</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ed</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// determine left and right cell-id</span>
+<span class="w">    </span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ceL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ed</span><span class="p">;</span>
+<span class="w">    </span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ceR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ceL</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">//cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewX and l_huOldX</span>
+<span class="w">    </span><span class="p">[...]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>matching</p>
+<div class="math notranslate nohighlight">
+\[Q_{i,j}^* = Q_{i,j}^n - \frac{\Delta t}{\Delta x} \left( A^+ \Delta Q_{i-1/2,j} + A^- \Delta Q_{i+1/2,j} \right)  \quad \forall i \in \{ 1, .., n \}, \; j \in \{ 0, .., n+1 \}\]</div>
+<p>and</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Y-SWEEP</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nCellsY</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ec</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nCellsX</span><span class="p">;</span><span class="w"> </span><span class="n">l_ed</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// determine upper and lower cell-id</span>
+<span class="w">    </span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ceB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">getStride</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_ed</span><span class="p">;</span>
+<span class="w">    </span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ceT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ceB</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getStride</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">//cell update code from WavePropagation1d, but l_huNew and l_huOld are now l_huNewY and l_huOldY</span>
+<span class="w">    </span><span class="p">[...]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>matching</p>
+<div class="math notranslate nohighlight">
+\[Q_{i,j}^{n+1} = Q_{i,j}^* - \frac{\Delta t}{\Delta y} \left( B^+ \Delta Q^*_{i,j-1/2} + B^- \Delta Q^*_{i,j+1/2} \right)  \quad \forall i,j \in \{ 1, .., n \}.\]</div>
+<p>Lastly, we had to adjust the ghost outflow. Instead of setting only 2 cells for a 1d row,
+we now had to set the bottom &amp; top rows, as well as the left and right most columns.
+We implemented this using for-loops.</p>
+</section>
+<section id="circular-dam-break">
+<h3>4.1.2 - Circular Dam Break<a class="headerlink" href="#circular-dam-break" title="Link to this heading"></a></h3>
+<p>Since the momenta of this setup are always 0, we won’t mention them any further here.</p>
+<p>The height however, is given by the following function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::CircularDamBreak2d::getHeight</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                       </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">i_x</span><span class="o">-=</span><span class="mi">50</span><span class="p">;</span>
+<span class="w">    </span><span class="n">i_y</span><span class="o">-=</span><span class="mi">50</span><span class="p">;</span>
+<span class="w">    </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">sumOfSquares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_y</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sumOfSquares</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We subtract 50 from both input parameters to realize the domain size of <span class="math notranslate nohighlight">\([-50, 50]^2\)</span>
+while using a simulation size of 100 and only positive numbers inside the main class.</p>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task-4.1.2-circularDamBreak.mp4" type="video/mp4">
+</video><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="bathymetry-and-visualization">
+<h3>4.1.3 - Bathymetry and Visualization<a class="headerlink" href="#bathymetry-and-visualization" title="Link to this heading"></a></h3>
+<p>We implemented a bathymetry reader to provide the bathymetry data using a csv file:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#dimensions</span>
+<span class="n">DIM</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span>
+<span class="cp">#x,y,bathymetry</span>
+<span class="mi">40</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">41</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">42</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">43</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">44</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">45</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">46</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">47</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">48</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">49</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">50</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">51</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">52</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">53</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">54</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">55</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">56</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">57</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">58</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+<span class="mi">59</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span>
+</pre></div>
+</div>
+<p>This creates a wall which can be seen clearly in the following animation:</p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task-4.1.3-circularDamBreakWithObstacle.mp4" type="video/mp4">
+</video><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The visualisation was created with ParaView using the <cite>TableToPoints</cite> and <cite>Delaunay2d</cite> filters.</p>
+</div>
+<p>The shown example can be replicated by running the project with the following configuration:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fwave&quot;</span><span class="p">,</span>
+<span class="nt">&quot;nx&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="nt">&quot;ny&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="nt">&quot;simulationSizeX&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="nt">&quot;simulationSizeY&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="nt">&quot;setup&quot;</span><span class="p">:</span><span class="s2">&quot;CIRCULARDAMBREAK2D&quot;</span><span class="p">,</span>
+<span class="nt">&quot;bathymetry&quot;</span><span class="p">:</span><span class="s2">&quot;resources/bathymetry/singleWall2d_100x100.csv&quot;</span><span class="p">,</span>
+<span class="nt">&quot;hasBoundaryL&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="nt">&quot;hasBoundaryR&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="nt">&quot;hasBoundaryU&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="nt">&quot;hasBoundaryD&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="nt">&quot;endTime&quot;</span><span class="p">:</span><span class="mi">20</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task-4-2-stations">
+<h2>Task 4.2 - Stations<a class="headerlink" href="#task-4-2-stations" title="Link to this heading"></a></h2>
+<section id="station-setup">
+<h3>4.2.1/2 - Station setup<a class="headerlink" href="#station-setup" title="Link to this heading"></a></h3>
+<p>Inside the config.json file we introduced a stations array where the user can provide multiple stations.
+The mandatory variables are: name, x-position and y-position.</p>
+<p>e.g.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;stations&quot;</span><span class="o">:</span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;station_1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locX&quot;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locY&quot;</span><span class="o">:</span><span class="mi">10</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;station_2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locX&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locY&quot;</span><span class="o">:</span><span class="mi">10</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;station_3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locX&quot;</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;locY&quot;</span><span class="o">:</span><span class="mi">10</span><span class="w"> </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>(File: Station.cpp)</strong></p>
+<p><strong>Constructor</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Station</span><span class="o">::</span><span class="n">Station</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_y</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">i_name</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">patches</span><span class="o">::</span><span class="n">WavePropagation</span><span class="w"> </span><span class="o">*</span><span class="n">i_waveProp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">m_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_x</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_y</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_waveProp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_waveProp</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_stride</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_waveProp</span><span class="o">-&gt;</span><span class="n">getStride</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">t_real</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The constructor reiceives the position and name of the station and additionally the WavePropagation patch.
+We use the latter to access the simulation data.</p>
+<p><strong>capture()</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tsunami_lab::io::Station::capture</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_time</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">t_real</span><span class="o">&gt;</span><span class="w"> </span><span class="n">capturedData</span><span class="p">;</span>
+<span class="w">    </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i_time</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumX</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumX</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumY</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumY</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">capturedData</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                            </span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()[</span><span class="n">t_idx</span><span class="p">(</span><span class="n">m_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_stride</span><span class="p">)]);</span>
+<span class="w">    </span><span class="n">m_data</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">capturedData</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The capture function only receives the time as input and puts the values height, momentum X/Y and bathymetry into a captured data vector.
+In the end this vector gets pushed into the m_data vector which we created in the constructor.</p>
+<p><strong>write()</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tsunami_lab::io::Station::write</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">l_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_filepath</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.csv&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="w"> </span><span class="n">l_file</span><span class="p">;</span>
+<span class="w">    </span><span class="n">l_file</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">l_path</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// write the CSV header</span>
+<span class="w">    </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;time&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,height&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumX</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,momentum_x&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getMomentumY</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,momentum_y&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,bathymetry&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getHeight</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_waveProp</span><span class="o">-&gt;</span><span class="n">getBathymetry</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,totalHeight&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// write data</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">t_real</span><span class="o">&gt;</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">m_data</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">elem</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elem</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elem</span><span class="p">[</span><span class="n">elem</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="p">];</span>
+<span class="w">        </span><span class="n">l_file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">l_file</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The write function saves all captured data into a station-csv-file.</p>
+<p><strong>(File: main.cpp)</strong></p>
+<p>Inside the main function we introduce the l_stations vector and set it up with the following code:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_configData</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;stations&quot;</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">json</span><span class="w"> </span><span class="o">&amp;</span><span class="n">elem</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">l_configData</span><span class="p">[</span><span class="s">&quot;stations&quot;</span><span class="p">])</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elem</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="s">&quot;locX&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elem</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="s">&quot;locY&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">l_stations</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Station</span><span class="p">(</span><span class="n">l_x</span><span class="p">,</span>
+<span class="w">                                                          </span><span class="n">l_y</span><span class="p">,</span>
+<span class="w">                                                          </span><span class="n">elem</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">),</span>
+<span class="w">                                                          </span><span class="n">l_waveProp</span><span class="p">));</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Added station &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elem</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; at x: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; and y: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_simTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">l_stationFrequency</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_captureCount</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Station</span><span class="w"> </span><span class="o">*</span><span class="n">l_s</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">l_stations</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">l_s</span><span class="o">-&gt;</span><span class="n">capture</span><span class="p">(</span><span class="n">l_simTime</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="o">++</span><span class="n">l_captureCount</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="w">    </span><span class="n">l_timeStep</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">l_simTime</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">l_dt</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The stations output frequency determines how often the capture function for each station is called.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Station</span><span class="w"> </span><span class="o">*</span><span class="n">l_s</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">l_stations</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">l_s</span><span class="o">-&gt;</span><span class="n">write</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now the csv files are getting written.</p>
+</section>
+<section id="d-vs-2d-dambreak">
+<h3>4.2.3 - 1d vs 2d dambreak<a class="headerlink" href="#d-vs-2d-dambreak" title="Link to this heading"></a></h3>
+<p>The positions of the stations can be seen in the following images of the initial setups:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>1d</p></th>
+<th class="head"><p>2d</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../_images/1dDamBreakStationLocation.png"><img alt="station1" src="../../_images/1dDamBreakStationLocation.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+<td><p><a class="reference internal" href="../../_images/2dDamBreakStationLocation.png"><img alt="station2" src="../../_images/2dDamBreakStationLocation.png" style="width: 174.75px; height: 168.0px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>The following images show the water height in relation to the time at one particular position.
+Each station collected data with a frequency of 1 Hz.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">stations</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>1d</p></th>
+<th class="head"><p>2d</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../_images/Station1_1d.png"><img alt="graphic1" src="../../_images/Station1_1d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+<td><p><a class="reference internal" href="../../_images/Station1_2d.png"><img alt="graphic2" src="../../_images/Station1_2d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../_images/Station2_1d.png"><img alt="graphic3" src="../../_images/Station2_1d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+<td><p><a class="reference internal" href="../../_images/Station2_2d.png"><img alt="graphic4" src="../../_images/Station2_2d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../_images/Station3_1d.png"><img alt="graphic5" src="../../_images/Station3_1d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+<td><p><a class="reference internal" href="../../_images/Station3_2d.png"><img alt="graphic6" src="../../_images/Station3_2d.png" style="width: 440.0px; height: 150.0px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observation</strong></p>
+<p>In the 1d case the wave starts at height 10 and propagates to the right. There is a constant middle state around 7.2 meters.
+In the third image is shown that on the right side the height increases to the end.</p>
+<p>In contrast, the height of the initial high water area decreases much faster in the 2d case. It also dips below the final height which is approximately 5 meters.
+The final height in the 2d case is lower than the one in the 1d case.
+Additionally, in picture 3 is the shockwave visible.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="03.html" class="btn btn-neutral float-left" title="3. Bathymetry &amp; Boundary Conditions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

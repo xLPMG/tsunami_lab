@@ -15,6 +15,7 @@ This documentation is divided into different categories categories:
 * **First steps**
     * **Introduction** - provides a broad overview
     * **Setup** - requirements and explanations on how to put this repository into action
+    * **Usage** - information on how to excecute this project and its tests
 * **Code documentation**
     * **Assignments** - divided into the different weekly steps, this category provides a detailed and manually written documentation of the source code
     * **Namespaces** -  automatically created code documentation using doxygen, divided into the namespaces
