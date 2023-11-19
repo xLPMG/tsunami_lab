@@ -26,6 +26,8 @@ TEST_CASE("Test of the Froude number calculator using the Supercritical1d setup"
                                                  5,
                                                  l_froudeNumber);
     REQUIRE(l_froudeNumber == Approx(0.3032084201066));
+
+    delete l_setup;
 }
 
 TEST_CASE("Test of the maximum Froude number calculator using the Supercritical1d setup", "[MaxFroude], [Supercritical1d]")
