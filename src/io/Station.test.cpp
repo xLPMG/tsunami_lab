@@ -116,7 +116,7 @@ TEST_CASE("2D test of the station implementation", "[Station],[WavePropagation2d
 
     // construct solver and setup a dambreak problem
     std::vector<tsunami_lab::io::Station *> m_stations;
-    tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, "fwave", false, false, false, false);
+    tsunami_lab::patches::WavePropagation2d m_waveProp(100, 100, false, false, false, false);
 
     for (std::size_t l_ce = 0; l_ce < 50; l_ce++)
     {
