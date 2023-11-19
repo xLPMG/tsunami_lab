@@ -398,7 +398,10 @@ The positions of the stations can be seen in the following images of the initial
 
 .. list-table:: 
     :widths: 200 200
- 
+    :header-rows: 1
+
+    * - 1d
+      - 2d
     * - |station1|
       - |station2|
 
