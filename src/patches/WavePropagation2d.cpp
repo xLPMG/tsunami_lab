@@ -110,6 +110,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
       // compute net-updates
       t_real l_netUpdates[2][2];
 
+      if(l_hL==0 && l_hR==0) continue;
       solvers::Fwave::netUpdates(l_hL,
                                  l_hR,
                                  l_huL,
@@ -174,6 +175,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
       // compute net-updates
       t_real l_netUpdates[2][2];
 
+      if(l_hD==0 && l_hU==0) continue;
       solvers::Fwave::netUpdates(l_hD,
                                  l_hU,
                                  l_huD,
