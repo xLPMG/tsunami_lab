@@ -25,6 +25,16 @@ vars.AddVariables(
               )
 )
 
+vars.Add(PathVariable('netcdf_dir',
+                    'where the root of netcdf is installed',
+                    '/usr/local/Cellar/netcdf/4.9.2_1'))
+vars.Add(PathVariable('netcdf_include',
+                    'where netcdf includes are installed',
+                    '$netcdf_dir/include'))
+vars.Add(PathVariable('netcdf_lib',
+                    'where the netcdf library is installed',
+                    '$netcdf_dir/lib'))
+
 # exit in the case of unknown variables
 if vars.UnknownVariables():
   print( "build configuration corrupted, don't know what to do with: " + str(vars.UnknownVariables().keys()) )
@@ -32,6 +42,12 @@ if vars.UnknownVariables():
 
 # create environment
 env = Environment( variables = vars )
+
+conf = Configure(env)
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h', 'C'):
+        print ('Did not find the netcdf library, exiting!')
+        Exit(1)
+env = conf.Finish()
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
@@ -73,6 +89,11 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
 
 # add json
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
+
+# add NetCdf
+env.Append( LINKFLAGS = [ '-isystem', '$netcdf_include' ] )
+env.Append( LINKFLAGS = [ '-L', '$netcdf_lib' ] )
+env.Append( LINKFLAGS = ['-lnetcdf'])
 
 # get source files
 VariantDir( variant_dir = 'build/src',
