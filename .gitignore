@@ -3,6 +3,7 @@ _build/
 _templates/
 
 .sconsign.dblite
+.sconf_temp
 .DS_Store
 .vscode/
 

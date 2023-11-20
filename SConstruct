@@ -1,5 +1,5 @@
 ##
-# @author Alexander Breuer (alex.breuer AT uni-jena.de)
+# @author Luca-Philipp Grumbach & Richard Hofmann
 #
 # @section DESCRIPTION
 # Entry-point for builds.
@@ -24,16 +24,6 @@ vars.AddVariables(
                 allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
               )
 )
-
-vars.Add(PathVariable('netcdf_dir',
-                    'where the root of netcdf is installed',
-                    '/usr/local/Cellar/netcdf/4.9.2_1'))
-vars.Add(PathVariable('netcdf_include',
-                    'where netcdf includes are installed',
-                    '$netcdf_dir/include'))
-vars.Add(PathVariable('netcdf_lib',
-                    'where the netcdf library is installed',
-                    '$netcdf_dir/lib'))
 
 # exit in the case of unknown variables
 if vars.UnknownVariables():
@@ -90,11 +80,6 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
 # add json
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 
-# add NetCdf
-env.Append( LINKFLAGS = [ '-isystem', '$netcdf_include' ] )
-env.Append( LINKFLAGS = [ '-L', '$netcdf_lib' ] )
-env.Append( LINKFLAGS = ['-lnetcdf'])
-
 # get source files
 VariantDir( variant_dir = 'build/src',
             src_dir     = 'src' )
@@ -108,10 +93,13 @@ SConscript( 'build/src/SConscript' )
 Import('env')
 
 env.Program( target = 'build/tsunami_lab',
-             source = env.sources + env.standalone )
+             source = env.sources + env.standalone,
+             LIBS='netcdf', LIBPATH='.' )
 
 env.Program( target = 'build/tests',
-             source = env.sources + env.tests )
+             source = env.sources + env.tests,
+             LIBS='netcdf', LIBPATH='.' )
 
 env.Program( target = 'build/sanitychecks',
-             source = env.sources + env.sanitychecks )
+             source = env.sources + env.sanitychecks,
+             LIBS='netcdf', LIBPATH='.' )
