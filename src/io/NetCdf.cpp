@@ -149,16 +149,18 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
     t_idx start[] = {i_t, 0, 0};
     t_idx count[] = {1, m_nx, m_ny};
 
-    t_real l_h[m_nx + 2][m_ny + 2];
-    t_real l_hu[m_nx + 2][m_ny + 2];
-    t_real l_hv[m_nx + 2][m_ny + 2];
+    t_real *l_h = new t_real[(m_nx + 2) * (m_ny + 2)];
+    t_real *l_hu = new t_real[(m_nx + 2) * (m_ny + 2)];
+    t_real *l_hv = new t_real[(m_nx + 2) * (m_ny + 2)];
+    int i=0;
     for (t_idx l_x = 0; l_x < m_nx + 1; l_x++)
     {
         for (t_idx l_y = 0; l_y < m_ny + 1; l_y++)
         {
-            l_h[l_x][l_y] = i_h[l_x + l_y * m_stride];
-            l_hu[l_x][l_y] = i_hu[l_x + l_y * m_stride];
-            l_hv[l_x][l_y] = i_hv[l_x + l_y * m_stride];
+            l_h[i] = i_h[l_x + l_y * m_stride];
+            l_hu[i] = i_hu[l_x + l_y * m_stride];
+            l_hv[i] = i_hv[l_x + l_y * m_stride];
+            i++;
         }
     }
 
@@ -166,20 +168,24 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
                               m_varHId,
                               start,
                               count,
-                              &l_h[0][0]);
+                              l_h);
     checkNcErr(m_err);
 
     m_err = nc_put_vara_float(m_ncId,
                               m_varHuId,
                               start,
                               count,
-                              &l_hu[0][0]);
+                              l_h);
     checkNcErr(m_err);
 
     m_err = nc_put_vara_float(m_ncId,
                               m_varHvId,
                               start,
                               count,
-                              &l_hv[0][0]);
+                              l_h);
     checkNcErr(m_err);
+
+    delete[] l_h;
+    delete[] l_hu;
+    delete[] l_hv;
 }
