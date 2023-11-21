@@ -1,11 +1,11 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
- * IO-routines for writing a snapshot as Comma Separated Values (CSV).
+ *
  **/
-#ifndef TSUNAMI_LAB_IO_NetCdf
-#define TSUNAMI_LAB_IO_NetCdf
+#ifndef TSUNAMI_LAB_IO_NETCDF
+#define TSUNAMI_LAB_IO_NETCDF
 
 #include "../constants.h"
 #include <cstring>
@@ -23,55 +23,62 @@ namespace tsunami_lab
 class tsunami_lab::io::NetCdf
 {
 private:
-    //
-    static int m_ncId;
+
+    t_real m_nx = 0;
+    t_real m_ny = 0;
+    t_real m_stride = 0;
+    int m_ncId = 0;
     // error
-    static int m_err;
+     int m_err = 0;
 
-    static int m_dimXId; 
+     int m_dimXId = 0;
 
-    static int m_dimYId;
+     int m_dimYId = 0;
 
-    static int m_dimTId;
+     int m_dimTId = 0;
 
-    static int m_varHId;
+     int m_varHId = 0;
 
-    static int m_varBId;
+     int m_varBId = 0;
 
-    static int  m_varHuId;
+     int m_varHuId = 0;
 
-    static int  m_varHvId;
+     int m_varHvId = 0;
 
-    static int m_dimBIds[2];
+     int m_dimIds[2] = {0};
 
-    static int m_dimHIds[3];
-
-    static int m_dimHuIds[3];
-
-    static int m_dimHvIds[3];
-
-    //static t_real l_data;
+     int m_dimTIds[3] = {0};
 
 
     /**
      * checks for error in Cdf file
      * @param i_err error
      */
-static void checkNcErr(int i_err);
+    void checkNcErr(t_idx i_err);
 
 public:
     /**
-     * writes into cdf file
+     *
+     *
      */
-static void write(t_real i_dx,
-               t_real i_dy,
-               t_idx i_nx,
-               t_idx i_ny,
-               t_idx i_stride,
-               t_real const *i_h,
-               t_real const *i_hu,
-               t_real const *i_hv,
-               t_real const *i_b,
-               std::ostream &io_stream);
+    NetCdf(t_real i_dx,
+           t_real i_dy,
+           t_idx i_nx,
+           t_idx i_ny,
+           t_idx i_stride,
+           t_real const *i_b);
+
+    /**
+     * writes into cdf file
+     *
+     * @param *i_h pointer for height
+     * @param *i_hu mementum x
+     * @param *i_hv momnetum y
+     * 
+     */
+    void write(t_real const *i_h,
+                      t_real const *i_hu,
+                      t_real const *i_hv,
+                      t_real i_t);
 };
 #endif

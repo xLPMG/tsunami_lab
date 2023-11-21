@@ -19,6 +19,7 @@
 #include "io/Csv.h"
 #include "io/BathymetryLoader.h"
 #include "io/Station.h"
+#include "io/NetCdf.h"
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
@@ -30,79 +31,9 @@
 
 using json = nlohmann::json;
 
-void checkNcErr( int i_err ) {
-  if( i_err ) {
-    std::cerr << "Error: "
-              << nc_strerror( i_err )
-              << std::endl;
-    exit(2);
-  }
-}
-
-void func(){
-   std::cout << "generating netcdf-file 04_simple.nc" << std::endl;
-  // set up data
-  int l_ncId, l_dimXId, l_dimYId, l_varId;
-  int l_dimIds[2];
-  int l_data[6][10];
-  int l_err;
-  for (std::size_t l_x = 0; l_x < 6; l_x++) { 
-    for (std::size_t l_y = 0; l_y < 10; l_y++) {
-      l_data[l_x][l_y] = l_x * 10 + l_y;
-    }
-  }
-
-  // set up netCDF-file
-  l_err = nc_create( "04_simple.nc", // path
-                      NC_CLOBBER,    // cmode
-                      &l_ncId );     // ncidp
-  checkNcErr( l_err );
-
-  // define dimensions
-  l_err = nc_def_dim( l_ncId,      // ncid
-                      "x",         // name
-                      6,           // len
-                      &l_dimXId ); // idp
-  checkNcErr( l_err );
-
-  l_err = nc_def_dim( l_ncId,      // ncid
-                      "y",         // name
-                      10,          // len
-                      &l_dimYId ); // idp
-  checkNcErr( l_err );
-
-  l_dimIds[0] = l_dimXId;
-  l_dimIds[1] = l_dimYId;
-
-  l_err = nc_def_var( l_ncId,     // ncid
-                      "data",     // name
-                      NC_INT,     // xtype
-                      2,          // ndims
-                      l_dimIds,   // dimidsp
-                      &l_varId ); // varidp
-  checkNcErr( l_err );
-
-  l_err = nc_enddef( l_ncId ); // ncid
-  checkNcErr( l_err );
-
-  // write data
-  l_err = nc_put_var_int( l_ncId,          // ncid
-                          l_varId,         // varid
-                          &l_data[0][0] ); // op
-  checkNcErr( l_err );
-
-  // close file
-  l_err = nc_close( l_ncId ); // ncid
-  checkNcErr( l_err );
-
-  std::cout << "finished writing 04_simple.nc" << std::endl
-            << "use ncdump to view its contents" << std::endl;
-}
-
 int main(int i_argc,
          char *i_argv[])
 {
-  func();
   // config file path
   std::string l_configFilePath = "config.json";
   // setup choice
@@ -390,6 +321,15 @@ int main(int i_argc,
 
   std::cout << "finished time loop" << std::endl;
 
+  tsunami_lab::io::NetCdf * l_netCdf = new tsunami_lab::io::NetCdf(l_dx,
+                                                                                l_dy,
+                                                                                l_nx,
+                                                                                l_ny,
+                                                                                l_waveProp->getStride(),
+                                                                                l_waveProp->getBathymetry());
+
+  std::cout << "before error" << std::endl;
+
   // free memory
   std::cout << "freeing memory" << std::endl;
   delete l_setup;
@@ -398,7 +338,7 @@ int main(int i_argc,
   {
     delete l_s;
   }
-  
+
   std::cout << "finished, exiting" << std::endl;
 
   return EXIT_SUCCESS;

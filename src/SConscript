@@ -22,7 +22,8 @@ l_sources = [ 'solvers/Roe.cpp',
               'io/Csv.cpp',
               'io/BathymetryLoader.cpp',
               'io/Station.cpp',
-              'calculations/Froude.cpp']
+              'calculations/Froude.cpp',
+              'io/NetCdf.cpp']
 
 for l_so in l_sources:
   env.sources.append( env.Object( l_so ) )
@@ -46,7 +47,8 @@ l_tests = [ 'tests.cpp',
             'setups/CircularDamBreak2d.test.cpp',
             'patches/WavePropagation2d.test.cpp',
             'io/Station.test.cpp',
-            'calculations/Froude.test.cpp']
+            'calculations/Froude.test.cpp',
+            'io/NetCdf.test.cpp']
 
 for l_te in l_tests:
   env.tests.append( env.Object( l_te ) )
