@@ -24,9 +24,9 @@ class tsunami_lab::io::NetCdf
 {
 private:
 
-    t_real m_nx = 0;
-    t_real m_ny = 0;
-    t_real m_stride = 0;
+    t_idx m_nx = 0;
+    t_idx m_ny = 0;
+    t_idx m_stride = 0;
     int m_ncId = 0;
     // error
      int m_err = 0;
@@ -61,24 +61,28 @@ public:
      *
      *
      */
-    NetCdf(t_real i_dx,
-           t_real i_dy,
-           t_idx i_nx,
+    NetCdf(t_idx i_nx,
            t_idx i_ny,
            t_idx i_stride,
            t_real const *i_b);
 
     /**
+     * Destructor
+     *
+     */
+    ~NetCdf();
+
+    /**
      * writes into cdf file
      *
      * @param *i_h pointer for height
-     * @param *i_hu mementum x
-     * @param *i_hv momnetum y
+     * @param *i_hu momentum x
+     * @param *i_hv momentum y
      * 
      */
     void write(t_real const *i_h,
                       t_real const *i_hu,
                       t_real const *i_hv,
-                      t_real i_t);
+                      t_idx i_t);
 };
 #endif

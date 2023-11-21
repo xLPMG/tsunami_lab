@@ -275,6 +275,11 @@ int main(int i_argc,
 
   std::cout << "entering time loop" << std::endl;
 
+  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                                                  l_ny,
+                                                                  l_waveProp->getStride(),
+                                                                  l_waveProp->getBathymetry());
+
   // iterate over time
   while (l_simTime < l_endTime)
   {
@@ -301,6 +306,11 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
     }
+    l_netCdf->write(l_waveProp->getHeight(),
+                    l_waveProp->getMomentumX(),
+                    l_waveProp->getMomentumY(),
+                    l_timeStep);
+
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
     if (l_simTime >= l_stationFrequency * l_captureCount)
@@ -321,19 +331,11 @@ int main(int i_argc,
 
   std::cout << "finished time loop" << std::endl;
 
-  tsunami_lab::io::NetCdf * l_netCdf = new tsunami_lab::io::NetCdf(l_dx,
-                                                                                l_dy,
-                                                                                l_nx,
-                                                                                l_ny,
-                                                                                l_waveProp->getStride(),
-                                                                                l_waveProp->getBathymetry());
-
-  std::cout << "before error" << std::endl;
-
   // free memory
   std::cout << "freeing memory" << std::endl;
   delete l_setup;
   delete l_waveProp;
+  delete l_netCdf;
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     delete l_s;

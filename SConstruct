@@ -34,7 +34,7 @@ if vars.UnknownVariables():
 env = Environment( variables = vars )
 
 conf = Configure(env)
-if not conf.CheckLibWithHeader('netcdf', 'netcdf.h', 'C'):
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
         print ('Did not find the netcdf library, exiting!')
         Exit(1)
 env = conf.Finish()
