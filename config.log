@@ -1,18 +1,28 @@
-file /Users/lpmg/Desktop/Uni/Sem5/Tsunami/tsunami_lab/SConstruct,line 36:
+file /Users/richardhofmann/Dropbox/Mac/Desktop/programming/uni/tsunami/tsunami_lab/SConstruct,line 36:
 	Configure(confdir = .sconf_temp)
 scons: Configure: Checking for C library netcdf... 
-.sconf_temp/conftest_1ddd6b9627e69bc88093239e56660785_0.c <-
+scons: Configure: ".sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.c <-
+  |  |
+  |  |
+  |  |#include "netcdf.h"
+  |  |
+  |  |int
+  |  |main() {
+  |  |  
+  |  |return 0;
+  |  |}
+  |  |
   |
+scons: Configure: ".sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.o" is up to date.
+scons: Configure: The original builder output was:
+  |gcc -o .sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.o -c .sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.c
   |
-  |#include "netcdf.h"
+scons: Configure: ".sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0_6914dc1c61d7fa91c0e58be35491f622" is up to date.
+scons: Configure: The original builder output was:
+  |gcc -o .sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0_6914dc1c61d7fa91c0e58be35491f622 .sconf_temp/conftest_292a485a87739177f630f5f17109eb40_0.o -lnetcdf
   |
-  |int main(void) {
-  |  
-  |return 0;
-  |}
-  |
-gcc -o .sconf_temp/conftest_1ddd6b9627e69bc88093239e56660785_0.o -c .sconf_temp/conftest_1ddd6b9627e69bc88093239e56660785_0.c
-gcc -o .sconf_temp/conftest_1ddd6b9627e69bc88093239e56660785_0_b592ebdd36f6be32a5b2ea6e1bd2921e .sconf_temp/conftest_1ddd6b9627e69bc88093239e56660785_0.o -lnetcdf
-scons: Configure: yes
+scons: Configure: (cached) yes
 
 

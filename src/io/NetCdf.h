@@ -23,6 +23,36 @@ namespace tsunami_lab
 class tsunami_lab::io::NetCdf
 {
 private:
+    //
+    static int m_ncId;
+    // error
+    static int m_err;
+
+    static int m_dimXId; 
+
+    static int m_dimYId;
+
+    static int m_dimTId;
+
+    static int m_varHId;
+
+    static int m_varBId;
+
+    static int  m_varHuId;
+
+    static int  m_varHvId;
+
+    static int m_dimBIds[2];
+
+    static int m_dimHIds[3];
+
+    static int m_dimHuIds[3];
+
+    static int m_dimHvIds[3];
+
+    //static t_real l_data;
+
+
     /**
      * checks for error in Cdf file
      * @param i_err error
