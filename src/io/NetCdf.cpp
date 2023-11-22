@@ -35,6 +35,8 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     checkNcErr(m_err);
 
     t_real *m_bathymetryData = new t_real[i_nx * i_ny];
+    t_real *m_x = new t_real[i_nx];
+    t_real *m_y = new t_real[i_ny];
 
     // loop for bathymetry
     int i = 0;
@@ -43,7 +45,9 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
         for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
         {
             m_bathymetryData[i++] = i_b[l_ix + l_iy * i_stride];
+            m_y[l_iy] = l_iy;
         }
+        m_x[l_ix] = l_ix;
     }
 
     // define dimensions
@@ -64,6 +68,30 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                        "y",        // name
                        i_ny,       // len
                        &m_dimYId); // idp
+    checkNcErr(m_err);
+
+    // define variables
+
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "x",        // name
+                       NC_FLOAT,   // xtype
+                       1,          // ndims
+                       &m_dimXId,  // dimidsp
+                       &m_varXId); // varidp
+    checkNcErr(m_err);
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "y",        // name
+                       NC_FLOAT,   // xtype
+                       1,          // ndims
+                       &m_dimYId,  // dimidsp
+                       &m_varYId); // varidp
+    checkNcErr(m_err);
+    m_err = nc_def_var(m_ncId,       // ncid
+                       "time",       // name
+                       NC_UNLIMITED, // xtype
+                       1,            // ndims
+                       &m_dimTId,    // dimidsp
+                       &m_varTId);   // varidp
     checkNcErr(m_err);
 
     // define variables
@@ -107,15 +135,24 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     checkNcErr(m_err);
 
     // assign attributes
-    m_err = nc_put_att_text(m_ncId, m_dimTId, "units",
+    m_err = nc_put_att_text(m_ncId, m_varTId, "units",
                             strlen("seconds"), "seconds");
     checkNcErr(m_err);
-    m_err = nc_put_att_text(m_ncId, m_dimXId, "units",
+
+    m_err = nc_put_att_text(m_ncId, m_varXId, "units",
                             strlen("meters"), "meters");
     checkNcErr(m_err);
-    m_err = nc_put_att_text(m_ncId, m_dimYId, "units",
+    m_err = nc_put_att_text(m_ncId, m_varXId, "axis",
+                            strlen("X"), "X");
+    checkNcErr(m_err);
+
+    m_err = nc_put_att_text(m_ncId, m_varYId, "units",
                             strlen("meters"), "meters");
     checkNcErr(m_err);
+    m_err = nc_put_att_text(m_ncId, m_varYId, "axis",
+                            strlen("Y"), "Y");
+    checkNcErr(m_err);
+
     m_err = nc_put_att_text(m_ncId, m_varHId, "units",
                             strlen("meters"), "meters");
     checkNcErr(m_err);
@@ -134,7 +171,19 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                              m_varBId,          // varid
                              m_bathymetryData); // op
     checkNcErr(m_err);
+
+    m_err = nc_put_var_float(m_ncId,
+                             m_varXId,
+                             &m_x[0]);
+    checkNcErr(m_err);
+    m_err = nc_put_var_float(m_ncId,
+                             m_varYId,
+                             &m_y[0]);
+    checkNcErr(m_err);
+
     delete[] m_bathymetryData;
+    delete[] m_x;
+    delete[] m_y;
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
