@@ -1,5 +1,5 @@
 /**
- * @author Luca Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach, Richard Hofmann
  *
  * @section DESCRIPTION
  *
@@ -29,28 +29,24 @@ private:
     int m_ncId = 0;
     // error
     int m_err = 0;
-
+    
+    // dimension ids
     int m_dimXId = 0;
-
     int m_dimYId = 0;
-
     int m_dimTId = 0;
 
-    int m_varHId = 0;
-
-    int m_varBId = 0;
-
-    int m_varHuId = 0;
-
-    int m_varHvId = 0;
-
-    int m_dimIds[2] = {0};
-
-    int m_dimTIds[3] = {0};
-
+    // variable ids
     int m_varXId = 0;
     int m_varYId = 0;
     int m_varTId = 0;
+    int m_varHId = 0;
+    int m_varTHId = 0;
+    int m_varBId = 0;
+    int m_varHuId = 0;
+    int m_varHvId = 0;
+
+    // index for timesteps
+    t_idx m_timeStepCount = 0;
 
     /**
      * checks for error in Cdf file
@@ -60,7 +56,11 @@ private:
 
 public:
     /**
-     *
+     *  Constructor
+     * @param i_nx amount of cells in x-direction
+     * @param i_ny amount of cells in y-direction
+     * @param i_stride stride
+     * @param i_b bathymetry
      *
      */
     NetCdf(t_idx i_nx,
@@ -77,14 +77,17 @@ public:
     /**
      * writes into cdf file
      *
-     * @param *i_h pointer for height
-     * @param *i_hu momentum x
-     * @param *i_hv momentum y
+     * @param i_h water heights
+     * @param i_hu momentum x-direction
+     * @param i_hv momentum y-direction
+     * @param i_b bathymetry
+     * @param i_t current timestep
      *
      */
     void write(t_real const *i_h,
                t_real const *i_hu,
                t_real const *i_hv,
-               t_idx i_t);
+               t_real const *i_b,
+               t_real i_t);
 };
 #endif

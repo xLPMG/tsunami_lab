@@ -305,11 +305,12 @@ int main(int i_argc,
                                   l_file);
       l_file.close();
       l_nOut++;
+      l_netCdf->write(l_waveProp->getHeight(),
+                      l_waveProp->getMomentumX(),
+                      l_waveProp->getMomentumY(),
+                      l_waveProp->getBathymetry(),
+                      l_timeStep);
     }
-    l_netCdf->write(l_waveProp->getHeight(),
-                    l_waveProp->getMomentumX(),
-                    l_waveProp->getMomentumY(),
-                    l_timeStep);
 
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);

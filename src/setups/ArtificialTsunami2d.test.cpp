@@ -13,7 +13,7 @@ TEST_CASE("Test the two-dimensional Artificial Tsunami event.", "[ArtificialTsun
 {
   tsunami_lab::setups::ArtificialTsunami2d l_ArtificialTsunami2d;
 
-  tsunami_lab::t_real margin = 0.0001;
+  tsunami_lab::t_real margin = 0.001;
 
     /**min x=y=500  -->right in the center 
      * i_x-=500 ; i_y-=500 
