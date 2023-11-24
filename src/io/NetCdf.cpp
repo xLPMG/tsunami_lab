@@ -8,7 +8,6 @@
 #include <iostream>
 #include <netcdf.h>
 
-
 void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
 {
     if (i_err)
@@ -20,35 +19,35 @@ void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
     }
 }
 
-tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
-                                const t_idx i_ny,
-                                t_idx i_stride,
-                                t_real const *i_b)
+tsunami_lab::io::NetCdf::NetCdf(const char *path,
+                                t_idx i_nx,
+                                t_idx i_ny,
+                                t_idx i_stride)
 {
 
     m_nx = i_nx;
     m_ny = i_ny;
     m_stride = i_stride;
 
-    m_err = nc_create("tsunamiNetCdf.nc", // path
-                      NC_CLOBBER,         // cmode
-                      &m_ncId);           // ncidp
+    if (path == nullptr)
+        return;
+
+    m_err = nc_create(path,       // path
+                      NC_CLOBBER, // cmode
+                      &m_ncId);   // ncidp
     checkNcErr(m_err);
 
-    t_real *m_bathymetryData = new t_real[i_nx * i_ny];
     t_real *m_x = new t_real[i_nx];
     t_real *m_y = new t_real[i_ny];
 
-    // loop for bathymetry
-    int i = 0;
+    // set x and y
     for (std::size_t l_ix = 0; l_ix < i_nx; l_ix++)
     {
-        for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
-        {
-            m_bathymetryData[i++] = i_b[l_ix + l_iy * i_stride];
-            m_y[l_iy] = l_iy;
-        }
         m_x[l_ix] = l_ix;
+    }
+    for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
+    {
+        m_y[l_iy] = l_iy;
     }
 
     // define dimensions
@@ -141,7 +140,8 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
 
     // assign attributes
     m_err = nc_put_att_text(m_ncId, m_varTId, "units",
-                            strlen("seconds"), "seconds");
+                            strlen("seconds since the earthquake event"),
+                            "seconds since the earthquake event");
     checkNcErr(m_err);
 
     m_err = nc_put_att_text(m_ncId, m_varXId, "units",
@@ -164,17 +164,11 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     m_err = nc_put_att_text(m_ncId, m_varTHId, "units",
                             strlen("meters"), "meters");
     checkNcErr(m_err);
-    m_err = nc_put_att_text(m_ncId, m_varHuId, "units",
-                            strlen("Newton * seconds"), "meters");
-    checkNcErr(m_err);
-    m_err = nc_put_att_text(m_ncId, m_varHvId, "units",
-                            strlen("Newton * seconds"), "meters");
-    checkNcErr(m_err);
 
     m_err = nc_enddef(m_ncId); // ncid
     checkNcErr(m_err);
 
-    // write data 
+    // write data
     m_err = nc_put_var_float(m_ncId,   // ncid
                              m_varXId, // varid
                              &m_x[0]); // op
@@ -184,13 +178,6 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                              &m_y[0]); // op
     checkNcErr(m_err);
 
-    m_err = nc_put_var_float(m_ncId,            // ncid
-                             m_varBId,          // varid
-                             m_bathymetryData); // op
-    checkNcErr(m_err);
-
-
-    delete[] m_bathymetryData;
     delete[] m_x;
     delete[] m_y;
 }
@@ -226,6 +213,28 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
             l_i++;
         }
     }
+
+    // write bathymetry on first call
+    if (m_timeStepCount == 0)
+    {
+        t_real *l_b = new t_real[m_nx * m_ny];
+        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        {
+            for (t_idx l_y = 0; l_y < m_ny; l_y++)
+            {
+                l_b[l_i] = i_b[l_x + l_y * m_stride];
+                l_i++;
+            }
+        }
+
+        m_err = nc_put_var_float(m_ncId,
+                                 m_varBId,
+                                 l_b);
+        checkNcErr(m_err);
+        delete[] l_b;
+    }
+
+    //write values
     m_err = nc_put_var1_float(m_ncId,
                               m_varTId,
                               &m_timeStepCount,
@@ -238,6 +247,7 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
                               count,
                               l_h);
     checkNcErr(m_err);
+
     m_err = nc_put_vara_float(m_ncId,
                               m_varTHId,
                               start,
@@ -267,55 +277,48 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
     delete[] l_hv;
 }
 
-void tsunami_lab::io::NetCdf::read(const char* l_filename,
-                                    t_real * i_b,
-                                    t_real * i_d){
-    t_real x_in[m_nx], y_in[m_ny];
-    int x_varid, y_varid, b_varid;
+tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
+                                                   const char *i_var,
+                                                   t_idx &o_nx,
+                                                   t_idx &o_ny)
+{
+    std::cout << "Loading "<< i_var << " from .nc file: " << i_file << std::endl;
 
-    t_real x_in[m_nx], y_in[m_ny];
+    int l_ncIdRead, l_varXIdRead, l_varYIdRead, l_varDataIdRead = 0;
 
-    int *l_data = new int[m_nx * m_ny];
+    m_err = nc_open(i_file, NC_NOWRITE, &l_ncIdRead);
+    checkNcErr(m_err);
 
-         m_err = nc_open(l_filename, NC_NOWRITE, &m_ncIdRead);
-        checkNcErr(m_err);
+    // get dimension ids
+    m_err = nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead);
+    checkNcErr(m_err);
+    m_err = nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead);
+    checkNcErr(m_err);
+    // read dimension size
+    m_err = nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &o_nx);
+    checkNcErr(m_err);
+    m_err = nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &o_ny);
+    checkNcErr(m_err);
+    // get var id of desired variable
+    m_err = nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead);
+    checkNcErr(m_err);
+    // read data
+    t_real l_data[o_nx][o_ny];
+    m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, &l_data[0][0]);
+    checkNcErr(m_err);
 
-        m_err = nc_inq_varid(m_ncIdRead, "x", &x_varid);
-        checkNcErr(m_err);
-        m_err = nc_inq_varid(m_ncIdRead, "y", &y_varid);
-        checkNcErr(m_err);
+    m_err = nc_close(l_ncIdRead);
+    checkNcErr(m_err);
 
-        /* Read the coordinate variable data. */
-        m_err = nc_get_var_float(m_ncIdRead, x_varid, &x_in[0]);
-        checkNcErr(m_err);
-        m_err = nc_get_var_float(m_ncIdRead, y_varid, &y_in[0]);
-        checkNcErr(m_err);
-
-    if(i_b == nullptr){
-        
-        /* Get the varids of the pressure and temperature netCDF
-         * variables. */
-         m_err = nc_inq_varid(m_ncIdRead, "bathymetry", &b_varid);
-        checkNcErr(m_err);
-
-        //read data
-        m_err  = nc_get_var_float(m_ncIdRead, b_varid, i_b);
-        checkNcErr(m_err);
-
-    
-        m_err = nc_close(m_ncIdRead);
-        checkNcErr(m_err);
-    } else{
-        /* Get the varids of the pressure and temperature netCDF
-         * variables. */
-         m_err = nc_inq_varid(m_ncIdRead, "displacement", &b_varid);
-        checkNcErr(m_err);
-
-        //read data
-        m_err  = nc_get_var_float(m_ncIdRead, d_varid, i_d);
-        checkNcErr(m_err);
-
-        m_err = nc_close(m_ncIdRead);
-        checkNcErr(m_err);
+    // convert to strided array
+    t_real *l_stridedArray = new t_real[o_nx * o_ny];
+    for (std::size_t l_ix = 0; l_ix < o_nx; l_ix++)
+    {
+        for (std::size_t l_iy = 0; l_iy < o_ny; l_iy++)
+        {
+            l_stridedArray[l_ix + l_iy * o_nx] = l_data[l_ix][l_iy];
+        }
     }
+    std::cout << "Done loading "<< i_var << std::endl;
+    return l_stridedArray;
 }

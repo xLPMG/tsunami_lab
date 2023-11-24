@@ -31,6 +31,15 @@
 
 using json = nlohmann::json;
 
+bool endsWith(std::string const &str, std::string const &suffix)
+{
+  if (str.length() < suffix.length())
+  {
+    return false;
+  }
+  return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
+}
+
 int main(int i_argc,
          char *i_argv[])
 {
@@ -219,26 +228,66 @@ int main(int i_argc,
                                 l_b);
     }
   }
+  // set up netCdf I/O
+  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf("solution.nc",
+                                                                  l_nx,
+                                                                  l_ny,
+                                                                  l_waveProp->getStride());
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
   {
-    tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
-    l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
-    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 4, 4, ".csv") == 0)
     {
-      tsunami_lab::t_real l_y = l_cy * l_dy;
-      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
+      l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
+      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
       {
-        tsunami_lab::t_real l_x = l_cx * l_dx;
-        tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
-        l_waveProp->setBathymetry(l_cx,
-                                  l_cy,
-                                  l_b);
+        tsunami_lab::t_real l_y = l_cy * l_dy;
+        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+        {
+          tsunami_lab::t_real l_x = l_cx * l_dx;
+          tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
+          l_waveProp->setBathymetry(l_cx,
+                                    l_cy,
+                                    l_b);
+        }
+      }
+      l_waveProp->adjustWaterHeight();
+      delete l_bathymetryLoader;
+    }
+    else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
+    {
+      tsunami_lab::t_idx l_bnx, l_bny = 0;
+      tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
+                                                "bathymetry",
+                                                l_bnx,
+                                                l_bny);
+
+      // convert from meters to cells
+      l_bnx /= l_dx;
+      l_bny /= l_dy;
+      // choose smaller value to not go out of bounds
+      l_bnx = std::min(l_bnx, l_nx);
+      l_bny = std::min(l_bny, l_ny);
+
+      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_bny; l_cy++)
+      {
+        tsunami_lab::t_real l_y = l_cy * l_dy;
+        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_bnx; l_cx++)
+        {
+          tsunami_lab::t_real l_x = l_cx * l_dx;
+
+          l_waveProp->setBathymetry(l_cx,
+                                    l_cy,
+                                    l_b[tsunami_lab::t_idx(l_x + (l_bnx * l_dx) * l_y)]);
+        }
       }
     }
-    l_waveProp->adjustWaterHeight();
-    delete l_bathymetryLoader;
+    else
+    {
+      std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
+    }
   }
 
   // derive maximum wave speed in setup; the momentum is ignored
@@ -274,11 +323,6 @@ int main(int i_argc,
   std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;
-
-  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                                                  l_ny,
-                                                                  l_waveProp->getStride(),
-                                                                  l_waveProp->getBathymetry());
 
   // iterate over time
   while (l_simTime < l_endTime)

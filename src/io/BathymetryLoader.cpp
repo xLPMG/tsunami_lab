@@ -18,7 +18,7 @@ tsunami_lab::io::BathymetryLoader::~BathymetryLoader()
 
 void tsunami_lab::io::BathymetryLoader::loadBathymetry(const std::string &i_file)
 {
-    std::cout << "Loading bathymetry from file: " << i_file << std::endl;
+    std::cout << "Loading bathymetry from csv file: " << i_file << std::endl;
     if (!std::filesystem::exists(i_file))
     {
         std::cerr << "Error: File not found!" << std::endl;

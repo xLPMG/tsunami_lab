@@ -48,20 +48,6 @@ private:
     // index for timesteps
     t_idx m_timeStepCount = 0;
 
-
-    //read
-    //
-    int m_ncIdRead=0;
-
-    //vars
-    int x_varid = 0;
-    int y_varid = 0;
-    int b_varid = 0;
-    int d_varid = 0;
-
-
-    
-
     /**
      * checks for error in Cdf file
      * @param i_err error
@@ -71,16 +57,17 @@ private:
 public:
     /**
      *  Constructor
+     * @param path file path
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
      * @param i_stride stride
      * @param i_b bathymetry
      *
      */
-    NetCdf(t_idx i_nx,
+    NetCdf(const char *path,
+           t_idx i_nx,
            t_idx i_ny,
-           t_idx i_stride,
-           t_real const *i_b);
+           t_idx i_stride);
 
     /**
      * Destructor
@@ -106,13 +93,12 @@ public:
 
     /**
      * reads from the cdf file
-     * 
-     * @param l_filename name of the file to read from
-     * @param i_b bathymetry
-     * @param i_d displacement
+     *
+     * @param l_file name of the file to read from
      */
-    void read(const char *l_filename,
-              t_real *i_b,
-              t_real *i_d);
+    t_real *read(const char *i_file,
+                 const char *i_var,
+                 t_idx &o_nx,
+                 t_idx &o_ny);
 };
 #endif
