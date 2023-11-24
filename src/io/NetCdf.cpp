@@ -303,8 +303,8 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
     m_err = nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead);
     checkNcErr(m_err);
     // read data
-    t_real l_data[o_nx][o_ny];
-    m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, &l_data[0][0]);
+    t_real *l_data = new t_real[o_nx * o_ny];
+    m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data);
     checkNcErr(m_err);
 
     m_err = nc_close(l_ncIdRead);
@@ -312,11 +312,12 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
 
     // convert to strided array
     t_real *l_stridedArray = new t_real[o_nx * o_ny];
+    int l_i = 0;
     for (std::size_t l_ix = 0; l_ix < o_nx; l_ix++)
     {
         for (std::size_t l_iy = 0; l_iy < o_ny; l_iy++)
         {
-            l_stridedArray[l_ix + l_iy * o_nx] = l_data[l_ix][l_iy];
+            l_stridedArray[l_ix + l_iy * o_nx] = l_data[l_i++];
         }
     }
     std::cout << "Done loading "<< i_var << std::endl;

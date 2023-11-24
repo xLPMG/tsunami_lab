@@ -62,8 +62,9 @@ int main(int i_argc,
   bool l_hasBoundaryR = false;
   bool l_hasBoundaryT = false;
   bool l_hasBoundaryB = false;
-  // bathymetry file path
+  // input file paths
   std::string l_bathymetryFilePath = "";
+  std::string l_displacementFilePath = "";
   // simulation time limit
   tsunami_lab::t_real l_endTime = 20;
   // keep track of all stations
@@ -95,6 +96,7 @@ int main(int i_argc,
   l_hasBoundaryT = l_configData.value("hasBoundaryT", false);
   l_hasBoundaryB = l_configData.value("hasBoundaryB", false);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
+  l_displacementFilePath = l_configData.value("displacement", "");
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
 
