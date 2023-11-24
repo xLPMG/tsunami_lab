@@ -234,7 +234,7 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
         delete[] l_b;
     }
 
-    //write values
+    // write values
     m_err = nc_put_var1_float(m_ncId,
                               m_varTId,
                               &m_timeStepCount,
@@ -278,13 +278,12 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
 }
 
 tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
-                                                   const char *i_var,
-                                                   t_idx &o_nx,
-                                                   t_idx &o_ny)
+                                                   const char *i_var)
 {
-    std::cout << "Loading "<< i_var << " from .nc file: " << i_file << std::endl;
+    std::cout << "Loading " << i_var << " from .nc file: " << i_file << std::endl;
 
-    int l_ncIdRead, l_varXIdRead, l_varYIdRead, l_varDataIdRead = 0;
+    int l_ncIdRead = 0, l_varXIdRead = 0, l_varYIdRead = 0, l_varDataIdRead = 0;
+    t_idx l_nx = 0, l_ny = 0;
 
     m_err = nc_open(i_file, NC_NOWRITE, &l_ncIdRead);
     checkNcErr(m_err);
@@ -295,31 +294,34 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
     m_err = nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead);
     checkNcErr(m_err);
     // read dimension size
-    m_err = nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &o_nx);
+    m_err = nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &l_nx);
     checkNcErr(m_err);
-    m_err = nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &o_ny);
+    m_err = nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &l_ny);
     checkNcErr(m_err);
     // get var id of desired variable
     m_err = nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead);
     checkNcErr(m_err);
     // read data
-    t_real *l_data = new t_real[o_nx * o_ny];
+    t_real *l_data = new t_real[l_nx * l_ny];
     m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data);
     checkNcErr(m_err);
 
     m_err = nc_close(l_ncIdRead);
     checkNcErr(m_err);
 
+    // choose smaller value to not reach out of bounds situations
+    l_nx = std::min(l_nx, m_nx);
+    l_ny = std::min(l_ny, m_ny);
     // convert to strided array
-    t_real *l_stridedArray = new t_real[o_nx * o_ny];
+    t_real *l_stridedArray = new t_real[m_nx * m_ny]{0};
     int l_i = 0;
-    for (std::size_t l_ix = 0; l_ix < o_nx; l_ix++)
+    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
     {
-        for (std::size_t l_iy = 0; l_iy < o_ny; l_iy++)
+        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
         {
-            l_stridedArray[l_ix + l_iy * o_nx] = l_data[l_i++];
+            l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
         }
     }
-    std::cout << "Done loading "<< i_var << std::endl;
+    std::cout << "Done loading " << i_var << std::endl;
     return l_stridedArray;
 }

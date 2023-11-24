@@ -30,7 +30,7 @@ private:
 
     t_real * m_b = nullptr;
 
-    tsunami_lab::setups::Setup * m_artificial = nullptr;
+    tsunami_lab::setups::Setup *m_artificial = nullptr;
 
 public:
   /**

@@ -97,8 +97,6 @@ public:
      * @param l_file name of the file to read from
      */
     t_real *read(const char *i_file,
-                 const char *i_var,
-                 t_idx &o_nx,
-                 t_idx &o_ny);
+                 const char *i_var);
 };
 #endif

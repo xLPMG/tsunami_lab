@@ -231,7 +231,7 @@ int main(int i_argc,
     }
   }
   // set up netCdf I/O
-  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf("solution.nc",
+  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf("solutions/solution.nc",
                                                                   l_nx,
                                                                   l_ny,
                                                                   l_waveProp->getStride());
@@ -260,29 +260,19 @@ int main(int i_argc,
     }
     else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
     {
-      tsunami_lab::t_idx l_bnx, l_bny = 0;
       tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
-                                                "bathymetry",
-                                                l_bnx,
-                                                l_bny);
+                                                "bathymetry");
 
-      // convert from meters to cells
-      l_bnx /= l_dx;
-      l_bny /= l_dy;
-      // choose smaller value to not go out of bounds
-      l_bnx = std::min(l_bnx, l_nx);
-      l_bny = std::min(l_bny, l_ny);
-
-      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_bny; l_cy++)
+      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
       {
         tsunami_lab::t_real l_y = l_cy * l_dy;
-        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_bnx; l_cx++)
+        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
         {
           tsunami_lab::t_real l_x = l_cx * l_dx;
 
           l_waveProp->setBathymetry(l_cx,
                                     l_cy,
-                                    l_b[tsunami_lab::t_idx(l_x + (l_bnx * l_dx) * l_y)]);
+                                    l_b[tsunami_lab::t_idx(l_x + l_nx * l_y)]);
         }
       }
     }
