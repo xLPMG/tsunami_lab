@@ -61,7 +61,6 @@ public:
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
      * @param i_stride stride
-     * @param i_b bathymetry
      *
      */
     NetCdf(const char *path,
@@ -76,7 +75,7 @@ public:
     ~NetCdf();
 
     /**
-     * writes into cdf file
+     * Writes into cdf file
      *
      * @param i_h water heights
      * @param i_hu momentum x-direction

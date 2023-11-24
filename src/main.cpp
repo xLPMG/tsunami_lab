@@ -188,6 +188,12 @@ int main(int i_argc,
 
   std::filesystem::create_directory("stations");
 
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+
+  std::filesystem::create_directory("solutions");
+
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
 
@@ -307,12 +313,6 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-
-  // clean solutions folder
-  if (std::filesystem::exists("solutions"))
-    std::filesystem::remove_all("solutions");
-
-  std::filesystem::create_directory("solutions");
 
   std::cout << "entering time loop" << std::endl;
 

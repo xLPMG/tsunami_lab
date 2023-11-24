@@ -47,6 +47,12 @@ for Linux/Windows. If you are on MacOS, use
 
 For further run configurations view the SConstruct file at the root of the tsunami_lab directory.
 
+For I/O, the project requires the ``NetCdf`` library to be installed:
+
+- `MacOS (Homebrew) <https://formulae.brew.sh/formula/netcdf>`_
+- Ubuntu: ``sudo apt-get install libnetcdf-dev``
+- `Windows <https://downloads.unidata.ucar.edu/netcdf/>`_
+
 5. Building the documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
