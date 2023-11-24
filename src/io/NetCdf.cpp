@@ -8,6 +8,7 @@
 #include <iostream>
 #include <netcdf.h>
 
+
 void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
 {
     if (i_err)
@@ -164,29 +165,30 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                             strlen("meters"), "meters");
     checkNcErr(m_err);
     m_err = nc_put_att_text(m_ncId, m_varHuId, "units",
-                            strlen("meters"), "meters");
+                            strlen("Newton * seconds"), "meters");
     checkNcErr(m_err);
     m_err = nc_put_att_text(m_ncId, m_varHvId, "units",
-                            strlen("meters"), "meters");
+                            strlen("Newton * seconds"), "meters");
     checkNcErr(m_err);
 
     m_err = nc_enddef(m_ncId); // ncid
     checkNcErr(m_err);
 
-    // write data
+    // write data 
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varXId, // varid
+                             &m_x[0]); // op
+    checkNcErr(m_err);
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varYId, // varid
+                             &m_y[0]); // op
+    checkNcErr(m_err);
+
     m_err = nc_put_var_float(m_ncId,            // ncid
                              m_varBId,          // varid
                              m_bathymetryData); // op
     checkNcErr(m_err);
 
-    m_err = nc_put_var_float(m_ncId,
-                             m_varXId,
-                             &m_x[0]);
-    checkNcErr(m_err);
-    m_err = nc_put_var_float(m_ncId,
-                             m_varYId,
-                             &m_y[0]);
-    checkNcErr(m_err);
 
     delete[] m_bathymetryData;
     delete[] m_x;
@@ -263,4 +265,57 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
     delete[] l_tH;
     delete[] l_hu;
     delete[] l_hv;
+}
+
+void tsunami_lab::io::NetCdf::read(const char* l_filename,
+                                    t_real * i_b,
+                                    t_real * i_d){
+    t_real x_in[m_nx], y_in[m_ny];
+    int x_varid, y_varid, b_varid;
+
+    t_real x_in[m_nx], y_in[m_ny];
+
+    int *l_data = new int[m_nx * m_ny];
+
+         m_err = nc_open(l_filename, NC_NOWRITE, &m_ncIdRead);
+        checkNcErr(m_err);
+
+        m_err = nc_inq_varid(m_ncIdRead, "x", &x_varid);
+        checkNcErr(m_err);
+        m_err = nc_inq_varid(m_ncIdRead, "y", &y_varid);
+        checkNcErr(m_err);
+
+        /* Read the coordinate variable data. */
+        m_err = nc_get_var_float(m_ncIdRead, x_varid, &x_in[0]);
+        checkNcErr(m_err);
+        m_err = nc_get_var_float(m_ncIdRead, y_varid, &y_in[0]);
+        checkNcErr(m_err);
+
+    if(i_b == nullptr){
+        
+        /* Get the varids of the pressure and temperature netCDF
+         * variables. */
+         m_err = nc_inq_varid(m_ncIdRead, "bathymetry", &b_varid);
+        checkNcErr(m_err);
+
+        //read data
+        m_err  = nc_get_var_float(m_ncIdRead, b_varid, i_b);
+        checkNcErr(m_err);
+
+    
+        m_err = nc_close(m_ncIdRead);
+        checkNcErr(m_err);
+    } else{
+        /* Get the varids of the pressure and temperature netCDF
+         * variables. */
+         m_err = nc_inq_varid(m_ncIdRead, "displacement", &b_varid);
+        checkNcErr(m_err);
+
+        //read data
+        m_err  = nc_get_var_float(m_ncIdRead, d_varid, i_d);
+        checkNcErr(m_err);
+
+        m_err = nc_close(m_ncIdRead);
+        checkNcErr(m_err);
+    }
 }

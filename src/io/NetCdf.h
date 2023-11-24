@@ -29,7 +29,7 @@ private:
     int m_ncId = 0;
     // error
     int m_err = 0;
-    
+
     // dimension ids
     int m_dimXId = 0;
     int m_dimYId = 0;
@@ -47,6 +47,20 @@ private:
 
     // index for timesteps
     t_idx m_timeStepCount = 0;
+
+
+    //read
+    //
+    int m_ncIdRead=0;
+
+    //vars
+    int x_varid = 0;
+    int y_varid = 0;
+    int b_varid = 0;
+    int d_varid = 0;
+
+
+    
 
     /**
      * checks for error in Cdf file
@@ -89,5 +103,16 @@ public:
                t_real const *i_hv,
                t_real const *i_b,
                t_real i_t);
+
+    /**
+     * reads from the cdf file
+     * 
+     * @param l_filename name of the file to read from
+     * @param i_b bathymetry
+     * @param i_d displacement
+     */
+    void read(const char *l_filename,
+              t_real *i_b,
+              t_real *i_d);
 };
 #endif
