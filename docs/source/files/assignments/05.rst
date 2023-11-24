@@ -1,0 +1,235 @@
+5. Large Data Input and Output
+*********************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 5.1 NetCDF Output
+========================
+
+
+Task 5.1.1 - Integrationof netCdf
+-----------------------------------------
+
+TODO 
+
+
+Task 5.1.2 - NetCDF class
+-----------------------------------------
+
+
+**(File: NetCdf.cpp)**
+
+For every opeartion we check for errors with:
+
+.. code:: cpp
+
+    void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
+    {
+        if (i_err)
+        {
+            std::cerr << "Error: "
+                    << nc_strerror(i_err)
+                    << std::endl;
+            exit(2);
+        }
+    }
+
+**Constructor**
+
+As inputs for the constructor we have thhe path pointer as char, amount of cells in x and y direction and the stride size.
+Next we create the nc file:
+
+.. code:: cpp
+
+    m_err = nc_create(path,       // path
+                    NC_CLOBBER, // cmode
+                    &m_ncId);   // ncidp
+
+Afterwards dimesnion are created like and stored in the m_dimIds array:
+
+.. code:: cpp
+
+    // define dimensions
+    int m_dimIds[3];
+
+    m_err = nc_def_dim(m_ncId,       // ncid
+                       "time",       // name
+                       NC_UNLIMITED, // len
+                       &m_dimTId);   // idp
+    checkNcErr(m_err);
+
+    ...
+
+    m_dimIds[0] = m_dimTId;
+    m_dimIds[1] = m_dimXId;
+    m_dimIds[2] = m_dimYId;
+
+.. note::
+    With the keyword NC_UNLIMITED the length of the dimesnion does not have to be fix yet. 
+    Therefore, it has to be the first dimension in the dimension array. 
+
+The variables follow for x, y, time, bathymetry, height, total height, momentum x and momentum y.
+As input one uses the nc ID, name of the variable, data type, dimension size, pointer to dimesion Id and the variable id.
+Example:
+
+.. code:: cpp
+
+     m_err = nc_def_var(m_ncId,        // ncid
+                       "totalHeight", // name
+                       NC_FLOAT,      // xtype
+                       3,             // ndims
+                       m_dimIds,      // dimidsp
+                       &m_varTHId);   // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,       // ncid
+                       "bathymetry", // name
+                       NC_FLOAT,     // xtype
+                       2,            // ndims
+                       m_dimIds + 1, // dimidsp
+                       &m_varBId);   // varidp
+    checkNcErr(m_err);
+    ...
+
+Also we can use the array with all three dimesnion for a two dimensional variable. 
+For this purpose thhe pointer has to be incremented by 1.
+
+Next, attributes get assigned to the variables:
+
+
+
+.. code:: cpp
+
+    m_err = nc_put_att_text(m_ncId, m_varXId, "units",
+                            strlen("meters"), "meters");
+    checkNcErr(m_err);
+
+
+**write**
+As input we have the current timestep and pointers for height, bathymetry, momentum in x and y direction.
+
+With the following arrays we tell NetCdf where how many values of data to write:
+
+.. code:: cpp
+
+    t_idx start[] = {m_timeStepCount, 0, 0};
+    t_idx count[] = {1, m_nx, m_ny};
+
+Next pointers for the data get instantiated and filled with values:
+
+.. code:: cpp
+    
+    t_real *l_h = new t_real[m_nx * m_ny];
+    t_real *l_tH = new t_real[m_nx * m_ny];
+    t_real *l_hu = new t_real[m_nx * m_ny];
+    t_real *l_hv = new t_real[m_nx * m_ny];
+    int l_i = 0;
+    for (t_idx l_x = 0; l_x < m_nx; l_x++)
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
+        {
+            l_h[l_i] = i_h[l_x + l_y * m_stride];
+            l_tH[l_i] = i_h[l_x + l_y * m_stride] + i_b[l_x + l_y * m_stride];
+            l_hu[l_i] = i_hu[l_x + l_y * m_stride];
+            l_hv[l_i] = i_hv[l_x + l_y * m_stride];
+            l_i++;
+        }
+    }
+
+Hence the bathymetry has to be written only once it is done at time step 0:
+
+.. code:: cpp
+
+    if (m_timeStepCount == 0)
+    {
+        t_real *l_b = new t_real[m_nx * m_ny];
+        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        {
+            for (t_idx l_y = 0; l_y < m_ny; l_y++)
+            {
+                l_b[l_i] = i_b[l_x + l_y * m_stride];
+                l_i++;
+            }
+        }
+
+        m_err = nc_put_var_float(m_ncId,
+                                 m_varBId,
+                                 l_b);
+        checkNcErr(m_err);
+        delete[] l_b;
+    }
+
+
+Next the other values get written and the time increased:
+
+.. code:: cpp
+
+    ...
+    m_err = nc_put_vara_float(m_ncId,
+                              m_varHvId,
+                              start,
+                              count,
+                              l_h);
+    checkNcErr(m_err);
+
+    m_timeStepCount++;
+
+nc_put_vara_float takes the nc and variable id, the start and count values and the data pointer as input.
+
+
+Task 5.2 NetCDF Input
+==========================
+
+Task 5.2.1 - ArtificialTsunami2d
+-----------------------------------------
+
+**(File: ArtificialTsunami2d.cpp)**
+
+In order to accomplish the computational domain we substracted 500 of either x and y in the computeD function, which looks like:
+
+**compueD**
+
+.. code:: cpp
+
+    
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeD(t_real i_x, 
+                                                                       t_real i_y) const
+    {   
+        i_x-=500;
+        i_y-=500;
+
+        return( 5 * computeF(i_x) * computeG(i_y));
+    }
+
+It calls both the computeF and computeG function:
+
+**computeF**
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeF(t_real i_x) const
+    {
+        return (sin((i_x / 500 + 1) * m_pi));
+    }
+
+**computeG**
+
+.. code::
+
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeG(t_real i_y) const
+    {
+        return (-((i_y / 500) * (i_y / 500)) + 1);
+    }
+
+
+Task 5.2.2 - NetCDF read
+-----------------------------------------
+TODO
+
+Task 5.2.3 -TsunamiEvent2d
+-----------------------------------------
+TODO
+
+Task 5.1.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
+--------------------------------------------------------------------
+TODO
