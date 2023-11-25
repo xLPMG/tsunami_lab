@@ -25,7 +25,6 @@ class tsunami_lab::io::NetCdf
 private:
     t_idx m_nx = 0;
     t_idx m_ny = 0;
-    t_idx m_stride = 0;
     int m_ncId = 0;
     // error
     int m_err = 0;
@@ -63,15 +62,12 @@ private:
 public:
     /**
      *  Constructor
-     * @param path file path
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
-     * @param i_stride stride
      *
      */
     NetCdf(t_idx i_nx,
-           t_idx i_ny,
-           t_idx i_stride);
+           t_idx i_ny);
 
     /**
      * Destructor
@@ -82,6 +78,8 @@ public:
     /**
      * Writes into cdf file
      *
+     * @param path file path
+     * @param i_stride stride
      * @param i_h water heights
      * @param i_hu momentum x-direction
      * @param i_hv momentum y-direction
@@ -90,6 +88,7 @@ public:
      *
      */
     void write(const char *path,
+               t_idx i_stride,
                t_real const *i_h,
                t_real const *i_hu,
                t_real const *i_hv,

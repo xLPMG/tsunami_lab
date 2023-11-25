@@ -28,7 +28,6 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
 
     t_real *m_x = new t_real[m_nx];
     t_real *m_y = new t_real[m_ny];
-
     // set x and y
     for (std::size_t l_ix = 0; l_ix < m_nx; l_ix++)
     {
@@ -172,13 +171,11 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
 }
 
 tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
-                                t_idx i_ny,
-                                t_idx i_stride)
+                                t_idx i_ny)
 {
 
     m_nx = i_nx;
     m_ny = i_ny;
-    m_stride = i_stride;
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -188,6 +185,7 @@ tsunami_lab::io::NetCdf::~NetCdf()
 }
 
 void tsunami_lab::io::NetCdf::write(const char *path,
+                                    t_idx i_stride,
                                     t_real const *i_h,
                                     t_real const *i_hu,
                                     t_real const *i_hv,
@@ -202,30 +200,30 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     t_real *l_hu = new t_real[m_nx * m_ny];
     t_real *l_hv = new t_real[m_nx * m_ny];
     int l_i = 0;
+
     for (t_idx l_x = 0; l_x < m_nx; l_x++)
     {
         for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_h[l_i] = i_h[l_x + l_y * m_stride];
-            l_tH[l_i] = i_h[l_x + l_y * m_stride] + i_b[l_x + l_y * m_stride];
-            l_hu[l_i] = i_hu[l_x + l_y * m_stride];
-            l_hv[l_i] = i_hv[l_x + l_y * m_stride];
+            l_h[l_i] = i_h[l_x + l_y * i_stride];
+            l_tH[l_i] = i_h[l_x + l_y * i_stride] + i_b[l_x + l_y * i_stride];
+            l_hu[l_i] = i_hu[l_x + l_y * i_stride];
+            l_hv[l_i] = i_hv[l_x + l_y * i_stride];
             l_i++;
         }
     }
-
     // set up file and write bathymetry on first call
     if (m_timeStepCount == 0)
     {
         setUpFile(path);
 
-        t_real *l_b = new t_real[m_nx * m_ny];
+        t_real *l_b = new t_real[m_nx * m_ny]{0};
+        int l_i = 0;
         for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {
             for (t_idx l_y = 0; l_y < m_ny; l_y++)
             {
-                l_b[l_i] = i_b[l_x + l_y * m_stride];
-                l_i++;
+                l_b[l_i++] = i_b[l_x + l_y * i_stride];
             }
         }
 
@@ -235,7 +233,6 @@ void tsunami_lab::io::NetCdf::write(const char *path,
         checkNcErr(m_err);
         delete[] l_b;
     }
-
     // write values
     m_err = nc_put_var1_float(m_ncId,
                               m_varTId,
@@ -261,14 +258,14 @@ void tsunami_lab::io::NetCdf::write(const char *path,
                               m_varHuId,
                               start,
                               count,
-                              l_h);
+                              l_hu);
     checkNcErr(m_err);
 
     m_err = nc_put_vara_float(m_ncId,
                               m_varHvId,
                               start,
                               count,
-                              l_h);
+                              l_hv);
     checkNcErr(m_err);
 
     m_timeStepCount++;
@@ -282,8 +279,6 @@ void tsunami_lab::io::NetCdf::write(const char *path,
 tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
                                                    const char *i_var)
 {
-    std::cout << "Loading " << i_var << " from .nc file: " << i_file << std::endl;
-
     int l_ncIdRead = 0, l_varXIdRead = 0, l_varYIdRead = 0, l_varDataIdRead = 0;
     t_idx l_nx = 0, l_ny = 0;
 
@@ -315,7 +310,7 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
     l_nx = std::min(l_nx, m_nx);
     l_ny = std::min(l_ny, m_ny);
     // convert to strided array
-    t_real *l_stridedArray = new t_real[m_nx * m_ny]{0};
+    t_real *l_stridedArray = new t_real[l_nx * l_ny]{0};
     int l_i = 0;
     for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
     {
@@ -324,6 +319,5 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
             l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
         }
     }
-    std::cout << "Done loading " << i_var << std::endl;
     return l_stridedArray;
 }

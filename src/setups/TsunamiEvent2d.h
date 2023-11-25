@@ -34,8 +34,6 @@ private:
   // displacement array pointer
   t_real *m_d = nullptr;
 
-  tsunami_lab::setups::Setup *m_artificial = nullptr;
-
 public:
   /**
    * Constructor.

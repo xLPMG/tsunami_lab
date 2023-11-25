@@ -16,6 +16,7 @@
 #include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
 #include "setups/TsunamiEvent1d.h"
+#include "setups/TsunamiEvent2d.h"
 #include "io/Csv.h"
 #include "io/BathymetryLoader.h"
 #include "io/Station.h"
@@ -141,6 +142,12 @@ int main(int i_argc,
   {
     l_setup = new tsunami_lab::setups::TsunamiEvent1d(l_bathymetryFilePath);
   }
+  else if (l_setupChoice == "TSUNAMIEVENT2D")
+  {
+    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/artificialtsunami_bathymetry_1000.nc",
+                                                      "resources/artificialtsunami_displ_1000.nc",
+                                                      l_nx);
+  }
   else
   {
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
@@ -238,14 +245,14 @@ int main(int i_argc,
   }
   // set up netCdf I/O
   tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                                                  l_ny,
-                                                                  l_waveProp->getStride());
+                                                                  l_ny);
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
   {
     if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 4, 4, ".csv") == 0)
     {
+      std::cout << "Loading bathymetry from csv file: " << l_bathymetryFilePath << std::endl;
       tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
       l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
       for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
@@ -262,9 +269,11 @@ int main(int i_argc,
       }
       l_waveProp->adjustWaterHeight();
       delete l_bathymetryLoader;
+      std::cout << "Done loading bathymetry." << std::endl;
     }
     else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
     {
+      std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
       tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
                                                 "bathymetry");
 
@@ -280,6 +289,7 @@ int main(int i_argc,
                                     l_b[tsunami_lab::t_idx(l_x + l_nx * l_y)]);
         }
       }
+      std::cout << "Done loading bathymetry." << std::endl;
     }
     else
     {
@@ -341,6 +351,7 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
       l_netCdf->write("solutions/solution.nc",
+                      l_waveProp->getStride(),
                       l_waveProp->getHeight(),
                       l_waveProp->getMomentumX(),
                       l_waveProp->getMomentumY(),

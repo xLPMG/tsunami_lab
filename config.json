@@ -1,14 +1,13 @@
 {
     "solver": "fwave",
-    "nx": 10,
-    "ny": 10,
-    "simulationSizeX": 10,
-    "simulationSizeY": 10,
-    "setup":"CIRCULARDAMBREAK2D",
-    "bathymetry":"resources/netCdfTest.nc",
+    "nx": 100,
+    "ny": 100,
+    "simulationSizeX": 100,
+    "simulationSizeY": 100,
+    "setup":"TSUNAMIEVENT2D",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
-    "endTime":20
+    "endTime":8
 }

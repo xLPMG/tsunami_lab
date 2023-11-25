@@ -15,13 +15,12 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *bathymetryPath,
                                                     const char *displacementPath,
                                                     t_idx i_stride)
 {
+    m_stride = i_stride;
 
-    tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(0,
-                                                                    0,
-                                                                    i_stride);
+    tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(100,
+                                                                    100);
     m_b = l_netCdf->read(bathymetryPath, "z");
     m_d = l_netCdf->read(displacementPath, "z");
-    t_idx m_stride = i_stride;
 }
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getHeight(t_real i_x,

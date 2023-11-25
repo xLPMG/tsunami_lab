@@ -12,7 +12,7 @@ TEST_CASE("Test NetCdf reading functionality", "[NetCdfRead]")
      * Test case: view resources/netCdfTest.cdl
      */
 
-    tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(10, 10, 10);
+    tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(10, 10);
     tsunami_lab::t_real *l_data = l_netCdf->read("resources/netCdfTest.nc",
                                                  "bathymetry");
 
