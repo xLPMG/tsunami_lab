@@ -201,11 +201,20 @@ Task 5.2 NetCDF Input
 Task 5.2.1 - ArtificialTsunami2d
 -----------------------------------------
 
+Following equations were given:
+
+.. math::
+    \begin{split}\begin{aligned}
+    \text{d}(x, y) & = & 5 \cdot f(x)g(y) \\
+    \text{f}(x) & = & \sin\left(\left(\frac{x}{500}+1\right) \cdot \pi\right) \\
+    \text{g}(y) & = & -\left(\frac{y}{500}\right)^2 + 1
+  \end{aligned}\end{split}
+
 **(File: ArtificialTsunami2d.cpp)**
 
 In order to accomplish the computational domain we substracted 500 of either x and y in the computeD function, which looks like:
 
-**compueD**
+**computeD**
 
 .. code:: cpp
 
