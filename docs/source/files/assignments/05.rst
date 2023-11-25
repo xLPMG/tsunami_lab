@@ -1,124 +1,143 @@
 5. Large Data Input and Output
-*********************************
+*************************************
 
 All project authors contributed to this assignment in equal parts.
 
-Task 5.1 NetCDF Output
-========================
+Task 5.1 - NetCdf Output
+=========================
 
+Task 5.1.1 - Installing and linking NetCdf
+-------------------------------------------
 
-Task 5.1.1 - Integrationof netCdf
------------------------------------------
+Since both authors use MacOS, we simply installed ``NetCdf`` using Homebrew:
 
-TODO 
+.. code:: bash
 
+    brew install netcdf
 
-Task 5.1.2 - NetCDF class
------------------------------------------
+We then made following changes to the ``SConstruct`` file:
 
+.. code:: python
+
+    conf = Configure(env)
+    if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
+        print ('Did not find the netcdf library, exiting!')
+        Exit(1)
+    env = conf.Finish()
+
+This tells scons to check if the ``netcdf`` library is installed on the system.
+If it is, we can proceed.
+
+At the end of our ``SConstruct`` file, we add the library to each executable:
+
+.. code:: python
+
+    env.Program( target = 'build/tsunami_lab',
+             source = env.sources + env.standalone,
+             LIBS='netcdf', LIBPATH='.' )
+
+    env.Program( target = 'build/tests',
+             source = env.sources + env.tests,
+             LIBS='netcdf', LIBPATH='.' )
+
+    env.Program( target = 'build/sanitychecks',
+             source = env.sources + env.sanitychecks,
+             LIBS='netcdf', LIBPATH='.' )
+
+We chose this implementation as it automatically works on most systems (at least Ubuntu, Windows and OSX) 
+as long as the netcdf library was correctly installed.
+See :ref:`setup` for download links.
+
+Task 5.1.2 - Writing netCDF files
+------------------------------------
+
+As instructed, we created a ``NetCdf`` class within the ``tsunami_lab::io`` namespace.
+Its constructor takes the file path, amount of cells in x- and y-direction and the stride as its input.
+This is because those parameters will not change between calls of the ``write()`` function within the same instance.
+
+In the constructor, we start off by creating the file and filling arrays of x- and y-values:
 
 **(File: NetCdf.cpp)**
 
-For every opeartion we check for errors with:
-
 .. code:: cpp
 
-    void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
-    {
-        if (i_err)
-        {
-            std::cerr << "Error: "
-                    << nc_strerror(i_err)
-                    << std::endl;
-            exit(2);
-        }
-    }
-
-**Constructor**
-
-As inputs for the constructor we have thhe path pointer as char, amount of cells in x and y direction and the stride size.
-Next we create the nc file:
-
-.. code:: cpp
+    if (path == nullptr)
+        return;
 
     m_err = nc_create(path,       // path
-                    NC_CLOBBER, // cmode
-                    &m_ncId);   // ncidp
+                      NC_CLOBBER, // cmode
+                      &m_ncId);   // ncidp
+    checkNcErr(m_err);
 
-Afterwards dimesnion are created like and stored in the m_dimIds array:
+    t_real *m_x = new t_real[i_nx];
+    t_real *m_y = new t_real[i_ny];
+
+    // set x and y
+    for (std::size_t l_ix = 0; l_ix < i_nx; l_ix++)
+    {
+        m_x[l_ix] = l_ix;
+    }
+    for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
+    {
+        m_y[l_iy] = l_iy;
+    }
+
+We then define the dimensions in following order:
+
+#. time with length ``NC_UNLIMITED``
+#. x with length ``i_nx`` 
+#. y with length ``i_ny`` 
+
+Next we define variables for each dimension and also for the height, momentum in x- and y-direction,
+the total height and the bathymetry. 
+Since the code is very repetitive, we will only provide a code snippet for the time here:
 
 .. code:: cpp
-
-    // define dimensions
-    int m_dimIds[3];
-
+    
     m_err = nc_def_dim(m_ncId,       // ncid
                        "time",       // name
                        NC_UNLIMITED, // len
                        &m_dimTId);   // idp
     checkNcErr(m_err);
 
-    ...
+    //              [...]
 
-    m_dimIds[0] = m_dimTId;
-    m_dimIds[1] = m_dimXId;
-    m_dimIds[2] = m_dimYId;
-
-.. note::
-    With the keyword NC_UNLIMITED the length of the dimesnion does not have to be fix yet. 
-    Therefore, it has to be the first dimension in the dimension array. 
-
-The variables follow for x, y, time, bathymetry, height, total height, momentum x and momentum y.
-As input one uses the nc ID, name of the variable, data type, dimension size, pointer to dimesion Id and the variable id.
-Example:
-
-.. code:: cpp
-
-     m_err = nc_def_var(m_ncId,        // ncid
-                       "totalHeight", // name
-                       NC_FLOAT,      // xtype
-                       3,             // ndims
-                       m_dimIds,      // dimidsp
-                       &m_varTHId);   // varidp
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "time",     // name
+                       NC_FLOAT,   // xtype
+                       1,          // ndims
+                       &m_dimTId,  // dimidsp
+                       &m_varTId); // varidp
     checkNcErr(m_err);
 
-    m_err = nc_def_var(m_ncId,       // ncid
-                       "bathymetry", // name
-                       NC_FLOAT,     // xtype
-                       2,            // ndims
-                       m_dimIds + 1, // dimidsp
-                       &m_varBId);   // varidp
-    checkNcErr(m_err);
-    ...
-
-Also we can use the array with all three dimesnion for a two dimensional variable. 
-For this purpose thhe pointer has to be incremented by 1.
-
-Next, attributes get assigned to the variables:
-
-
+Lastly, we add attributes such as the units (not shown) and then write the x and y data:
 
 .. code:: cpp
 
-    m_err = nc_put_att_text(m_ncId, m_varXId, "units",
-                            strlen("meters"), "meters");
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varXId, // varid
+                             &m_x[0]); // op
+    checkNcErr(m_err);
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varYId, // varid
+                             &m_y[0]); // op
     checkNcErr(m_err);
 
+Now onto the more interesting part, the actual writing process.
 
-**write**
-As input we have the current timestep and pointers for height, bathymetry, momentum in x and y direction.
+The ``write()`` function takes pointers to the arrays of height, momentum in the x- and y-direction
+and the bathymetry, as well as the current time step.
 
-With the following arrays we tell NetCdf where how many values of data to write:
+To write data, we used ``nc_put_var1_float`` to write the whole bathymetry on the first time step
+(since it doesn't change) and the other values using ``nc_put_vara_float`` which takes a ``start``
+offset and a ``count`` of how many values will be written. 
+The issue we encountered here was that these functions do not support strided arrays.
+We are aware that functions like ``nc_put_vars_float`` and ``nc_put_varm_float`` allow
+for a stride parameter, however even after intensive research we were not able to implement those correctly.
+That being said we decided on a much simpler but probably (not tested) less performant option:
 
 .. code:: cpp
 
-    t_idx start[] = {m_timeStepCount, 0, 0};
-    t_idx count[] = {1, m_nx, m_ny};
-
-Next pointers for the data get instantiated and filled with values:
-
-.. code:: cpp
-    
     t_real *l_h = new t_real[m_nx * m_ny];
     t_real *l_tH = new t_real[m_nx * m_ny];
     t_real *l_hu = new t_real[m_nx * m_ny];
@@ -136,37 +155,36 @@ Next pointers for the data get instantiated and filled with values:
         }
     }
 
-Hence the bathymetry has to be written only once it is done at time step 0:
+That is, 'copying' the arrays to new ones and removing the stride in the process.
+
+Moving on, it is worth noting that we also implemented a ``timestepCount`` variable,
+serving as an index for the time steps.
+After each time the ``write()`` function is called, this counter is increased by 1.
+On the time axis, we start writing at the the current time index and only for 1 time step (hence the first entry of ``count`` is 1):
 
 .. code:: cpp
 
-    if (m_timeStepCount == 0)
-    {
-        t_real *l_b = new t_real[m_nx * m_ny];
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
-        {
-            for (t_idx l_y = 0; l_y < m_ny; l_y++)
-            {
-                l_b[l_i] = i_b[l_x + l_y * m_stride];
-                l_i++;
-            }
-        }
+    t_idx start[] = {m_timeStepCount, 0, 0};
+    t_idx count[] = {1, m_nx, m_ny};
 
-        m_err = nc_put_var_float(m_ncId,
-                                 m_varBId,
-                                 l_b);
-        checkNcErr(m_err);
-        delete[] l_b;
-    }
+The other values start at 0 along the x- and y-axis. 
+The count specifies how many values will be written, 
+which is the amount of cells since we want to save all values.
 
+Thanks to this implementation, we can call the ``write()`` function even with non-consecutive 
+(however still strictly monotonically increasing) time steps since their index is counted separately 
+and has no relation with the actual time step value. Calling the function every 25 time steps will result in
 
-Next the other values get written and the time increased:
+.. code::
+
+    time = 0, 25, 50, 75, 100, 125 ... 
+
+All that is left to do is to actually write the values like so:
 
 .. code:: cpp
 
-    ...
     m_err = nc_put_vara_float(m_ncId,
-                              m_varHvId,
+                              m_varHId,
                               start,
                               count,
                               l_h);
