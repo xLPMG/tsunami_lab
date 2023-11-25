@@ -19,33 +19,22 @@ void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
     }
 }
 
-tsunami_lab::io::NetCdf::NetCdf(const char *path,
-                                t_idx i_nx,
-                                t_idx i_ny,
-                                t_idx i_stride)
+void tsunami_lab::io::NetCdf::setUpFile(const char *path)
 {
-
-    m_nx = i_nx;
-    m_ny = i_ny;
-    m_stride = i_stride;
-
-    if (path == nullptr)
-        return;
-
     m_err = nc_create(path,       // path
                       NC_CLOBBER, // cmode
                       &m_ncId);   // ncidp
     checkNcErr(m_err);
 
-    t_real *m_x = new t_real[i_nx];
-    t_real *m_y = new t_real[i_ny];
+    t_real *m_x = new t_real[m_nx];
+    t_real *m_y = new t_real[m_ny];
 
     // set x and y
-    for (std::size_t l_ix = 0; l_ix < i_nx; l_ix++)
+    for (std::size_t l_ix = 0; l_ix < m_nx; l_ix++)
     {
         m_x[l_ix] = l_ix;
     }
-    for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
+    for (std::size_t l_iy = 0; l_iy < m_ny; l_iy++)
     {
         m_y[l_iy] = l_iy;
     }
@@ -61,13 +50,13 @@ tsunami_lab::io::NetCdf::NetCdf(const char *path,
 
     m_err = nc_def_dim(m_ncId,     // ncid
                        "x",        // name
-                       i_nx,       // len
+                       m_nx,       // len
                        &m_dimXId); // idp
     checkNcErr(m_err);
 
     m_err = nc_def_dim(m_ncId,     // ncid
                        "y",        // name
-                       i_ny,       // len
+                       m_ny,       // len
                        &m_dimYId); // idp
     checkNcErr(m_err);
 
@@ -182,13 +171,24 @@ tsunami_lab::io::NetCdf::NetCdf(const char *path,
     delete[] m_y;
 }
 
+tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
+                                t_idx i_ny,
+                                t_idx i_stride)
+{
+
+    m_nx = i_nx;
+    m_ny = i_ny;
+    m_stride = i_stride;
+}
+
 tsunami_lab::io::NetCdf::~NetCdf()
 {
     int m_err = nc_close(m_ncId);
     checkNcErr(m_err);
 }
 
-void tsunami_lab::io::NetCdf::write(t_real const *i_h,
+void tsunami_lab::io::NetCdf::write(const char *path,
+                                    t_real const *i_h,
                                     t_real const *i_hu,
                                     t_real const *i_hv,
                                     t_real const *i_b,
@@ -214,9 +214,11 @@ void tsunami_lab::io::NetCdf::write(t_real const *i_h,
         }
     }
 
-    // write bathymetry on first call
+    // set up file and write bathymetry on first call
     if (m_timeStepCount == 0)
     {
+        setUpFile(path);
+
         t_real *l_b = new t_real[m_nx * m_ny];
         for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {

@@ -237,8 +237,7 @@ int main(int i_argc,
     }
   }
   // set up netCdf I/O
-  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf("solutions/solution.nc",
-                                                                  l_nx,
+  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
                                                                   l_ny,
                                                                   l_waveProp->getStride());
 
@@ -341,7 +340,8 @@ int main(int i_argc,
                                   l_file);
       l_file.close();
       l_nOut++;
-      l_netCdf->write(l_waveProp->getHeight(),
+      l_netCdf->write("solutions/solution.nc",
+                      l_waveProp->getHeight(),
                       l_waveProp->getMomentumX(),
                       l_waveProp->getMomentumY(),
                       l_waveProp->getBathymetry(),

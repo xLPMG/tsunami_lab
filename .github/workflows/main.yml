@@ -44,19 +44,19 @@ jobs:
         run: |
           scons mode=debug+san
           ./build/tests
-          ./build/tsunami_lab
+          ./build/tsunami_lab minimalConfig.json
           scons mode=release+san
           ./build/tests
-          ./build/tsunami_lab
+          ./build/tsunami_lab minimalConfig.json
 
       - name: Valgrind
         run: |
           scons mode=debug
           valgrind ./build/tests
-          valgrind ./build/tsunami_lab
+          valgrind ./build/tsunami_lab minimalConfig.json
 
       - name: Release
         run: |
           scons
           ./build/tests
-          ./build/tsunami_lab
+          ./build/tsunami_lab minimalConfig.json

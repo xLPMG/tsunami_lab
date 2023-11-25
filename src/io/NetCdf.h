@@ -54,6 +54,12 @@ private:
      */
     void checkNcErr(t_idx i_err);
 
+    /**
+     * Sets up a netcdf file fr writing
+     *
+     */
+    void setUpFile(const char *path);
+
 public:
     /**
      *  Constructor
@@ -63,8 +69,7 @@ public:
      * @param i_stride stride
      *
      */
-    NetCdf(const char *path,
-           t_idx i_nx,
+    NetCdf(t_idx i_nx,
            t_idx i_ny,
            t_idx i_stride);
 
@@ -84,7 +89,8 @@ public:
      * @param i_t current timestep
      *
      */
-    void write(t_real const *i_h,
+    void write(const char *path,
+               t_real const *i_h,
                t_real const *i_hu,
                t_real const *i_hv,
                t_real const *i_b,

@@ -8,7 +8,7 @@
 #define TSUNAMI_LAB_SETUPS_TSUNAMI_EVENT_2D
 
 #include "Setup.h"
-#include  <cmath> 
+#include <cmath>
 
 namespace tsunami_lab
 {
@@ -24,28 +24,34 @@ namespace tsunami_lab
 class tsunami_lab::setups::TsunamiEvent2d : public Setup
 {
 private:
-    t_real m_delta = 20; 
+  t_real m_delta = 20;
 
-    t_idx m_stride = 0;
+  t_idx m_stride = 0;
 
-    t_real * m_b = nullptr;
+  // bathymetry array pointer
+  t_real *m_b = nullptr;
 
-    tsunami_lab::setups::Setup *m_artificial = nullptr;
+  // displacement array pointer
+  t_real *m_d = nullptr;
+
+  tsunami_lab::setups::Setup *m_artificial = nullptr;
 
 public:
   /**
    * Constructor.
    *
    **/
-  TsunamiEvent2d(t_real * i_b,t_idx i_stride);
+  TsunamiEvent2d(const char *bathymetryPath,
+                 const char *displacementPath,
+                 t_idx i_stride);
 
-   /**
+  /**
    * Gets the water height at a given point.
    *
    * @return height at the given point.
    **/
   t_real getHeight(t_real,
-                    t_real) const;
+                   t_real) const;
 
   /**
    * Gets the momentum in x-direction.
@@ -70,9 +76,6 @@ public:
    **/
   t_real getBathymetry(t_real i_x,
                        t_real i_y) const;
-
-
-                    
 };
 
 #endif
