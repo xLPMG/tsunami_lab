@@ -303,10 +303,10 @@ int main(int i_argc,
     }
     else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
     {
-      //TODO
-      // std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
-      // tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
-      //                                           "bathymetry");
+      // TODO
+      //  std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
+      //  tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
+      //                                            "bathymetry");
 
       // for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
       // {
@@ -378,13 +378,16 @@ int main(int i_argc,
                                   l_file);
       l_file.close();
       l_nOut++;
+    }
+    if (l_timeStep % 10 == 0)
+    {
       l_netCdf->write("solutions/solution.nc",
                       l_waveProp->getStride(),
                       l_waveProp->getHeight(),
                       l_waveProp->getMomentumX(),
                       l_waveProp->getMomentumY(),
                       l_waveProp->getBathymetry(),
-                      l_timeStep);
+                      l_simTime);
     }
 
     l_waveProp->setGhostOutflow();
