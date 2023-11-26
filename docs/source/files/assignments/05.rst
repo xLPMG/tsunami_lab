@@ -208,8 +208,6 @@ Following equations were given:
 
 **(File: ArtificialTsunami2d.cpp)**
 
-In order to accomplish the computational domain we substracted 500 of either x and y in the computeD function, which looks like:
-
 **computeD**
 
 .. code:: cpp
@@ -218,13 +216,18 @@ In order to accomplish the computational domain we substracted 500 of either x a
     tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeD(t_real i_x, 
                                                                        t_real i_y) const
     {   
-        i_x-=500;
-        i_y-=500;
-
-        return( 5 * computeF(i_x) * computeG(i_y));
+        if (i_x >= -500 && i_x <= 500 && i_y >= -500 && i_y <= 500)
+        {
+            return (5 * computeF(i_x) * computeG(i_y));
+        }
+        else
+        {
+            return 0;
+        }
     }
 
-It calls both the computeF and computeG function:
+First we check if the i_x and i_y are in the area for computing the displacement.
+Afterwards it calls both the computeF and computeG function:
 
 **computeF**
 
@@ -237,14 +240,16 @@ It calls both the computeF and computeG function:
 
 **computeG**
 
-.. code::
+.. code:: cpp
 
     tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeG(t_real i_y) const
     {
         return (-((i_y / 500) * (i_y / 500)) + 1);
     }
 
+For the bathymetry we return ``-100 + computeD(i_x, i_y)``.
 
+    
 Task 5.2.2 - NetCDF read
 -----------------------------------------
 
@@ -288,8 +293,167 @@ Lastly, we need to add stride into the array:
 
 Task 5.2.3 -TsunamiEvent2d
 -----------------------------------------
-TODO
+Following setup is given:
 
-Task 5.1.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
+.. math::
+    \begin{split}\begin{split}
+    h  &= \begin{cases}
+            \max( -b_\text{in}, \delta), &\text{if } b_\text{in} < 0 \\
+            0, &\text{else}
+          \end{cases}\\
+    hu &= 0\\
+    hv &= 0\\
+    b  &= \begin{cases}
+            \min(b_\text{in}, -\delta) + d, & \text{ if } b_\text{in} < 0\\
+            \max(b_\text{in}, \delta) + d, & \text{ else}.
+          \end{cases}
+    \end{split}\end{split}
+
+**TsunamiEvent2d**
+
+Input are paths for bathymetry and displacement, netCdf instance and the stride value.
+
+We first read the bathymetry and displacements from the files:
+
+.. code:: cpp
+    
+    i_netCdf->read(i_bathymetryPath, "z", m_nxB, m_nyB, &m_xDataB, &m_yDataB, &m_b);
+    i_netCdf->read(i_displacementPath, "z", m_nxD, m_nyD, &m_xDataD, &m_yDataD, &m_d);
+
+The computational domain is also negative, therefore we check where the last negative value in the array is. 
+This shall lead to a more efficient computation. We do this for bathymetry and displacement.
+
+.. code:: cpp
+
+     if (m_xDataB[0] < 0 && m_xDataB[m_nxB-1] > 0)
+    {
+        for (t_idx l_ix = 1; l_ix < m_nxB; l_ix++)
+        {
+            if (m_xDataB[l_ix - 1] < 0 && m_xDataB[l_ix] >= 0)
+            {
+                m_lastNegativeIndexBX = l_ix - 1;
+                break;
+            }
+        }
+    }
+    if (m_yDataB[0] < 0 && m_yDataB[m_nyB-1] > 0)
+    {
+        for (t_idx l_iy = 1; l_iy < m_nyB; l_iy++)
+        {
+            if (m_yDataB[l_iy - 1] < 0 && m_yDataB[l_iy] >= 0)
+            {
+                m_lastNegativeIndexBY = l_iy - 1;
+                break;
+            }
+        }
+    }
+    ...
+
+
+**getBathymetry and getDisplacement**
+
+We check if the point is within the file definde domain. 
+
+.. code:: cpp
+
+    if(i_x < m_xDataD[0] || i_x > m_xDataD[m_nxD-1] || i_y < m_yDataD[0] || i_y > m_yDataD[m_nyD-1]) return 0;
+
+There are two loops in which we look for the index of the closest values to our point.
+
+.. code:: cpp
+
+    t_idx l_x = 0;
+    t_idx l_ix = i_x >= 0 ? m_lastNegativeIndexDX : 1;
+    for (; l_ix < m_nxD; l_ix++)
+    {
+        
+        if (m_xDataD[l_ix] > i_x)
+        {
+            if (abs(m_xDataD[l_ix] - i_x) > abs(m_xDataD[l_ix - 1] - i_x))
+            {
+                l_x = l_ix - 1;
+            }
+            else
+            {
+                l_x = l_ix;
+            }
+            break;
+        }
+    }
+
+    t_idx l_y = 0;
+    t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexDY : 1;
+    for (; l_iy < m_nyD; l_iy++)
+    {
+        if (m_yDataD[l_iy] > i_y)
+        {
+            if (abs(m_yDataD[l_iy] - i_y) > abs(m_yDataD[l_iy - 1] - i_y))
+            {
+                l_y = l_iy - 1;
+            }
+            else
+            {
+                l_y = l_iy;
+            }
+            break;
+        }
+    }
+    return m_d[l_x + m_nxD * l_y];
+
+|
+
+For the following functions we implemented the equations from above:
+
+**getHeight**
+
+.. code:: cpp
+
+    t_real l_bath = getBathymetryFromArray(i_x, i_y);
+    if (l_bath < 0)
+    {
+        return (std::max(-l_bath, m_delta));
+    }
+    else
+    {
+        return 0;
+    }
+
+**getBathymetry**
+
+.. code:: cpp
+
+    t_real l_bath = getBathymetryFromArray(i_x, i_y);
+    t_real l_displ = getDisplacementFromArray(i_x, i_y);
+    if (l_bath < 0)
+    {
+        return std::min(l_bath, -m_delta) + l_displ;
+    }
+    else
+    {
+        return std::min(l_bath, m_delta) + l_displ;
+    }
+
+
+Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
 --------------------------------------------------------------------
-TODO
+
+**Visualization**
+
+We can observe, that both setups behave equally.
+
+`ArtificialTsunami2d`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_5-2-4_artificial2D.mp4" type="video/mp4">
+    </video> 
+
+`TsunamiEvent2D`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_5-2-4_tsunami2D.mp4" type="video/mp4">
+    </video> 
+

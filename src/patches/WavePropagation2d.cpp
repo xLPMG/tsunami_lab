@@ -1,13 +1,12 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach & Richard Hofmann
  *
  * @section DESCRIPTION
- * One-dimensional wave propagation patch.
+ * two-dimensional wave propagation patch.
  **/
 #include "WavePropagation2d.h"
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
-#include <string>
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
@@ -278,4 +277,17 @@ void tsunami_lab::patches::WavePropagation2d::handleReflections(t_real *i_h,
     o_bL = m_b[i_ceR];
     o_huL = -i_hu[i_ceR];
   }
+}
+
+void tsunami_lab::patches::WavePropagation2d::adjustWaterHeight(){
+   
+   for (t_idx l_ix= 1; l_ix < m_nCellsX + 1; l_ix++)
+    {
+         for (t_idx l_iy = 1; l_iy < m_nCellsY + 1; l_iy++)
+         {
+                m_h[m_step][l_ix + l_iy * getStride()] -= m_b[l_ix + l_iy * getStride()];
+                if (m_h[m_step][l_ix + l_iy * getStride()] < 0)
+                    m_h[m_step][l_ix + l_iy * getStride()] = 0;
+         }
+    }
 }

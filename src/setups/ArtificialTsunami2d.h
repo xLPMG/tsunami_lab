@@ -35,6 +35,7 @@ public:
 
   /**
    * compute the displacement
+   * 
    * @param i_x postion in x direction
    * @param i_y postion in y direction
    * @return displacement
@@ -44,15 +45,15 @@ public:
 
   /**
    * compute equation for f
+   * 
    * @param i_x postion in x direction
-   * @param i_y postion in y direction
    * @return value for f
    */
   t_real computeF(t_real i_x) const;
 
   /**
    * compute equation for g
-   * @param i_x postion in x direction
+   * 
    * @param i_y postion in y direction
    * @return value for g
    */
@@ -65,14 +66,12 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return water height at the given point.
    **/
-  t_real getHeight(t_real,
-                   t_real) const;
+  t_real getHeight(t_real i_x,
+                   t_real i_y) const;
 
   /**
    * Gets the momentum in x-direction.
    *
-   * @param i_x x-coordinate of the queried point.
-   * @param i_y y-coordinate of the queried point.
    * @return momentum in x-direction.
    **/
   t_real getMomentumX(t_real,
@@ -81,8 +80,6 @@ public:
   /**
    * Gets the momentum in y-direction.
    *
-   * @param i_x x-coordinate of the queried point.
-   * @param i_y y-coordinate of the queried point.
    * @return momentum in y-direction.
    **/
   t_real getMomentumY(t_real,
@@ -95,8 +92,8 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return bathymetry.
    **/
-  t_real getBathymetry(t_real,
-                       t_real) const;
+  t_real getBathymetry(t_real i_x,
+                       t_real i_y) const;
 };
 
 #endif

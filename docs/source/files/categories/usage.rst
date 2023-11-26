@@ -85,6 +85,14 @@ As of now, these are:
      - frequency at which stations will capture data
      - float
      - seconds
+   * - offsetX
+     - domain offset from 0 in x direction
+     - float
+     - metres
+   * - offsetY
+     - domain offset from 0 in y direction
+     - float
+     - metres
 
 as well as another two with more complicated parameters:
 

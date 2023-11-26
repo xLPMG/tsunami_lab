@@ -64,7 +64,7 @@ private:
   * @param o_hR water height on the right side
   * @param o_huL water momentum on the left side
   * @param o_huR water momentum on the right side
-  * @param o_bl bathymetry on the left side 
+  * @param o_bL bathymetry on the left side 
   * @param o_bR bathymetry on the right side
   */
   void handleReflections(t_real *i_h,
@@ -222,18 +222,8 @@ public:
    * Corrects the water height based on the bathymetry
    *
    **/
-  void adjustWaterHeight()
-  {
-    for (t_idx ix = 1; ix < m_nCellsX + 1; ix++)
-    {
-         for (t_idx iy = 1; iy < m_nCellsY + 1; iy++)
-         {
-                m_h[m_step][ix + iy * getStride()] -= m_b[ix + iy * getStride()];
-                if (m_h[m_step][ix + iy * getStride()] < 0)
-                    m_h[m_step][ix + iy * getStride()] = 0;
-         }
-    }
-  }
+  void adjustWaterHeight();
+  
 };
 
 #endif

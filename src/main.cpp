@@ -351,7 +351,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    // l_dt *= 0.5;
+    l_dt *= 0.5;
   }
 
   // derive scaling for a time step

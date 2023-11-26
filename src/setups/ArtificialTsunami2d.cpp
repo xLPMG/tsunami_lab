@@ -52,6 +52,5 @@ tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::getMomentumY(t_rea
 
 tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::getBathymetry(t_real i_x, t_real i_y) const
 {
-    t_real l_bathOriginal = -100;
-    return l_bathOriginal + computeD(i_x, i_y);
+    return -100 + computeD(i_x, i_y);
 }

@@ -25,7 +25,7 @@ namespace tsunami_lab
 class tsunami_lab::setups::TsunamiEvent2d : public Setup
 {
 private:
-  // value for data
+  // value for delta
   t_real m_delta = 20;
 
   // stride size
@@ -39,6 +39,7 @@ private:
   t_real *m_yDataB = nullptr;
   // bathymetry
   t_real *m_b = nullptr;
+  //
   t_idx m_lastNegativeIndexBX = 0;
   t_idx m_lastNegativeIndexBY = 0;
 
@@ -49,8 +50,9 @@ private:
   t_real *m_xDataD = nullptr;
   // displacement data x
   t_real *m_yDataD = nullptr;
-  // displacment
+  // displacement
   t_real *m_d = nullptr;
+  //
   t_idx m_lastNegativeIndexDX = 0;
   t_idx m_lastNegativeIndexDY = 0;
 

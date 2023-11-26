@@ -23,7 +23,7 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
 
     // find breaking point between negative and positive numbers (if it exists)
     // this is so for positive coordinates, we dont need to traverse the negative part of the array
-    if (m_xDataB[0] < 0 && m_xDataB[m_nxB] > 0)
+    if (m_xDataB[0] < 0 && m_xDataB[m_nxB-1] > 0)
     {
         for (t_idx l_ix = 1; l_ix < m_nxB; l_ix++)
         {
@@ -34,7 +34,7 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
             }
         }
     }
-    if (m_yDataB[0] < 0 && m_yDataB[m_nyB] > 0)
+    if (m_yDataB[0] < 0 && m_yDataB[m_nyB-1] > 0)
     {
         for (t_idx l_iy = 1; l_iy < m_nyB; l_iy++)
         {
@@ -45,7 +45,7 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
             }
         }
     }
-    if (m_xDataD[0] < 0 && m_xDataD[m_nxD] > 0)
+    if (m_xDataD[0] < 0 && m_xDataD[m_nxD-1] > 0)
     {
         for (t_idx l_ix = 1; l_ix < m_nxD; l_ix++)
         {
@@ -56,7 +56,7 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
             }
         }
     }
-    if (m_yDataD[0] < 0 && m_yDataD[m_nyD] > 0)
+    if (m_yDataD[0] < 0 && m_yDataD[m_nyD-1] > 0)
     {
         for (t_idx l_iy = 1; l_iy < m_nyD; l_iy++)
         {
@@ -72,10 +72,11 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(t_real i_x,
                                                                                 t_real i_y) const
 {
-    if(i_x < m_xDataB[0] || i_x > m_xDataB[m_nxB] || i_y < m_yDataB[0] || i_y > m_yDataB[m_nyB]) return 0;
+    if(i_x < m_xDataB[0] || i_x > m_xDataB[m_nxB-1] || i_y < m_yDataB[0] || i_y > m_yDataB[m_nyB-1]) return 0;
 
     t_idx l_x = 0;
-    t_idx l_ix = 1;
+    t_idx l_ix = i_x >= 0 ? m_lastNegativeIndexBX : 1;
+
     for (; l_ix < m_nxB; l_ix++)
     {
         if (m_xDataB[l_ix] > i_x)
@@ -93,12 +94,12 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
     }
 
     t_idx l_y = 0;
-    t_idx l_iy = 1;
+    t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexBY : 1;
     for (; l_iy < m_nyB; l_iy++)
     {
         if (m_yDataB[l_iy] > i_y)
         {
-            if (abs(m_yDataB[l_iy] - i_x) > abs(m_yDataB[l_iy - 1] - i_y))
+            if (abs(m_yDataB[l_iy] - i_y) > abs(m_yDataB[l_iy - 1] - i_y))
             {
                 l_y = l_iy - 1;
             }
@@ -116,12 +117,14 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getDisplacementFromArray(t_real i_x,
                                                                                   t_real i_y) const
 {
-    if(i_x < m_xDataD[0] || i_x > m_xDataD[m_nxD] || i_y < m_yDataD[0] || i_y > m_yDataD[m_nyD]) return 0;
+    if(i_x < m_xDataD[0] || i_x > m_xDataD[m_nxD-1] || i_y < m_yDataD[0] || i_y > m_yDataD[m_nyD-1]) return 0;
 
     t_idx l_x = 0;
-    t_idx l_ix = 1;
+    t_idx l_ix = i_x >= 0 ? m_lastNegativeIndexDX : 1;
+
     for (; l_ix < m_nxD; l_ix++)
     {
+        
         if (m_xDataD[l_ix] > i_x)
         {
             if (abs(m_xDataD[l_ix] - i_x) > abs(m_xDataD[l_ix - 1] - i_x))
@@ -137,12 +140,12 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getDisplacementFromArra
     }
 
     t_idx l_y = 0;
-    t_idx l_iy = 1;
+    t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexDY : 1;
     for (; l_iy < m_nyD; l_iy++)
     {
         if (m_yDataD[l_iy] > i_y)
         {
-            if (abs(m_yDataD[l_iy] - i_x) > abs(m_yDataD[l_iy - 1] - i_y))
+            if (abs(m_yDataD[l_iy] - i_y) > abs(m_yDataD[l_iy - 1] - i_y))
             {
                 l_y = l_iy - 1;
             }
