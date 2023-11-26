@@ -328,6 +328,7 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
             l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
         }
     }
+    delete[] l_data;
 
     // set other outputs
     o_nx = l_nx;
