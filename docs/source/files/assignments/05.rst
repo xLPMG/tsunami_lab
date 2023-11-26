@@ -55,31 +55,28 @@ As instructed, we created a ``NetCdf`` class within the ``tsunami_lab::io`` name
 Its constructor takes the file path, amount of cells in x- and y-direction and the stride as its input.
 This is because those parameters will not change between calls of the ``write()`` function within the same instance.
 
-In the constructor, we start off by creating the file and filling arrays of x- and y-values:
+In the ``setupFile()`` function, we start off by creating the file and filling arrays of x- and y-values:
 
 **(File: NetCdf.cpp)**
 
 .. code:: cpp
 
-    if (path == nullptr)
-        return;
-
     m_err = nc_create(path,       // path
                       NC_CLOBBER, // cmode
                       &m_ncId);   // ncidp
     checkNcErr(m_err);
+    m_outputFileOpened = true;
 
-    t_real *m_x = new t_real[i_nx];
-    t_real *m_y = new t_real[i_ny];
+    t_real *l_x = new t_real[m_nx];
+    t_real *l_y = new t_real[m_ny];
 
-    // set x and y
-    for (std::size_t l_ix = 0; l_ix < i_nx; l_ix++)
+    for (t_idx l_ix = 0; l_ix < m_nx; l_ix++)
     {
-        m_x[l_ix] = l_ix;
+        l_x[l_ix] = (l_ix + 0.5) * (m_simulationSizeX / m_nx) + m_offsetX;
     }
-    for (std::size_t l_iy = 0; l_iy < i_ny; l_iy++)
+    for (t_idx l_iy = 0; l_iy < m_ny; l_iy++)
     {
-        m_y[l_iy] = l_iy;
+        l_y[l_iy] = (l_iy + 0.5) * (m_simulationSizeY / m_ny) + m_offsetY;
     }
 
 We then define the dimensions in following order:
@@ -125,8 +122,11 @@ Lastly, we add attributes such as the units (not shown) and then write the x and
 
 Now onto the more interesting part, the actual writing process.
 
-The ``write()`` function takes pointers to the arrays of height, momentum in the x- and y-direction
-and the bathymetry, as well as the current time step.
+The ``write()`` function takes the output file path, the stride, pointers to the arrays of height, 
+momentum in the x- and y-direction and the bathymetry, as well as the current time step.
+
+If one of them is a ``nullptr``, we just assume the values are zero and write them for completeness.
+
 
 To write data, we used ``nc_put_var1_float`` to write the whole bathymetry on the first time step
 (since it doesn't change) and the other values using ``nc_put_vara_float`` which takes a ``start``
@@ -142,15 +142,17 @@ That being said we decided on a much simpler but probably (not tested) less perf
     t_real *l_tH = new t_real[m_nx * m_ny];
     t_real *l_hu = new t_real[m_nx * m_ny];
     t_real *l_hv = new t_real[m_nx * m_ny];
+
     int l_i = 0;
     for (t_idx l_x = 0; l_x < m_nx; l_x++)
     {
         for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_h[l_i] = i_h[l_x + l_y * m_stride];
-            l_tH[l_i] = i_h[l_x + l_y * m_stride] + i_b[l_x + l_y * m_stride];
-            l_hu[l_i] = i_hu[l_x + l_y * m_stride];
-            l_hv[l_i] = i_hv[l_x + l_y * m_stride];
+            l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) 
+                        + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
             l_i++;
         }
     }
@@ -173,11 +175,7 @@ which is the amount of cells since we want to save all values.
 
 Thanks to this implementation, we can call the ``write()`` function even with non-consecutive 
 (however still strictly monotonically increasing) time steps since their index is counted separately 
-and has no relation with the actual time step value. Calling the function every 25 time steps will result in
-
-.. code::
-
-    time = 0, 25, 50, 75, 100, 125 ... 
+and has no relation with the actual time step value.
 
 All that is left to do is to actually write the values like so:
 
@@ -190,13 +188,11 @@ All that is left to do is to actually write the values like so:
                               l_h);
     checkNcErr(m_err);
 
-    m_timeStepCount++;
-
-nc_put_vara_float takes the nc and variable id, the start and count values and the data pointer as input.
+``nc_put_vara_float`` takes the nc and variable id, the start and count values and the data pointer as input.
 
 
-Task 5.2 NetCDF Input
-==========================
+Task 5.2 - NetCdf Input
+==============================
 
 Task 5.2.1 - ArtificialTsunami2d
 -----------------------------------------
@@ -251,7 +247,44 @@ It calls both the computeF and computeG function:
 
 Task 5.2.2 - NetCDF read
 -----------------------------------------
-TODO
+
+The read function first checks for x and y dimensions and gets the respective IDs:
+
+.. code:: cpp
+
+    // get dimension ids
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead));
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead));
+    // read dimension size
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &l_nx));
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &l_ny));
+
+We then create the data arrays for the x, y and z values and fill them with the file data:
+
+.. code:: cpp
+
+    t_real *l_xData = new t_real[l_nx];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varXIdRead, l_xData));
+
+    t_real *l_yData = new t_real[l_ny];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varYIdRead, l_yData));
+
+    t_real *l_data = new t_real[l_nx * l_ny];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data));
+
+Lastly, we need to add stride into the array:
+
+.. code:: cpp
+
+    t_real *l_stridedArray = new t_real[l_nx * l_ny];
+    int l_i = 0;
+    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
+    {
+        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
+        {
+            l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
+        }
+    }
 
 Task 5.2.3 -TsunamiEvent2d
 -----------------------------------------
