@@ -219,9 +219,9 @@ void tsunami_lab::io::NetCdf::write(const char *path,
         for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
             l_h[l_i] = i_h[l_x + l_y * i_stride];
-            l_tH[l_i] = i_h[l_x + l_y * i_stride] + i_b[l_x + l_y * i_stride];
-            l_hu[l_i] = i_hu[l_x + l_y * i_stride];
-            l_hv[l_i] = i_hv[l_x + l_y * i_stride];
+            l_tH[l_i] = i_h[l_x + l_y * i_stride] + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
             l_i++;
         }
     }

@@ -363,7 +363,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-
+  
   std::cout << "entering time loop" << std::endl;
 
   // iterate over time
