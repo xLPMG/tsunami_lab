@@ -26,16 +26,15 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
                       &m_ncId);   // ncidp
     checkNcErr(m_err);
 
-    t_real *m_x = new t_real[m_nx];
-    t_real *m_y = new t_real[m_ny];
-    // set x and y
-    for (std::size_t l_ix = 0; l_ix < m_nx; l_ix++)
+    t_real *l_x = new t_real[m_nx];
+    t_real *l_y = new t_real[m_ny];
+    for (t_idx l_ix = 0; l_ix < m_nx; l_ix++)
     {
-        m_x[l_ix] = l_ix;
+        l_x[l_ix] = (l_ix + 0.5) * (m_simulationSizeX / m_nx) + m_offsetX;
     }
-    for (std::size_t l_iy = 0; l_iy < m_ny; l_iy++)
+    for (t_idx l_iy = 0; l_iy < m_ny; l_iy++)
     {
-        m_y[l_iy] = l_iy;
+        l_y[l_iy] = (l_iy + 0.5) * (m_simulationSizeY / m_ny) + m_offsetY;
     }
 
     // define dimensions
@@ -159,23 +158,30 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
     // write data
     m_err = nc_put_var_float(m_ncId,   // ncid
                              m_varXId, // varid
-                             &m_x[0]); // op
+                             &l_x[0]); // op
     checkNcErr(m_err);
     m_err = nc_put_var_float(m_ncId,   // ncid
                              m_varYId, // varid
-                             &m_y[0]); // op
+                             &l_y[0]); // op
     checkNcErr(m_err);
 
-    delete[] m_x;
-    delete[] m_y;
+    delete[] l_x;
+    delete[] l_y;
 }
 
 tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
-                                t_idx i_ny)
+                                t_idx i_ny,
+                                t_real i_simulationSizeX,
+                                t_real i_simulationSizeY,
+                                t_real i_offsetX,
+                                t_real i_offsetY)
 {
-
     m_nx = i_nx;
     m_ny = i_ny;
+    m_simulationSizeX = i_simulationSizeX;
+    m_simulationSizeY = i_simulationSizeY;
+    m_offsetX = i_offsetX;
+    m_offsetY = i_offsetY;
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -276,15 +282,20 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     delete[] l_hv;
 }
 
-tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
-                                                   const char *i_var)
+void tsunami_lab::io::NetCdf::read(const char *i_file,
+                                   const char *i_var,
+                                   t_idx &o_nx,
+                                   t_idx &o_ny,
+                                   t_real **o_xData,
+                                   t_real **o_yData,
+                                   t_real **o_data)
+
 {
     int l_ncIdRead = 0, l_varXIdRead = 0, l_varYIdRead = 0, l_varDataIdRead = 0;
     t_idx l_nx = 0, l_ny = 0;
 
     m_err = nc_open(i_file, NC_NOWRITE, &l_ncIdRead);
     checkNcErr(m_err);
-
     // get dimension ids
     m_err = nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead);
     checkNcErr(m_err);
@@ -299,18 +310,22 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
     m_err = nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead);
     checkNcErr(m_err);
     // read data
+    t_real *l_xData = new t_real[l_nx];
+    m_err = nc_get_var_float(l_ncIdRead, l_varXIdRead, l_xData);
+    checkNcErr(m_err);
+
+    t_real *l_yData = new t_real[l_ny];
+    m_err = nc_get_var_float(l_ncIdRead, l_varYIdRead, l_yData);
+    checkNcErr(m_err);
+
     t_real *l_data = new t_real[l_nx * l_ny];
     m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data);
     checkNcErr(m_err);
 
     m_err = nc_close(l_ncIdRead);
     checkNcErr(m_err);
-
-    // choose smaller value to not reach out of bounds situations
-    l_nx = std::min(l_nx, m_nx);
-    l_ny = std::min(l_ny, m_ny);
     // convert to strided array
-    t_real *l_stridedArray = new t_real[l_nx * l_ny]{0};
+    t_real *l_stridedArray = new t_real[l_nx * l_ny];
     int l_i = 0;
     for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
     {
@@ -319,5 +334,11 @@ tsunami_lab::t_real *tsunami_lab::io::NetCdf::read(const char *i_file,
             l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
         }
     }
-    return l_stridedArray;
+
+    // set other outputs
+    o_nx = l_nx;
+    o_ny = l_ny;
+    *o_xData = l_xData;
+    *o_yData = l_yData;
+    *o_data = l_stridedArray;
 }

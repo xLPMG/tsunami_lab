@@ -5,9 +5,11 @@
  * Entry-point for simulations.
  **/
 
-#include <nlohmann/json.hpp>
+// wave prop patches
 #include "patches/WavePropagation1d.h"
 #include "patches/WavePropagation2d.h"
+
+// setups
 #include "setups/DamBreak1d.h"
 #include "setups/CircularDamBreak2d.h"
 #include "setups/RareRare1d.h"
@@ -17,10 +19,15 @@
 #include "setups/GeneralDiscontinuity1d.h"
 #include "setups/TsunamiEvent1d.h"
 #include "setups/TsunamiEvent2d.h"
+#include "setups/ArtificialTsunami2d.h"
+
+// io
 #include "io/Csv.h"
 #include "io/BathymetryLoader.h"
 #include "io/Station.h"
 #include "io/NetCdf.h"
+
+// c libraries
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
@@ -28,6 +35,8 @@
 #include <limits>
 #include <filesystem>
 
+// external libraries
+#include <nlohmann/json.hpp>
 #include <netcdf.h>
 
 using json = nlohmann::json;
@@ -54,6 +63,9 @@ int main(int i_argc,
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 10.0;
   tsunami_lab::t_real l_simulationSizeY = 10.0;
+  // set offset in metres
+  tsunami_lab::t_real l_offsetX = 0;
+  tsunami_lab::t_real l_offsetY = 0;
   // set cell size
   tsunami_lab::t_real l_dx = 1;
   tsunami_lab::t_real l_dy = 1;
@@ -92,6 +104,8 @@ int main(int i_argc,
   l_ny = l_configData.value("ny", 1);
   l_simulationSizeX = l_configData.value("simulationSizeX", 1);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
+  l_offsetX = l_configData.value("offsetX", 0);
+  l_offsetY = l_configData.value("offsetY", 0);
   l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
   l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
   l_hasBoundaryT = l_configData.value("hasBoundaryT", false);
@@ -144,9 +158,21 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "TSUNAMIEVENT2D")
   {
+
+    tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(l_nx,
+                                                                        l_ny,
+                                                                        l_simulationSizeX,
+                                                                        l_simulationSizeY,
+                                                                        l_offsetX,
+                                                                        l_offsetY);
     l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/artificialtsunami_bathymetry_1000.nc",
                                                       "resources/artificialtsunami_displ_1000.nc",
+                                                      l_netCdfTE2D,
                                                       l_nx);
+  }
+  else if (l_setupChoice == "ARTIFICIAL2D")
+  {
+    l_setup = new tsunami_lab::setups::ArtificialTsunami2d();
   }
   else
   {
@@ -207,11 +233,11 @@ int main(int i_argc,
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
-    tsunami_lab::t_real l_y = l_cy * l_dy;
+    tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetX;
 
     for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
     {
-      tsunami_lab::t_real l_x = l_cx * l_dx;
+      tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetY;
 
       // get initial values of the setup
       tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
@@ -245,7 +271,11 @@ int main(int i_argc,
   }
   // set up netCdf I/O
   tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                                                  l_ny);
+                                                                  l_ny,
+                                                                  l_simulationSizeX,
+                                                                  l_simulationSizeY,
+                                                                  l_offsetX,
+                                                                  l_offsetY);
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -273,23 +303,21 @@ int main(int i_argc,
     }
     else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
     {
-      std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
-      tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
-                                                "bathymetry");
+      //TODO
+      // std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
+      // tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
+      //                                           "bathymetry");
 
-      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
-      {
-        tsunami_lab::t_real l_y = l_cy * l_dy;
-        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
-        {
-          tsunami_lab::t_real l_x = l_cx * l_dx;
-
-          l_waveProp->setBathymetry(l_cx,
-                                    l_cy,
-                                    l_b[tsunami_lab::t_idx(l_x + l_nx * l_y)]);
-        }
-      }
-      std::cout << "Done loading bathymetry." << std::endl;
+      // for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+      // {
+      //   for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      //   {
+      //     l_waveProp->setBathymetry(l_cx,
+      //                               l_cy,
+      //                               l_b[l_cx + l_nx * l_cy]);
+      //   }
+      // }
+      // std::cout << "Done loading bathymetry." << std::endl;
     }
     else
     {
@@ -310,7 +338,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    l_dt *= 0.3;
+    // l_dt *= 0.3;
   }
 
   // derive scaling for a time step

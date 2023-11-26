@@ -25,6 +25,10 @@ class tsunami_lab::io::NetCdf
 private:
     t_idx m_nx = 0;
     t_idx m_ny = 0;
+    t_real m_simulationSizeX = 0;
+    t_real m_simulationSizeY = 0;
+    t_real m_offsetX = 0;
+    t_real m_offsetY = 0;
     int m_ncId = 0;
     // error
     int m_err = 0;
@@ -64,10 +68,15 @@ public:
      *  Constructor
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
-     *
+     * @param i_offsetX offset in x-direction
+     * @param i_offsetY offset in y-direction
      */
     NetCdf(t_idx i_nx,
-           t_idx i_ny);
+           t_idx i_ny,
+           t_real i_simulationSizeX,
+           t_real i_simulationSizeY,
+           t_real i_offsetX,
+           t_real i_offsetY);
 
     /**
      * Destructor
@@ -100,7 +109,12 @@ public:
      *
      * @param l_file name of the file to read from
      */
-    t_real *read(const char *i_file,
-                 const char *i_var);
+    void read(const char *i_file,
+              const char *i_var,
+              t_idx &o_nx,
+              t_idx &o_ny,
+              t_real **o_xData,
+              t_real **o_yData,
+              t_real **o_data);
 };
 #endif
