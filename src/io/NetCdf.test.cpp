@@ -4,7 +4,6 @@
 #define private public
 #include "NetCdf.h"
 #undef public
-#include <iostream>
 
 TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
 {

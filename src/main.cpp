@@ -130,9 +130,6 @@ int main(int i_argc,
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
 
-  l_dx = l_simulationSizeX / l_nx;
-  l_dy = l_simulationSizeY / l_ny;
-
   // construct setup
   /**
    * note: switch statement was not feasible because the string from the json
@@ -200,6 +197,9 @@ int main(int i_argc,
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  l_dx = l_simulationSizeX / l_nx;
+  l_dy = l_simulationSizeY / l_ny;
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
