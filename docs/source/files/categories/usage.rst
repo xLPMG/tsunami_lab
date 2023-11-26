@@ -138,6 +138,8 @@ the bathymetry will be set to 0. A valid file may look like this:
 * "SUBCRITICAL1D"
 * "SUPERCRITICAL1D"
 * "TSUNAMIEVENT1D"
+* "TSUNAMIEVENT2D"
+* "ARTIFICIAL"
 
 .. note:: 
     In order to use the one-dimensional setups **ny** and **simulationSizeY** has to be set to 1 in the config.json.
