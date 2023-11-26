@@ -25,6 +25,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
                       NC_CLOBBER, // cmode
                       &m_ncId);   // ncidp
     checkNcErr(m_err);
+    m_outputFileOpened = true;
 
     t_real *l_x = new t_real[m_nx];
     t_real *l_y = new t_real[m_ny];
@@ -193,8 +194,8 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
 
 tsunami_lab::io::NetCdf::~NetCdf()
 {
-    int m_err = nc_close(m_ncId);
-    checkNcErr(m_err);
+    if(m_outputFileOpened) checkNcErr(nc_close(m_ncId));
+    m_outputFileOpened = false;
 }
 
 void tsunami_lab::io::NetCdf::write(const char *path,
@@ -218,13 +219,14 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     {
         for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_h[l_i] = i_h[l_x + l_y * i_stride];
-            l_tH[l_i] = i_h[l_x + l_y * i_stride] + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
             l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
             l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
             l_i++;
         }
     }
+
     // set up file and write bathymetry on first call
     if (m_timeStepCount == 0)
     {
@@ -236,9 +238,10 @@ void tsunami_lab::io::NetCdf::write(const char *path,
         {
             for (t_idx l_y = 0; l_y < m_ny; l_y++)
             {
-                l_b[l_i++] = i_b[l_x + l_y * i_stride];
+                l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
             }
         }
+
         // we did not use m_err in this function in hopes of better performance
         checkNcErr(nc_put_var_float(m_ncId,
                                     m_varBId,

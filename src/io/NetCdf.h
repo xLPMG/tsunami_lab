@@ -51,6 +51,9 @@ private:
     // index for timesteps
     t_idx m_timeStepCount = 0;
 
+    //tracks if file was opened for writing
+    bool m_outputFileOpened = false;
+
     /**
      * checks for error in Cdf file
      * @param i_err error
