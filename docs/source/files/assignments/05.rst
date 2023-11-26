@@ -1,0 +1,459 @@
+5. Large Data Input and Output
+*************************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 5.1 - NetCdf Output
+=========================
+
+Task 5.1.1 - Installing and linking NetCdf
+-------------------------------------------
+
+Since both authors use MacOS, we simply installed ``NetCdf`` using Homebrew:
+
+.. code:: bash
+
+    brew install netcdf
+
+We then made following changes to the ``SConstruct`` file:
+
+.. code:: python
+
+    conf = Configure(env)
+    if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
+        print ('Did not find the netcdf library, exiting!')
+        Exit(1)
+    env = conf.Finish()
+
+This tells scons to check if the ``netcdf`` library is installed on the system.
+If it is, we can proceed.
+
+At the end of our ``SConstruct`` file, we add the library to each executable:
+
+.. code:: python
+
+    env.Program( target = 'build/tsunami_lab',
+             source = env.sources + env.standalone,
+             LIBS='netcdf', LIBPATH='.' )
+
+    env.Program( target = 'build/tests',
+             source = env.sources + env.tests,
+             LIBS='netcdf', LIBPATH='.' )
+
+    env.Program( target = 'build/sanitychecks',
+             source = env.sources + env.sanitychecks,
+             LIBS='netcdf', LIBPATH='.' )
+
+We chose this implementation as it automatically works on most systems (at least Ubuntu, Windows and OSX) 
+as long as the netcdf library was correctly installed.
+See :ref:`setup` for download links.
+
+Task 5.1.2 - Writing netCDF files
+------------------------------------
+
+As instructed, we created a ``NetCdf`` class within the ``tsunami_lab::io`` namespace.
+Its constructor takes the file path, amount of cells in x- and y-direction and the stride as its input.
+This is because those parameters will not change between calls of the ``write()`` function within the same instance.
+
+In the ``setupFile()`` function, we start off by creating the file and filling arrays of x- and y-values:
+
+**(File: NetCdf.cpp)**
+
+.. code:: cpp
+
+    m_err = nc_create(path,       // path
+                      NC_CLOBBER, // cmode
+                      &m_ncId);   // ncidp
+    checkNcErr(m_err);
+    m_outputFileOpened = true;
+
+    t_real *l_x = new t_real[m_nx];
+    t_real *l_y = new t_real[m_ny];
+
+    for (t_idx l_ix = 0; l_ix < m_nx; l_ix++)
+    {
+        l_x[l_ix] = (l_ix + 0.5) * (m_simulationSizeX / m_nx) + m_offsetX;
+    }
+    for (t_idx l_iy = 0; l_iy < m_ny; l_iy++)
+    {
+        l_y[l_iy] = (l_iy + 0.5) * (m_simulationSizeY / m_ny) + m_offsetY;
+    }
+
+We then define the dimensions in following order:
+
+#. time with length ``NC_UNLIMITED``
+#. x with length ``i_nx`` 
+#. y with length ``i_ny`` 
+
+Next we define variables for each dimension and also for the height, momentum in x- and y-direction,
+the total height and the bathymetry. 
+Since the code is very repetitive, we will only provide a code snippet for the time here:
+
+.. code:: cpp
+    
+    m_err = nc_def_dim(m_ncId,       // ncid
+                       "time",       // name
+                       NC_UNLIMITED, // len
+                       &m_dimTId);   // idp
+    checkNcErr(m_err);
+
+    //              [...]
+
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "time",     // name
+                       NC_FLOAT,   // xtype
+                       1,          // ndims
+                       &m_dimTId,  // dimidsp
+                       &m_varTId); // varidp
+    checkNcErr(m_err);
+
+Lastly, we add attributes such as the units (not shown) and then write the x and y data:
+
+.. code:: cpp
+
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varXId, // varid
+                             &m_x[0]); // op
+    checkNcErr(m_err);
+    m_err = nc_put_var_float(m_ncId,   // ncid
+                             m_varYId, // varid
+                             &m_y[0]); // op
+    checkNcErr(m_err);
+
+Now onto the more interesting part, the actual writing process.
+
+The ``write()`` function takes the output file path, the stride, pointers to the arrays of height, 
+momentum in the x- and y-direction and the bathymetry, as well as the current time step.
+
+If one of them is a ``nullptr``, we just assume the values are zero and write them for completeness.
+
+
+To write data, we used ``nc_put_var1_float`` to write the whole bathymetry on the first time step
+(since it doesn't change) and the other values using ``nc_put_vara_float`` which takes a ``start``
+offset and a ``count`` of how many values will be written. 
+The issue we encountered here was that these functions do not support strided arrays.
+We are aware that functions like ``nc_put_vars_float`` and ``nc_put_varm_float`` allow
+for a stride parameter, however even after intensive research we were not able to implement those correctly.
+That being said we decided on a much simpler but probably (not tested) less performant option:
+
+.. code:: cpp
+
+    t_real *l_h = new t_real[m_nx * m_ny];
+    t_real *l_tH = new t_real[m_nx * m_ny];
+    t_real *l_hu = new t_real[m_nx * m_ny];
+    t_real *l_hv = new t_real[m_nx * m_ny];
+
+    int l_i = 0;
+    for (t_idx l_x = 0; l_x < m_nx; l_x++)
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
+        {
+            l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) 
+                        + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
+            l_i++;
+        }
+    }
+
+That is, 'copying' the arrays to new ones and removing the stride in the process.
+
+Moving on, it is worth noting that we also implemented a ``timestepCount`` variable,
+serving as an index for the time steps.
+After each time the ``write()`` function is called, this counter is increased by 1.
+On the time axis, we start writing at the the current time index and only for 1 time step (hence the first entry of ``count`` is 1):
+
+.. code:: cpp
+
+    t_idx start[] = {m_timeStepCount, 0, 0};
+    t_idx count[] = {1, m_nx, m_ny};
+
+The other values start at 0 along the x- and y-axis. 
+The count specifies how many values will be written, 
+which is the amount of cells since we want to save all values.
+
+Thanks to this implementation, we can call the ``write()`` function even with non-consecutive 
+(however still strictly monotonically increasing) time steps since their index is counted separately 
+and has no relation with the actual time step value.
+
+All that is left to do is to actually write the values like so:
+
+.. code:: cpp
+
+    m_err = nc_put_vara_float(m_ncId,
+                              m_varHId,
+                              start,
+                              count,
+                              l_h);
+    checkNcErr(m_err);
+
+``nc_put_vara_float`` takes the nc and variable id, the start and count values and the data pointer as input.
+
+
+Task 5.2 - NetCdf Input
+==============================
+
+Task 5.2.1 - ArtificialTsunami2d
+-----------------------------------------
+
+Following equations were given:
+
+.. math::
+    \begin{split}\begin{aligned}
+    \text{d}(x, y) & = & 5 \cdot f(x)g(y) \\
+    \text{f}(x) & = & \sin\left(\left(\frac{x}{500}+1\right) \cdot \pi\right) \\
+    \text{g}(y) & = & -\left(\frac{y}{500}\right)^2 + 1
+  \end{aligned}\end{split}
+
+**(File: ArtificialTsunami2d.cpp)**
+
+**computeD**
+
+.. code:: cpp
+
+    
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeD(t_real i_x, 
+                                                                       t_real i_y) const
+    {   
+        if (i_x >= -500 && i_x <= 500 && i_y >= -500 && i_y <= 500)
+        {
+            return (5 * computeF(i_x) * computeG(i_y));
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+First we check if the i_x and i_y are in the area for computing the displacement.
+Afterwards it calls both the computeF and computeG function:
+
+**computeF**
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeF(t_real i_x) const
+    {
+        return (sin((i_x / 500 + 1) * m_pi));
+    }
+
+**computeG**
+
+.. code:: cpp
+
+    tsunami_lab::t_real tsunami_lab::setups::ArtificialTsunami2d::computeG(t_real i_y) const
+    {
+        return (-((i_y / 500) * (i_y / 500)) + 1);
+    }
+
+For the bathymetry we return ``-100 + computeD(i_x, i_y)``.
+
+    
+Task 5.2.2 - NetCDF read
+-----------------------------------------
+
+The read function first checks for x and y dimensions and gets the respective IDs:
+
+.. code:: cpp
+
+    // get dimension ids
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead));
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead));
+    // read dimension size
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &l_nx));
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &l_ny));
+
+We then create the data arrays for the x, y and z values and fill them with the file data:
+
+.. code:: cpp
+
+    t_real *l_xData = new t_real[l_nx];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varXIdRead, l_xData));
+
+    t_real *l_yData = new t_real[l_ny];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varYIdRead, l_yData));
+
+    t_real *l_data = new t_real[l_nx * l_ny];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data));
+
+Lastly, we need to add stride into the array:
+
+.. code:: cpp
+
+    t_real *l_stridedArray = new t_real[l_nx * l_ny];
+    int l_i = 0;
+    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
+    {
+        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
+        {
+            l_stridedArray[l_ix + l_iy * l_nx] = l_data[l_i++];
+        }
+    }
+
+Task 5.2.3 -TsunamiEvent2d
+-----------------------------------------
+Following setup is given:
+
+.. math::
+    \begin{split}\begin{split}
+    h  &= \begin{cases}
+            \max( -b_\text{in}, \delta), &\text{if } b_\text{in} < 0 \\
+            0, &\text{else}
+          \end{cases}\\
+    hu &= 0\\
+    hv &= 0\\
+    b  &= \begin{cases}
+            \min(b_\text{in}, -\delta) + d, & \text{ if } b_\text{in} < 0\\
+            \max(b_\text{in}, \delta) + d, & \text{ else}.
+          \end{cases}
+    \end{split}\end{split}
+
+**TsunamiEvent2d**
+
+Input are paths for bathymetry and displacement, netCdf instance and the stride value.
+
+We first read the bathymetry and displacements from the files:
+
+.. code:: cpp
+    
+    i_netCdf->read(i_bathymetryPath, "z", m_nxB, m_nyB, &m_xDataB, &m_yDataB, &m_b);
+    i_netCdf->read(i_displacementPath, "z", m_nxD, m_nyD, &m_xDataD, &m_yDataD, &m_d);
+
+The computational domain is also negative, therefore we check where the last negative value in the array is. 
+This shall lead to a more efficient computation. We do this for bathymetry and displacement.
+
+.. code:: cpp
+
+     if (m_xDataB[0] < 0 && m_xDataB[m_nxB-1] > 0)
+    {
+        for (t_idx l_ix = 1; l_ix < m_nxB; l_ix++)
+        {
+            if (m_xDataB[l_ix - 1] < 0 && m_xDataB[l_ix] >= 0)
+            {
+                m_lastNegativeIndexBX = l_ix - 1;
+                break;
+            }
+        }
+    }
+    if (m_yDataB[0] < 0 && m_yDataB[m_nyB-1] > 0)
+    {
+        for (t_idx l_iy = 1; l_iy < m_nyB; l_iy++)
+        {
+            if (m_yDataB[l_iy - 1] < 0 && m_yDataB[l_iy] >= 0)
+            {
+                m_lastNegativeIndexBY = l_iy - 1;
+                break;
+            }
+        }
+    }
+    ...
+
+
+**getBathymetry and getDisplacement**
+
+We check if the point is within the file definde domain. 
+
+.. code:: cpp
+
+    if(i_x < m_xDataD[0] || i_x > m_xDataD[m_nxD-1] || i_y < m_yDataD[0] || i_y > m_yDataD[m_nyD-1]) return 0;
+
+There are two loops in which we look for the index of the closest values to our point.
+
+.. code:: cpp
+
+    t_idx l_x = 0;
+    t_idx l_ix = i_x >= 0 ? m_lastNegativeIndexDX : 1;
+    for (; l_ix < m_nxD; l_ix++)
+    {
+        
+        if (m_xDataD[l_ix] > i_x)
+        {
+            if (abs(m_xDataD[l_ix] - i_x) > abs(m_xDataD[l_ix - 1] - i_x))
+            {
+                l_x = l_ix - 1;
+            }
+            else
+            {
+                l_x = l_ix;
+            }
+            break;
+        }
+    }
+
+    t_idx l_y = 0;
+    t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexDY : 1;
+    for (; l_iy < m_nyD; l_iy++)
+    {
+        if (m_yDataD[l_iy] > i_y)
+        {
+            if (abs(m_yDataD[l_iy] - i_y) > abs(m_yDataD[l_iy - 1] - i_y))
+            {
+                l_y = l_iy - 1;
+            }
+            else
+            {
+                l_y = l_iy;
+            }
+            break;
+        }
+    }
+    return m_d[l_x + m_nxD * l_y];
+
+|
+
+For the following functions we implemented the equations from above:
+
+**getHeight**
+
+.. code:: cpp
+
+    t_real l_bath = getBathymetryFromArray(i_x, i_y);
+    if (l_bath < 0)
+    {
+        return (std::max(-l_bath, m_delta));
+    }
+    else
+    {
+        return 0;
+    }
+
+**getBathymetry**
+
+.. code:: cpp
+
+    t_real l_bath = getBathymetryFromArray(i_x, i_y);
+    t_real l_displ = getDisplacementFromArray(i_x, i_y);
+    if (l_bath < 0)
+    {
+        return std::min(l_bath, -m_delta) + l_displ;
+    }
+    else
+    {
+        return std::min(l_bath, m_delta) + l_displ;
+    }
+
+
+Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
+--------------------------------------------------------------------
+
+**Visualization**
+
+We can observe, that both setups behave equally.
+
+`ArtificialTsunami2d`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_5-2-4_artificial2D.mp4" type="video/mp4">
+    </video> 
+
+`TsunamiEvent2D`
+
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_5-2-4_tsunami2D.mp4" type="video/mp4">
+    </video> 
+

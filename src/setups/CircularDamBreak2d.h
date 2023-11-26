@@ -33,15 +33,16 @@ public:
 
   /**
    * Gets the water height at a given point.
-   *
+   * @param i_x x-coordinate of the queried point.
+   * @param i_y y-coordinate of the queried point.
    * @return height at the given point.
    **/
-  t_real getHeight(t_real,
-                   t_real) const;
+  t_real getHeight(t_real i_x,
+                   t_real i_y) const;
 
   /**
    * Gets the momentum in x-direction.
-   *
+   * 
    * @return momentum in x-direction.
    **/
   t_real getMomentumX(t_real,

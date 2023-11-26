@@ -1,0 +1,13 @@
+{
+    "solver": "fwave",
+    "nx": 10,
+    "ny": 1,
+    "simulationSizeX": 10,
+    "simulationSizeY": 1,
+    "setup":"DAMBREAK1D",
+    "hasBoundaryL": false,
+    "hasBoundaryR": false,
+    "hasBoundaryU": false,
+    "hasBoundaryD": false,
+    "endTime":20
+}

@@ -1,5 +1,5 @@
 ##
-# @author Alexander Breuer (alex.breuer AT uni-jena.de)
+# @author Luca-Philipp Grumbach & Richard Hofmann
 #
 # @section DESCRIPTION
 # Entry-point for builds.
@@ -32,6 +32,12 @@ if vars.UnknownVariables():
 
 # create environment
 env = Environment( variables = vars )
+
+conf = Configure(env)
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
+        print ('Did not find the netcdf library, exiting!')
+        Exit(1)
+env = conf.Finish()
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
@@ -87,10 +93,13 @@ SConscript( 'build/src/SConscript' )
 Import('env')
 
 env.Program( target = 'build/tsunami_lab',
-             source = env.sources + env.standalone )
+             source = env.sources + env.standalone,
+             LIBS='netcdf', LIBPATH='.' )
 
 env.Program( target = 'build/tests',
-             source = env.sources + env.tests )
+             source = env.sources + env.tests,
+             LIBS='netcdf', LIBPATH='.' )
 
 env.Program( target = 'build/sanitychecks',
-             source = env.sources + env.sanitychecks )
+             source = env.sources + env.sanitychecks,
+             LIBS='netcdf', LIBPATH='.' )

@@ -1,14 +1,15 @@
 {
     "solver": "fwave",
-    "nx": 50,
-    "ny": 50,
-    "simulationSizeX": 100,
-    "simulationSizeY": 100,
-    "setup":"CIRCULARDAMBREAK2D",
-    "bathymetry":"resources/bathymetry/singleWall2d_100x100.csv",
+    "nx": 1000,
+    "ny": 1000,
+    "simulationSizeX": 10000,
+    "simulationSizeY": 10000,
+    "offsetX": -5000,
+    "offsetY": -5000,
+    "setup":"TSUNAMIEVENT2D",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
-    "endTime":20
+    "endTime":100
 }

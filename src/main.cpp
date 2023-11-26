@@ -5,9 +5,11 @@
  * Entry-point for simulations.
  **/
 
-#include <nlohmann/json.hpp>
+// wave prop patches
 #include "patches/WavePropagation1d.h"
 #include "patches/WavePropagation2d.h"
+
+// setups
 #include "setups/DamBreak1d.h"
 #include "setups/CircularDamBreak2d.h"
 #include "setups/RareRare1d.h"
@@ -16,9 +18,16 @@
 #include "setups/Supercritical1d.h"
 #include "setups/GeneralDiscontinuity1d.h"
 #include "setups/TsunamiEvent1d.h"
+#include "setups/TsunamiEvent2d.h"
+#include "setups/ArtificialTsunami2d.h"
+
+// io
 #include "io/Csv.h"
 #include "io/BathymetryLoader.h"
 #include "io/Station.h"
+#include "io/NetCdf.h"
+
+// c libraries
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
@@ -26,7 +35,35 @@
 #include <limits>
 #include <filesystem>
 
+// external libraries
+#include <nlohmann/json.hpp>
+#include <netcdf.h>
+
 using json = nlohmann::json;
+
+bool endsWith(std::string const &str, std::string const &suffix)
+{
+  if (str.length() < suffix.length())
+  {
+    return false;
+  }
+  return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
+}
+
+void setupFolders()
+{
+  // set up stations folder for stations to save their data in
+  if (std::filesystem::exists("stations"))
+    std::filesystem::remove_all("stations");
+
+  std::filesystem::create_directory("stations");
+
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+
+  std::filesystem::create_directory("solutions");
+}
 
 int main(int i_argc,
          char *i_argv[])
@@ -41,6 +78,9 @@ int main(int i_argc,
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 10.0;
   tsunami_lab::t_real l_simulationSizeY = 10.0;
+  // set offset in metres
+  tsunami_lab::t_real l_offsetX = 0;
+  tsunami_lab::t_real l_offsetY = 0;
   // set cell size
   tsunami_lab::t_real l_dx = 1;
   tsunami_lab::t_real l_dy = 1;
@@ -50,8 +90,9 @@ int main(int i_argc,
   bool l_hasBoundaryR = false;
   bool l_hasBoundaryT = false;
   bool l_hasBoundaryB = false;
-  // bathymetry file path
+  // input file paths
   std::string l_bathymetryFilePath = "";
+  std::string l_displacementFilePath = "";
   // simulation time limit
   tsunami_lab::t_real l_endTime = 20;
   // keep track of all stations
@@ -78,16 +119,16 @@ int main(int i_argc,
   l_ny = l_configData.value("ny", 1);
   l_simulationSizeX = l_configData.value("simulationSizeX", 1);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
+  l_offsetX = l_configData.value("offsetX", 0);
+  l_offsetY = l_configData.value("offsetY", 0);
   l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
   l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
   l_hasBoundaryT = l_configData.value("hasBoundaryT", false);
   l_hasBoundaryB = l_configData.value("hasBoundaryB", false);
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
+  l_displacementFilePath = l_configData.value("displacement", "");
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
-
-  l_dx = l_simulationSizeX / l_nx;
-  l_dy = l_simulationSizeY / l_ny;
 
   // construct setup
   /**
@@ -117,21 +158,48 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "SUBCRITICAL1D")
   {
+    l_simulationSizeX = 10;
     l_setup = new tsunami_lab::setups::Subcritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "SUPERCRITICAL1D")
   {
+    l_simulationSizeX = 10;
     l_setup = new tsunami_lab::setups::Supercritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "TSUNAMIEVENT1D")
   {
     l_setup = new tsunami_lab::setups::TsunamiEvent1d(l_bathymetryFilePath);
   }
+  else if (l_setupChoice == "TSUNAMIEVENT2D")
+  {
+
+    tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(l_nx,
+                                                                        l_ny,
+                                                                        l_simulationSizeX,
+                                                                        l_simulationSizeY,
+                                                                        l_offsetX,
+                                                                        l_offsetY);
+    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/artificialtsunami_bathymetry_1000.nc",
+                                                      "resources/artificialtsunami_displ_1000.nc",
+                                                      l_netCdfTE2D,
+                                                      l_nx);
+  }
+  else if (l_setupChoice == "ARTIFICIAL2D")
+  {
+    l_simulationSizeX = 10000;
+    l_simulationSizeY = 10000;
+    l_offsetX = -5000;
+    l_offsetY = -5000;
+    l_setup = new tsunami_lab::setups::ArtificialTsunami2d();
+  }
   else
   {
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
     exit(EXIT_FAILURE);
   }
+
+  l_dx = l_simulationSizeX / l_nx;
+  l_dy = l_simulationSizeY / l_ny;
 
   // construct solver
   tsunami_lab::patches::WavePropagation *l_waveProp;
@@ -168,11 +236,9 @@ int main(int i_argc,
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-  // set up stations folder for stations to save their data in
-  if (std::filesystem::exists("stations"))
-    std::filesystem::remove_all("stations");
 
-  std::filesystem::create_directory("stations");
+  // set up folders
+  setupFolders();
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -180,11 +246,11 @@ int main(int i_argc,
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
-    tsunami_lab::t_real l_y = l_cy * l_dy;
+    tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetX;
 
     for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
     {
-      tsunami_lab::t_real l_x = l_cx * l_dx;
+      tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetY;
 
       // get initial values of the setup
       tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
@@ -216,26 +282,60 @@ int main(int i_argc,
                                 l_b);
     }
   }
+  // set up netCdf I/O
+  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                                                  l_ny,
+                                                                  l_simulationSizeX,
+                                                                  l_simulationSizeY,
+                                                                  l_offsetX,
+                                                                  l_offsetY);
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
   {
-    tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
-    l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
-    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 4, 4, ".csv") == 0)
     {
-      tsunami_lab::t_real l_y = l_cy * l_dy;
-      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      std::cout << "Loading bathymetry from csv file: " << l_bathymetryFilePath << std::endl;
+      tsunami_lab::io::BathymetryLoader *l_bathymetryLoader = new tsunami_lab::io::BathymetryLoader();
+      l_bathymetryLoader->loadBathymetry(l_bathymetryFilePath);
+      for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
       {
-        tsunami_lab::t_real l_x = l_cx * l_dx;
-        tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
-        l_waveProp->setBathymetry(l_cx,
-                                  l_cy,
-                                  l_b);
+        tsunami_lab::t_real l_y = l_cy * l_dy;
+        for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+        {
+          tsunami_lab::t_real l_x = l_cx * l_dx;
+          tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
+          l_waveProp->setBathymetry(l_cx,
+                                    l_cy,
+                                    l_b);
+        }
       }
+      l_waveProp->adjustWaterHeight();
+      delete l_bathymetryLoader;
+      std::cout << "Done loading bathymetry." << std::endl;
     }
-    l_waveProp->adjustWaterHeight();
-    delete l_bathymetryLoader;
+    else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
+    {
+      // TODO
+      //  std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
+      //  tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
+      //                                            "bathymetry");
+
+      // for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+      // {
+      //   for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      //   {
+      //     l_waveProp->setBathymetry(l_cx,
+      //                               l_cy,
+      //                               l_b[l_cx + l_nx * l_cy]);
+      //   }
+      // }
+      // std::cout << "Done loading bathymetry." << std::endl;
+    }
+    else
+    {
+      std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
+    }
   }
 
   // derive maximum wave speed in setup; the momentum is ignored
@@ -251,7 +351,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    l_dt *= 0.3;
+    l_dt *= 0.5;
   }
 
   // derive scaling for a time step
@@ -263,13 +363,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-
-  // clean solutions folder
-  if (std::filesystem::exists("solutions"))
-    std::filesystem::remove_all("solutions");
-
-  std::filesystem::create_directory("solutions");
-
+  
   std::cout << "entering time loop" << std::endl;
 
   // iterate over time
@@ -298,6 +392,18 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
     }
+    if (l_timeStep % 50 == 0)
+    {
+      std::cout << "  writing to netcdf " << std::endl;
+      l_netCdf->write("solutions/solution.nc",
+                      l_waveProp->getStride(),
+                      l_waveProp->getHeight(),
+                      l_waveProp->getMomentumX(),
+                      l_waveProp->getMomentumY(),
+                      l_waveProp->getBathymetry(),
+                      l_simTime);
+    }
+
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
     if (l_simTime >= l_stationFrequency * l_captureCount)
@@ -322,6 +428,7 @@ int main(int i_argc,
   std::cout << "freeing memory" << std::endl;
   delete l_setup;
   delete l_waveProp;
+  delete l_netCdf;
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     delete l_s;

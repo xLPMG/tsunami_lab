@@ -31,6 +31,12 @@ On MacOS, you can use homebrew for both:
     brew install scons
     brew install gcc
 
+For I/O, the project requires the ``NetCdf`` library to be installed:
+
+- `MacOS (Homebrew) <https://formulae.brew.sh/formula/netcdf>`_
+- Ubuntu: ``sudo apt-get install libnetcdf-dev``
+- `Windows <https://downloads.unidata.ucar.edu/netcdf/>`_
+
 4. Building the project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Navigate to the in step 1 created ``tsunami_lab`` folder and run
