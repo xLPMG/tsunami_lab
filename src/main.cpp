@@ -392,8 +392,9 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
     }
-    if (l_timeStep % 10 == 0)
+    if (l_timeStep % 50 == 0)
     {
+      std::cout << "  writing to netcdf " << std::endl;
       l_netCdf->write("solutions/solution.nc",
                       l_waveProp->getStride(),
                       l_waveProp->getHeight(),

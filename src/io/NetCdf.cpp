@@ -152,6 +152,13 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
                             strlen("meters"), "meters");
     checkNcErr(m_err);
 
+    m_err = nc_put_att_text(m_ncId, m_varHuId, "units",
+                            strlen("square meters per second"), "square meters per second");
+    checkNcErr(m_err);
+    m_err = nc_put_att_text(m_ncId, m_varHvId, "units",
+                            strlen("square meters per second"), "square meters per second");
+    checkNcErr(m_err);
+
     m_err = nc_enddef(m_ncId); // ncid
     checkNcErr(m_err);
 
@@ -205,7 +212,7 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     t_real *l_tH = new t_real[m_nx * m_ny];
     t_real *l_hu = new t_real[m_nx * m_ny];
     t_real *l_hv = new t_real[m_nx * m_ny];
-    
+
     int l_i = 0;
     for (t_idx l_x = 0; l_x < m_nx; l_x++)
     {
@@ -232,47 +239,41 @@ void tsunami_lab::io::NetCdf::write(const char *path,
                 l_b[l_i++] = i_b[l_x + l_y * i_stride];
             }
         }
-
-        m_err = nc_put_var_float(m_ncId,
-                                 m_varBId,
-                                 l_b);
-        checkNcErr(m_err);
+        // we did not use m_err in this function in hopes of better performance
+        checkNcErr(nc_put_var_float(m_ncId,
+                                    m_varBId,
+                                    l_b));
         delete[] l_b;
     }
     // write values
-    m_err = nc_put_var1_float(m_ncId,
-                              m_varTId,
-                              &m_timeStepCount,
-                              &i_t);
-    checkNcErr(m_err);
+    checkNcErr(nc_put_var1_float(m_ncId,
+                                 m_varTId,
+                                 &m_timeStepCount,
+                                 &i_t));
 
-    m_err = nc_put_vara_float(m_ncId,
-                              m_varHId,
-                              start,
-                              count,
-                              l_h);
-    checkNcErr(m_err);
+    checkNcErr(nc_put_vara_float(m_ncId,
+                                 m_varHId,
+                                 start,
+                                 count,
+                                 l_h));
 
-    m_err = nc_put_vara_float(m_ncId,
-                              m_varTHId,
-                              start,
-                              count,
-                              l_tH);
-    checkNcErr(m_err);
+    checkNcErr(nc_put_vara_float(m_ncId,
+                                 m_varTHId,
+                                 start,
+                                 count,
+                                 l_tH));
 
-    m_err = nc_put_vara_float(m_ncId,
-                              m_varHuId,
-                              start,
-                              count,
-                              l_hu);
-    checkNcErr(m_err);
+    checkNcErr(nc_put_vara_float(m_ncId,
+                                 m_varHuId,
+                                 start,
+                                 count,
+                                 l_hu));
 
-    m_err = nc_put_vara_float(m_ncId,
-                              m_varHvId,
-                              start,
-                              count,
-                              l_hv);
-    checkNcErr(m_err);
+    checkNcErr(nc_put_vara_float(m_ncId,
+                                 m_varHvId,
+                                 start,
+                                 count,
+                                 l_hv));
 
     m_timeStepCount++;
 
@@ -294,36 +295,26 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
     int l_ncIdRead = 0, l_varXIdRead = 0, l_varYIdRead = 0, l_varDataIdRead = 0;
     t_idx l_nx = 0, l_ny = 0;
 
-    m_err = nc_open(i_file, NC_NOWRITE, &l_ncIdRead);
-    checkNcErr(m_err);
+    checkNcErr(nc_open(i_file, NC_NOWRITE, &l_ncIdRead));
     // get dimension ids
-    m_err = nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead);
-    checkNcErr(m_err);
-    m_err = nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead);
-    checkNcErr(m_err);
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "x", &l_varXIdRead));
+    checkNcErr(nc_inq_dimid(l_ncIdRead, "y", &l_varYIdRead));
     // read dimension size
-    m_err = nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &l_nx);
-    checkNcErr(m_err);
-    m_err = nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &l_ny);
-    checkNcErr(m_err);
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varXIdRead, &l_nx));
+    checkNcErr(nc_inq_dimlen(l_ncIdRead, l_varYIdRead, &l_ny));
     // get var id of desired variable
-    m_err = nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead);
-    checkNcErr(m_err);
+    checkNcErr(nc_inq_varid(l_ncIdRead, i_var, &l_varDataIdRead));
     // read data
     t_real *l_xData = new t_real[l_nx];
-    m_err = nc_get_var_float(l_ncIdRead, l_varXIdRead, l_xData);
-    checkNcErr(m_err);
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varXIdRead, l_xData));
 
     t_real *l_yData = new t_real[l_ny];
-    m_err = nc_get_var_float(l_ncIdRead, l_varYIdRead, l_yData);
-    checkNcErr(m_err);
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varYIdRead, l_yData));
 
     t_real *l_data = new t_real[l_nx * l_ny];
-    m_err = nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data);
-    checkNcErr(m_err);
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data));
 
-    m_err = nc_close(l_ncIdRead);
-    checkNcErr(m_err);
+    checkNcErr(nc_close(l_ncIdRead));
     // convert to strided array
     t_real *l_stridedArray = new t_real[l_nx * l_ny];
     int l_i = 0;
