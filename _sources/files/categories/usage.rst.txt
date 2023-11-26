@@ -85,6 +85,14 @@ As of now, these are:
      - frequency at which stations will capture data
      - float
      - seconds
+   * - offsetX
+     - domain offset from 0 in x direction
+     - float
+     - metres
+   * - offsetY
+     - domain offset from 0 in y direction
+     - float
+     - metres
 
 as well as another two with more complicated parameters:
 
@@ -138,6 +146,8 @@ the bathymetry will be set to 0. A valid file may look like this:
 * "SUBCRITICAL1D"
 * "SUPERCRITICAL1D"
 * "TSUNAMIEVENT1D"
+* "TSUNAMIEVENT2D"
+* "ARTIFICIAL"
 
 .. note:: 
     In order to use the one-dimensional setups **ny** and **simulationSizeY** has to be set to 1 in the config.json.

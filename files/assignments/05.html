@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. Large Data Input and Output &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/05.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="4. Two-Dimensional Solver" href="04.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Large Data Input and Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-5-1-netcdf-output">Task 5.1 - NetCdf Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-1-1-installing-and-linking-netcdf">Task 5.1.1 - Installing and linking NetCdf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-1-2-writing-netcdf-files">Task 5.1.2 - Writing netCDF files</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-5-2-netcdf-input">Task 5.2 - NetCdf Input</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-2-1-artificialtsunami2d">Task 5.2.1 - ArtificialTsunami2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-2-2-netcdf-read">Task 5.2.2 - NetCDF read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-2-3-tsunamievent2d">Task 5.2.3 -TsunamiEvent2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d">Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">5. Large Data Input and Output</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/05.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="large-data-input-and-output">
+<h1>5. Large Data Input and Output<a class="headerlink" href="#large-data-input-and-output" title="Link to this heading"></a></h1>
+<p>All project authors contributed to this assignment in equal parts.</p>
+<section id="task-5-1-netcdf-output">
+<h2>Task 5.1 - NetCdf Output<a class="headerlink" href="#task-5-1-netcdf-output" title="Link to this heading"></a></h2>
+<section id="task-5-1-1-installing-and-linking-netcdf">
+<h3>Task 5.1.1 - Installing and linking NetCdf<a class="headerlink" href="#task-5-1-1-installing-and-linking-netcdf" title="Link to this heading"></a></h3>
+<p>Since both authors use MacOS, we simply installed <code class="docutils literal notranslate"><span class="pre">NetCdf</span></code> using Homebrew:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>netcdf
+</pre></div>
+</div>
+<p>We then made following changes to the <code class="docutils literal notranslate"><span class="pre">SConstruct</span></code> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conf</span> <span class="o">=</span> <span class="n">Configure</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLibWithHeader</span><span class="p">(</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="s1">&#39;netcdf.h&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the netcdf library, exiting!&#39;</span><span class="p">)</span>
+    <span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">Finish</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This tells scons to check if the <code class="docutils literal notranslate"><span class="pre">netcdf</span></code> library is installed on the system.
+If it is, we can proceed.</p>
+<p>At the end of our <code class="docutils literal notranslate"><span class="pre">SConstruct</span></code> file, we add the library to each executable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">Program</span><span class="p">(</span> <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;build/tsunami_lab&#39;</span><span class="p">,</span>
+         <span class="n">source</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sources</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">standalone</span><span class="p">,</span>
+         <span class="n">LIBS</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="n">LIBPATH</span><span class="o">=</span><span class="s1">&#39;.&#39;</span> <span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">Program</span><span class="p">(</span> <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;build/tests&#39;</span><span class="p">,</span>
+         <span class="n">source</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sources</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">tests</span><span class="p">,</span>
+         <span class="n">LIBS</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="n">LIBPATH</span><span class="o">=</span><span class="s1">&#39;.&#39;</span> <span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">Program</span><span class="p">(</span> <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;build/sanitychecks&#39;</span><span class="p">,</span>
+         <span class="n">source</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sources</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">sanitychecks</span><span class="p">,</span>
+         <span class="n">LIBS</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="n">LIBPATH</span><span class="o">=</span><span class="s1">&#39;.&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>We chose this implementation as it automatically works on most systems (at least Ubuntu, Windows and OSX)
+as long as the netcdf library was correctly installed.
+See <a class="reference internal" href="../categories/setup.html#setup"><span class="std std-ref">Setup</span></a> for download links.</p>
+</section>
+<section id="task-5-1-2-writing-netcdf-files">
+<h3>Task 5.1.2 - Writing netCDF files<a class="headerlink" href="#task-5-1-2-writing-netcdf-files" title="Link to this heading"></a></h3>
+<p>As instructed, we created a <code class="docutils literal notranslate"><span class="pre">NetCdf</span></code> class within the <code class="docutils literal notranslate"><span class="pre">tsunami_lab::io</span></code> namespace.
+Its constructor takes the file path, amount of cells in x- and y-direction and the stride as its input.
+This is because those parameters will not change between calls of the <code class="docutils literal notranslate"><span class="pre">write()</span></code> function within the same instance.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">setupFile()</span></code> function, we start off by creating the file and filling arrays of x- and y-values:</p>
+<p><strong>(File: NetCdf.cpp)</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_create</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w">       </span><span class="c1">// path</span>
+<span class="w">                  </span><span class="n">NC_CLOBBER</span><span class="p">,</span><span class="w"> </span><span class="c1">// cmode</span>
+<span class="w">                  </span><span class="o">&amp;</span><span class="n">m_ncId</span><span class="p">);</span><span class="w">   </span><span class="c1">// ncidp</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+<span class="n">m_outputFileOpened</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="p">];</span>
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_ny</span><span class="p">];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">l_x</span><span class="p">[</span><span class="n">l_ix</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l_ix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">m_simulationSizeX</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">m_nx</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_offsetX</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">l_y</span><span class="p">[</span><span class="n">l_iy</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l_iy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">m_simulationSizeY</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">m_ny</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_offsetY</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We then define the dimensions in following order:</p>
+<ol class="arabic simple">
+<li><p>time with length <code class="docutils literal notranslate"><span class="pre">NC_UNLIMITED</span></code></p></li>
+<li><p>x with length <code class="docutils literal notranslate"><span class="pre">i_nx</span></code></p></li>
+<li><p>y with length <code class="docutils literal notranslate"><span class="pre">i_ny</span></code></p></li>
+</ol>
+<p>Next we define variables for each dimension and also for the height, momentum in x- and y-direction,
+the total height and the bathymetry.
+Since the code is very repetitive, we will only provide a code snippet for the time here:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_def_dim</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span><span class="w">       </span><span class="c1">// ncid</span>
+<span class="w">                   </span><span class="s">&quot;time&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">// name</span>
+<span class="w">                   </span><span class="n">NC_UNLIMITED</span><span class="p">,</span><span class="w"> </span><span class="c1">// len</span>
+<span class="w">                   </span><span class="o">&amp;</span><span class="n">m_dimTId</span><span class="p">);</span><span class="w">   </span><span class="c1">// idp</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+
+<span class="c1">//              [...]</span>
+
+<span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_def_var</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span><span class="w">     </span><span class="c1">// ncid</span>
+<span class="w">                   </span><span class="s">&quot;time&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// name</span>
+<span class="w">                   </span><span class="n">NC_FLOAT</span><span class="p">,</span><span class="w">   </span><span class="c1">// xtype</span>
+<span class="w">                   </span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="c1">// ndims</span>
+<span class="w">                   </span><span class="o">&amp;</span><span class="n">m_dimTId</span><span class="p">,</span><span class="w">  </span><span class="c1">// dimidsp</span>
+<span class="w">                   </span><span class="o">&amp;</span><span class="n">m_varTId</span><span class="p">);</span><span class="w"> </span><span class="c1">// varidp</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Lastly, we add attributes such as the units (not shown) and then write the x and y data:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_put_var_float</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span><span class="w">   </span><span class="c1">// ncid</span>
+<span class="w">                         </span><span class="n">m_varXId</span><span class="p">,</span><span class="w"> </span><span class="c1">// varid</span>
+<span class="w">                         </span><span class="o">&amp;</span><span class="n">m_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span><span class="w"> </span><span class="c1">// op</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+<span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_put_var_float</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span><span class="w">   </span><span class="c1">// ncid</span>
+<span class="w">                         </span><span class="n">m_varYId</span><span class="p">,</span><span class="w"> </span><span class="c1">// varid</span>
+<span class="w">                         </span><span class="o">&amp;</span><span class="n">m_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span><span class="w"> </span><span class="c1">// op</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now onto the more interesting part, the actual writing process.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">write()</span></code> function takes the output file path, the stride, pointers to the arrays of height,
+momentum in the x- and y-direction and the bathymetry, as well as the current time step.</p>
+<p>If one of them is a <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>, we just assume the values are zero and write them for completeness.</p>
+<p>To write data, we used <code class="docutils literal notranslate"><span class="pre">nc_put_var1_float</span></code> to write the whole bathymetry on the first time step
+(since it doesn’t change) and the other values using <code class="docutils literal notranslate"><span class="pre">nc_put_vara_float</span></code> which takes a <code class="docutils literal notranslate"><span class="pre">start</span></code>
+offset and a <code class="docutils literal notranslate"><span class="pre">count</span></code> of how many values will be written.
+The issue we encountered here was that these functions do not support strided arrays.
+We are aware that functions like <code class="docutils literal notranslate"><span class="pre">nc_put_vars_float</span></code> and <code class="docutils literal notranslate"><span class="pre">nc_put_varm_float</span></code> allow
+for a stride parameter, however even after intensive research we were not able to implement those correctly.
+That being said we decided on a much simpler but probably (not tested) less performant option:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="p">];</span>
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_tH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="p">];</span>
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_hu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="p">];</span>
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_hv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="p">];</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">l_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">l_h</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_h</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i_h</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">];</span>
+<span class="w">        </span><span class="n">l_tH</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i_h</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i_h</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">])</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">i_b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i_b</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">l_hu</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_hu</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i_hu</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">];</span>
+<span class="w">        </span><span class="n">l_hv</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_hv</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i_hv</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">];</span>
+<span class="w">        </span><span class="n">l_i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>That is, ‘copying’ the arrays to new ones and removing the stride in the process.</p>
+<p>Moving on, it is worth noting that we also implemented a <code class="docutils literal notranslate"><span class="pre">timestepCount</span></code> variable,
+serving as an index for the time steps.
+After each time the <code class="docutils literal notranslate"><span class="pre">write()</span></code> function is called, this counter is increased by 1.
+On the time axis, we start writing at the the current time index and only for 1 time step (hence the first entry of <code class="docutils literal notranslate"><span class="pre">count</span></code> is 1):</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_idx</span><span class="w"> </span><span class="n">start</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">m_timeStepCount</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="n">t_idx</span><span class="w"> </span><span class="n">count</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m_nx</span><span class="p">,</span><span class="w"> </span><span class="n">m_ny</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>The other values start at 0 along the x- and y-axis.
+The count specifies how many values will be written,
+which is the amount of cells since we want to save all values.</p>
+<p>Thanks to this implementation, we can call the <code class="docutils literal notranslate"><span class="pre">write()</span></code> function even with non-consecutive
+(however still strictly monotonically increasing) time steps since their index is counted separately
+and has no relation with the actual time step value.</p>
+<p>All that is left to do is to actually write the values like so:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">m_err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nc_put_vara_float</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">m_varHId</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">start</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">l_h</span><span class="p">);</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">m_err</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">nc_put_vara_float</span></code> takes the nc and variable id, the start and count values and the data pointer as input.</p>
+</section>
+</section>
+<section id="task-5-2-netcdf-input">
+<h2>Task 5.2 - NetCdf Input<a class="headerlink" href="#task-5-2-netcdf-input" title="Link to this heading"></a></h2>
+<section id="task-5-2-1-artificialtsunami2d">
+<h3>Task 5.2.1 - ArtificialTsunami2d<a class="headerlink" href="#task-5-2-1-artificialtsunami2d" title="Link to this heading"></a></h3>
+<p>Following equations were given:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{aligned}
+  \text{d}(x, y) &amp; = &amp; 5 \cdot f(x)g(y) \\
+  \text{f}(x) &amp; = &amp; \sin\left(\left(\frac{x}{500}+1\right) \cdot \pi\right) \\
+  \text{g}(y) &amp; = &amp; -\left(\frac{y}{500}\right)^2 + 1
+\end{aligned}\end{split}\end{split}\]</div>
+<p><strong>(File: ArtificialTsunami2d.cpp)</strong></p>
+<p><strong>computeD</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::ArtificialTsunami2d::computeD</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                   </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i_x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">-500</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">500</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">-500</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">computeF</span><span class="p">(</span><span class="n">i_x</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">computeG</span><span class="p">(</span><span class="n">i_y</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>First we check if the i_x and i_y are in the area for computing the displacement.
+Afterwards it calls both the computeF and computeG function:</p>
+<p><strong>computeF</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::ArtificialTsunami2d::computeF</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">sin</span><span class="p">((</span><span class="n">i_x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">500</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_pi</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>computeG</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::ArtificialTsunami2d::computeG</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">i_y</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">500</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">i_y</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">500</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For the bathymetry we return <code class="docutils literal notranslate"><span class="pre">-100</span> <span class="pre">+</span> <span class="pre">computeD(i_x,</span> <span class="pre">i_y)</span></code>.</p>
+</section>
+<section id="task-5-2-2-netcdf-read">
+<h3>Task 5.2.2 - NetCDF read<a class="headerlink" href="#task-5-2-2-netcdf-read" title="Link to this heading"></a></h3>
+<p>The read function first checks for x and y dimensions and gets the respective IDs:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// get dimension ids</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_inq_dimid</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_varXIdRead</span><span class="p">));</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_inq_dimid</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_varYIdRead</span><span class="p">));</span>
+<span class="c1">// read dimension size</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_inq_dimlen</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_varXIdRead</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_nx</span><span class="p">));</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_inq_dimlen</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_varYIdRead</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_ny</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>We then create the data arrays for the x, y and z values and fill them with the file data:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_xData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="p">];</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_get_var_float</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_varXIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_xData</span><span class="p">));</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_yData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">l_ny</span><span class="p">];</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_get_var_float</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_varYIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_yData</span><span class="p">));</span>
+
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_get_var_float</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_varDataIdRead</span><span class="p">,</span><span class="w"> </span><span class="n">l_data</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Lastly, we need to add stride into the array:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_stridedArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">l_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">l_stridedArray</span><span class="p">[</span><span class="n">l_ix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_data</span><span class="p">[</span><span class="n">l_i</span><span class="o">++</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="task-5-2-3-tsunamievent2d">
+<h3>Task 5.2.3 -TsunamiEvent2d<a class="headerlink" href="#task-5-2-3-tsunamievent2d" title="Link to this heading"></a></h3>
+<p>Following setup is given:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}\begin{split}
+h  &amp;= \begin{cases}
+        \max( -b_\text{in}, \delta), &amp;\text{if } b_\text{in} &lt; 0 \\
+        0, &amp;\text{else}
+      \end{cases}\\
+hu &amp;= 0\\
+hv &amp;= 0\\
+b  &amp;= \begin{cases}
+        \min(b_\text{in}, -\delta) + d, &amp; \text{ if } b_\text{in} &lt; 0\\
+        \max(b_\text{in}, \delta) + d, &amp; \text{ else}.
+      \end{cases}
+\end{split}\end{split}\end{split}\]</div>
+<p><strong>TsunamiEvent2d</strong></p>
+<p>Input are paths for bathymetry and displacement, netCdf instance and the stride value.</p>
+<p>We first read the bathymetry and displacements from the files:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">i_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">i_bathymetryPath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;z&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">m_nxB</span><span class="p">,</span><span class="w"> </span><span class="n">m_nyB</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_xDataB</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_yDataB</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_b</span><span class="p">);</span>
+<span class="n">i_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">i_displacementPath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;z&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">m_nxD</span><span class="p">,</span><span class="w"> </span><span class="n">m_nyD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_xDataD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_yDataD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_d</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The computational domain is also negative, therefore we check where the last negative value in the array is.
+This shall lead to a more efficient computation. We do this for bathymetry and displacement.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_xDataB</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">m_nxB</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nxB</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">l_ix</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_lastNegativeIndexBX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_yDataB</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_yDataB</span><span class="p">[</span><span class="n">m_nyB</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nyB</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_yDataB</span><span class="p">[</span><span class="n">l_iy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_yDataB</span><span class="p">[</span><span class="n">l_iy</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_lastNegativeIndexBY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p><strong>getBathymetry and getDisplacement</strong></p>
+<p>We check if the point is within the file definde domain.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">i_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_xDataD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_xDataD</span><span class="p">[</span><span class="n">m_nxD</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_yDataD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_yDataD</span><span class="p">[</span><span class="n">m_nyD</span><span class="mi">-1</span><span class="p">])</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>There are two loops in which we look for the index of the closest values to our point.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">t_idx</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_lastNegativeIndexDX</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nxD</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_xDataD</span><span class="p">[</span><span class="n">l_ix</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">i_x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">m_xDataD</span><span class="p">[</span><span class="n">l_ix</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_x</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">m_xDataD</span><span class="p">[</span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_x</span><span class="p">))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ix</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">t_idx</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">t_idx</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_y</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_lastNegativeIndexDY</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nyD</span><span class="p">;</span><span class="w"> </span><span class="n">l_iy</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_yDataD</span><span class="p">[</span><span class="n">l_iy</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">m_yDataD</span><span class="p">[</span><span class="n">l_iy</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">m_yDataD</span><span class="p">[</span><span class="n">l_iy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_y</span><span class="p">))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_iy</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_iy</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">return</span><span class="w"> </span><span class="n">m_d</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m_nxD</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_y</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>For the following functions we implemented the equations from above:</p>
+<p><strong>getHeight</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_bath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getBathymetryFromArray</span><span class="p">(</span><span class="n">i_x</span><span class="p">,</span><span class="w"> </span><span class="n">i_y</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_bath</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="o">-</span><span class="n">l_bath</span><span class="p">,</span><span class="w"> </span><span class="n">m_delta</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>getBathymetry</strong></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_bath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getBathymetryFromArray</span><span class="p">(</span><span class="n">i_x</span><span class="p">,</span><span class="w"> </span><span class="n">i_y</span><span class="p">);</span>
+<span class="n">t_real</span><span class="w"> </span><span class="n">l_displ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getDisplacementFromArray</span><span class="p">(</span><span class="n">i_x</span><span class="p">,</span><span class="w"> </span><span class="n">i_y</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_bath</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">l_bath</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">m_delta</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_displ</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">l_bath</span><span class="p">,</span><span class="w"> </span><span class="n">m_delta</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_displ</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d">
+<h3>Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d<a class="headerlink" href="#task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d" title="Link to this heading"></a></h3>
+<p><strong>Visualization</strong></p>
+<p>We can observe, that both setups behave equally.</p>
+<p><cite>ArtificialTsunami2d</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_5-2-4_artificial2D.mp4" type="video/mp4">
+</video><p><cite>TsunamiEvent2D</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_5-2-4_tsunami2D.mp4" type="video/mp4">
+</video></section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="04.html" class="btn btn-neutral float-left" title="4. Two-Dimensional Solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

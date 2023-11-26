@@ -92,6 +92,141 @@
 <span id="ns-setups"></span><h1>Setups<a class="headerlink" href="#setups" title="Link to this heading"></a></h1>
 <dl class="cpp class">
 <dt class="sig sig-object cpp">
+<span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ArtificialTsunami2d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;ArtificialTsunami2d.h&gt;</em></div>
+<p>2d dam break setup. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="sig-name descname"><span class="n"><span class="pre">ArtificialTsunami2d</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Constructor.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
+</dd>
+</dl>
+</p>
+<section id="namespacetsunami__lab_1DESCRIPTION">
+<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<p>Two-dimensional artificial tsunami </p>
+</section>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeD</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>compute the displacement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – postion in x direction </p></li>
+<li><p><strong>i_y</strong> – postion in y direction </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>displacement </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeF</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>compute equation for f</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_x</strong> – postion in x direction </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>value for f </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeG</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>compute equation for g</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_y</strong> – postion in y direction </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>value for g </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the water height at a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x-coordinate of the queried point. </p></li>
+<li><p><strong>i_y</strong> – y-coordinate of the queried point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>water height at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumX</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in x-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in x-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in y-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in y-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBathymetry</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the bathymetry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x-coordinate of the queried point. </p></li>
+<li><p><strong>i_y</strong> – y-coordinate of the queried point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bathymetry. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_pi</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">3.1415926</span></span><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp">
 <span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CircularDamBreak2d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;CircularDamBreak2d.h&gt;</em></div>
@@ -115,11 +250,17 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
-<dd><p>Gets the water height at a given point.</p>
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the water height at a given point. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>height at the given point. </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x-coordinate of the queried point. </p></li>
+<li><p><strong>i_y</strong> – y-coordinate of the queried point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>height at the given point. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -499,7 +640,7 @@
 <dd><div class="docutils container">
 <em>#include &lt;Setup.h&gt;</em></div>
 <p>Base setup. </p>
-<p>Subclassed by tsunami_lab::setups::CircularDamBreak2d, tsunami_lab::setups::DamBreak1d, tsunami_lab::setups::GeneralDiscontinuity1d, tsunami_lab::setups::RareRare1d, tsunami_lab::setups::ShockShock1d, tsunami_lab::setups::Subcritical1d, tsunami_lab::setups::Supercritical1d, tsunami_lab::setups::TsunamiEvent1d</p>
+<p>Subclassed by tsunami_lab::setups::ArtificialTsunami2d, tsunami_lab::setups::CircularDamBreak2d, tsunami_lab::setups::DamBreak1d, tsunami_lab::setups::GeneralDiscontinuity1d, tsunami_lab::setups::RareRare1d, tsunami_lab::setups::ShockShock1d, tsunami_lab::setups::Subcritical1d, tsunami_lab::setups::Supercritical1d, tsunami_lab::setups::TsunamiEvent1d, tsunami_lab::setups::TsunamiEvent2d</p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -1007,6 +1148,217 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
 <span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_delta</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">20</span></span><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TsunamiEvent2d</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N11tsunami_lab6setups11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;TsunamiEvent2d.h&gt;</em></div>
+<p>2d dam break setup. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="sig-name descname"><span class="n"><span class="pre">TsunamiEvent2d</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_bathymetryPath</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_displacementPath</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">io</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NetCdf</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_netCdf</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stride</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Constructor. <dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
+</dd>
+</dl>
+</p>
+<section id="namespacetsunami__lab_1DESCRIPTION">
+<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<p>Two-dimensional artificial tsunami </p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bathymetryPath</strong> – path to file containing bathymetry data </p></li>
+<li><p><strong>displacementPath</strong> – path to file containing bathymetry data </p></li>
+<li><p><strong>i_netCdf</strong> – NetCdf instance </p></li>
+<li><p><strong>i_stride</strong> – stride</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeight</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the water height at a given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x position </p></li>
+<li><p><strong>i_y</strong> – y position </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>height at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumX</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in x-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in x-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMomentumY</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the momentum in y-direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>momentum in y-direction. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBathymetry</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>Gets the bathymetry </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x position </p></li>
+<li><p><strong>i_y</strong> – y position </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bathymetry. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBathymetryFromArray</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>gets the value for bathymetry at a point </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x position </p></li>
+<li><p><strong>i_y</strong> – y position </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bathymetry value </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getDisplacementFromArray</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_x</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><br /></dt>
+<dd><p>gets the value for displacement at a point </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_x</strong> – x position </p></li>
+<li><p><strong>i_y</strong> – y position </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>displacment value </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_delta</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">20</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_stride</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_nxB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_nyB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_xDataB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_yDataB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_b</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastNegativeIndexBX</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastNegativeIndexBY</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_nxD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_nyD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_xDataD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_yDataD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_d</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastNegativeIndexDX</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastNegativeIndexDY</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
 <dd></dd></dl>
 
 </div>

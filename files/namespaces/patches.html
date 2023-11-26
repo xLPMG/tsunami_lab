@@ -498,13 +498,13 @@
 <span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryL</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryR</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryT</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryB</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 2d wave propagation solver.</p>
 <p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
 </dd>
 </dl>
 </p>
 <section id="namespacetsunami__lab_1DESCRIPTION">
 <h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
-<p>One-dimensional wave propagation patch. </p>
+<p>two-dimensional wave propagation patch. </p>
 </section>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -662,7 +662,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">adjustWaterHeight</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">adjustWaterHeight</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Corrects the water height based on the bathymetry </p>
 </dd></dl>
 
@@ -684,7 +684,7 @@
 <li><p><strong>o_hR</strong> – water height on the right side </p></li>
 <li><p><strong>o_huL</strong> – water momentum on the left side </p></li>
 <li><p><strong>o_huR</strong> – water momentum on the right side </p></li>
-<li><p><strong>o_bl</strong> – bathymetry on the left side </p></li>
+<li><p><strong>o_bL</strong> – bathymetry on the left side </p></li>
 <li><p><strong>o_bR</strong> – bathymetry on the right side </p></li>
 </ul>
 </dd>
