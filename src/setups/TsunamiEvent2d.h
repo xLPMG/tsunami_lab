@@ -25,36 +25,59 @@ namespace tsunami_lab
 class tsunami_lab::setups::TsunamiEvent2d : public Setup
 {
 private:
+  // value for data
   t_real m_delta = 20;
 
+  // stride size
   t_idx m_stride = 0;
 
-  // bathymetry
+  // amount of cells
   t_idx m_nxB = 0, m_nyB = 0;
+  // bathymetry data x
   t_real *m_xDataB = nullptr;
+  // bathymetry data y
   t_real *m_yDataB = nullptr;
+  // bathymetry
   t_real *m_b = nullptr;
   t_idx m_lastNegativeIndexBX = 0;
   t_idx m_lastNegativeIndexBY = 0;
 
   // displacements
+  // amount of cells
   t_idx m_nxD = 0, m_nyD = 0;
+  // displacement data x
   t_real *m_xDataD = nullptr;
+  // displacement data x
   t_real *m_yDataD = nullptr;
+  // displacment
   t_real *m_d = nullptr;
   t_idx m_lastNegativeIndexDX = 0;
   t_idx m_lastNegativeIndexDY = 0;
 
-  t_real getBathymetryFromArray(t_real,
-                                t_real) const;
-  t_real getDisplacementFromArray(t_real,
-                                  t_real) const;
+  /**
+   * gets the value for bathymetry at a point
+   * @param i_x x position
+   * @param i_y y position
+   * @return bathymetry value
+   */
+  t_real getBathymetryFromArray(t_real i_x,
+                                t_real i_y) const;
+
+  /**
+   * gets the value for displacement at a point
+   * @param i_x x position
+   * @param i_y y position
+   * @return displacment value
+   */
+  t_real getDisplacementFromArray(t_real i_x,
+                                  t_real i_y) const;
 
 public:
   /**
    * Constructor.
    * @param bathymetryPath path to file containing bathymetry data
    * @param displacementPath path to file containing bathymetry data
+   * @param i_netCdf NetCdf instance
    * @param i_stride stride
    **/
   TsunamiEvent2d(const char *i_bathymetryPath,
@@ -64,11 +87,12 @@ public:
 
   /**
    * Gets the water height at a given point.
-   *
+   * @param i_x x position
+   * @param i_y y position
    * @return height at the given point.
    **/
-  t_real getHeight(t_real,
-                   t_real) const;
+  t_real getHeight(t_real i_x,
+                   t_real i_y) const;
 
   /**
    * Gets the momentum in x-direction.
@@ -88,7 +112,8 @@ public:
 
   /**
    * Gets the bathymetry
-   *
+   * @param i_x x position
+   * @param i_y y position
    * @return bathymetry.
    **/
   t_real getBathymetry(t_real i_x,

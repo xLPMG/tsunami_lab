@@ -8,7 +8,7 @@
 #define TSUNAMI_LAB_SETUPS_ARTIFICIAL_TSUNAMI_2D
 
 #include "Setup.h"
-#include  <cmath> 
+#include <cmath>
 
 namespace tsunami_lab
 {
@@ -24,23 +24,39 @@ namespace tsunami_lab
 class tsunami_lab::setups::ArtificialTsunami2d : public Setup
 {
 private:
+  static t_real constexpr m_pi = 3.1415926;
 
-    static t_real constexpr m_pi = 3.1415926;
-    
 public:
   /**
    * Constructor.
    *
    **/
   ArtificialTsunami2d();
-  
-    t_real computeD(t_real i_x,
-                    t_real i_y) const;
 
-    t_real computeF(t_real i_x) const;
-                    
-    t_real computeG(t_real i_y) const;
+  /**
+   * compute the displacement
+   * @param i_x postion in x direction
+   * @param i_y postion in y direction
+   * @return displacement
+   */
+  t_real computeD(t_real i_x,
+                  t_real i_y) const;
 
+  /**
+   * compute equation for f
+   * @param i_x postion in x direction
+   * @param i_y postion in y direction
+   * @return value for f
+   */
+  t_real computeF(t_real i_x) const;
+
+  /**
+   * compute equation for g
+   * @param i_x postion in x direction
+   * @param i_y postion in y direction
+   * @return value for g
+   */
+  t_real computeG(t_real i_y) const;
 
   /**
    * Gets the water height at a given point.
@@ -49,8 +65,8 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return water height at the given point.
    **/
-   t_real getHeight(t_real ,
-                           t_real )const;
+  t_real getHeight(t_real,
+                   t_real) const;
 
   /**
    * Gets the momentum in x-direction.
@@ -59,8 +75,8 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return momentum in x-direction.
    **/
-  t_real getMomentumX(t_real ,
-                              t_real ) const;
+  t_real getMomentumX(t_real,
+                      t_real) const;
 
   /**
    * Gets the momentum in y-direction.
@@ -69,8 +85,8 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return momentum in y-direction.
    **/
-   t_real getMomentumY(t_real,
-                              t_real )const ;
+  t_real getMomentumY(t_real,
+                      t_real) const;
 
   /**
    * Gets the bathymetry.
@@ -79,9 +95,8 @@ public:
    * @param i_y y-coordinate of the queried point.
    * @return bathymetry.
    **/
-   t_real getBathymetry(t_real ,
-                               t_real )const;
-                    
+  t_real getBathymetry(t_real,
+                       t_real) const;
 };
 
 #endif

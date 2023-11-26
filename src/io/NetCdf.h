@@ -23,12 +23,19 @@ namespace tsunami_lab
 class tsunami_lab::io::NetCdf
 {
 private:
+    //amount of cells in x direction
     t_idx m_nx = 0;
+    //amount of cells in y direction
     t_idx m_ny = 0;
+    //simulation size in x direction 
     t_real m_simulationSizeX = 0;
+    //simulation size in y direction 
     t_real m_simulationSizeY = 0;
+    //offset in x direction 
     t_real m_offsetX = 0;
+    //offset in y direction 
     t_real m_offsetY = 0;
+    //Id for nc file
     int m_ncId = 0;
     // error
     int m_err = 0;
@@ -111,6 +118,12 @@ public:
      * reads from the cdf file
      *
      * @param l_file name of the file to read from
+     * @param i_var variable to be read
+     * @param o_nx amount of cells in x direction 
+     * @param o_ny amount of cells in y direction 
+     * @param o_xData data of x dimension 
+     * @param o_yData data of y dimension 
+     * @param o_data output data
      */
     void read(const char *i_file,
               const char *i_var,
