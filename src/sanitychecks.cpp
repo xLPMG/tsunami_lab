@@ -18,7 +18,7 @@
 #include <limits>
 
 #define CATCH_CONFIG_RUNNER
-#include <catch2/catch.hpp>
+#include "catch2/catch.hpp"
 #undef CATCH_CONFIG_RUNNER
 
 int main(int i_argc,
