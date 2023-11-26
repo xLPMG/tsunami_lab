@@ -2,14 +2,14 @@
     "solver": "fwave",
     "nx": 1000,
     "ny": 1000,
-    "simulationSizeX": 10000,
-    "simulationSizeY": 10000,
-    "offsetX": -5000,
-    "offsetY": -5000,
-    "setup":"TSUNAMIEVENT2D",
+    "simulationSizeX": 1000,
+    "simulationSizeY": 1000,
+    "offsetX": -500,
+    "offsetY": -500,
+    "setup":"ARTIFICIAL2D",
     "hasBoundaryL": false,
     "hasBoundaryR": false,
     "hasBoundaryU": false,
     "hasBoundaryD": false,
-    "endTime":20
+    "endTime":50
 }

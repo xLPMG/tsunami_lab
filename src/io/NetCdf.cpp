@@ -205,8 +205,8 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     t_real *l_tH = new t_real[m_nx * m_ny];
     t_real *l_hu = new t_real[m_nx * m_ny];
     t_real *l_hv = new t_real[m_nx * m_ny];
+    
     int l_i = 0;
-
     for (t_idx l_x = 0; l_x < m_nx; l_x++)
     {
         for (t_idx l_y = 0; l_y < m_ny; l_y++)

@@ -50,6 +50,21 @@ bool endsWith(std::string const &str, std::string const &suffix)
   return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
 
+void setupFolders()
+{
+  // set up stations folder for stations to save their data in
+  if (std::filesystem::exists("stations"))
+    std::filesystem::remove_all("stations");
+
+  std::filesystem::create_directory("stations");
+
+  // clean solutions folder
+  if (std::filesystem::exists("solutions"))
+    std::filesystem::remove_all("solutions");
+
+  std::filesystem::create_directory("solutions");
+}
+
 int main(int i_argc,
          char *i_argv[])
 {
@@ -146,10 +161,12 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "SUBCRITICAL1D")
   {
+    l_simulationSizeX = 10;
     l_setup = new tsunami_lab::setups::Subcritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "SUPERCRITICAL1D")
   {
+    l_simulationSizeX = 10;
     l_setup = new tsunami_lab::setups::Supercritical1d(0.0001, 5);
   }
   else if (l_setupChoice == "TSUNAMIEVENT1D")
@@ -172,6 +189,10 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "ARTIFICIAL2D")
   {
+    l_simulationSizeX = 10000;
+    l_simulationSizeY = 10000;
+    l_offsetX = -5000;
+    l_offsetY = -5000;
     l_setup = new tsunami_lab::setups::ArtificialTsunami2d();
   }
   else
@@ -215,17 +236,9 @@ int main(int i_argc,
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-  // set up stations folder for stations to save their data in
-  if (std::filesystem::exists("stations"))
-    std::filesystem::remove_all("stations");
 
-  std::filesystem::create_directory("stations");
-
-  // clean solutions folder
-  if (std::filesystem::exists("solutions"))
-    std::filesystem::remove_all("solutions");
-
-  std::filesystem::create_directory("solutions");
+  // set up folders
+  setupFolders();
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -338,7 +351,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    // l_dt *= 0.3;
+    // l_dt *= 0.5;
   }
 
   // derive scaling for a time step

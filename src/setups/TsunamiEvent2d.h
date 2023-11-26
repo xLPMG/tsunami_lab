@@ -34,12 +34,16 @@ private:
   t_real *m_xDataB = nullptr;
   t_real *m_yDataB = nullptr;
   t_real *m_b = nullptr;
+  t_idx m_lastNegativeIndexBX = 0;
+  t_idx m_lastNegativeIndexBY = 0;
 
   // displacements
   t_idx m_nxD = 0, m_nyD = 0;
   t_real *m_xDataD = nullptr;
   t_real *m_yDataD = nullptr;
   t_real *m_d = nullptr;
+  t_idx m_lastNegativeIndexDX = 0;
+  t_idx m_lastNegativeIndexDY = 0;
 
   t_real getBathymetryFromArray(t_real,
                                 t_real) const;
