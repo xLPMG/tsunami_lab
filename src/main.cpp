@@ -401,6 +401,7 @@ int main(int i_argc,
                       l_waveProp->getMomentumX(),
                       l_waveProp->getMomentumY(),
                       l_waveProp->getBathymetry(),
+                      true,
                       l_simTime);
     }
 
