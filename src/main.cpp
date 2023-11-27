@@ -392,6 +392,7 @@ int main(int i_argc,
       l_file.close();
       l_nOut++;
     }
+
     if (l_timeStep % 50 == 0)
     {
       std::cout << "  writing to netcdf " << std::endl;
@@ -401,7 +402,6 @@ int main(int i_argc,
                       l_waveProp->getMomentumX(),
                       l_waveProp->getMomentumY(),
                       l_waveProp->getBathymetry(),
-                      true,
                       l_simTime);
     }
 

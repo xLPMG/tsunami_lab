@@ -194,8 +194,7 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
 
 tsunami_lab::io::NetCdf::~NetCdf()
 {
-    if (m_outputFileOpened)
-        checkNcErr(nc_close(m_ncId));
+    if(m_outputFileOpened) checkNcErr(nc_close(m_ncId));
     m_outputFileOpened = false;
 }
 
@@ -205,7 +204,6 @@ void tsunami_lab::io::NetCdf::write(const char *path,
                                     t_real const *i_hu,
                                     t_real const *i_hv,
                                     t_real const *i_b,
-                                    bool i_hasGhostCells,
                                     t_real i_t)
 {
     t_idx start[] = {m_timeStepCount, 0, 0};
@@ -217,32 +215,15 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     t_real *l_hv = new t_real[m_nx * m_ny];
 
     int l_i = 0;
-    if (i_hasGhostCells)
+    for (t_idx l_x = 0; l_x < m_nx; l_x++)
     {
-        for (t_idx l_x = 1; l_x < m_nx + 1; l_x++)
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            for (t_idx l_y = 1; l_y < m_ny + 1; l_y++)
-            {
-                l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
-                l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
-                l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
-                l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
-                l_i++;
-            }
-        }
-    }
-    else
-    {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
-        {
-            for (t_idx l_y = 0; l_y < m_ny; l_y++)
-            {
-                l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
-                l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
-                l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
-                l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
-                l_i++;
-            }
+            l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            l_hu[l_i] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            l_hv[l_i] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
+            l_i++;
         }
     }
 
@@ -253,24 +234,11 @@ void tsunami_lab::io::NetCdf::write(const char *path,
 
         t_real *l_b = new t_real[m_nx * m_ny]{0};
         int l_i = 0;
-        if (i_hasGhostCells)
+        for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {
-            for (t_idx l_x = 1; l_x < m_nx + 1; l_x++)
+            for (t_idx l_y = 0; l_y < m_ny; l_y++)
             {
-                for (t_idx l_y = 1; l_y < m_ny + 1; l_y++)
-                {
-                    l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
-                }
-            }
-        }
-        else
-        {
-            for (t_idx l_x = 0; l_x < m_nx; l_x++)
-            {
-                for (t_idx l_y = 0; l_y < m_ny; l_y++)
-                {
-                    l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
-                }
+                l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
             }
         }
 

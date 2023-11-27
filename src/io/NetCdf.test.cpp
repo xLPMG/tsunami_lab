@@ -28,7 +28,6 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
                          nullptr,
                          nullptr,
                          nullptr,
-                         false,
                          0);
     delete l_netCdfWrite;
     delete[] l_dataToWrite;

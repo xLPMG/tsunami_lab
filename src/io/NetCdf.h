@@ -104,7 +104,6 @@ public:
      * @param i_hv momentum y-direction
      * @param i_b bathymetry
      * @param i_t current timestep
-     * @param i_hasGhostCells true if the arrays have ghost cells
      *
      */
     void write(const char *path,
@@ -113,7 +112,6 @@ public:
                t_real const *i_hu,
                t_real const *i_hv,
                t_real const *i_b,
-               bool i_hasGhostCells,
                t_real i_t);
 
     /**
