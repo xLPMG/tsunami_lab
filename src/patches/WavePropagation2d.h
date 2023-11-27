@@ -182,7 +182,7 @@ public:
    *
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_hu momentum in x-direction.
+   * @param i_huX momentum in x-direction.
    **/
   void setMomentumX(t_idx i_ix,
                     t_idx i_iy,
@@ -195,7 +195,7 @@ public:
    * Sets the momentum in y-direction to the given value.
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_hu momentum in y-direction.
+   * @param i_huY momentum in y-direction.
    **/
   void setMomentumY(t_idx i_ix,
                     t_idx i_iy,
@@ -209,7 +209,7 @@ public:
    *
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_h bathymetry.
+   * @param i_b bathymetry.
    **/
   void setBathymetry(t_idx i_ix,
                      t_idx i_iy,
