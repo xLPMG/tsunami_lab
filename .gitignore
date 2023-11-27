@@ -7,5 +7,7 @@ _templates/
 .DS_Store
 .vscode/
 
+*.log
+
 solutions/
 stations/

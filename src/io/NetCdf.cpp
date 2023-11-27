@@ -215,9 +215,9 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     t_real *l_hv = new t_real[m_nx * m_ny];
 
     int l_i = 0;
-    for (t_idx l_x = 0; l_x < m_nx; l_x++)
+    for (t_idx l_x = 1; l_x < m_nx+1; l_x++)
     {
-        for (t_idx l_y = 0; l_y < m_ny; l_y++)
+        for (t_idx l_y = 1; l_y < m_ny+1; l_y++)
         {
             l_h[l_i] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
             l_tH[l_i] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
@@ -234,9 +234,9 @@ void tsunami_lab::io::NetCdf::write(const char *path,
 
         t_real *l_b = new t_real[m_nx * m_ny]{0};
         int l_i = 0;
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        for (t_idx l_x = 1; l_x < m_nx + 1; l_x++)
         {
-            for (t_idx l_y = 0; l_y < m_ny; l_y++)
+            for (t_idx l_y = 1; l_y < m_ny + 1; l_y++)
             {
                 l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
             }
