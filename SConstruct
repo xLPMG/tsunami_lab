@@ -34,7 +34,7 @@ if vars.UnknownVariables():
 env = Environment( variables = vars )
 
 conf = Configure(env)
-if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         print ('Did not find the netcdf library, exiting!')
         Exit(1)
 env = conf.Finish()
@@ -93,13 +93,10 @@ SConscript( 'build/src/SConscript' )
 Import('env')
 
 env.Program( target = 'build/tsunami_lab',
-             source = env.sources + env.standalone,
-             LIBS='netcdf', LIBPATH='.' )
+             source = env.sources + env.standalone)
 
 env.Program( target = 'build/tests',
-             source = env.sources + env.tests,
-             LIBS='netcdf', LIBPATH='.' )
+             source = env.sources + env.tests)
 
 env.Program( target = 'build/sanitychecks',
-             source = env.sources + env.sanitychecks,
-             LIBS='netcdf', LIBPATH='.' )
+             source = env.sources + env.sanitychecks)

@@ -78,6 +78,8 @@ public:
      *  Constructor
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
+     * @param i_simulationSizeX simulation size in x-direction
+     * @param i_simulationSizeY simulation size in y-direction
      * @param i_offsetX offset in x-direction
      * @param i_offsetY offset in y-direction
      */

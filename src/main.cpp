@@ -98,6 +98,13 @@ int main(int i_argc,
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
   tsunami_lab::t_real l_stationFrequency = 1;
+  // data writer choice
+  enum DataWriter
+  {
+    NETCDF = 0,
+    CSV = 1
+  };
+  DataWriter l_dataWriter = NETCDF;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -129,6 +136,15 @@ int main(int i_argc,
   l_displacementFilePath = l_configData.value("displacement", "");
   l_endTime = l_configData.value("endTime", 20);
   l_stationFrequency = l_configData.value("stationFrequency", 1);
+  std::string l_outputMethod = l_configData.value("outputMethod", "netcdf");
+  if (l_outputMethod == "netcdf" || l_outputMethod == "NETCDF")
+  {
+    l_dataWriter = NETCDF;
+  }
+  else if (l_outputMethod == "csv" || l_outputMethod == "CSV")
+  {
+    l_dataWriter = CSV;
+  }
 
   // construct setup
   /**
@@ -363,48 +379,54 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
+  tsunami_lab::t_idx l_writingFrequency = (l_endTime*0.5)+15;
 
   std::cout << "entering time loop" << std::endl;
 
   // iterate over time
   while (l_simTime < l_endTime)
   {
-    if (l_timeStep % 25 == 0)
+    if (l_timeStep % l_writingFrequency == 0)
     {
       std::cout << "  simulation time / #time steps: "
                 << l_simTime << " / " << l_timeStep << std::endl;
 
-      std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
-      std::cout << "  writing wave field to " << l_path << std::endl;
-
-      std::ofstream l_file;
-      l_file.open(l_path);
-      tsunami_lab::io::Csv::write(l_dx,
-                                  l_dy,
-                                  l_nx,
-                                  l_ny,
-                                  l_waveProp->getStride(),
-                                  l_waveProp->getHeight(),
-                                  l_waveProp->getMomentumX(),
-                                  l_waveProp->getMomentumY(),
-                                  l_waveProp->getBathymetry(),
-                                  l_file);
-      l_file.close();
-      l_nOut++;
+      switch (l_dataWriter)
+      {
+      case NETCDF:
+      {
+        std::cout << "  writing to netcdf " << std::endl;
+        l_netCdf->write("solutions/solution.nc",
+                        l_waveProp->getStride(),
+                        l_waveProp->getHeight(),
+                        l_waveProp->getMomentumX(),
+                        l_waveProp->getMomentumY(),
+                        l_waveProp->getBathymetry(),
+                        l_simTime);
+        break;
+      }
+      case CSV:
+      {
+        std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
+        std::cout << "  writing wave field to " << l_path << std::endl;
+        std::ofstream l_file;
+        l_file.open(l_path);
+        tsunami_lab::io::Csv::write(l_dx,
+                                    l_dy,
+                                    l_nx,
+                                    l_ny,
+                                    l_waveProp->getStride(),
+                                    l_waveProp->getHeight(),
+                                    l_waveProp->getMomentumX(),
+                                    l_waveProp->getMomentumY(),
+                                    l_waveProp->getBathymetry(),
+                                    l_file);
+        l_file.close();
+        l_nOut++;
+        break;
+      }
+      }
     }
-
-    if (l_timeStep % 50 == 0)
-    {
-      std::cout << "  writing to netcdf " << std::endl;
-      l_netCdf->write("solutions/solution.nc",
-                      l_waveProp->getStride(),
-                      l_waveProp->getHeight(),
-                      l_waveProp->getMomentumX(),
-                      l_waveProp->getMomentumY(),
-                      l_waveProp->getBathymetry(),
-                      l_simTime);
-    }
-
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
     if (l_simTime >= l_stationFrequency * l_captureCount)
