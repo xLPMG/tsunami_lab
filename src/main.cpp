@@ -207,6 +207,27 @@ int main(int i_argc,
     l_offsetY = -5000;
     l_setup = new tsunami_lab::setups::ArtificialTsunami2d();
   }
+  else if (l_setupChoice == "CHILE")
+  {
+    l_simulationSizeX = 3500000;
+    l_simulationSizeY = 2950000;
+    l_offsetX = -3000000;
+    l_offsetY = -1450000;
+
+    l_nx = l_simulationSizeX / 1000;
+    l_ny = l_simulationSizeY / 1000;
+
+    tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
+                                                                         l_ny,
+                                                                         l_simulationSizeX,
+                                                                         l_simulationSizeY,
+                                                                         l_offsetX,
+                                                                         l_offsetY);
+    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/chile/chile_gebco20_usgs_250m_bath_fixed.nc",
+                                                      "resources/chile/chile_gebco20_usgs_250m_displ_fixed.nc",
+                                                      l_netCdfChile,
+                                                      l_nx);
+  }
   else
   {
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
@@ -379,7 +400,7 @@ int main(int i_argc,
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
   tsunami_lab::t_idx l_writingFrequency = (l_endTime * 0.04) + 50;
-  l_writingFrequency = (l_endTime/4) < l_writingFrequency ? (l_endTime/4) : l_writingFrequency;
+  l_writingFrequency = (l_endTime / 4) < l_writingFrequency ? (l_endTime / 4) : l_writingFrequency;
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
