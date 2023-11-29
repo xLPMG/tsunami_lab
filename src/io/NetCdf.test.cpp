@@ -1,9 +1,9 @@
 #include <catch2/catch.hpp>
 #include "../constants.h"
-#include <sstream>
 #define private public
 #include "NetCdf.h"
 #undef public
+#include <iostream>
 
 TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
 {
@@ -21,7 +21,6 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
             l_dataToWrite[l_ix + l_x * l_iy] = -int(l_iy);
         }
     }
-
     l_netCdfWrite->write("resources/netCdfTest.nc",
                          l_x,
                          l_dataToWrite,
@@ -35,15 +34,19 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
     // read data
     tsunami_lab::io::NetCdf *l_netCdfRead = new tsunami_lab::io::NetCdf(l_x, l_y, l_x, l_y, 0, 0);
 
-    tsunami_lab::t_real *l_dataXToRead = nullptr;
-    tsunami_lab::t_real *l_dataYToRead = nullptr;
-    tsunami_lab::t_real *l_dataToRead = nullptr;
+    tsunami_lab::t_real *l_dataXToRead = new tsunami_lab::t_real[l_x];
+    tsunami_lab::t_real *l_dataYToRead = new tsunami_lab::t_real[l_y];
+    tsunami_lab::t_real *l_dataToRead = new tsunami_lab::t_real[l_x*l_y];
 
     tsunami_lab::t_idx l_nx = 0, l_ny = 0;
+    l_netCdfRead->getDimensionSize("resources/netCdfTest.nc",
+                                   l_nx,
+                                   "x");
+    l_netCdfRead->getDimensionSize("resources/netCdfTest.nc",
+                                   l_ny,
+                                   "y");
     l_netCdfRead->read("resources/netCdfTest.nc",
                        "height",
-                       l_nx,
-                       l_ny,
                        &l_dataXToRead,
                        &l_dataYToRead,
                        &l_dataToRead);

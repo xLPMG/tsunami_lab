@@ -188,7 +188,6 @@ int main(int i_argc,
   }
   else if (l_setupChoice == "TSUNAMIEVENT2D")
   {
-
     tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(l_nx,
                                                                         l_ny,
                                                                         l_simulationSizeX,
@@ -379,8 +378,9 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = (l_endTime*0.5)+15;
-
+  tsunami_lab::t_idx l_writingFrequency = (l_endTime * 0.04) + 50;
+  l_writingFrequency = (l_endTime/4) < l_writingFrequency ? (l_endTime/4) : l_writingFrequency;
+  std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
   // iterate over time

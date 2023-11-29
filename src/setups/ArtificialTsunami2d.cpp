@@ -7,8 +7,7 @@
 
 #include "ArtificialTsunami2d.h"
 #include <cmath>
-#include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 
 tsunami_lab::setups::ArtificialTsunami2d::ArtificialTsunami2d(){};
 

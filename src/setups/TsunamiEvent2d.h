@@ -88,6 +88,12 @@ public:
                  t_idx i_stride);
 
   /**
+   * Destructor.
+   * 
+   **/
+  ~TsunamiEvent2d();
+
+  /**
    * Gets the water height at a given point.
    * @param i_x x position
    * @param i_y y position

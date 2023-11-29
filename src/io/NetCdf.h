@@ -9,8 +9,6 @@
 
 #include "../constants.h"
 #include <cstring>
-#include <iostream>
-#include <vector>
 
 namespace tsunami_lab
 {
@@ -23,19 +21,19 @@ namespace tsunami_lab
 class tsunami_lab::io::NetCdf
 {
 private:
-    //amount of cells in x direction
+    // amount of cells in x direction
     t_idx m_nx = 0;
-    //amount of cells in y direction
+    // amount of cells in y direction
     t_idx m_ny = 0;
-    //simulation size in x direction 
+    // simulation size in x direction
     t_real m_simulationSizeX = 0;
-    //simulation size in y direction 
+    // simulation size in y direction
     t_real m_simulationSizeY = 0;
-    //offset in x direction 
+    // offset in x direction
     t_real m_offsetX = 0;
-    //offset in y direction 
+    // offset in y direction
     t_real m_offsetY = 0;
-    //Id for nc file
+    // Id for nc file
     int m_ncId = 0;
     // error
     int m_err = 0;
@@ -58,7 +56,7 @@ private:
     // index for timesteps
     t_idx m_timeStepCount = 0;
 
-    //tracks if file was opened for writing
+    // tracks if file was opened for writing
     bool m_outputFileOpened = false;
 
     /**
@@ -117,20 +115,27 @@ public:
                t_real i_t);
 
     /**
-     * reads from the cdf file
+     * Gets the size of a dimension
      *
-     * @param l_file name of the file to read from
+     * @param i_file name of the file to read from
+     * @param o_n number of entries along that axis
+     * @param i_dimName name of the dimension
+     */
+    void getDimensionSize(const char *i_file,
+                          t_idx &o_n,
+                          const char *i_dimName);
+
+    /**
+     * Reads from the cdf file
+     *
+     * @param i_file name of the file to read from
      * @param i_var variable to be read
-     * @param o_nx amount of cells in x direction 
-     * @param o_ny amount of cells in y direction 
-     * @param o_xData data of x dimension 
-     * @param o_yData data of y dimension 
+     * @param o_xData data of x dimension
+     * @param o_yData data of y dimension
      * @param o_data output data
      */
     void read(const char *i_file,
               const char *i_var,
-              t_idx &o_nx,
-              t_idx &o_ny,
               t_real **o_xData,
               t_real **o_yData,
               t_real **o_data);
