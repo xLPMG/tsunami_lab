@@ -314,8 +314,8 @@ int main(int i_argc,
       tsunami_lab::t_real l_y = elem.at("locY");
     
       //location cell
-      tsunami_lab::t_idx l_cx = l_x/l_dx - l_offsetX;
-      tsunami_lab::t_idx l_cy = l_y/l_dy - l_offsetY;
+      tsunami_lab::t_idx l_cx = (l_x - l_offsetX)/l_dx;
+      tsunami_lab::t_idx l_cy = (l_y - l_offsetY)/l_dy;
 
       l_stations.push_back(new tsunami_lab::io::Station(l_cx,
                                                         l_cy,
