@@ -50,7 +50,7 @@ public:
   /**
    * Constructor
    *
-   * @param i_x position in x dierection
+   * @param i_x position in x-direction
    * @param i_y position in y-direction
    * @param i_name name the station
    * @param i_waveProp active wave propagation patch

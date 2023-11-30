@@ -280,7 +280,7 @@ int main(int i_argc,
                                                              l_boundaryT,
                                                              l_boundaryB);
   }
-
+  
   // set up stations
   std::cout << "Setting up stations..." << std::endl;
   std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
@@ -288,10 +288,16 @@ int main(int i_argc,
   {
     for (json &elem : l_configData["stations"])
     {
+      //location in meters
       tsunami_lab::t_real l_x = elem.at("locX");
       tsunami_lab::t_real l_y = elem.at("locY");
-      l_stations.push_back(new tsunami_lab::io::Station(l_x,
-                                                        l_y,
+    
+      //location cell
+      tsunami_lab::t_idx l_cx = l_x/l_dx - l_offsetX;
+      tsunami_lab::t_idx l_cy = l_y/l_dy - l_offsetY;
+
+      l_stations.push_back(new tsunami_lab::io::Station(l_cx,
+                                                        l_cy,
                                                         elem.at("name"),
                                                         l_waveProp));
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
