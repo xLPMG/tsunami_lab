@@ -253,6 +253,27 @@ int main(int i_argc,
                                                       l_netCdfChile,
                                                       l_nx);
   }
+  else if (l_setupChoice == "TOHOKU")
+  {
+    l_simulationSizeX = 2700000;
+    l_simulationSizeY = 1500000;
+    l_offsetX = -200000;
+    l_offsetY = -750000;
+
+    l_nx = l_simulationSizeX / 1000;
+    l_ny = l_simulationSizeY / 1000;
+
+    tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
+                                                                         l_ny,
+                                                                         l_simulationSizeX,
+                                                                         l_simulationSizeY,
+                                                                         l_offsetX,
+                                                                         l_offsetY);
+    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco20_ucsb3_250m_bath.nc",
+                                                      "resources/tohoku/tohoku_gebco20_ucsb3_250m_displ.nc",
+                                                      l_netCdfTohoku,
+                                                      l_nx);
+  }
   else
   {
     std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
