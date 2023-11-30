@@ -39,11 +39,11 @@ private:
   //! selected solver (roe or fwave)
   std::string m_solver = "";
 
-  //! true if there is a boundary on the left side
-  bool m_hasBoundaryL = false;
+  //! boundary condition on the left side
+  Boundary m_boundaryL = OUTFLOW;
 
-  //! true if there is a boundary on the right side
-  bool m_hasBoundaryR = false;
+  //! boundary condition on the right side
+  Boundary m_boundaryR = OUTFLOW;
 
  /**
   * Compute the reflection effect
@@ -76,13 +76,13 @@ public:
    *
    * @param i_nCells number of cells.
    * @param i_solver selected solver.
-   * @param i_hasBoundaryL true if there is a reflecting boundary on the left side
-   * @param i_hasBoundaryR true if there is a reflecting boundary on the right side
+   * @param i_boundaryL boundary condition on the left side
+   * @param i_boundaryR boundary condition on the right side
    **/
   WavePropagation1d(t_idx i_nCells,
                     const std::string &i_solver,
-                    bool i_hasBoundaryL,
-                    bool i_hasBoundaryR);
+                    Boundary i_boundaryL,
+                    Boundary i_boundaryR);
 
   /**
    * Destructor which frees all allocated memory.

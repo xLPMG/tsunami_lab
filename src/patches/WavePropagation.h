@@ -20,6 +20,12 @@ namespace tsunami_lab
 class tsunami_lab::patches::WavePropagation
 {
 public:
+  enum Boundary
+  {
+    OUTFLOW = 0,
+    WALL = 1
+  };
+  
   /**
    * Virtual destructor for base class.
    **/

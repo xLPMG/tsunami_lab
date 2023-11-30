@@ -40,6 +40,7 @@
 #include <netcdf.h>
 
 using json = nlohmann::json;
+using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
 
 bool endsWith(std::string const &str, std::string const &suffix)
 {
@@ -86,10 +87,11 @@ int main(int i_argc,
   tsunami_lab::t_real l_dy = 1;
   // solver default
   std::string l_solver = "";
-  bool l_hasBoundaryL = false;
-  bool l_hasBoundaryR = false;
-  bool l_hasBoundaryT = false;
-  bool l_hasBoundaryB = false;
+  // boundary conditions
+  Boundary l_boundaryL = Boundary::OUTFLOW;
+  Boundary l_boundaryR = Boundary::OUTFLOW;
+  Boundary l_boundaryT = Boundary::OUTFLOW;
+  Boundary l_boundaryB = Boundary::OUTFLOW;
   // input file paths
   std::string l_bathymetryFilePath = "";
   std::string l_displacementFilePath = "";
@@ -122,19 +124,42 @@ int main(int i_argc,
 
   l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
   l_solver = l_configData.value("solver", "fwave");
+  // read size config
   l_nx = l_configData.value("nx", 1);
   l_ny = l_configData.value("ny", 1);
   l_simulationSizeX = l_configData.value("simulationSizeX", 1);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
   l_offsetX = l_configData.value("offsetX", 0);
   l_offsetY = l_configData.value("offsetY", 0);
-  l_hasBoundaryL = l_configData.value("hasBoundaryL", false);
-  l_hasBoundaryR = l_configData.value("hasBoundaryR", false);
-  l_hasBoundaryT = l_configData.value("hasBoundaryT", false);
-  l_hasBoundaryB = l_configData.value("hasBoundaryB", false);
+  l_endTime = l_configData.value("endTime", 20);
+  // read boundary config
+  std::string l_boundaryStringL = l_configData.value("boundaryL", "outflow");
+  if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
+    l_boundaryL = Boundary::OUTFLOW;
+  else if (l_boundaryStringL == "wall" || l_boundaryStringL == "WALL")
+    l_boundaryL = Boundary::WALL;
+
+  std::string l_boundaryStringR = l_configData.value("boundaryR", "outflow");
+  if (l_boundaryStringR == "outflow" || l_boundaryStringR == "OUTFLOW")
+    l_boundaryR = Boundary::OUTFLOW;
+  else if (l_boundaryStringR == "wall" || l_boundaryStringR == "WALL")
+    l_boundaryR = Boundary::WALL;
+
+  std::string l_boundaryStringT = l_configData.value("boundaryT", "outflow");
+  if (l_boundaryStringT == "outflow" || l_boundaryStringT == "OUTFLOW")
+    l_boundaryT = Boundary::OUTFLOW;
+  else if (l_boundaryStringT == "wall" || l_boundaryStringT == "WALL")
+    l_boundaryT = Boundary::WALL;
+
+  std::string l_boundaryStringB = l_configData.value("boundaryB", "outflow");
+  if (l_boundaryStringB == "outflow" || l_boundaryStringB == "OUTFLOW")
+    l_boundaryB = Boundary::OUTFLOW;
+  else if (l_boundaryStringB == "wall" || l_boundaryStringB == "WALL")
+    l_boundaryB = Boundary::WALL;
+  // read file paths from config
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_displacementFilePath = l_configData.value("displacement", "");
-  l_endTime = l_configData.value("endTime", 20);
+  // read station data
   l_stationFrequency = l_configData.value("stationFrequency", 1);
   std::string l_outputMethod = l_configData.value("outputMethod", "netcdf");
   if (l_outputMethod == "netcdf" || l_outputMethod == "NETCDF")
@@ -243,17 +268,17 @@ int main(int i_argc,
   {
     l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
                                                              l_solver,
-                                                             l_hasBoundaryL,
-                                                             l_hasBoundaryR);
+                                                             l_boundaryL,
+                                                             l_boundaryR);
   }
   else
   {
     l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
                                                              l_ny,
-                                                             l_hasBoundaryL,
-                                                             l_hasBoundaryR,
-                                                             l_hasBoundaryT,
-                                                             l_hasBoundaryB);
+                                                             l_boundaryL,
+                                                             l_boundaryR,
+                                                             l_boundaryT,
+                                                             l_boundaryB);
   }
 
   // set up stations
@@ -387,7 +412,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    l_dt *= 0.5;
+    // l_dt *= 0.5;
   }
 
   // derive scaling for a time step
@@ -399,8 +424,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = (l_endTime * 0.04) + 50;
-  l_writingFrequency = (l_endTime / 4) < l_writingFrequency ? (l_endTime / 4) : l_writingFrequency;
+  tsunami_lab::t_idx l_writingFrequency = 100;
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
