@@ -31,9 +31,9 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
                                m_nyD,
                                "y");
 
-    m_xDataB = new t_real[m_nxB]{0};
-    m_yDataB = new t_real[m_nyB]{0};
-    m_b = new t_real[m_nxB * m_nyB]{0};
+    m_xDataB = new t_real[m_nxB];
+    m_yDataB = new t_real[m_nyB];
+    m_b = new t_real[m_nxB * m_nyB];
 
     i_netCdf->read(i_bathymetryPath,
                    "z",

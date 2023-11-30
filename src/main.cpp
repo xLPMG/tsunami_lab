@@ -307,11 +307,11 @@ int main(int i_argc,
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
-    tsunami_lab::t_real l_y = (l_cy + 0.5) * l_dy + l_offsetX;
+    tsunami_lab::t_real l_y = (l_cy + 0.5) * l_dy + l_offsetY;
 
     for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
     {
-      tsunami_lab::t_real l_x = (l_cx + 0.5) * l_dx + l_offsetY;
+      tsunami_lab::t_real l_x = (l_cx + 0.5) * l_dx + l_offsetX;
 
       // get initial values of the setup
       tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
