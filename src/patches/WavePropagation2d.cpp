@@ -223,12 +223,12 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     t_idx ceL = getStride() * i;
     t_idx ceR = ceL + m_nCellsX + 1;
     // left column
-    l_h[ceL] = m_boundaryL ? OUTFLOW : l_h[ceL + 1];
+    l_h[ceL] = m_boundaryL == WALL ? 0 : l_h[ceL + 1];
     l_huX[ceL] = l_huX[ceL + 1];
     l_huY[ceL] = l_huY[ceL + 1];
     l_b[ceL] = l_b[ceL + 1];
     // right column
-    l_h[ceR] = m_boundaryR ? OUTFLOW : l_h[ceR - 1];
+    l_h[ceR] =  m_boundaryR == WALL ? 0 : l_h[ceR - 1];
     l_huX[ceR] = l_huX[ceR - 1];
     l_huY[ceR] = l_huY[ceR - 1];
     l_b[ceR] = l_b[ceR - 1];
@@ -238,12 +238,12 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     t_idx ceB = i;
     t_idx ceT = i + (m_nCellsY + 1) * getStride();
     // bottom row
-    l_h[ceB] = m_boundaryB ? OUTFLOW : l_h[ceB + getStride()];
+    l_h[ceB] = m_boundaryB == WALL ? 0 : l_h[ceB + getStride()];
     l_huX[ceB] = l_huX[ceB + getStride()];
     l_huY[ceB] = l_huY[ceB + getStride()];
     l_b[ceB] = l_b[ceB + getStride()];
     // top row
-    l_h[ceT] = m_boundaryT ? OUTFLOW : l_h[ceT - getStride()];
+    l_h[ceT] = m_boundaryT == WALL ? 0 : l_h[ceT - getStride()];
     l_huX[ceT] = l_huX[ceT - getStride()];
     l_huY[ceT] = l_huY[ceT - getStride()];
     l_b[ceT] = l_b[ceT - getStride()];
