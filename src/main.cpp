@@ -424,7 +424,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = 100;
+  tsunami_lab::t_idx l_writingFrequency = l_endTime / 10;
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
