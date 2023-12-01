@@ -70,7 +70,7 @@ int main(int i_argc,
          char *i_argv[])
 {
   // config file path
-  std::string l_configFilePath = "config.json";
+  std::string l_configFilePath = "configs/config.json";
   // setup choice
   std::string l_setupChoice = "";
   // number of cells in x- and y-direction
@@ -243,8 +243,8 @@ int main(int i_argc,
     l_offsetX = -2999875;
     l_offsetY = -1449875;
 
-    l_nx = l_simulationSizeX / 10000;
-    l_ny = l_simulationSizeY / 10000;
+    // l_nx = l_simulationSizeX / 10000;
+    // l_ny = l_simulationSizeY / 10000;
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,

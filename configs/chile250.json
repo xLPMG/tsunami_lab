@@ -1,0 +1,8 @@
+{
+    "solver": "fwave",
+    "setup":"CHILE",
+    "nx":14000,
+    "ny":11800,
+    "endTime":15000,
+    "writingFrequency":300
+}

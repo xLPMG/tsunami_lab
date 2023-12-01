@@ -15,11 +15,13 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
 
     tsunami_lab::t_real *l_dataToWrite = new tsunami_lab::t_real[l_x * l_y];
 
+    int l_i = 1;
     for (tsunami_lab::t_idx l_iy = 0; l_iy < l_y; l_iy++)
     {
         for (tsunami_lab::t_idx l_ix = 0; l_ix < l_x; l_ix++)
         {
-            l_dataToWrite[l_ix + l_x * l_iy] = -int(l_iy + 1) * 100;
+            l_dataToWrite[l_ix + l_x * l_iy] = -l_i * 100;
+            l_i++;
         }
     }
 
@@ -56,11 +58,14 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
     REQUIRE(l_nx == l_x);
     REQUIRE(l_ny == l_y);
 
-    for (tsunami_lab::t_idx l_iy = 0; l_iy < l_y; l_iy++)
+    l_i = 1;
+
+    for (tsunami_lab::t_idx l_ix = 0; l_ix < l_x; l_ix++)
     {
-        for (tsunami_lab::t_idx l_ix = 0; l_ix < l_x; l_ix++)
+        for (tsunami_lab::t_idx l_iy = 0; l_iy < l_y; l_iy++)
         {
-            REQUIRE(l_dataToRead[l_ix + l_x * l_iy] == -int(l_iy + 1) * 100);
+            REQUIRE(l_dataToRead[l_ix + l_x * l_iy] == -l_i * 100);
+            l_i++;
         }
     }
 
