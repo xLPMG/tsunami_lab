@@ -40,8 +40,6 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
                    &m_xDataB,
                    &m_yDataB,
                    &m_b);
-                   
-    std::cout << m_b[0 + m_nxB*1] << std::endl;
 
     m_xDataD = new t_real[m_nxD];
     m_yDataD = new t_real[m_nyD];
@@ -235,14 +233,13 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetry(t_real i_
 {
     t_real l_bath = getBathymetryFromArray(i_x, i_y);
     t_real l_displ = getDisplacementFromArray(i_x, i_y);
-    return l_bath;
-    // TODO add displ
+
     if (l_bath < 0)
     {
-        return std::min(l_bath, -m_delta);
+        return std::min(l_bath, -m_delta) + l_displ;
     }
     else
     {
-        return std::max(l_bath, m_delta);
+        return std::max(l_bath, m_delta) + l_displ;
     }
 }

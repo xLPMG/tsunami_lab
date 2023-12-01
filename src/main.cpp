@@ -100,6 +100,8 @@ int main(int i_argc,
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
   tsunami_lab::t_real l_stationFrequency = 1;
+  // writing frequency in timesteps
+  tsunami_lab::t_idx l_writingFrequency = 80;
   // data writer choice
   enum DataWriter
   {
@@ -159,6 +161,8 @@ int main(int i_argc,
   // read file paths from config
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_displacementFilePath = l_configData.value("displacement", "");
+  //writing frequency
+  l_writingFrequency = l_configData.value("writingFrequency", 80);
   // read station data
   l_stationFrequency = l_configData.value("stationFrequency", 1);
   std::string l_outputMethod = l_configData.value("outputMethod", "netcdf");
@@ -239,8 +243,8 @@ int main(int i_argc,
     l_offsetX = -2999875;
     l_offsetY = -1449875;
 
-    l_nx = l_simulationSizeX / 8000;
-    l_ny = l_simulationSizeY / 8000;
+    l_nx = l_simulationSizeX / 10000;
+    l_ny = l_simulationSizeY / 10000;
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
@@ -440,7 +444,7 @@ int main(int i_argc,
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    // l_dt *= 0.5;
+    l_dt *= 0.5;
   }
 
   // derive scaling for a time step
@@ -452,7 +456,6 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = l_endTime<=1000 ? l_endTime : (l_endTime / 1000);
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 

@@ -224,7 +224,7 @@ void tsunami_lab::io::NetCdf::write(const char *path,
         for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {
             for (t_idx l_y = 0; l_y < m_ny; l_y++)
-            {   
+            {
                 l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
             }
         }
@@ -349,9 +349,9 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
 
     // convert to strided array
     int l_i = 0;
-    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
+    for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
     {
-        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
+        for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
         {
             *(*o_data + (l_ix + l_nx * l_iy)) = l_data[l_i++];
         }
