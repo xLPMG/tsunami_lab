@@ -40,6 +40,8 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
                    &m_xDataB,
                    &m_yDataB,
                    &m_b);
+                   
+    std::cout << m_b[0 + m_nxB*1] << std::endl;
 
     m_xDataD = new t_real[m_nxD];
     m_yDataD = new t_real[m_nyD];
@@ -121,7 +123,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
 
     for (; l_ix < m_nxB; l_ix++)
     {
-        if (m_xDataB[l_ix] > i_x)
+        if (m_xDataB[l_ix] >= i_x)
         {
             if (abs(m_xDataB[l_ix] - i_x) > abs(m_xDataB[l_ix - 1] - i_x))
             {
@@ -137,9 +139,10 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
 
     t_idx l_y = 0;
     t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexBY : 1;
+
     for (; l_iy < m_nyB; l_iy++)
     {
-        if (m_yDataB[l_iy] > i_y)
+        if (m_yDataB[l_iy] >= i_y)
         {
             if (abs(m_yDataB[l_iy] - i_y) > abs(m_yDataB[l_iy - 1] - i_y))
             {
@@ -152,7 +155,6 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
             break;
         }
     }
-
     return m_b[l_x + m_nxB * l_y];
 }
 
@@ -168,7 +170,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getDisplacementFromArra
     for (; l_ix < m_nxD; l_ix++)
     {
 
-        if (m_xDataD[l_ix] > i_x)
+        if (m_xDataD[l_ix] >= i_x)
         {
             if (abs(m_xDataD[l_ix] - i_x) > abs(m_xDataD[l_ix - 1] - i_x))
             {
@@ -186,7 +188,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getDisplacementFromArra
     t_idx l_iy = i_y >= 0 ? m_lastNegativeIndexDY : 1;
     for (; l_iy < m_nyD; l_iy++)
     {
-        if (m_yDataD[l_iy] > i_y)
+        if (m_yDataD[l_iy] >= i_y)
         {
             if (abs(m_yDataD[l_iy] - i_y) > abs(m_yDataD[l_iy - 1] - i_y))
             {
@@ -233,12 +235,14 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetry(t_real i_
 {
     t_real l_bath = getBathymetryFromArray(i_x, i_y);
     t_real l_displ = getDisplacementFromArray(i_x, i_y);
+    return l_bath;
+    // TODO add displ
     if (l_bath < 0)
     {
-        return std::min(l_bath, -m_delta) + l_displ;
+        return std::min(l_bath, -m_delta);
     }
     else
     {
-        return std::max(l_bath, m_delta) + l_displ;
+        return std::max(l_bath, m_delta);
     }
 }

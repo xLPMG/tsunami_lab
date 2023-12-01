@@ -31,11 +31,11 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
     t_real *l_y = new t_real[m_ny];
     for (t_idx l_ix = 0; l_ix < m_nx; l_ix++)
     {
-        l_x[l_ix] = (l_ix + 0.5) * (m_simulationSizeX / m_nx) + m_offsetX;
+        l_x[l_ix] = l_ix * (m_simulationSizeX / m_nx) + m_offsetX;
     }
     for (t_idx l_iy = 0; l_iy < m_ny; l_iy++)
     {
-        l_y[l_iy] = (l_iy + 0.5) * (m_simulationSizeY / m_ny) + m_offsetY;
+        l_y[l_iy] = l_iy * (m_simulationSizeY / m_ny) + m_offsetY;
     }
 
     // define dimensions
@@ -220,10 +220,11 @@ void tsunami_lab::io::NetCdf::write(const char *path,
 
         t_real *l_b = new t_real[m_nx * m_ny];
         int l_i = 0;
+
         for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {
             for (t_idx l_y = 0; l_y < m_ny; l_y++)
-            {
+            {   
                 l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
             }
         }
@@ -341,7 +342,19 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
 
     checkNcErr(nc_get_var_float(l_ncIdRead, l_varYIdRead, *o_yData));
 
-    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, *o_data));
+    t_real *l_data = new t_real[l_nx * l_ny];
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data));
 
     checkNcErr(nc_close(l_ncIdRead));
+
+    // convert to strided array
+    int l_i = 0;
+    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
+    {
+        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
+        {
+            *(*o_data + (l_ix + l_nx * l_iy)) = l_data[l_i++];
+        }
+    }
+    delete[] l_data;
 }
