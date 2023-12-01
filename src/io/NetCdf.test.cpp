@@ -54,11 +54,12 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf]")
     REQUIRE(l_nx == l_x);
     REQUIRE(l_ny == l_y);
 
+    int i=0;
     for (tsunami_lab::t_idx l_ix = 0; l_ix < l_x; l_ix++)
     {
         for (tsunami_lab::t_idx l_iy = 0; l_iy < l_y; l_iy++)
         {
-            REQUIRE(l_dataToRead[l_ix + l_x * l_iy] == -int(l_iy));
+            REQUIRE(l_dataToRead[i++] == -int(l_iy));
         }
     }
 
