@@ -1,11 +1,11 @@
 {
     "solver": "fwave",
-    "nx": 1000,
-    "ny": 1000,
+    "nx": 2000,
+    "ny": 2000,
+    "simulationSizeX": 10000,
+    "simulationSizeY": 10000,
+    "offsetX": -5000,
+    "offsetY": -5000,
     "setup":"CHILE",
-    "hasBoundaryL": false,
-    "hasBoundaryR": false,
-    "hasBoundaryU": false,
-    "hasBoundaryD": false,
-    "endTime":36000
+    "endTime":10
 }

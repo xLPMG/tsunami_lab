@@ -124,6 +124,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(
         if (m_xDataB[l_ix] > i_x)
         {
             if (abs(m_xDataB[l_ix]) - i_x > abs(m_xDataB[l_ix - 1] - i_x))
+            if (abs(m_xDataB[l_ix] - i_x) > abs(m_xDataB[l_ix - 1] - i_x))
             {
                 l_x = l_ix - 1;
             }
@@ -239,6 +240,6 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetry(t_real i_
     }
     else
     {
-        return std::min(l_bath, m_delta) + l_displ;
+        return std::max(l_bath, m_delta) + l_displ;
     }
 }

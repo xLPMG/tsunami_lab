@@ -236,11 +236,11 @@ int main(int i_argc,
   {
     l_simulationSizeX = 3500000;
     l_simulationSizeY = 2950000;
-    l_offsetX = -3000000;
-    l_offsetY = -1450000;
+    l_offsetX = -2999875;
+    l_offsetY = -1449875;
 
-    l_nx = l_simulationSizeX / 1000;
-    l_ny = l_simulationSizeY / 1000;
+    l_nx = l_simulationSizeX / 100000;
+    l_ny = l_simulationSizeY / 100000;
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
@@ -334,11 +334,11 @@ int main(int i_argc,
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
-    tsunami_lab::t_real l_y = (l_cy + 0.5) * l_dy + l_offsetY;
+    tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetY;
 
     for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
     {
-      tsunami_lab::t_real l_x = (l_cx + 0.5) * l_dx + l_offsetX;
+      tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;
 
       // get initial values of the setup
       tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
@@ -451,7 +451,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = l_endTime / 10;
+  tsunami_lab::t_idx l_writingFrequency = l_endTime<=10 ? l_endTime : (l_endTime / 10);
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
