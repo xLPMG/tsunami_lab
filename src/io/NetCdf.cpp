@@ -166,11 +166,11 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
     // write data
     m_err = nc_put_var_float(m_ncId,   // ncid
                              m_varXId, // varid
-                             &l_x[0]); // op
+                             l_x);     // op
     checkNcErr(m_err);
     m_err = nc_put_var_float(m_ncId,   // ncid
                              m_varYId, // varid
-                             &l_y[0]); // op
+                             l_y);     // op
     checkNcErr(m_err);
 
     delete[] l_x;
@@ -218,7 +218,7 @@ void tsunami_lab::io::NetCdf::write(const char *path,
     {
         setUpFile(path);
 
-        t_real *l_b = new t_real[m_nx * m_ny]{0};
+        t_real *l_b = new t_real[m_nx * m_ny];
         int l_i = 0;
         for (t_idx l_x = 0; l_x < m_nx; l_x++)
         {
@@ -341,18 +341,7 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
 
     checkNcErr(nc_get_var_float(l_ncIdRead, l_varYIdRead, *o_yData));
 
-    t_real *l_data = new t_real[l_nx * l_ny];
-    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, l_data));
+    checkNcErr(nc_get_var_float(l_ncIdRead, l_varDataIdRead, *o_data));
 
     checkNcErr(nc_close(l_ncIdRead));
-    // convert to strided array
-    int l_i = 0;
-    for (std::size_t l_ix = 0; l_ix < l_nx; l_ix++)
-    {
-        for (std::size_t l_iy = 0; l_iy < l_ny; l_iy++)
-        {   
-            *(*o_data+(l_ix + l_nx * l_iy)) = l_data[l_i++];
-        }
-    }
-    delete[] l_data;
 }

@@ -239,8 +239,8 @@ int main(int i_argc,
     l_offsetX = -2999875;
     l_offsetY = -1449875;
 
-    l_nx = l_simulationSizeX / 100000;
-    l_ny = l_simulationSizeY / 100000;
+    l_nx = l_simulationSizeX / 8000;
+    l_ny = l_simulationSizeY / 8000;
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
@@ -260,8 +260,8 @@ int main(int i_argc,
     l_offsetX = -200000;
     l_offsetY = -750000;
 
-    l_nx = l_simulationSizeX / 1000;
-    l_ny = l_simulationSizeY / 1000;
+    l_nx = l_simulationSizeX / 10000;
+    l_ny = l_simulationSizeY / 10000;
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
@@ -269,8 +269,8 @@ int main(int i_argc,
                                                                          l_simulationSizeY,
                                                                          l_offsetX,
                                                                          l_offsetY);
-    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco20_ucsb3_250m_bath.nc",
-                                                      "resources/tohoku/tohoku_gebco20_ucsb3_250m_displ.nc",
+    l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco08_ucsb3_250m_bath.nc",
+                                                      "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
                                                       l_netCdfTohoku,
                                                       l_nx);
   }
@@ -330,7 +330,7 @@ int main(int i_argc,
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
-
+  std::cout << "Setting up solver..."<<std::endl;
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
@@ -370,6 +370,7 @@ int main(int i_argc,
                                 l_b);
     }
   }
+  std::cout << "Done."<<std::endl;
   // set up netCdf I/O
   tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
                                                                   l_ny,
@@ -451,7 +452,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_writingFrequency = l_endTime<=10 ? l_endTime : (l_endTime / 10);
+  tsunami_lab::t_idx l_writingFrequency = l_endTime<=1000 ? l_endTime : (l_endTime / 1000);
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
