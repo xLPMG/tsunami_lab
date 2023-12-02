@@ -53,17 +53,15 @@ bool endsWith(std::string const &str, std::string const &suffix)
 
 void setupFolders()
 {
+  // create solutions folder
+  if (!std::filesystem::exists("solutions"))
+    std::filesystem::create_directory("solutions");
+
   // set up stations folder for stations to save their data in
   if (std::filesystem::exists("stations"))
     std::filesystem::remove_all("stations");
 
   std::filesystem::create_directory("stations");
-
-  // clean solutions folder
-  if (std::filesystem::exists("solutions"))
-    std::filesystem::remove_all("solutions");
-
-  std::filesystem::create_directory("solutions");
 }
 
 int main(int i_argc,
@@ -71,20 +69,22 @@ int main(int i_argc,
 {
   // config file path
   std::string l_configFilePath = "configs/config.json";
+  // output file name
+  std::string l_outputFileName = "";
   // setup choice
   std::string l_setupChoice = "";
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
-  tsunami_lab::t_idx l_ny = 1;
+  tsunami_lab::t_idx l_ny = 0;
   // set simulation size in metres
-  tsunami_lab::t_real l_simulationSizeX = 10.0;
-  tsunami_lab::t_real l_simulationSizeY = 10.0;
+  tsunami_lab::t_real l_simulationSizeX = 0;
+  tsunami_lab::t_real l_simulationSizeY = 0;
   // set offset in metres
   tsunami_lab::t_real l_offsetX = 0;
   tsunami_lab::t_real l_offsetY = 0;
   // set cell size
-  tsunami_lab::t_real l_dx = 1;
-  tsunami_lab::t_real l_dy = 1;
+  tsunami_lab::t_real l_dx = 0;
+  tsunami_lab::t_real l_dy = 0;
   // solver default
   std::string l_solver = "";
   // boundary conditions
@@ -96,12 +96,12 @@ int main(int i_argc,
   std::string l_bathymetryFilePath = "";
   std::string l_displacementFilePath = "";
   // simulation time limit
-  tsunami_lab::t_real l_endTime = 20;
+  tsunami_lab::t_real l_endTime = 0;
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
-  tsunami_lab::t_real l_stationFrequency = 1;
+  tsunami_lab::t_real l_stationFrequency = 0;
   // writing frequency in timesteps
-  tsunami_lab::t_idx l_writingFrequency = 80;
+  tsunami_lab::t_idx l_writingFrequency = 0;
   // data writer choice
   enum DataWriter
   {
@@ -129,11 +129,12 @@ int main(int i_argc,
   // read size config
   l_nx = l_configData.value("nx", 1);
   l_ny = l_configData.value("ny", 1);
-  l_simulationSizeX = l_configData.value("simulationSizeX", 1);
+  l_simulationSizeX = l_configData.value("simulationSizeX", 10);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
   l_offsetX = l_configData.value("offsetX", 0);
   l_offsetY = l_configData.value("offsetY", 0);
   l_endTime = l_configData.value("endTime", 20);
+  l_outputFileName = l_configData.value("outputFileName", "solution");
   // read boundary config
   std::string l_boundaryStringL = l_configData.value("boundaryL", "outflow");
   if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
@@ -161,7 +162,7 @@ int main(int i_argc,
   // read file paths from config
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_displacementFilePath = l_configData.value("displacement", "");
-  //writing frequency
+  // writing frequency
   l_writingFrequency = l_configData.value("writingFrequency", 80);
   // read station data
   l_stationFrequency = l_configData.value("stationFrequency", 1);
@@ -268,11 +269,11 @@ int main(int i_argc,
     l_ny = l_simulationSizeY / 10000;
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
-                                                                         l_ny,
-                                                                         l_simulationSizeX,
-                                                                         l_simulationSizeY,
-                                                                         l_offsetX,
-                                                                         l_offsetY);
+                                                                          l_ny,
+                                                                          l_simulationSizeX,
+                                                                          l_simulationSizeY,
+                                                                          l_offsetX,
+                                                                          l_offsetY);
     l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco08_ucsb3_250m_bath.nc",
                                                       "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
                                                       l_netCdfTohoku,
@@ -305,7 +306,7 @@ int main(int i_argc,
                                                              l_boundaryT,
                                                              l_boundaryB);
   }
-  
+
   // set up stations
   std::cout << "Setting up stations..." << std::endl;
   std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
@@ -313,13 +314,13 @@ int main(int i_argc,
   {
     for (json &elem : l_configData["stations"])
     {
-      //location in meters
+      // location in meters
       tsunami_lab::t_real l_x = elem.at("locX");
       tsunami_lab::t_real l_y = elem.at("locY");
-    
-      //location cell
-      tsunami_lab::t_idx l_cx = (l_x - l_offsetX)/l_dx;
-      tsunami_lab::t_idx l_cy = (l_y - l_offsetY)/l_dy;
+
+      // location cell
+      tsunami_lab::t_idx l_cx = (l_x - l_offsetX) / l_dx;
+      tsunami_lab::t_idx l_cy = (l_y - l_offsetY) / l_dy;
 
       l_stations.push_back(new tsunami_lab::io::Station(l_cx,
                                                         l_cy,
@@ -334,7 +335,7 @@ int main(int i_argc,
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
-  std::cout << "Setting up solver..."<<std::endl;
+  std::cout << "Setting up solver..." << std::endl;
   // set up solver
   for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
   {
@@ -374,7 +375,7 @@ int main(int i_argc,
                                 l_b);
     }
   }
-  std::cout << "Done."<<std::endl;
+  std::cout << "Done." << std::endl;
   // set up netCdf I/O
   tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
                                                                   l_ny,
@@ -456,6 +457,9 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
+  std::string l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
+  const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
+
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
@@ -472,7 +476,7 @@ int main(int i_argc,
       case NETCDF:
       {
         std::cout << "  writing to netcdf " << std::endl;
-        l_netCdf->write("solutions/solution.nc",
+        l_netCdf->write(l_netcdfOutputPath,
                         l_waveProp->getStride(),
                         l_waveProp->getHeight(),
                         l_waveProp->getMomentumX(),
@@ -483,10 +487,10 @@ int main(int i_argc,
       }
       case CSV:
       {
-        std::string l_path = "solutions/solution_" + std::to_string(l_nOut) + ".csv";
-        std::cout << "  writing wave field to " << l_path << std::endl;
+        std::string l_csvOutputPath = "solutions/" + l_outputFileName + "_" + std::to_string(l_nOut) + ".csv";
+        std::cout << "  writing wave field to " << l_csvOutputPath << std::endl;
         std::ofstream l_file;
-        l_file.open(l_path);
+        l_file.open(l_csvOutputPath);
         tsunami_lab::io::Csv::write(l_dx,
                                     l_dy,
                                     l_nx,

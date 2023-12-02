@@ -1,6 +1,7 @@
 {
     "solver": "fwave",
     "setup":"CHILE",
+    "outputFileName":"chile_250_solution",
     "nx":14000,
     "ny":11800,
     "endTime":15000,
