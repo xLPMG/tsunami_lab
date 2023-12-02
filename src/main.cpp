@@ -265,8 +265,8 @@ int main(int i_argc,
     l_offsetX = -200000;
     l_offsetY = -750000;
 
-    l_nx = l_simulationSizeX / 10000;
-    l_ny = l_simulationSizeY / 10000;
+    //l_nx = l_simulationSizeX / 10000;
+    //l_ny = l_simulationSizeY / 10000;
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
                                                                           l_ny,
