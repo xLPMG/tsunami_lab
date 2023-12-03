@@ -11,13 +11,13 @@
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
                                                            const std::string &i_solver,
-                                                           bool i_hasBoundaryL,
-                                                           bool i_hasBoundaryR)
+                                                           Boundary i_boundaryL,
+                                                           Boundary i_boundaryR)
 {
   m_nCells = i_nCells;
   m_solver = i_solver;
-  m_hasBoundaryL = i_hasBoundaryL;
-  m_hasBoundaryR = i_hasBoundaryR;
+  m_boundaryL = i_boundaryL;
+  m_boundaryR = i_boundaryR;
 
   // allocate memory including a single ghost cell on each side
   for (unsigned short l_st = 0; l_st < 2; l_st++)
@@ -146,7 +146,7 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
   t_real *l_b = m_b;
 
   // left boundary
-  if (m_hasBoundaryL)
+  if (m_boundaryL == WALL)
   {
     l_h[0] = 0;
   }
@@ -157,7 +157,7 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
     l_b[0] = l_b[1];
   }
   // right boundary
-  if (m_hasBoundaryR)
+  if (m_boundaryR == WALL)
   {
     l_h[m_nCells + 1] = 0;
   }

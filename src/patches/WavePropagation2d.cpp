@@ -10,17 +10,17 @@
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
-                                                           bool i_hasBoundaryL,
-                                                           bool i_hasBoundaryR,
-                                                           bool i_hasBoundaryT,
-                                                           bool i_hasBoundaryB)
+                                                           Boundary i_boundaryL,
+                                                           Boundary i_boundaryR,
+                                                           Boundary i_boundaryT,
+                                                           Boundary i_boundaryB)
 {
   m_nCellsX = i_nCellsX;
   m_nCellsY = i_nCellsY;
-  m_hasBoundaryL = i_hasBoundaryL;
-  m_hasBoundaryR = i_hasBoundaryR;
-  m_hasBoundaryT = i_hasBoundaryT;
-  m_hasBoundaryB = i_hasBoundaryB;
+  m_boundaryL = i_boundaryL;
+  m_boundaryR = i_boundaryR;
+  m_boundaryT = i_boundaryT;
+  m_boundaryB = i_boundaryB;
 
   // allocate memory including a single ghost cell on each side
   t_idx l_totalCells = (m_nCellsX + 2) * (m_nCellsY + 2);
@@ -223,12 +223,12 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     t_idx ceL = getStride() * i;
     t_idx ceR = ceL + m_nCellsX + 1;
     // left column
-    l_h[ceL] = m_hasBoundaryL ? 0 : l_h[ceL + 1];
+    l_h[ceL] = m_boundaryL == WALL ? 0 : l_h[ceL + 1];
     l_huX[ceL] = l_huX[ceL + 1];
     l_huY[ceL] = l_huY[ceL + 1];
     l_b[ceL] = l_b[ceL + 1];
     // right column
-    l_h[ceR] = m_hasBoundaryR ? 0 : l_h[ceR - 1];
+    l_h[ceR] =  m_boundaryR == WALL ? 0 : l_h[ceR - 1];
     l_huX[ceR] = l_huX[ceR - 1];
     l_huY[ceR] = l_huY[ceR - 1];
     l_b[ceR] = l_b[ceR - 1];
@@ -238,12 +238,12 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     t_idx ceB = i;
     t_idx ceT = i + (m_nCellsY + 1) * getStride();
     // bottom row
-    l_h[ceB] = m_hasBoundaryB ? 0 : l_h[ceB + getStride()];
+    l_h[ceB] = m_boundaryB == WALL ? 0 : l_h[ceB + getStride()];
     l_huX[ceB] = l_huX[ceB + getStride()];
     l_huY[ceB] = l_huY[ceB + getStride()];
     l_b[ceB] = l_b[ceB + getStride()];
     // top row
-    l_h[ceT] = m_hasBoundaryT ? 0 : l_h[ceT - getStride()];
+    l_h[ceT] = m_boundaryT == WALL ? 0 : l_h[ceT - getStride()];
     l_huX[ceT] = l_huX[ceT - getStride()];
     l_huY[ceT] = l_huY[ceT - getStride()];
     l_b[ceT] = l_b[ceT - getStride()];

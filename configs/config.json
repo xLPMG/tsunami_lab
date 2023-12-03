@@ -1,0 +1,10 @@
+{
+    "solver": "fwave",
+    "simulationSizeX": 10000,
+    "simulationSizeY": 10000,
+    "nx":1000,
+    "ny":1000,
+    "setup":"ARTIFICIAL2D",
+    "endTime":100,
+    "writingFrequency":50
+}

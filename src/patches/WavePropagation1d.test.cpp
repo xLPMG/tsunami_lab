@@ -8,6 +8,8 @@
 #include "WavePropagation1d.h"
 #include "../io/Csv.h"
 
+using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
+
 TEST_CASE("Test the 1d wave propagation solver using roe.", "[WaveProp1d],[Roe]")
 {
   /*
@@ -28,7 +30,10 @@ TEST_CASE("Test the 1d wave propagation solver using roe.", "[WaveProp1d],[Roe]"
    */
 
   // construct solver and setup a dambreak problem
-  tsunami_lab::patches::WavePropagation1d m_waveProp(100, "roe", false, false);
+  tsunami_lab::patches::WavePropagation1d m_waveProp(100,
+                                                     "roe",
+                                                     Boundary::OUTFLOW,
+                                                     Boundary::OUTFLOW);
 
   for (std::size_t l_ce = 0; l_ce < 50; l_ce++)
   {
@@ -97,7 +102,10 @@ TEST_CASE("Test the 1d wave propagation solver using fwave.", "[WaveProp1d],[Fwa
    */
 
   // construct solver and setup a dambreak problem
-  tsunami_lab::patches::WavePropagation1d m_waveProp(100, "fwave", false, false);
+  tsunami_lab::patches::WavePropagation1d m_waveProp(100,
+                                                     "fwave",
+                                                     Boundary::OUTFLOW,
+                                                     Boundary::OUTFLOW);
 
   for (std::size_t l_ce = 0; l_ce < 50; l_ce++)
   {

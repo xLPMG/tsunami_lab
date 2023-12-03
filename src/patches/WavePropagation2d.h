@@ -41,17 +41,17 @@ private:
   //! bathymetry 
   t_real *m_b = nullptr;
 
-  //! true if there is a boundary on the left side
-  bool m_hasBoundaryL = false;
+  //! boundary condition on the left side
+  Boundary m_boundaryL = OUTFLOW;
 
-  //! true if there is a boundary on the right side
-  bool m_hasBoundaryR = false;
+  //! boundary condition on the right side
+  Boundary m_boundaryR = OUTFLOW;
 
-  //! true if there is a boundary on the top side
-  bool m_hasBoundaryT = false;
+  //! boundary condition on the top side
+  Boundary m_boundaryT = OUTFLOW;
 
-  //! true if there is a boundary on the bottom side
-  bool m_hasBoundaryB = false;
+  //! boundary condition on the bottom side
+  Boundary m_boundaryB = OUTFLOW;
 
  /**
   * Compute the reflection effect
@@ -84,17 +84,17 @@ public:
    *
    * @param i_nCellsX number of cells in x direction.
    * @param i_nCellsY number of cells in y direction.
-   * @param i_hasBoundaryL has boundary on the left side
-   * @param i_hasBoundaryR has boundary on the left side
-   * @param i_hasBoundaryT has boundary on the top side
-   * @param i_hasBoundaryB has boundary on the bottom side
+   * @param i_boundaryL boundary condition on the left side
+   * @param i_boundaryR boundary condition on the left side
+   * @param i_boundaryT boundary condition on the top side
+   * @param i_boundaryB boundary condition on the bottom side
    **/
   WavePropagation2d(t_idx i_nCellsX,
                     t_idx i_nCellsY,
-                    bool i_hasBoundaryL,
-                    bool i_hasBoundaryR,
-                    bool i_hasBoundaryT,
-                    bool i_hasBoundaryB);
+                    Boundary i_boundaryL,
+                    Boundary i_boundaryR,
+                    Boundary i_boundaryT,
+                    Boundary i_boundaryB);
 
   /**
    * Destructor which frees all allocated memory.
@@ -182,7 +182,7 @@ public:
    *
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_hu momentum in x-direction.
+   * @param i_huX momentum in x-direction.
    **/
   void setMomentumX(t_idx i_ix,
                     t_idx i_iy,
@@ -195,7 +195,7 @@ public:
    * Sets the momentum in y-direction to the given value.
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_hu momentum in y-direction.
+   * @param i_huY momentum in y-direction.
    **/
   void setMomentumY(t_idx i_ix,
                     t_idx i_iy,
@@ -209,7 +209,7 @@ public:
    *
    * @param i_ix id of the cell in x-direction.
    * @param i_iy id of the cell in y-direction.
-   * @param i_h bathymetry.
+   * @param i_b bathymetry.
    **/
   void setBathymetry(t_idx i_ix,
                      t_idx i_iy,
