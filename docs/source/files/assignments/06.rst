@@ -88,8 +88,27 @@ Computational demant: per timestep we update 4050000 cells.
 Task 6.2.2 - Soma
 -------------------------------------------
 
+We have put the station at x=120000 and y=50000.
+
 The initial water height is -0.7  meters.
 It steadily decreases and reaches its minimum at 2620 seconds at -2.1 meters.
 The water level starts rising and at 3320 surpasses 0 meters and thus the wave reaches Soma.
 The wave reaches Soma after 55 minutes.
 It then steadily rises and reacehs its maximum at 3870 seconds with 4.45 meters. 
+
+
+`Computation`
+
+Given is:
+
+.. math:: \lambda \approx \sqrt{gh}
+
+We used 15 meters as our water height from the epicenter to compute the speed.
+
+:math:`\lambda = \sqrt{9.81*15} = 12.33 m/s`
+
+Multiply by 3.6 to get km/h: 44.39km/h.
+
+Using the Pythogaros we get a distance to the station 130 kilometers. 
+
+Dividing it by the speed we get a time of 2.92 hours.
