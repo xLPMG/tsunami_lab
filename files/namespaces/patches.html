@@ -99,6 +99,25 @@
 <em>#include &lt;WavePropagation.h&gt;</em></div>
 <p>Subclassed by tsunami_lab::patches::WavePropagation1d, tsunami_lab::patches::WavePropagation2d</p>
 <div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Boundary</span></span></span><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OUTFLOW</span></span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WALL</span></span></span><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
@@ -259,7 +278,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCells</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">i_solver</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryL</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryR</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCells</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">i_solver</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 1d wave propagation solver.</p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
@@ -275,8 +294,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_nCells</strong> – number of cells. </p></li>
 <li><p><strong>i_solver</strong> – selected solver. </p></li>
-<li><p><strong>i_hasBoundaryL</strong> – true if there is a reflecting boundary on the left side </p></li>
-<li><p><strong>i_hasBoundaryR</strong> – true if there is a reflecting boundary on the right side</p></li>
+<li><p><strong>i_boundaryL</strong> – boundary condition on the left side </p></li>
+<li><p><strong>i_boundaryR</strong> – boundary condition on the right side</p></li>
 </ul>
 </dd>
 </dl>
@@ -475,14 +494,14 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the left side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the left side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the right side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the right side </p>
 </dd></dl>
 
 </div>
@@ -497,7 +516,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryL</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryR</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryT</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hasBoundaryB</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryT</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryB</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 2d wave propagation solver.</p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
@@ -513,10 +532,10 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_nCellsX</strong> – number of cells in x direction. </p></li>
 <li><p><strong>i_nCellsY</strong> – number of cells in y direction. </p></li>
-<li><p><strong>i_hasBoundaryL</strong> – has boundary on the left side </p></li>
-<li><p><strong>i_hasBoundaryR</strong> – has boundary on the left side </p></li>
-<li><p><strong>i_hasBoundaryT</strong> – has boundary on the top side </p></li>
-<li><p><strong>i_hasBoundaryB</strong> – has boundary on the bottom side</p></li>
+<li><p><strong>i_boundaryL</strong> – boundary condition on the left side </p></li>
+<li><p><strong>i_boundaryR</strong> – boundary condition on the left side </p></li>
+<li><p><strong>i_boundaryT</strong> – boundary condition on the top side </p></li>
+<li><p><strong>i_boundaryB</strong> – boundary condition on the bottom side</p></li>
 </ul>
 </dd>
 </dl>
@@ -626,7 +645,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_ix</strong> – id of the cell in x-direction. </p></li>
 <li><p><strong>i_iy</strong> – id of the cell in y-direction. </p></li>
-<li><p><strong>i_hu</strong> – momentum in x-direction. </p></li>
+<li><p><strong>i_huX</strong> – momentum in x-direction. </p></li>
 </ul>
 </dd>
 </dl>
@@ -641,7 +660,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_ix</strong> – id of the cell in x-direction. </p></li>
 <li><p><strong>i_iy</strong> – id of the cell in y-direction. </p></li>
-<li><p><strong>i_hu</strong> – momentum in y-direction. </p></li>
+<li><p><strong>i_huY</strong> – momentum in y-direction. </p></li>
 </ul>
 </dd>
 </dl>
@@ -656,7 +675,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_ix</strong> – id of the cell in x-direction. </p></li>
 <li><p><strong>i_iy</strong> – id of the cell in y-direction. </p></li>
-<li><p><strong>i_h</strong> – bathymetry. </p></li>
+<li><p><strong>i_b</strong> – bathymetry. </p></li>
 </ul>
 </dd>
 </dl>
@@ -739,26 +758,26 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the left side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the left side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the right side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the right side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the top side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the top side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasBoundaryB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
-<dd><p>true if there is a boundary on the bottom side </p>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<dd><p>boundary condition on the bottom side </p>
 </dd></dl>
 
 </div>

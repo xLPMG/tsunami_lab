@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6. Tsunami Simulations &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/06.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="5. Large Data Input and Output" href="05.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6. Tsunami Simulations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-6-1-2010-m-8-8-chile-event">Task 6.1 - 2010 M 8.8 Chile Event</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-6-1-1-visualization-of-input">Task 6.1.1 - Visualization of input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-6-1-2-simulations">Task 6.1.2 - Simulations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-6-2-2011-m-9-1-tohoku-event">Task 6.2 - 2011 M 9.1 Tohoku Event</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-6-2-1-visualization-of-input">Task 6.2.1 - Visualization of input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-6-2-2-soma">Task 6.2.2 - Soma</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">6. Tsunami Simulations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/06.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tsunami-simulations">
+<h1>6. Tsunami Simulations<a class="headerlink" href="#tsunami-simulations" title="Link to this heading"></a></h1>
+<p>All project authors contributed to this assignment in equal parts.</p>
+<section id="task-6-1-2010-m-8-8-chile-event">
+<h2>Task 6.1 - 2010 M 8.8 Chile Event<a class="headerlink" href="#task-6-1-2010-m-8-8-chile-event" title="Link to this heading"></a></h2>
+<section id="task-6-1-1-visualization-of-input">
+<h3>Task 6.1.1 - Visualization of input<a class="headerlink" href="#task-6-1-1-visualization-of-input" title="Link to this heading"></a></h3>
+<img alt="../../_images/task_6-1-1_chile_dis.png" src="../../_images/task_6-1-1_chile_dis.png" />
+<p>scaling interval[-2,2].</p>
+<img alt="../../_images/task_6-1-1_chile_bath.png" src="../../_images/task_6-1-1_chile_bath.png" />
+<p>scaling interval[-10000,10000].</p>
+</section>
+<section id="task-6-1-2-simulations">
+<h3>Task 6.1.2 - Simulations<a class="headerlink" href="#task-6-1-2-simulations" title="Link to this heading"></a></h3>
+<p><cite>Chile 1000</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_6-1-1_chile_1000.mp4" type="video/mp4">
+</video><p>grid size: 1000</p>
+<p><cite>Chile 5000</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_6-1-1_chile_5000.mp4" type="video/mp4">
+</video><p>grid size: 5000</p>
+</section>
+</section>
+<section id="task-6-2-2011-m-9-1-tohoku-event">
+<h2>Task 6.2 - 2011 M 9.1 Tohoku Event<a class="headerlink" href="#task-6-2-2011-m-9-1-tohoku-event" title="Link to this heading"></a></h2>
+<section id="task-6-2-1-visualization-of-input">
+<h3>Task 6.2.1 - Visualization of input<a class="headerlink" href="#task-6-2-1-visualization-of-input" title="Link to this heading"></a></h3>
+<img alt="../../_images/task_6-2-1_tohoku_dis.png" src="../../_images/task_6-2-1_tohoku_dis.png" />
+<p>scaling interval[-2,2].</p>
+<img alt="../../_images/task_6-2-1_tohoku_bath.png" src="../../_images/task_6-2-1_tohoku_bath.png" />
+<p>scaling interval[-10000,10000].</p>
+<p><strong>Simulations</strong></p>
+<p><cite>Tohoku 1000</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_6-2-1_tohoku_1000.mp4" type="video/mp4">
+</video><p>grid size: 1000
+Leaves the top domain at 2900 seconds.
+Computational demant: per timestep we update 4050000 cells.</p>
+<p><cite>Tohoku 5000</cite></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_6-2-1_tohoku_5000.mp4" type="video/mp4">
+</video><p>grid size: 5000
+Computational demant: per timestep we update 4050000 cells.</p>
+</section>
+<section id="task-6-2-2-soma">
+<h3>Task 6.2.2 - Soma<a class="headerlink" href="#task-6-2-2-soma" title="Link to this heading"></a></h3>
+<p>We have put the station at x=120000 and y=50000.</p>
+<p>The initial water height is -0.7  meters.
+It steadily decreases and reaches its minimum at 2620 seconds at -2.1 meters.
+The water level starts rising and at 3320 surpasses 0 meters and thus the wave reaches Soma.
+The wave reaches Soma after 55 minutes.
+It then steadily rises and reacehs its maximum at 3870 seconds with 4.45 meters.</p>
+<p><cite>Computation</cite></p>
+<p>Given is:</p>
+<div class="math notranslate nohighlight">
+\[\lambda \approx \sqrt{gh}\]</div>
+<p>We used 15 meters as our water height from the epicenter to compute the speed.</p>
+<p><span class="math notranslate nohighlight">\(\lambda = \sqrt{9.81*15} = 12.33 m/s\)</span></p>
+<p>Multiply by 3.6 to get km/h: 44.39km/h.</p>
+<p>Using the Pythogaros we get a distance to the station 130 kilometers.</p>
+<p>Dividing it by the speed we get a time of 2.92 hours.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="05.html" class="btn btn-neutral float-left" title="5. Large Data Input and Output" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
