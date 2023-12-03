@@ -70,7 +70,7 @@ scaling interval[-10000,10000].
 
 grid size: 1000
 Leaves the top domain at 2900 seconds. 
-Computational demant: per timestep we update 4050000 cells.
+Computational demand: per timestep we update 4050000 cells.
 
 
 `Tohoku 5000`
@@ -82,7 +82,6 @@ Computational demant: per timestep we update 4050000 cells.
     </video> 
 
 grid size: 5000
-Computational demant: per timestep we update 4050000 cells.
 
 
 Task 6.2.2 - Soma
