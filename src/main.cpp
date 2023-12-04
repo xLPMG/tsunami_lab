@@ -211,6 +211,7 @@ int main(int i_argc,
   tsunami_lab::setups::Setup *l_setup;
   if (l_setupChoice == "CHECKPOINT")
   {
+    l_setup = new tsunami_lab::setups::CircularDamBreak2d();
   }
   else if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
