@@ -58,10 +58,11 @@ void setupFolders()
     std::filesystem::create_directory("solutions");
 
   // set up stations folder for stations to save their data in
-  if (std::filesystem::exists("stations"))
-    std::filesystem::remove_all("stations");
+  if (!std::filesystem::exists("stations"))
+    std::filesystem::create_directory("stations");
 
-  std::filesystem::create_directory("stations");
+  if (!std::filesystem::exists("checkpoints"))
+    std::filesystem::create_directory("checkpoints");
 }
 
 int main(int i_argc,
@@ -71,8 +72,14 @@ int main(int i_argc,
   std::string l_configFilePath = "configs/config.json";
   // output file name
   std::string l_outputFileName = "";
+  // checkpoint file path
+  std::string l_checkPointFilePath = "";
+  // load from checkpoint if true
+  bool l_loadFromCheckpoint = false;
   // setup choice
   std::string l_setupChoice = "";
+  // wave propagation patch
+  tsunami_lab::patches::WavePropagation *l_waveProp;
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 0;
@@ -110,6 +117,12 @@ int main(int i_argc,
   };
   DataWriter l_dataWriter = NETCDF;
 
+  // set up time and print control
+  tsunami_lab::t_idx l_timeStep = 0;
+  tsunami_lab::t_idx l_nOut = 0;
+  tsunami_lab::t_real l_simTime = 0;
+  tsunami_lab::t_idx l_captureCount = 0;
+
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
   std::cout << "###                              ###" << std::endl;
@@ -119,12 +132,23 @@ int main(int i_argc,
   if (i_argc == 2)
     l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
+ 
+  // set up folders
+  setupFolders();
 
   // read configuration data from file
   std::ifstream l_configFile(l_configFilePath);
   json l_configData = json::parse(l_configFile);
+  l_outputFileName = l_configData.value("outputFileName", "solution");
 
-  l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  //check if checkpoint exists
+  l_checkPointFilePath = "checkpoints/"+l_outputFileName+".txt";
+  l_loadFromCheckpoint = std::filesystem::exists(l_checkPointFilePath);
+  if(l_loadFromCheckpoint) std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
+
+  if(l_loadFromCheckpoint) l_setupChoice = "CHECKPOINT";
+  else l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  
   l_solver = l_configData.value("solver", "fwave");
   // read size config
   l_nx = l_configData.value("nx", 1);
@@ -134,7 +158,6 @@ int main(int i_argc,
   l_offsetX = l_configData.value("offsetX", 0);
   l_offsetY = l_configData.value("offsetY", 0);
   l_endTime = l_configData.value("endTime", 20);
-  l_outputFileName = l_configData.value("outputFileName", "solution");
   // read boundary config
   std::string l_boundaryStringL = l_configData.value("boundaryL", "outflow");
   if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
@@ -182,7 +205,10 @@ int main(int i_argc,
    * would have needed to be converted into an enum using if-statements anyway
    **/
   tsunami_lab::setups::Setup *l_setup;
-  if (l_setupChoice == "GENERALDISCONTINUITY1D")
+  if(l_setupChoice == "CHECKPOINT"){
+    
+  }
+  else if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
     l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, -10, l_simulationSizeX / 2);
   }
@@ -283,7 +309,6 @@ int main(int i_argc,
   l_dy = l_simulationSizeY / l_ny;
 
   // construct solver
-  tsunami_lab::patches::WavePropagation *l_waveProp;
   if (l_ny == 1)
   {
     l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
@@ -323,9 +348,6 @@ int main(int i_argc,
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-
-  // set up folders
-  setupFolders();
 
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -446,11 +468,6 @@ int main(int i_argc,
   tsunami_lab::t_real l_scalingX = l_dt / l_dx;
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
-  // set up time and print control
-  tsunami_lab::t_idx l_timeStep = 0;
-  tsunami_lab::t_idx l_nOut = 0;
-  tsunami_lab::t_real l_simTime = 0;
-  tsunami_lab::t_idx l_captureCount = 0;
   std::string l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
   const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
 

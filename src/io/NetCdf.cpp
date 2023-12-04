@@ -177,6 +177,107 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
     delete[] l_y;
 }
 
+void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *path)
+{
+    m_err = nc_create(path,       // path
+                      NC_CLOBBER, // cmode
+                      &m_ncId);   // ncidp
+    checkNcErr(m_err);
+
+    // define dimensions
+    int m_dimIds[2];
+
+    m_err = nc_def_dim(m_ncId,     // ncid
+                       "x",        // name
+                       m_nx,       // len
+                       &m_dimXId); // idp
+    checkNcErr(m_err);
+
+    m_err = nc_def_dim(m_ncId,     // ncid
+                       "y",        // name
+                       m_ny,       // len
+                       &m_dimYId); // idp
+    checkNcErr(m_err);
+
+    // define variables
+    m_dimIds[0] = m_dimXId;
+    m_dimIds[1] = m_dimYId;
+
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "height",   // name
+                       NC_FLOAT,   // xtype
+                       2,          // ndims
+                       m_dimIds,   // dimidsp
+                       &m_varHId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,      // ncid
+                       "momentumX", // name
+                       NC_FLOAT,    // xtype
+                       2,           // ndims
+                       m_dimIds,    // dimidsp
+                       &m_varHuId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,      // ncid
+                       "momentumY", // name
+                       NC_FLOAT,    // xtype
+                       2,           // ndims
+                       m_dimIds,    // dimidsp
+                       &m_varHvId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,     // ncid
+                       "time",     // name
+                       NC_FLOAT,   // xtype
+                       0,          // ndims
+                       m_dimIds,   // dimidsp
+                       &m_varTId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,            // ncid
+                       "timeStep",        // name
+                       NC_FLOAT,          // xtype
+                       0,                 // ndims
+                       m_dimIds,          // dimidsp
+                       &m_varTimeStepId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,            // ncid
+                       "simulationSizeX", // name
+                       NC_FLOAT,          // xtype
+                       0,                 // ndims
+                       m_dimIds,          // dimidsp
+                       &m_varSimSizeXId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,            // ncid
+                       "simulationSizeY", // name
+                       NC_FLOAT,          // xtype
+                       0,                 // ndims
+                       m_dimIds,          // dimidsp
+                       &m_varSimSizeYId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,           // ncid
+                       "offsetX",        // name
+                       NC_FLOAT,         // xtype
+                       0,                // ndims
+                       m_dimIds,         // dimidsp
+                       &m_varOffsetXId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncId,           // ncid
+                       "offsetY",        // name
+                       NC_FLOAT,         // xtype
+                       0,                // ndims
+                       m_dimIds,         // dimidsp
+                       &m_varOffsetYId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_enddef(m_ncId); // ncid
+}
+
 tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                                 t_idx i_ny,
                                 t_real i_simulationSizeX,
@@ -190,6 +291,18 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     m_simulationSizeY = i_simulationSizeY;
     m_offsetX = i_offsetX;
     m_offsetY = i_offsetY;
+}
+
+tsunami_lab::io::NetCdf::NetCdf(std::string i_checkpointFile)
+{
+    // readCheckpoint() and set:
+    // m_nx = i_nx
+    // m_ny = i_ny
+    // m_simulationSizeX = i_simulationSizeX
+    // m_simulationSizeY = i_simulationSizeY
+    // m_offsetX = i_offsetX
+    // m_offsetY = i_offsetY
+    // m_timeStepCount = i_timeStepCount
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -357,4 +470,38 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
         }
     }
     delete[] l_data;
+}
+
+void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
+                                              t_real const *i_h,
+                                              t_real const *i_hu,
+                                              t_real const *i_hv,
+                                              t_real i_t,
+                                              t_real i_timeStep)
+{
+
+    // also save:
+    // m_nx
+    // m_ny
+    // m_simulationSizeX
+    // m_simulationSizeY
+    // m_offsetX
+    // m_offsetY
+    // m_timeStepCount
+}
+
+void tsunami_lab::io::NetCdf::loadCheckpoint(const char *path,
+                                             t_real const *i_h,
+                                             t_real const *i_hu,
+                                             t_real const *i_hv,
+                                             t_real i_t,
+                                             t_real i_timeStep)
+{
+    // m_nx
+    // m_ny
+    // m_simulationSizeX
+    // m_simulationSizeY
+    // m_offsetX
+    // m_offsetY
+    // m_timeStepCount
 }

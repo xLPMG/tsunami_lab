@@ -9,6 +9,7 @@
 
 #include "../constants.h"
 #include <cstring>
+#include "Station.h"
 
 namespace tsunami_lab
 {
@@ -53,6 +54,14 @@ private:
     int m_varHuId = 0;
     int m_varHvId = 0;
 
+    // extra variable ids for checkpointing
+    int m_varTimeStepId = 0;
+    int m_varSimSizeXId = 0;
+    int m_varSimSizeYId = 0;
+    int m_varOffsetXId = 0;
+    int m_varOffsetYId = 0;
+    
+
     // index for timesteps
     t_idx m_timeStepCount = 0;
 
@@ -66,14 +75,21 @@ private:
     void checkNcErr(t_idx i_err);
 
     /**
-     * Sets up a netcdf file fr writing
+     * Sets up a netcdf file for writing
      *
      */
     void setUpFile(const char *path);
 
+    /**
+     * Sets up a netcdf file for checkpointing
+     *
+     */
+    void setUpCheckpointFile(const char *path);
+
 public:
     /**
-     *  Constructor
+     *  Constructor for initialization
+     *
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
      * @param i_simulationSizeX simulation size in x-direction
@@ -87,6 +103,12 @@ public:
            t_real i_simulationSizeY,
            t_real i_offsetX,
            t_real i_offsetY);
+
+    /**
+     *  Constructor for when we have  checkoint file to read from
+     * @param i_checkpointFile path of a checkpoint file
+     */
+    NetCdf(std::string i_checkpointFile);
 
     /**
      * Destructor
@@ -139,5 +161,19 @@ public:
               t_real **o_xData,
               t_real **o_yData,
               t_real **o_data);
+
+    void writeCheckpoint(const char *path,
+                         t_real const *i_h,
+                         t_real const *i_hu,
+                         t_real const *i_hv,
+                         t_real i_t,
+                         t_real i_timeStep);
+
+    void loadCheckpoint(const char *path,
+                        t_real const *i_h,
+                        t_real const *i_hu,
+                        t_real const *i_hv,
+                        t_real i_t,
+                        t_real i_timeStep);
 };
 #endif
