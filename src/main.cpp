@@ -244,9 +244,6 @@ int main(int i_argc,
     l_offsetX = -2999875;
     l_offsetY = -1449875;
 
-    // l_nx = l_simulationSizeX / 10000;
-    // l_ny = l_simulationSizeY / 10000;
-
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
                                                                          l_simulationSizeX,
@@ -262,11 +259,8 @@ int main(int i_argc,
   {
     l_simulationSizeX = 2700000;
     l_simulationSizeY = 1500000;
-    l_offsetX = -200000;
-    l_offsetY = -750000;
-
-    //l_nx = l_simulationSizeX / 10000;
-    //l_ny = l_simulationSizeY / 10000;
+    l_offsetX = -199875;
+    l_offsetY = -749875;
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
                                                                           l_ny,
