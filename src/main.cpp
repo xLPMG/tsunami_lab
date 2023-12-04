@@ -72,8 +72,6 @@ int main(int i_argc,
   std::string l_configFilePath = "configs/config.json";
   // output file name
   std::string l_outputFileName = "";
-  // checkpoint file path
-  std::string l_checkPointFilePath = "";
   // load from checkpoint if true
   bool l_loadFromCheckpoint = false;
   // setup choice
@@ -132,7 +130,7 @@ int main(int i_argc,
   if (i_argc == 2)
     l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
- 
+
   // set up folders
   setupFolders();
 
@@ -140,15 +138,21 @@ int main(int i_argc,
   std::ifstream l_configFile(l_configFilePath);
   json l_configData = json::parse(l_configFile);
   l_outputFileName = l_configData.value("outputFileName", "solution");
+  std::string l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
+  const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
 
-  //check if checkpoint exists
-  l_checkPointFilePath = "checkpoints/"+l_outputFileName+".txt";
-  l_loadFromCheckpoint = std::filesystem::exists(l_checkPointFilePath);
-  if(l_loadFromCheckpoint) std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
+  // check if checkpoint exists
+  std::string l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".txt";
+  const char *l_checkPointFilePath = l_checkPointFilePathString.c_str();
+  l_loadFromCheckpoint = (std::filesystem::exists(l_checkPointFilePathString) && std::filesystem::exists(l_netCdfOutputPathString));
+  if (l_loadFromCheckpoint)
+    std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
 
-  if(l_loadFromCheckpoint) l_setupChoice = "CHECKPOINT";
-  else l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
-  
+  if (l_loadFromCheckpoint)
+    l_setupChoice = "CHECKPOINT";
+  else
+    l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+
   l_solver = l_configData.value("solver", "fwave");
   // read size config
   l_nx = l_configData.value("nx", 1);
@@ -205,8 +209,8 @@ int main(int i_argc,
    * would have needed to be converted into an enum using if-statements anyway
    **/
   tsunami_lab::setups::Setup *l_setup;
-  if(l_setupChoice == "CHECKPOINT"){
-    
+  if (l_setupChoice == "CHECKPOINT")
+  {
   }
   else if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
@@ -249,7 +253,9 @@ int main(int i_argc,
                                                                         l_simulationSizeX,
                                                                         l_simulationSizeY,
                                                                         l_offsetX,
-                                                                        l_offsetY);
+                                                                        l_offsetY,
+                                                                        l_netcdfOutputPath,
+                                                                        l_checkPointFilePath);
     l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/artificialtsunami_bathymetry_1000.nc",
                                                       "resources/artificialtsunami_displ_1000.nc",
                                                       l_netCdfTE2D,
@@ -275,7 +281,9 @@ int main(int i_argc,
                                                                          l_simulationSizeX,
                                                                          l_simulationSizeY,
                                                                          l_offsetX,
-                                                                         l_offsetY);
+                                                                         l_offsetY,
+                                                                         l_netcdfOutputPath,
+                                                                         l_checkPointFilePath);
     l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/chile/chile_gebco20_usgs_250m_bath_fixed.nc",
                                                       "resources/chile/chile_gebco20_usgs_250m_displ_fixed.nc",
                                                       l_netCdfChile,
@@ -293,7 +301,9 @@ int main(int i_argc,
                                                                           l_simulationSizeX,
                                                                           l_simulationSizeY,
                                                                           l_offsetX,
-                                                                          l_offsetY);
+                                                                          l_offsetY,
+                                                                          l_netcdfOutputPath,
+                                                                          l_checkPointFilePath);
     l_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco08_ucsb3_250m_bath.nc",
                                                       "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
                                                       l_netCdfTohoku,
@@ -398,7 +408,9 @@ int main(int i_argc,
                                                                   l_simulationSizeX,
                                                                   l_simulationSizeY,
                                                                   l_offsetX,
-                                                                  l_offsetY);
+                                                                  l_offsetY,
+                                                                  l_netcdfOutputPath,
+                                                                  l_checkPointFilePath);
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -468,9 +480,6 @@ int main(int i_argc,
   tsunami_lab::t_real l_scalingX = l_dt / l_dx;
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
-  std::string l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
-  const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
-
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
@@ -487,8 +496,7 @@ int main(int i_argc,
       case NETCDF:
       {
         std::cout << "  writing to netcdf " << std::endl;
-        l_netCdf->write(l_netcdfOutputPath,
-                        l_waveProp->getStride(),
+        l_netCdf->write(l_waveProp->getStride(),
                         l_waveProp->getHeight(),
                         l_waveProp->getMomentumX(),
                         l_waveProp->getMomentumY(),
