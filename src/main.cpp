@@ -109,7 +109,7 @@ int main(int i_argc,
   // writing frequency in timesteps
   tsunami_lab::t_idx l_writingFrequency = 0;
   // frequency at which checkpoints are written
-  tsunami_lab::t_real l_checkpointFrequency = 10;
+  tsunami_lab::t_real l_checkpointFrequency = -1;
   // data writer choice
   enum DataWriter
   {
@@ -190,11 +190,13 @@ int main(int i_argc,
     l_boundaryB = Boundary::OUTFLOW;
   else if (l_boundaryStringB == "wall" || l_boundaryStringB == "WALL")
     l_boundaryB = Boundary::WALL;
-  // read file paths from config
+
   l_bathymetryFilePath = l_configData.value("bathymetry", "");
   l_displacementFilePath = l_configData.value("displacement", "");
-  // writing frequency
+
   l_writingFrequency = l_configData.value("writingFrequency", 80);
+  l_checkpointFrequency = l_configData.value("checkpointFrequency", -1);
+
   // read station data
   l_stationFrequency = l_configData.value("stationFrequency", 1);
   std::string l_outputMethod = l_configData.value("outputMethod", "netcdf");
@@ -606,6 +608,7 @@ int main(int i_argc,
     }
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
+    // write stations
     if (l_simTime >= l_stationFrequency * l_captureCount)
     {
       for (tsunami_lab::io::Station *l_s : l_stations)
@@ -614,7 +617,8 @@ int main(int i_argc,
       }
       ++l_captureCount;
     }
-    if (l_simTime >= l_checkpointFrequency * l_checkpointCount)
+    // write checkpoint
+    if (l_checkpointFrequency > 0 && l_simTime >= l_checkpointFrequency * l_checkpointCount)
     {
       std::cout << "  saving checkpoint to " << l_checkPointFilePathString << std::endl;
       l_netCdf->writeCheckpoint(l_checkPointFilePath,
