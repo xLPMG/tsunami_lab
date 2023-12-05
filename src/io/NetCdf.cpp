@@ -337,6 +337,7 @@ tsunami_lab::io::NetCdf::NetCdf(const char *i_path,
                                 const char *i_checkpointFile)
 {
     m_path = i_path;
+    m_checkpointFile = i_checkpointFile;
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
