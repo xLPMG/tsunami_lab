@@ -73,7 +73,7 @@ int main(int i_argc,
   // output file name
   std::string l_outputFileName = "";
   // load from checkpoint if true
-  bool l_loadFromCheckpoint = false;
+  bool l_checkpointExists = false;
   // setup choice
   std::string l_setupChoice = "";
   // wave propagation patch
@@ -148,14 +148,27 @@ int main(int i_argc,
   // check if checkpoint exists
   std::string l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
   const char *l_checkPointFilePath = l_checkPointFilePathString.c_str();
-  l_loadFromCheckpoint = (std::filesystem::exists(l_checkPointFilePathString) && std::filesystem::exists(l_netCdfOutputPathString));
-  if (l_loadFromCheckpoint)
+  l_checkpointExists = std::filesystem::exists(l_checkPointFilePathString);
+  // checkpoint file found
+  if (l_checkpointExists)
+  {
     std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
-
-  if (l_loadFromCheckpoint)
     l_setupChoice = "CHECKPOINT";
+  }
   else
-    l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  {
+    // no checkpoint but solution file exists
+    if (std::filesystem::exists(l_netCdfOutputPathString))
+    {
+      std::cout << "Solution file exists but no checkpoint was found. The solution will be deleted." << std::endl;
+      std::filesystem::remove(l_netCdfOutputPathString);
+    }
+    // no checkpoint and no solution
+    else
+    {
+      l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+    }
+  }
 
   l_solver = l_configData.value("solver", "fwave");
   // read size config
@@ -243,14 +256,14 @@ int main(int i_argc,
                                        l_timeStep);
     std::cout << std::endl;
     std::cout << "Loaded following data from checkpoint: " << std::endl;
-    std::cout << "Cells x:                  " << l_nx << std::endl;
-    std::cout << "Cells y:                  " << l_ny << std::endl;
-    std::cout << "Simulation size x:        " << l_simulationSizeX << std::endl;
-    std::cout << "Simulation size y:        " << l_simulationSizeY << std::endl;
-    std::cout << "Offset x:                 " << l_offsetX << std::endl;
-    std::cout << "Offset y:                 " << l_offsetY << std::endl;
-    std::cout << "Current simulation time:  " << l_simTime << std::endl;
-    std::cout << "Current time step:        " << l_timeStep << std::endl;
+    std::cout << "  Cells x:                  " << l_nx << std::endl;
+    std::cout << "  Cells y:                  " << l_ny << std::endl;
+    std::cout << "  Simulation size x:        " << l_simulationSizeX << std::endl;
+    std::cout << "  Simulation size y:        " << l_simulationSizeY << std::endl;
+    std::cout << "  Offset x:                 " << l_offsetX << std::endl;
+    std::cout << "  Offset y:                 " << l_offsetY << std::endl;
+    std::cout << "  Current simulation time:  " << l_simTime << std::endl;
+    std::cout << "  Current time step:        " << l_timeStep << std::endl;
     std::cout << std::endl;
     l_setup = nullptr;
   }
@@ -379,10 +392,10 @@ int main(int i_argc,
   }
 
   // set up stations
-  std::cout << "Setting up stations..." << std::endl;
-  std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
   if (l_configData.contains("stations"))
   {
+    std::cout << "Setting up stations..." << std::endl;
+    std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
     for (json &elem : l_configData["stations"])
     {
       // location in meters
@@ -484,7 +497,7 @@ int main(int i_argc,
       }
     }
   }
-  std::cout << "Done." << std::endl;
+  std::cout << "Setup done." << std::endl;
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)

@@ -22,19 +22,24 @@ void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
 
 void tsunami_lab::io::NetCdf::setUpFile(const char *path)
 {
-    // set up netcdf file
-    if (m_outputFileOpened)
-    {
-        checkNcErr(nc_close(m_ncId));
-    }
-    m_err = nc_create(path,       // path
-                      NC_CLOBBER, // cmode
-                      &m_ncId);   // ncidp
-    checkNcErr(m_err);
-
-    m_outputFileOpened = true;
     if (m_doesSolutionExist)
     {
+        m_err = nc_open(path,     // path
+                        NC_WRITE, // cmode
+                        &m_ncId); // ncidp
+        checkNcErr(m_err);
+        m_outputFileOpened = true;
+
+        int l_dimensions = 0;
+        int l_variables = 0;
+        int l_attributes = 0;
+        checkNcErr(nc_inq(m_ncId, &l_dimensions, &l_variables, &l_attributes, &m_dimTId));
+
+        if (l_dimensions != 3)
+            std::cerr << "Error in " << path << " file. Dimension size is invalid." << std::endl;
+        if (l_variables != 8)
+            std::cerr << "Error in " << path << " file. Variable size is invalid." << std::endl;
+
         checkNcErr(nc_inq_dimid(m_ncId, "x", &m_dimXId));
         checkNcErr(nc_inq_dimid(m_ncId, "y", &m_dimYId));
         checkNcErr(nc_inq_dimid(m_ncId, "time", &m_dimTId));
@@ -46,6 +51,11 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *path)
     }
     else
     {
+        m_err = nc_create(path,       // path
+                          NC_CLOBBER, // cmode
+                          &m_ncId);   // ncidp
+        checkNcErr(m_err);
+        m_outputFileOpened = true;
 
         t_real *l_x = new t_real[m_nx];
         t_real *l_y = new t_real[m_ny];
@@ -407,7 +417,8 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     int l_i = 0;
 
     // set up file and write bathymetry on first call
-    if (!m_outputFileOpened){
+    if (!m_outputFileOpened)
+    {
         setUpFile(m_netcdfOutputPath);
     }
     if (m_writingStepsCount == 0)
@@ -678,6 +689,11 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
                                  l_data));
 
     delete[] l_data;
+
+    // flush all data
+    nc_sync(m_ncCheckId);
+    nc_sync(m_ncId);
+
     checkNcErr(nc_close(m_ncCheckId));
 }
 

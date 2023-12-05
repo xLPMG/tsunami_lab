@@ -6,6 +6,6 @@
     "ny":1000,
     "setup":"ARTIFICIAL2D",
     "endTime":100,
-    "writingFrequency":100,
-    "checkpointFrequency": 10
+    "writingFrequency":200,
+    "checkpointFrequency": 5
 }
