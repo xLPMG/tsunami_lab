@@ -34,6 +34,7 @@
 #include <fstream>
 #include <limits>
 #include <filesystem>
+#include <chrono>
 
 // external libraries
 #include <nlohmann/json.hpp>
@@ -123,7 +124,6 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
-  tsunami_lab::t_idx l_checkpointCount = 0;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -413,6 +413,7 @@ int main(int i_argc,
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   std::cout << "Setting up solver..." << std::endl;
+  auto l_timeSetup1 = std::chrono::high_resolution_clock::now();
   // set up solver
   if (l_setupChoice == "CHECKPOINT")
   {
@@ -493,7 +494,9 @@ int main(int i_argc,
       }
     }
   }
-  std::cout << "Setup done." << std::endl;
+  auto l_timeSetup2 = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> l_timeSetupMS = l_timeSetup2 - l_timeSetup1;
+  std::cout << "Setup done. Operation took " << l_timeSetupMS.count() << "ms = " << l_timeSetupMS.count() / 1000 << "s" << std::endl;
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -564,13 +567,15 @@ int main(int i_argc,
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
+  std::cout << "Saving checkpoint every " << l_checkpointFrequency << " seconds" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
-  // set counts in case we load from a checkpoint file
+  auto l_lastWrite = std::chrono::system_clock::now();
+
+  // set count in case we load from a checkpoint file
   if (l_simTime > 0)
   {
     l_captureCount = std::floor(l_simTime / l_stationFrequency);
-    l_checkpointCount = std::floor(l_simTime / l_checkpointFrequency);
   }
   // iterate over time
   while (l_simTime < l_endTime)
@@ -627,9 +632,10 @@ int main(int i_argc,
       ++l_captureCount;
     }
     // write checkpoint
-    if (l_checkpointFrequency > 0 && l_simTime >= l_checkpointFrequency * l_checkpointCount)
+    if (l_checkpointFrequency > 0 &&
+        std::chrono::system_clock::now() - l_lastWrite >= std::chrono::duration<float>(l_checkpointFrequency))
     {
-      std::cout << "  saving checkpoint to " << l_checkPointFilePathString << std::endl;
+      std::cout << "saving checkpoint to " << l_checkPointFilePathString << std::endl;
       l_netCdf->writeCheckpoint(l_checkPointFilePath,
                                 l_waveProp->getHeight(),
                                 l_waveProp->getMomentumX(),
@@ -637,7 +643,7 @@ int main(int i_argc,
                                 l_waveProp->getBathymetry(),
                                 l_simTime,
                                 l_timeStep);
-      ++l_checkpointCount;
+      l_lastWrite = std::chrono::system_clock::now();
     }
     l_timeStep++;
     l_simTime += l_dt;

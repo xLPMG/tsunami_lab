@@ -1,11 +1,11 @@
 {
     "solver": "fwave",
-    "simulationSizeX": 1000,
-    "simulationSizeY": 1000,
-    "nx":100,
-    "ny":100,
+    "simulationSizeX": 1000000,
+    "simulationSizeY": 1000000,
+    "nx":1000,
+    "ny":1000,
     "setup":"ARTIFICIAL2D",
     "endTime":100,
     "writingFrequency":10,
-    "checkpointFrequency": -1
+    "checkpointFrequency": 10
 }
