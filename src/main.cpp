@@ -104,9 +104,12 @@ int main(int i_argc,
   tsunami_lab::t_real l_endTime = 0;
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
+  // frequency at which stations are written
   tsunami_lab::t_real l_stationFrequency = 0;
   // writing frequency in timesteps
   tsunami_lab::t_idx l_writingFrequency = 0;
+  // frequency at which checkpoints are written
+  tsunami_lab::t_real l_checkpointFrequency = 10;
   // data writer choice
   enum DataWriter
   {
@@ -120,6 +123,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
   tsunami_lab::t_idx l_captureCount = 0;
+  tsunami_lab::t_idx l_checkpointCount = 0;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -142,7 +146,7 @@ int main(int i_argc,
   const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
 
   // check if checkpoint exists
-  std::string l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".txt";
+  std::string l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
   const char *l_checkPointFilePath = l_checkPointFilePathString.c_str();
   l_loadFromCheckpoint = (std::filesystem::exists(l_checkPointFilePathString) && std::filesystem::exists(l_netCdfOutputPathString));
   if (l_loadFromCheckpoint)
@@ -203,15 +207,50 @@ int main(int i_argc,
     l_dataWriter = CSV;
   }
 
+  // set up netCdf I/O
+  tsunami_lab::io::NetCdf *l_netCdf;
+  if (l_setupChoice == "CHECKPOINT")
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+  }
+  else
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                           l_ny,
+                                           l_simulationSizeX,
+                                           l_simulationSizeY,
+                                           l_offsetX,
+                                           l_offsetY,
+                                           l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+  }
+
   // construct setup
-  /**
-   * note: switch statement was not feasible because the string from the json
-   * would have needed to be converted into an enum using if-statements anyway
-   **/
   tsunami_lab::setups::Setup *l_setup;
   if (l_setupChoice == "CHECKPOINT")
   {
-    l_setup = new tsunami_lab::setups::CircularDamBreak2d();
+    l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
+                                       l_nx,
+                                       l_ny,
+                                       l_simulationSizeX,
+                                       l_simulationSizeY,
+                                       l_offsetX,
+                                       l_offsetY,
+                                       l_simTime,
+                                       l_timeStep);
+    std::cout << std::endl;
+    std::cout << "Loaded following data from checkpoint: " << std::endl;
+    std::cout << "Cells x:                  " << l_nx << std::endl;
+    std::cout << "Cells y:                  " << l_ny << std::endl;
+    std::cout << "Simulation size x:        " << l_simulationSizeX << std::endl;
+    std::cout << "Simulation size y:        " << l_simulationSizeY << std::endl;
+    std::cout << "Offset x:                 " << l_offsetX << std::endl;
+    std::cout << "Offset y:                 " << l_offsetY << std::endl;
+    std::cout << "Current simulation time:  " << l_simTime << std::endl;
+    std::cout << "Current time step:        " << l_timeStep << std::endl;
+    std::cout << std::endl;
+    l_setup = nullptr;
   }
   else if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
@@ -364,54 +403,86 @@ int main(int i_argc,
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   std::cout << "Setting up solver..." << std::endl;
   // set up solver
-  for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+  if (l_setupChoice == "CHECKPOINT")
   {
-    tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetY;
-
-    for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+    tsunami_lab::t_real *l_hCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_huCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_hvCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_bCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    l_netCdf->read(l_checkPointFilePath, "height", &l_hCheck);
+    l_netCdf->read(l_checkPointFilePath, "momentumX", &l_huCheck);
+    l_netCdf->read(l_checkPointFilePath, "momentumY", &l_hvCheck);
+    l_netCdf->read(l_checkPointFilePath, "bathymetry", &l_bCheck);
+    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
     {
-      tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;
+      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      {
+        l_hMax = std::max(l_hCheck[l_cx + l_cy * l_nx], l_hMax);
 
-      // get initial values of the setup
-      tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
-                                                   l_y);
-      l_hMax = std::max(l_h, l_hMax);
+        l_waveProp->setHeight(l_cx,
+                              l_cy,
+                              l_hCheck[l_cx + l_cy * l_nx]);
 
-      tsunami_lab::t_real l_hu = l_setup->getMomentumX(l_x,
-                                                       l_y);
-      tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
-                                                       l_y);
-      tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
-                                                       l_y);
+        l_waveProp->setMomentumX(l_cx,
+                                 l_cy,
+                                 l_huCheck[l_cx + l_cy * l_nx]);
 
-      // set initial values in wave propagation solver
-      l_waveProp->setHeight(l_cx,
-                            l_cy,
-                            l_h);
+        l_waveProp->setMomentumY(l_cx,
+                                 l_cy,
+                                 l_hvCheck[l_cx + l_cy * l_nx]);
 
-      l_waveProp->setMomentumX(l_cx,
-                               l_cy,
-                               l_hu);
+        l_waveProp->setBathymetry(l_cx,
+                                  l_cy,
+                                  l_bCheck[l_cx + l_cy * l_nx]);
+      }
+    }
+    delete[] l_hCheck;
+    delete[] l_huCheck;
+    delete[] l_hvCheck;
+    delete[] l_bCheck;
+  }
+  else
+  {
+    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    {
+      tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetY;
 
-      l_waveProp->setMomentumY(l_cx,
-                               l_cy,
-                               l_hv);
+      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      {
+        tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;
 
-      l_waveProp->setBathymetry(l_cx,
-                                l_cy,
-                                l_b);
+        // get initial values of the setup
+        tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
+                                                     l_y);
+        l_hMax = std::max(l_h, l_hMax);
+
+        tsunami_lab::t_real l_hu = l_setup->getMomentumX(l_x,
+                                                         l_y);
+        tsunami_lab::t_real l_hv = l_setup->getMomentumY(l_x,
+                                                         l_y);
+        tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
+                                                         l_y);
+
+        // set initial values in wave propagation solver
+        l_waveProp->setHeight(l_cx,
+                              l_cy,
+                              l_h);
+
+        l_waveProp->setMomentumX(l_cx,
+                                 l_cy,
+                                 l_hu);
+
+        l_waveProp->setMomentumY(l_cx,
+                                 l_cy,
+                                 l_hv);
+
+        l_waveProp->setBathymetry(l_cx,
+                                  l_cy,
+                                  l_b);
+      }
     }
   }
   std::cout << "Done." << std::endl;
-  // set up netCdf I/O
-  tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                                                  l_ny,
-                                                                  l_simulationSizeX,
-                                                                  l_simulationSizeY,
-                                                                  l_offsetX,
-                                                                  l_offsetY,
-                                                                  l_netcdfOutputPath,
-                                                                  l_checkPointFilePath);
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -484,6 +555,12 @@ int main(int i_argc,
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   std::cout << "entering time loop" << std::endl;
 
+  // set counts in case we load from a checkpoint file
+  if (l_simTime > 0)
+  {
+    l_captureCount = std::floor(l_simTime / l_stationFrequency);
+    l_checkpointCount = std::floor(l_simTime / l_checkpointFrequency);
+  }
   // iterate over time
   while (l_simTime < l_endTime)
   {
@@ -536,6 +613,18 @@ int main(int i_argc,
         l_s->capture(l_simTime);
       }
       ++l_captureCount;
+    }
+    if (l_simTime >= l_checkpointFrequency * l_checkpointCount)
+    {
+      std::cout << "  saving checkpoint to " << l_checkPointFilePathString << std::endl;
+      l_netCdf->writeCheckpoint(l_checkPointFilePath,
+                                l_waveProp->getHeight(),
+                                l_waveProp->getMomentumX(),
+                                l_waveProp->getMomentumY(),
+                                l_waveProp->getBathymetry(),
+                                l_simTime,
+                                l_timeStep);
+      ++l_checkpointCount;
     }
     l_timeStep++;
     l_simTime += l_dt;

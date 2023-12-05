@@ -6,5 +6,5 @@
     "ny":1000,
     "setup":"ARTIFICIAL2D",
     "endTime":100,
-    "writingFrequency":50
+    "writingFrequency":100
 }

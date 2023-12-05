@@ -39,11 +39,11 @@ private:
     // error
     int m_err = 0;
 
-    const char *m_path = nullptr;
-    const char *m_checkpointFile = nullptr;
+    const char *m_netcdfOutputPath = nullptr;
+    const char *m_checkpointFilePath = nullptr;
 
     bool m_hasCheckpointFileBeenSetup = false;
-
+    bool m_doesSolutionExist = false;
     // dimension ids
     int m_dimXId = 0;
     int m_dimYId = 0;
@@ -73,15 +73,16 @@ private:
     int m_varCheckHId = 0;
     int m_varCheckHuId = 0;
     int m_varCheckHvId = 0;
+    int m_varCheckBId = 0;
     int m_varCheckTimeStepId = 0;
-    int m_varCheckTimeStepCountId = 0;
+    int m_varCheckWritingStepsCountId = 0;
     int m_varCheckSimSizeXId = 0;
     int m_varCheckSimSizeYId = 0;
     int m_varCheckOffsetXId = 0;
     int m_varCheckOffsetYId = 0;
 
     // index for timesteps
-    t_idx m_timeStepCount = 0;
+    t_idx m_writingStepsCount = 0;
 
     // tracks if file was opened for writing
     bool m_outputFileOpened = false;
@@ -123,15 +124,15 @@ public:
            t_real i_simulationSizeY,
            t_real i_offsetX,
            t_real i_offsetY,
-           const char *path,
-           const char *i_checkpointFile);
+           const char *i_netcdfOutputPath,
+           const char *i_checkpointFilePath);
 
     /**
      *  Constructor for when we have  checkoint file to read from
      * @param i_checkpointFile path of a checkpoint file
      */
-    NetCdf(const char *path,
-           const char *i_checkpointFile);
+    NetCdf(const char *i_netcdfOutputPath,
+           const char *i_checkpointFilePath);
 
     /**
      * Destructor
@@ -184,24 +185,32 @@ public:
               t_real **o_yData,
               t_real **o_data);
 
+    /** Reads from the cdf file
+     *
+     * @param i_file name of the file to read from
+     * @param i_var variable to be read
+     * @param o_data output data
+     */
+    void read(const char *i_file,
+              const char *i_var,
+              t_real **o_data);
+
     void writeCheckpoint(const char *path,
                          t_real const *i_h,
                          t_real const *i_hu,
                          t_real const *i_hv,
+                         t_real const *i_b,
                          t_real i_t,
                          t_real i_timeStep);
 
-    void loadCheckpoint(const char *path,
-                        t_real **o_h,
-                        t_real **o_hu,
-                        t_real **o_hv,
-                        t_idx &o_nx,
-                        t_idx &o_ny,
-                        t_real &o_simulationSizeX,
-                        t_real &o_simulationSizeY,
-                        t_real &o_offsetX,
-                        t_real &o_offsetY,
-                        t_real &o_t,
-                        t_real &o_timeStep);
+    void loadCheckpointDimensions(const char *i_checkpointFile,
+                                  t_idx &o_nx,
+                                  t_idx &o_ny,
+                                  t_real &o_simulationSizeX,
+                                  t_real &o_simulationSizeY,
+                                  t_real &o_offsetX,
+                                  t_real &o_offsetY,
+                                  t_real &o_t,
+                                  t_idx &o_timeStep);
 };
 #endif
