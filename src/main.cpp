@@ -163,11 +163,7 @@ int main(int i_argc,
       std::cout << "Solution file exists but no checkpoint was found. The solution will be deleted." << std::endl;
       std::filesystem::remove(l_netCdfOutputPathString);
     }
-    // no checkpoint and no solution
-    else
-    {
-      l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
-    }
+    l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
   }
 
   l_solver = l_configData.value("solver", "fwave");
