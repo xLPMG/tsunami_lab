@@ -413,7 +413,7 @@ int main(int i_argc,
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   std::cout << "Setting up solver..." << std::endl;
-  auto l_timeSetup1 = std::chrono::high_resolution_clock::now();
+  auto l_timeSetupStart = std::chrono::high_resolution_clock::now();
   // set up solver
   if (l_setupChoice == "CHECKPOINT")
   {
@@ -494,9 +494,10 @@ int main(int i_argc,
       }
     }
   }
-  auto l_timeSetup2 = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> l_timeSetupMS = l_timeSetup2 - l_timeSetup1;
-  std::cout << "Setup done. Operation took " << l_timeSetupMS.count() << "ms = " << l_timeSetupMS.count() / 1000 << "s" << std::endl;
+  auto l_timeSetupEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> l_timeSetupMS = l_timeSetupEnd - l_timeSetupStart;
+  std::chrono::duration<double> l_timeSetupS = l_timeSetupEnd - l_timeSetupStart;
+  std::cout << "Setup done. Operation took " << l_timeSetupMS.count() << "ms = " << l_timeSetupS.count() / 1000 << "s" << std::endl;
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -571,7 +572,7 @@ int main(int i_argc,
   std::cout << "entering time loop" << std::endl;
 
   auto l_lastWrite = std::chrono::system_clock::now();
-
+  auto l_timeCalculationStart = std::chrono::system_clock::now();
   // set count in case we load from a checkpoint file
   if (l_simTime > 0)
   {
@@ -652,8 +653,18 @@ int main(int i_argc,
   {
     l_s->write();
   }
-
+  auto l_timeCalculationEnd = std::chrono::system_clock::now();
   std::cout << "finished time loop" << std::endl;
+
+  std::chrono::duration<double, std::milli> l_timeCalculationMS = l_timeCalculationEnd - l_timeCalculationStart;
+  std::chrono::duration<double> l_timeCalculationS = l_timeCalculationEnd - l_timeCalculationStart;
+  std::chrono::duration<double, std::ratio<60>> l_timeCalculationM = l_timeCalculationEnd - l_timeCalculationStart;
+
+  std::cout << std::endl;
+  std::cout << "Calculation time: " << l_timeCalculationMS.count() << "ms" << std::endl;
+  std::cout << "= " << l_timeCalculationS.count() << " seconds" << std::endl;
+  std::cout << "= " << l_timeCalculationM.count() << " minutes" << std::endl;
+  std::cout << std::endl;
 
   // free memory
   std::cout << "freeing memory" << std::endl;
