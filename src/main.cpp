@@ -218,52 +218,9 @@ int main(int i_argc,
     l_dataWriter = CSV;
   }
 
-  // set up netCdf I/O
-  tsunami_lab::io::NetCdf *l_netCdf;
-  if (l_setupChoice == "CHECKPOINT")
-  {
-    l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
-                                           l_checkPointFilePath);
-  }
-  else
-  {
-    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                           l_ny,
-                                           l_simulationSizeX,
-                                           l_simulationSizeY,
-                                           l_offsetX,
-                                           l_offsetY,
-                                           l_netcdfOutputPath,
-                                           l_checkPointFilePath);
-  }
-
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
-  if (l_setupChoice == "CHECKPOINT")
-  {
-    l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
-                                       l_nx,
-                                       l_ny,
-                                       l_simulationSizeX,
-                                       l_simulationSizeY,
-                                       l_offsetX,
-                                       l_offsetY,
-                                       l_simTime,
-                                       l_timeStep);
-    std::cout << std::endl;
-    std::cout << "Loaded following data from checkpoint: " << std::endl;
-    std::cout << "  Cells x:                  " << l_nx << std::endl;
-    std::cout << "  Cells y:                  " << l_ny << std::endl;
-    std::cout << "  Simulation size x:        " << l_simulationSizeX << std::endl;
-    std::cout << "  Simulation size y:        " << l_simulationSizeY << std::endl;
-    std::cout << "  Offset x:                 " << l_offsetX << std::endl;
-    std::cout << "  Offset y:                 " << l_offsetY << std::endl;
-    std::cout << "  Current simulation time:  " << l_simTime << std::endl;
-    std::cout << "  Current time step:        " << l_timeStep << std::endl;
-    std::cout << std::endl;
-    l_setup = nullptr;
-  }
-  else if (l_setupChoice == "GENERALDISCONTINUITY1D")
+  if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
     l_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, -10, l_simulationSizeX / 2);
   }
@@ -360,10 +317,49 @@ int main(int i_argc,
                                                       l_netCdfTohoku,
                                                       l_nx);
   }
+
+  // set up netCdf I/O
+  tsunami_lab::io::NetCdf *l_netCdf;
+  if (l_setupChoice == "CHECKPOINT")
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+  }
   else
   {
-    std::cerr << "ERROR: No valid setup specified. Terminating..." << std::endl;
-    exit(EXIT_FAILURE);
+    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                           l_ny,
+                                           l_simulationSizeX,
+                                           l_simulationSizeY,
+                                           l_offsetX,
+                                           l_offsetY,
+                                           l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+  }
+  // setup for checkpoint
+  if (l_setupChoice == "CHECKPOINT")
+  {
+    l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
+                                       l_nx,
+                                       l_ny,
+                                       l_simulationSizeX,
+                                       l_simulationSizeY,
+                                       l_offsetX,
+                                       l_offsetY,
+                                       l_simTime,
+                                       l_timeStep);
+    std::cout << std::endl;
+    std::cout << "Loaded following data from checkpoint: " << std::endl;
+    std::cout << "  Cells x:                  " << l_nx << std::endl;
+    std::cout << "  Cells y:                  " << l_ny << std::endl;
+    std::cout << "  Simulation size x:        " << l_simulationSizeX << std::endl;
+    std::cout << "  Simulation size y:        " << l_simulationSizeY << std::endl;
+    std::cout << "  Offset x:                 " << l_offsetX << std::endl;
+    std::cout << "  Offset y:                 " << l_offsetY << std::endl;
+    std::cout << "  Current simulation time:  " << l_simTime << std::endl;
+    std::cout << "  Current time step:        " << l_timeStep << std::endl;
+    std::cout << std::endl;
+    l_setup = nullptr;
   }
 
   l_dx = l_simulationSizeX / l_nx;

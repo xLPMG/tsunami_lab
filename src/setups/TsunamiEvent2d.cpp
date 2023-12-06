@@ -19,17 +19,17 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
 
     m_stride = i_stride;
     i_netCdf->getDimensionSize(i_bathymetryPath,
-                               m_nxB,
-                               "x");
+                               "x",
+                               m_nxB);
     i_netCdf->getDimensionSize(i_bathymetryPath,
-                               m_nyB,
-                               "y");
+                               "y",
+                               m_nyB);
     i_netCdf->getDimensionSize(i_displacementPath,
-                               m_nxD,
-                               "x");
+                               "x",
+                               m_nxD);
     i_netCdf->getDimensionSize(i_displacementPath,
-                               m_nyD,
-                               "y");
+                               "y",
+                               m_nyD);
 
     m_xDataB = new t_real[m_nxB];
     m_yDataB = new t_real[m_nyB];
