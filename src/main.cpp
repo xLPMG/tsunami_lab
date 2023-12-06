@@ -316,6 +316,8 @@ int main(int i_argc,
                                                       "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
                                                       l_netCdfTohoku,
                                                       l_nx);
+  }else{
+    l_setup = nullptr;
   }
 
   // set up netCdf I/O
@@ -359,7 +361,6 @@ int main(int i_argc,
     std::cout << "  Current simulation time:  " << l_simTime << std::endl;
     std::cout << "  Current time step:        " << l_timeStep << std::endl;
     std::cout << std::endl;
-    l_setup = nullptr;
   }
 
   l_dx = l_simulationSizeX / l_nx;
