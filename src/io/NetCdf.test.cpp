@@ -1,10 +1,11 @@
 #include <catch2/catch.hpp>
 #include "../constants.h"
+#include <iostream>
+#include <filesystem>
+
 #define private public
 #include "NetCdf.h"
 #undef public
-#include <iostream>
-#include <filesystem>
 
 TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf], [ReadFile], [WriteFile]")
 {

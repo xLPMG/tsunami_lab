@@ -316,7 +316,9 @@ int main(int i_argc,
                                                       "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
                                                       l_netCdfTohoku,
                                                       l_nx);
-  }else{
+  }
+  else
+  {
     l_setup = nullptr;
   }
 
@@ -565,7 +567,14 @@ int main(int i_argc,
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
 
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
-  std::cout << "Saving checkpoint every " << l_checkpointFrequency << " seconds" << std::endl;
+  if (l_checkpointFrequency > 0)
+  {
+    std::cout << "Saving checkpoint every " << l_checkpointFrequency << " seconds" << std::endl;
+  }
+  else
+  {
+    std::cout << "Warning: Checkpoints have been disabled for this run. " << std::endl;
+  }
   std::cout << "entering time loop" << std::endl;
 
   auto l_lastWrite = std::chrono::system_clock::now();
