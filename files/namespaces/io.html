@@ -231,8 +231,8 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="sig-name descname"><span class="n"><span class="pre">NetCdf</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nx</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_ny</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_simulationSizeX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_simulationSizeY</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetY</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Constructor </p>
+<span class="sig-name descname"><span class="n"><span class="pre">NetCdf</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nx</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_ny</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_simulationSizeX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_simulationSizeY</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetY</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_netcdfOutputPath</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_checkpointFilePath</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Constructor for initialization</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -242,6 +242,22 @@
 <li><p><strong>i_simulationSizeY</strong> – simulation size in y-direction </p></li>
 <li><p><strong>i_offsetX</strong> – offset in x-direction </p></li>
 <li><p><strong>i_offsetY</strong> – offset in y-direction </p></li>
+<li><p><strong>i_netcdfOutputPath</strong> – path of the netcdf output file </p></li>
+<li><p><strong>i_checkpointFile</strong> – path of the checkpoint file </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="sig-name descname"><span class="n"><span class="pre">NetCdf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_netcdfOutputPath</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_checkpointFilePath</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Constructor for when we have a checkpoint file to read from </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_netcdfOutputPath</strong> – path of the netcdf output file </p></li>
+<li><p><strong>i_checkpointFile</strong> – path of the checkpoint file </p></li>
 </ul>
 </dd>
 </dl>
@@ -255,12 +271,11 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">write</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">path</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stride</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_h</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hu</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hv</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_b</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_t</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Writes into cdf file</p>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">write</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stride</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_h</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hu</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hv</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_b</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_t</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Writes data into netcdf file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – file path </p></li>
 <li><p><strong>i_stride</strong> – stride </p></li>
 <li><p><strong>i_h</strong> – water heights </p></li>
 <li><p><strong>i_hu</strong> – momentum x-direction </p></li>
@@ -274,14 +289,14 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getDimensionSize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_file</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_n</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_dimName</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getDimensionSize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_file</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_dimName</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_n</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Gets the size of a dimension</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_file</strong> – name of the file to read from </p></li>
-<li><p><strong>o_n</strong> – number of entries along that axis </p></li>
+<li><p><strong>i_file</strong> – path of the file to read from </p></li>
 <li><p><strong>i_dimName</strong> – name of the dimension </p></li>
+<li><p><strong>o_n</strong> – number of entries along that axis </p></li>
 </ul>
 </dd>
 </dl>
@@ -294,11 +309,66 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_file</strong> – name of the file to read from </p></li>
+<li><p><strong>i_file</strong> – path of the file to read from </p></li>
 <li><p><strong>i_var</strong> – variable to be read </p></li>
 <li><p><strong>o_xData</strong> – data of x dimension </p></li>
 <li><p><strong>o_yData</strong> – data of y dimension </p></li>
 <li><p><strong>o_data</strong> – output data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">read</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_file</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_var</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">o_data</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Reads from the cdf file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_file</strong> – path of the file to read from </p></li>
+<li><p><strong>i_var</strong> – variable to be read </p></li>
+<li><p><strong>o_data</strong> – output data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">writeCheckpoint</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_checkpointFile</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_h</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hu</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_hv</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_b</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_t</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_timeStep</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Writes checkpoint data to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_checkpointFile</strong> – path of the checkpoint file </p></li>
+<li><p><strong>i_h</strong> – water heights </p></li>
+<li><p><strong>i_hu</strong> – momentum x-direction </p></li>
+<li><p><strong>i_hv</strong> – momentum y-direction </p></li>
+<li><p><strong>i_b</strong> – bathymetry </p></li>
+<li><p><strong>i_t</strong> – simulation time </p></li>
+<li><p><strong>i_timestep</strong> – timestep </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadCheckpointDimensions</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_checkpointFile</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_nx</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_ny</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_simulationSizeX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_simulationSizeY</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_offsetX</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_offsetY</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_t</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_timeStep</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Loads checkpoint data from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_checkpointFile</strong> – path of the checkpoint file </p></li>
+<li><p><strong>o_nx</strong> – amount of cells in x-direction </p></li>
+<li><p><strong>o_ny</strong> – amount of cells in y-direction </p></li>
+<li><p><strong>o_simulationSizeX</strong> – simulation size in x-direction </p></li>
+<li><p><strong>o_simulationSizeY</strong> – simulation size in y-direction </p></li>
+<li><p><strong>o_offsetX</strong> – offset in x-direction </p></li>
+<li><p><strong>o_offsetY</strong> – offset in y-direction </p></li>
+<li><p><strong>o_t</strong> – simulation time </p></li>
+<li><p><strong>o_timestep</strong> – timestep </p></li>
 </ul>
 </dd>
 </dl>
@@ -328,8 +398,30 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setUpFile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">path</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Sets up a netcdf file fr writing </p>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setUpFile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_file</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Sets up a netcdf file for writing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_netcdfOutputPath</strong> – path of the netcdf output file </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setUpCheckpointFile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_checkpointFile</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Sets up a netcdf file for checkpointing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_checkpointFile</strong> – path of the checkpoint file </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadNetCdfIds</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Loads dimension and variable ids from an existing netcdf file. </p>
 </dd></dl>
 
 </div>
@@ -373,6 +465,26 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
 <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_err</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_netcdfOutputPath</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_checkpointFilePath</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_hasCheckpointFileBeenSetup</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_doesSolutionExist</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -432,7 +544,92 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_timeStepCount</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_ncCheckId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_dimCheckXId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_dimCheckYId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_dimCheckTId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckXId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckYId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckTId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckHId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckHuId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckHvId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckBId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckTimeStepId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckWritingStepsCountId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckSimSizeXId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckSimSizeYId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckOffsetXId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_varCheckOffsetYId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_writingStepsCount</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
