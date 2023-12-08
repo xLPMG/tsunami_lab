@@ -82,6 +82,8 @@ int main(int i_argc,
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 0;
+  // number of cells which will be grouped in netcdf output
+  tsunami_lab::t_idx l_nk = 10;
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 0;
   tsunami_lab::t_real l_simulationSizeY = 0;
@@ -258,6 +260,7 @@ int main(int i_argc,
   {
     tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(l_nx,
                                                                         l_ny,
+                                                                        l_nk,
                                                                         l_simulationSizeX,
                                                                         l_simulationSizeY,
                                                                         l_offsetX,
@@ -286,6 +289,7 @@ int main(int i_argc,
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
+                                                                         l_nk,
                                                                          l_simulationSizeX,
                                                                          l_simulationSizeY,
                                                                          l_offsetX,
@@ -306,6 +310,7 @@ int main(int i_argc,
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
                                                                           l_ny,
+                                                                          l_nk,
                                                                           l_simulationSizeX,
                                                                           l_simulationSizeY,
                                                                           l_offsetX,
@@ -333,6 +338,7 @@ int main(int i_argc,
   {
     l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
                                            l_ny,
+                                           l_nk,
                                            l_simulationSizeX,
                                            l_simulationSizeY,
                                            l_offsetX,
@@ -346,6 +352,7 @@ int main(int i_argc,
     l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
                                        l_nx,
                                        l_ny,
+                                       l_nk,
                                        l_simulationSizeX,
                                        l_simulationSizeY,
                                        l_offsetX,
@@ -657,6 +664,7 @@ int main(int i_argc,
 
   // free memory
   std::cout << "freeing memory" << std::endl;
+  std::filesystem::remove(l_checkPointFilePathString);
   delete l_setup;
   delete l_waveProp;
   delete l_netCdf;

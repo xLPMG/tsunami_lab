@@ -20,6 +20,7 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf], [ReadFile]
     // write data
     tsunami_lab::io::NetCdf *l_netCdfWrite = new tsunami_lab::io::NetCdf(l_x,
                                                                          l_y,
+                                                                         1,
                                                                          l_simulationSizeX,
                                                                          l_simulationSizeY,
                                                                          0,
@@ -52,6 +53,7 @@ TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf], [ReadFile]
     // read data
     tsunami_lab::io::NetCdf *l_netCdfRead = new tsunami_lab::io::NetCdf(l_x,
                                                                         l_y,
+                                                                        1,
                                                                         l_simulationSizeX,
                                                                         l_simulationSizeY,
                                                                         0,
@@ -117,6 +119,7 @@ TEST_CASE("Test NetCdf checkpointing functionality", "[NetCdf], [Checkpoint]")
     // write data
     tsunami_lab::io::NetCdf *l_netCdf = new tsunami_lab::io::NetCdf(l_x,
                                                                     l_y,
+                                                                    1,
                                                                     l_simulationSizeX,
                                                                     l_simulationSizeY,
                                                                     l_offsetX,
@@ -157,10 +160,12 @@ TEST_CASE("Test NetCdf checkpointing functionality", "[NetCdf], [Checkpoint]")
     tsunami_lab::t_real l_offsetXRead = 0, l_offsetYRead = 0;
     tsunami_lab::t_real l_tRead = 0;
     tsunami_lab::t_idx l_timeStepRead = 0;
+    tsunami_lab::t_idx l_k= 0;
 
     l_netCdf->loadCheckpointDimensions(l_checkpointFile,
                                        l_xRead,
                                        l_yRead,
+                                       l_k,
                                        l_simulationSizeXRead,
                                        l_simulationSizeYRead,
                                        l_offsetXRead,

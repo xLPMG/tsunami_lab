@@ -39,6 +39,10 @@ private:
     // error
     int m_err = 0;
 
+    t_idx m_k = 0;
+    t_idx m_nkx = 0;
+    t_idx m_nky = 0;
+
     const char *m_netcdfOutputPath = nullptr;
     const char *m_checkpointFilePath = nullptr;
 
@@ -81,6 +85,7 @@ private:
     int m_varCheckSimSizeYId = 0;
     int m_varCheckOffsetXId = 0;
     int m_varCheckOffsetYId = 0;
+    int m_varCheckKId = 0;
 
     // index for timesteps
     t_idx m_writingStepsCount = 0;
@@ -110,7 +115,7 @@ private:
 
     /**
      * Loads dimension and variable ids from an existing netcdf file.
-     * 
+     *
      */
     void loadNetCdfIds();
 
@@ -129,6 +134,7 @@ public:
      */
     NetCdf(t_idx i_nx,
            t_idx i_ny,
+           t_idx i_nk,
            t_real i_simulationSizeX,
            t_real i_simulationSizeY,
            t_real i_offsetX,
@@ -239,6 +245,7 @@ public:
     void loadCheckpointDimensions(const char *i_checkpointFile,
                                   t_idx &o_nx,
                                   t_idx &o_ny,
+                                  t_idx &o_nk,
                                   t_real &o_simulationSizeX,
                                   t_real &o_simulationSizeY,
                                   t_real &o_offsetX,
