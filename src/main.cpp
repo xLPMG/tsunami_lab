@@ -461,7 +461,6 @@ int main(int i_argc,
       for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
       {
         tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;
-
         // get initial values of the setup
         tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
                                                      l_y);
@@ -473,7 +472,6 @@ int main(int i_argc,
                                                          l_y);
         tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
                                                          l_y);
-
         // set initial values in wave propagation solver
         l_waveProp->setHeight(l_cx,
                               l_cy,
@@ -522,24 +520,6 @@ int main(int i_argc,
       delete l_bathymetryLoader;
       std::cout << "Done loading bathymetry." << std::endl;
     }
-    else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
-    {
-      // TODO
-      //  std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
-      //  tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
-      //                                            "bathymetry");
-
-      // for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
-      // {
-      //   for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
-      //   {
-      //     l_waveProp->setBathymetry(l_cx,
-      //                               l_cy,
-      //                               l_b[l_cx + l_nx * l_cy]);
-      //   }
-      // }
-      // std::cout << "Done loading bathymetry." << std::endl;
-    }
     else
     {
       std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
@@ -575,16 +555,17 @@ int main(int i_argc,
   {
     std::cout << "Warning: Checkpoints have been disabled for this run. " << std::endl;
   }
-  std::cout << "entering time loop" << std::endl;
-
-  auto l_lastWrite = std::chrono::system_clock::now();
-  auto l_timeCalculationStart = std::chrono::system_clock::now();
   // set count in case we load from a checkpoint file
   if (l_simTime > 0)
   {
     l_captureCount = std::floor(l_simTime / l_stationFrequency);
   }
-  // iterate over time
+
+  std::cout << "entering time loop" << std::endl;
+
+  auto l_lastWrite = std::chrono::system_clock::now();
+  auto l_timeCalculationStart = std::chrono::system_clock::now();
+  // START LOOP
   while (l_simTime < l_endTime)
   {
     if (l_timeStep % l_writingFrequency == 0)
@@ -644,6 +625,7 @@ int main(int i_argc,
     {
       std::cout << "saving checkpoint to " << l_checkPointFilePathString << std::endl;
       l_netCdf->writeCheckpoint(l_checkPointFilePath,
+                                l_nx + 2,
                                 l_waveProp->getHeight(),
                                 l_waveProp->getMomentumX(),
                                 l_waveProp->getMomentumY(),
@@ -655,6 +637,7 @@ int main(int i_argc,
     l_timeStep++;
     l_simTime += l_dt;
   }
+  // END LOOP
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     l_s->write();

@@ -143,6 +143,7 @@ TEST_CASE("Test NetCdf checkpointing functionality", "[NetCdf], [Checkpoint]")
     }
 
     l_netCdf->writeCheckpoint(l_checkpointFile,
+                              l_x,
                               l_h,
                               l_hu,
                               l_hv,

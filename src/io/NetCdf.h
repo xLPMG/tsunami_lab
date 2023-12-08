@@ -207,6 +207,7 @@ public:
     /** Writes checkpoint data to a file.
      *
      * @param i_checkpointFile path of the checkpoint file
+     * @param i_stride stride
      * @param i_h water heights
      * @param i_hu momentum x-direction
      * @param i_hv momentum y-direction
@@ -215,6 +216,7 @@ public:
      * @param i_timestep timestep
      */
     void writeCheckpoint(const char *i_checkpointFile,
+                         t_idx i_stride,
                          t_real const *i_h,
                          t_real const *i_hu,
                          t_real const *i_hv,
