@@ -56,24 +56,27 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
                           &m_ncId);   // ncidp
         checkNcErr(m_err);
         m_outputFileOpened = true;
-
+        int l_i = 0;
         t_real *l_y = new t_real[m_nky]{0};
         t_real *l_x = new t_real[m_nkx]{0};
-        for (t_idx l_gy = 0; l_gy < m_nky; l_gy++)
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy+=m_k)
         {
             for (t_idx l_iy = 0; l_iy < m_k; l_iy++)
             {
-                l_y[l_gy] += (l_gy * m_k + l_iy) * (m_simulationSizeY / m_ny) + m_offsetY;
+                l_y[l_i] += (l_gy + l_iy) * (m_simulationSizeY / m_ny) + m_offsetY;
             }
-            l_y[l_gy] /= m_k;
+            l_y[l_i] /= m_k;
+            l_i++;
         }
-        for (t_idx l_gx = 0; l_gx < m_nkx; l_gx++)
+        l_i = 0;
+        for (t_idx l_gx = 0; l_gx < m_nx; l_gx+=m_k)
         {
             for (t_idx l_ix = 0; l_ix < m_k; l_ix++)
             {
-                l_x[l_gx] += (l_gx * m_k + l_ix) * (m_simulationSizeX / m_nx) + m_offsetX;
+                l_x[l_i] += (l_gx + l_ix) * (m_simulationSizeX / m_nx) + m_offsetX;
             }
-            l_x[l_gx] /= m_k;
+            l_x[l_i] /= m_k;
+            l_i++;
         }
         // define dimensions
         int m_dimIds[3];

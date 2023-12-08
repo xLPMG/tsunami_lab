@@ -34,13 +34,13 @@ private:
     t_real m_offsetX = 0;
     // offset in y direction
     t_real m_offsetY = 0;
-    // Id for nc file
-    int m_ncId = 0;
     // error
     int m_err = 0;
-
+    // amount of cells in x- and y-direction whose output will be grouped together 
     t_idx m_k = 0;
+    // amount of output values in x-direction
     t_idx m_nkx = 0;
+    // amount of output values in y-direction
     t_idx m_nky = 0;
 
     const char *m_netcdfOutputPath = nullptr;
@@ -48,6 +48,9 @@ private:
 
     bool m_hasCheckpointFileBeenSetup = false;
     bool m_doesSolutionExist = false;
+
+    // id of nc file
+    int m_ncId = 0;
 
     // dimension ids
     int m_dimXId = 0;
@@ -64,6 +67,7 @@ private:
     int m_varHuId = 0;
     int m_varHvId = 0;
 
+    // id of checkpoint nc file
     int m_ncCheckId = 0;
 
     // dimension ids for checkpointing
@@ -125,6 +129,7 @@ public:
      *
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
+     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together 
      * @param i_simulationSizeX simulation size in x-direction
      * @param i_simulationSizeY simulation size in y-direction
      * @param i_offsetX offset in x-direction
@@ -235,6 +240,7 @@ public:
      * @param i_checkpointFile path of the checkpoint file
      * @param o_nx amount of cells in x-direction
      * @param o_ny amount of cells in y-direction
+     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together 
      * @param o_simulationSizeX simulation size in x-direction
      * @param o_simulationSizeY simulation size in y-direction
      * @param o_offsetX offset in x-direction

@@ -83,7 +83,7 @@ int main(int i_argc,
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 0;
   // number of cells which will be grouped in netcdf output
-  tsunami_lab::t_idx l_nk = 10;
+  tsunami_lab::t_idx l_nk = 1;
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 0;
   tsunami_lab::t_real l_simulationSizeY = 0;
@@ -172,6 +172,7 @@ int main(int i_argc,
   // read size config
   l_nx = l_configData.value("nx", 1);
   l_ny = l_configData.value("ny", 1);
+  l_nk = l_configData.value("nk", 1);
   l_simulationSizeX = l_configData.value("simulationSizeX", 10);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
   l_offsetX = l_configData.value("offsetX", 0);
@@ -333,22 +334,6 @@ int main(int i_argc,
   {
     l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
                                            l_checkPointFilePath);
-  }
-  else
-  {
-    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                           l_ny,
-                                           l_nk,
-                                           l_simulationSizeX,
-                                           l_simulationSizeY,
-                                           l_offsetX,
-                                           l_offsetY,
-                                           l_netcdfOutputPath,
-                                           l_checkPointFilePath);
-  }
-  // setup for checkpoint
-  if (l_setupChoice == "CHECKPOINT")
-  {
     l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
                                        l_nx,
                                        l_ny,
@@ -370,6 +355,18 @@ int main(int i_argc,
     std::cout << "  Current simulation time:  " << l_simTime << std::endl;
     std::cout << "  Current time step:        " << l_timeStep << std::endl;
     std::cout << std::endl;
+  }
+  else
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                           l_ny,
+                                           l_nk,
+                                           l_simulationSizeX,
+                                           l_simulationSizeY,
+                                           l_offsetX,
+                                           l_offsetY,
+                                           l_netcdfOutputPath,
+                                           l_checkPointFilePath);
   }
 
   l_dx = l_simulationSizeX / l_nx;
