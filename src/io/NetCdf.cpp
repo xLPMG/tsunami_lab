@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Interface for NetCdf
  **/
 #include "NetCdf.h"
@@ -379,8 +380,8 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                                 t_real i_simulationSizeY,
                                 t_real i_offsetX,
                                 t_real i_offsetY,
-                                const char *i_netcdfOutputPath,
-                                const char *i_checkpointFilePath)
+                                const char *i_netcdfOutputFile,
+                                const char *i_checkpointFile)
 {
     m_nx = i_nx;
     m_ny = i_ny;
@@ -391,23 +392,23 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     m_simulationSizeY = i_simulationSizeY;
     m_offsetX = i_offsetX;
     m_offsetY = i_offsetY;
-    m_netcdfOutputPath = i_netcdfOutputPath;
-    m_checkpointFilePath = i_checkpointFilePath;
+    m_netcdfOutputFile = i_netcdfOutputFile;
+    m_checkpointFile = i_checkpointFile;
 
-    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputPath);
+    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
 }
 
-tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputPath,
-                                const char *i_checkpointFilePath)
+tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
+                                const char *i_checkpointFile)
 {
-    m_netcdfOutputPath = i_netcdfOutputPath;
-    m_checkpointFilePath = i_checkpointFilePath;
+    m_netcdfOutputFile = i_netcdfOutputFile;
+    m_checkpointFile = i_checkpointFile;
 
     // those parameters are only needed to satisfy the function call parameters
     t_real l_t = 0;
     t_idx l_timeStep = 0;
 
-    loadCheckpointDimensions(i_checkpointFilePath,
+    loadCheckpointDimensions(i_checkpointFile,
                              m_nx,
                              m_ny,
                              m_k,
@@ -420,7 +421,7 @@ tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputPath,
 
     m_nkx = m_nx / m_k;
     m_nky = m_ny / m_k;
-    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputPath);
+    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -446,7 +447,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     // set up file and write bathymetry on first call
     if (!m_outputFileOpened)
     {
-        setUpFile(m_netcdfOutputPath);
+        setUpFile(m_netcdfOutputFile);
     }
     if (m_writingStepsCount == 0)
     {
@@ -688,7 +689,7 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
     delete[] l_data;
 }
 
-void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
+void tsunami_lab::io::NetCdf::writeCheckpoint(const char *i_checkpointFile,
                                               t_idx i_stride,
                                               t_real const *i_h,
                                               t_real const *i_hu,
@@ -697,7 +698,7 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
                                               t_real i_t,
                                               t_real i_timeStep)
 {
-    setUpCheckpointFile(path);
+    setUpCheckpointFile(i_checkpointFile);
 
     t_idx start[] = {0, 0};
     t_idx count[] = {m_ny, m_nx};

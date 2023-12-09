@@ -60,7 +60,7 @@ if 'debug' in env['mode']:
   env.Append( CXXFLAGS = [ '-g',
                            '-O0' ] )
 else:
-  env.Append( CXXFLAGS = [ '-O2' ] )
+  env.Append( CXXFLAGS = [ '-O3' ] )
 
 # add sanitizers
 if 'san' in  env['mode']:

@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Froude number calculation
  **/
 #ifndef FROUDE_H
@@ -27,6 +28,7 @@ private:
 public:
     /**
      * Gets the maximum Froude number within a given domain.
+     * 
      *@param i_setup setup for which the Froude number will be calculated for
      *@param i_domainSize size of the domain in which the max Fraude number will be searched for
      *@param i_stepSize accuracy of the data queries towards th setup
@@ -41,6 +43,7 @@ public:
 
     /**
      * Gets the Fraude number for a specified location.
+     * 
      *@param i_setup setup for which the Froude number will be calculated for
      *@param i_position location of the queried point
      *@param o_Froude Froude number output

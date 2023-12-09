@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Two-dimensional circular dam break problem.
  **/
 #ifndef TSUNAMI_LAB_SETUPS_CIRCULAR_DAM_BREAK_2D_H

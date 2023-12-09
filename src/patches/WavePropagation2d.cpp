@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * two-dimensional wave propagation patch.
  **/
 #include "WavePropagation2d.h"

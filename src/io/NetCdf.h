@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  *
  **/
 #ifndef TSUNAMI_LAB_IO_NETCDF
@@ -43,8 +44,8 @@ private:
     // amount of output values in y-direction
     t_idx m_nky = 0;
 
-    const char *m_netcdfOutputPath = nullptr;
-    const char *m_checkpointFilePath = nullptr;
+    const char *m_netcdfOutputFile = nullptr;
+    const char *m_checkpointFile = nullptr;
 
     bool m_hasCheckpointFileBeenSetup = false;
     bool m_doesSolutionExist = false;
@@ -134,7 +135,7 @@ public:
      * @param i_simulationSizeY simulation size in y-direction
      * @param i_offsetX offset in x-direction
      * @param i_offsetY offset in y-direction
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_netcdfOutputFile path of the netcdf output file
      * @param i_checkpointFile path of the checkpoint file
      */
     NetCdf(t_idx i_nx,
@@ -144,16 +145,16 @@ public:
            t_real i_simulationSizeY,
            t_real i_offsetX,
            t_real i_offsetY,
-           const char *i_netcdfOutputPath,
-           const char *i_checkpointFilePath);
+           const char *i_netcdfOutputFile,
+           const char *i_checkpointFile);
 
     /**
      *  Constructor for when we have a checkpoint file to read from
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_netcdfOutputFile path of the netcdf output file
      * @param i_checkpointFile path of the checkpoint file
      */
-    NetCdf(const char *i_netcdfOutputPath,
-           const char *i_checkpointFilePath);
+    NetCdf(const char *i_netcdfOutputFile,
+           const char *i_checkpointFile);
 
     /**
      * Destructor
@@ -240,7 +241,7 @@ public:
      * @param i_checkpointFile path of the checkpoint file
      * @param o_nx amount of cells in x-direction
      * @param o_ny amount of cells in y-direction
-     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together 
+     * @param o_nk amount of cells in x- and y-direction whose output will be grouped together 
      * @param o_simulationSizeX simulation size in x-direction
      * @param o_simulationSizeY simulation size in y-direction
      * @param o_offsetX offset in x-direction

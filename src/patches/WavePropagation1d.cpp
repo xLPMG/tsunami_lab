@@ -1,7 +1,8 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * One-dimensional wave propagation patch.
  **/
 #include "WavePropagation1d.h"

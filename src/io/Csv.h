@@ -1,7 +1,8 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * IO-routines for writing a snapshot as Comma Separated Values (CSV).
  **/
 #ifndef TSUNAMI_LAB_IO_CSV

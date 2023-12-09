@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Loads bathymetry data from files
  **/
 #include "BathymetryLoader.h"

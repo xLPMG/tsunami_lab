@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Fwave solver for the one-dimensional shallow water equations.
  **/
 #ifndef TSUNAMI_LAB_SOLVERS_FWAVE
@@ -30,17 +31,17 @@ private:
    *
    * @param i_hL height of the left side.
    * @param i_hR height of the right side.
-   * @param i_uL particle velocity of the leftside.
-   * @param i_uR particles velocity of the right side.
-   * @param o_waveSpeedL will be set to the speed of the wave propagating to the left.
-   * @param o_waveSpeedR will be set to the speed of the wave propagating to the right.
+   * @param i_uL particle velocity of the left side.
+   * @param i_uR particle velocity of the right side.
+   * @param eigenvalueRoe_1 will be set to the speed of the wave propagating to the left.
+   * @param eigenvalueRoe_2 will be set to the speed of the wave propagating to the right.
    **/
   static void computeEigenvalues(t_real i_hL,
                                  t_real i_hR,
                                  t_real i_uL,
                                  t_real i_uR,
-                                 t_real &o_waveSpeedL,
-                                 t_real &o_waveSpeedR);
+                                 t_real &eigenvalueRoe_1,
+                                 t_real &eigenvalueRoe_2);
   /**
    * Computes the roe eigencoefficients.
    *

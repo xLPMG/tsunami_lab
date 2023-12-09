@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * A station which can capture data in a specified location on demand and also save it to a csv file
  **/
 

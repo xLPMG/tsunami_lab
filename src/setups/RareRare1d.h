@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Implementation of rare-rare Riemann problems
  **/
 #ifndef TSUNAMI_LAB_SETUPS_RARE_RARE_1D_H

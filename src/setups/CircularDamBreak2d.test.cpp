@@ -1,7 +1,8 @@
 /**
- * @author Luca Grumbach, Ricahrd Hofamnn
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Tests the 2d dam break setup.
  **/
 #include <catch2/catch.hpp>

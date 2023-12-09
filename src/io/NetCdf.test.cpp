@@ -1,3 +1,11 @@
+/**
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
+ *
+ * # Description 
+ * Unit tests for the NETCDF_interface.
+ **/
+
 #include <catch2/catch.hpp>
 #include "../constants.h"
 #include <iostream>

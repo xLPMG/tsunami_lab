@@ -1,7 +1,7 @@
 /**
  * @author Alexander Breuer (alex.breuer AT uni-jena.de)
  *
- * @section DESCRIPTION
+ * # Description
  * Constants / typedefs used throughout the code.
  **/
 #ifndef TSUNAMI_LAB_CONSTANTS_H

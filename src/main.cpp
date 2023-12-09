@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Entry-point for simulations.
  **/
 
@@ -629,7 +630,7 @@ int main(int i_argc,
     {
       std::cout << "saving checkpoint to " << l_checkPointFilePathString << std::endl;
       l_netCdf->writeCheckpoint(l_checkPointFilePath,
-                                l_nx + 2,
+                                l_waveProp->getStride(),
                                 l_waveProp->getHeight(),
                                 l_waveProp->getMomentumX(),
                                 l_waveProp->getMomentumY(),

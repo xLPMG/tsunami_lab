@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * One-dimensional supercritical problem
  **/
 #ifndef TSUNAMI_LAB_SETUPS_SUPERCRITICAL_1D_H

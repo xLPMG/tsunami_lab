@@ -1,7 +1,8 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Unit tests for the one-dimensional wave propagation patch.
  **/
 #include <catch2/catch.hpp>

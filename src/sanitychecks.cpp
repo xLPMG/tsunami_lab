@@ -1,7 +1,7 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
  *
- * @section DESCRIPTION
+ * # Description 
  * Entry-point for sanity checks.
  **/
 
