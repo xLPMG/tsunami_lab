@@ -59,7 +59,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
         int l_i = 0;
         t_real *l_y = new t_real[m_nky]{0};
         t_real *l_x = new t_real[m_nkx]{0};
-        for (t_idx l_gy = 0; l_gy < m_ny; l_gy+=m_k)
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_iy = 0; l_iy < m_k; l_iy++)
             {
@@ -69,7 +69,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
             l_i++;
         }
         l_i = 0;
-        for (t_idx l_gx = 0; l_gx < m_nx; l_gx+=m_k)
+        for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
         {
             for (t_idx l_ix = 0; l_ix < m_k; l_ix++)
             {
@@ -712,7 +712,7 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckOffsetXId, start, count, &m_offsetX));
     // WRITE OFFSET Y
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckOffsetYId, start, count, &m_offsetY));
-    // WRITE TIME STEP COUNT
+    // WRITE WRITING STEP COUNT
     float l_writingStepsFloat = float(m_writingStepsCount);
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckWritingStepsCountId, start, count, &l_writingStepsFloat));
     // WRITE TIME STEP
@@ -725,12 +725,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // WRITE HEIGHT
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_h == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_h[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -740,12 +746,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
                                  l_data));
     // WRITE MOMENTUM X
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_hu == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_hu[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -756,12 +768,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // WRITE MOMENTUM Y
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_hv == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_hv[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -772,12 +790,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // WRITE BATHYMETRY
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_b == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_b[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -790,7 +814,9 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // flush all data
     nc_sync(m_ncCheckId);
-    nc_sync(m_ncId);
+    if (m_outputFileOpened){
+        nc_sync(m_ncId);
+    }
 
     checkNcErr(nc_close(m_ncCheckId));
 }
