@@ -57,7 +57,7 @@ private:
   * @param o_hR water height on the right side
   * @param o_huL water momentum on the left side
   * @param o_huR water momentum on the right side
-  * @param o_bl bathymetry on the left side 
+  * @param o_bL bathymetry on the left side 
   * @param o_bR bathymetry on the right side
   */
   void handleReflections(t_real *i_h,
@@ -191,7 +191,7 @@ public:
    * Sets the bathymetry of the cell to the given value.
    *
    * @param i_ix id of the cell in x-direction.
-   * @param i_h bathymetry.
+   * @param i_b bathymetry.
    **/
   void setBathymetry(t_idx i_ix,
                      t_idx,

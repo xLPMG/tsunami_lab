@@ -107,7 +107,7 @@ private:
     /**
      * Sets up a netcdf file for writing.
      *
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_file path of the netcdf output file
      */
     void setUpFile(const char *i_file);
 
@@ -225,7 +225,7 @@ public:
      * @param i_hv momentum y-direction
      * @param i_b bathymetry
      * @param i_t simulation time
-     * @param i_timestep timestep
+     * @param i_timeStep timestep
      */
     void writeCheckpoint(const char *i_checkpointFile,
                          t_idx i_stride,
@@ -247,7 +247,7 @@ public:
      * @param o_offsetX offset in x-direction
      * @param o_offsetY offset in y-direction
      * @param o_t simulation time
-     * @param o_timestep timestep
+     * @param o_timeStep timestep
      */
     void loadCheckpointDimensions(const char *i_checkpointFile,
                                   t_idx &o_nx,

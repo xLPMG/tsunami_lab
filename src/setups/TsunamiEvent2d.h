@@ -78,8 +78,8 @@ private:
 public:
   /**
    * Constructor.
-   * @param bathymetryPath path to file containing bathymetry data
-   * @param displacementPath path to file containing bathymetry data
+   * @param i_bathymetryPath path to file containing bathymetry data
+   * @param i_displacementPath path to file containing bathymetry data
    * @param i_netCdf NetCdf instance
    * @param i_stride stride
    **/
