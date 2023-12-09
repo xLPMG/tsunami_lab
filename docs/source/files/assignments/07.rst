@@ -1,0 +1,77 @@
+7. Checkpointing and Coarse Output
+*************************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 7.1 - Checkpointing
+=====================================
+
+Task 7.1.1 - 
+-------------------------------------------
+
+Task 7.1.2 - CheckPoint setup
+-------------------------------------------
+
+Task 7.1.3 - 
+-------------------------------------------
+
+Task 7.1.4 - 
+-------------------------------------------
+
+
+Task 7.2 - Coarse Output
+=====================================
+
+7.2.1 - Implementation
+--------------------------------
+
+First we added new variables in the NetCdf Constructor:
+
+.. code:: cpp
+
+    m_k = i_nk;
+    m_nkx = i_nx / i_nk;
+    m_nky = i_ny / i_nk;
+
+m_nkx and m_nky state how many values we have for the x and y direction after dividing them by k.
+We use these values for the definition of the dimension sizes for x and y.
+
+For each bathymetry, height, momentumX and momentumY we use the following loop. 
+As example for bathymetry:
+
+.. code:: cpp
+
+    t_real *l_b = new t_real[m_nkx * m_nky];
+    l_i = 0;
+    
+    for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
+    {
+        for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+        {
+            for (t_idx l_y = 0; l_y < m_k; l_y++)
+            {
+                for (t_idx l_x = 0; l_x < m_k; l_x++)
+                {
+                    l_b[l_i] += i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
+                }
+            }
+            l_b[l_i] /= m_k * m_k;
+            l_i++;
+        }
+    }
+
+    checkNcErr(nc_put_var_float(m_ncId,
+                                    m_varBId,
+                                    l_b));
+    delete[] l_b;
+
+We go through x and y and add k for each step, in order to skip the already used cells.
+Inside the square we again go through all according cells x and y.
+We use the iteration variables and the stride to get the right values of the array.
+Afterwards, the data gets written into the NetCdf file and the allocated memory is freed.
+
+7.2.2 - Visualization
+--------------------------------
+
+We run a script for a cell size of 50 meters. 
+Therefore we had 
