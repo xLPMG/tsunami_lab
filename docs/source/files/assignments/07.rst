@@ -310,4 +310,20 @@ Afterwards, the data gets written into the NetCdf file and the allocated memory 
 --------------------------------
 
 We run a script for a cell size of 50 meters. 
-Therefore we had 
+While running the programm we got the following error:
+
+.. code:: cpp
+
+    ...
+    simulation time / time steps: 2.55646 / 70
+    writing to netcdf
+    saving checkpoint to checkpoints/tohoku_50_5_solution.nc
+    Error: NetCDF: One or more variable sizes violate format constraints
+
+We thought we had fixed this issue by enabling 
+`Large File Support <https://docs.unidata.ucar.edu/nug/current/file_structure_and_performance.html>`_ 
+using the "NC_64BIT_OFFSET" specifier in ``nc_create``. It solved the issue for writing our output data,
+but for some reason not for writing checkpoints. Due to lack of time we were not able to find the issue yet,
+however we are working on it.
+
+Because of the error the solution file was corrupted and we could not open it in paraview to visualize it.
