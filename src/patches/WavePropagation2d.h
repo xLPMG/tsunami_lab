@@ -1,14 +1,14 @@
 /**
- * @author Luca Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Two-dimensional wave propagation patch.
  **/
 #ifndef TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D
 #define TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D
 
 #include "WavePropagation.h"
-#include <string>
 
 namespace tsunami_lab
 {

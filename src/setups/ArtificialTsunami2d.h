@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Two-dimensional artificial tsunami event
  **/
 #ifndef TSUNAMI_LAB_SETUPS_ARTIFICIAL_TSUNAMI_2D

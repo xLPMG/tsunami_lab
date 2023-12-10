@@ -1,0 +1,329 @@
+7. Checkpointing and Coarse Output
+*************************************
+
+All project authors contributed to this assignment in equal parts.
+
+Task 7.1 - Checkpointing
+=====================================
+
+Task 7.1.1 - Writing checkpoints
+-------------------------------------------
+
+We extended the ``NetCdf.cpp`` file by a ``writeCheckpoint()`` function:
+
+.. code:: cpp
+
+    void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
+                                              t_idx i_stride,
+                                              t_real const *i_h,
+                                              t_real const *i_hu,
+                                              t_real const *i_hv,
+                                              t_real const *i_b,
+                                              t_real i_t,
+                                              t_real i_timeStep)
+    {
+    setUpCheckpointFile(path);
+
+    t_idx start[] = {0, 0};
+    t_idx count[] = {m_ny, m_nx};
+
+    int l_i = 0;
+    t_real *l_data = new t_real[m_nx * m_ny];
+    // WRITE SIMULATION SIZE X
+    checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckSimSizeXId, start, count, &m_simulationSizeX));
+    // WRITE SIMULATION SIZE Y
+    checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckSimSizeYId, start, count, &m_simulationSizeY));
+
+    [...]
+
+    // WRITE HEIGHT
+    l_i = 0;
+    if (i_h == nullptr)
+    {
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
+        {
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_h[l_x + l_y * i_stride];
+            }
+        }
+    }
+    checkNcErr(nc_put_vara_float(m_ncCheckId,
+                                 m_varCheckHId,
+                                 start,
+                                 count,
+                                 l_data));
+    
+    [...]
+
+    delete[] l_data;
+
+    // flush all data
+    nc_sync(m_ncCheckId);
+    if (m_outputFileOpened){
+        nc_sync(m_ncId);
+    }
+
+    checkNcErr(nc_close(m_ncCheckId));
+    }
+
+First we write single value data, such as the simulation size,
+offset, writing step count, current time step, current time and the k-value from the next task.
+For simplification, we only included the simulation size in the code snippet.
+
+We then write the arrays, as seen in the example for height. It is the same for
+the momenta and bathymetry data. If the input is a nullptr, we write 0 into the array using ``memset``.
+
+At the end of the function, we not only flush the checkpoint data to the file, but also 
+all standard netcdf output data.
+
+Task 7.1.2 - CheckPoint setup
+-------------------------------------------
+
+We decided against using a setup, as the code was short enough to be implemented directly into the main class.
+We also hope to get better performance because we can directly access the array from within the main class,
+without making function calls to a separate CheckPoint class.
+
+We extended the NetCdf class instance initialization in the  ``main.cpp`` by directly loading single value data
+from the checkpoint file in the case of an existing checkpoint. We overload the ``NetCdf`` constructor with
+a lighter version that only takes the two file paths as its input.
+
+.. code:: cpp
+
+  // set up netCdf I/O
+  tsunami_lab::io::NetCdf *l_netCdf;
+  if (l_setupChoice == "CHECKPOINT")
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+    l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
+                                       l_nx,
+                                       l_ny,
+                                       l_nk,
+                                       l_simulationSizeX,
+                                       l_simulationSizeY,
+                                       l_offsetX,
+                                       l_offsetY,
+                                       l_simTime,
+                                       l_timeStep);
+    std::cout << std::endl;
+    std::cout << "Loaded following data from checkpoint: " << std::endl;
+    std::cout << "  Cells x:                  " << l_nx << std::endl;
+    std::cout << "  Cells y:                  " << l_ny << std::endl;
+    std::cout << "  Simulation size x:        " << l_simulationSizeX << std::endl;
+    std::cout << "  Simulation size y:        " << l_simulationSizeY << std::endl;
+    std::cout << "  Offset x:                 " << l_offsetX << std::endl;
+    std::cout << "  Offset y:                 " << l_offsetY << std::endl;
+    std::cout << "  Current simulation time:  " << l_simTime << std::endl;
+    std::cout << "  Current time step:        " << l_timeStep << std::endl;
+    std::cout << std::endl;
+  }  
+  else
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                           l_ny,
+                                           l_nk,
+                                           l_simulationSizeX,
+                                           l_simulationSizeY,
+                                           l_offsetX,
+                                           l_offsetY,
+                                           l_netcdfOutputPath,
+                                           l_checkPointFilePath);
+  }
+
+The ``loadCheckpointDimensions()`` function might have a little misleading name, but ``Dimensions`` refers to 
+values like simulation size, cell amount, offset etc. and not dimensions of the checkpoint file. 
+
+For all other values which are stored in arrays (height, momenta, bathymetry), 
+we added following code before the usual solver setup:
+
+.. code:: cpp
+
+  if (l_setupChoice == "CHECKPOINT")
+  {
+    tsunami_lab::t_real *l_hCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_huCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_hvCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    tsunami_lab::t_real *l_bCheck = new tsunami_lab::t_real[l_nx * l_ny];
+    l_netCdf->read(l_checkPointFilePath, "height", &l_hCheck);
+    l_netCdf->read(l_checkPointFilePath, "momentumX", &l_huCheck);
+    l_netCdf->read(l_checkPointFilePath, "momentumY", &l_hvCheck);
+    l_netCdf->read(l_checkPointFilePath, "bathymetry", &l_bCheck);
+    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    {
+      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      {
+        l_hMax = std::max(l_hCheck[l_cx + l_cy * l_nx], l_hMax);
+
+        l_waveProp->setHeight(l_cx,
+                              l_cy,
+                              l_hCheck[l_cx + l_cy * l_nx]);
+
+        l_waveProp->setMomentumX(l_cx,
+                                 l_cy,
+                                 l_huCheck[l_cx + l_cy * l_nx]);
+
+        l_waveProp->setMomentumY(l_cx,
+                                 l_cy,
+                                 l_hvCheck[l_cx + l_cy * l_nx]);
+
+        l_waveProp->setBathymetry(l_cx,
+                                  l_cy,
+                                  l_bCheck[l_cx + l_cy * l_nx]);
+      }
+    }
+    delete[] l_hCheck;
+    delete[] l_huCheck;
+    delete[] l_hvCheck;
+    delete[] l_bCheck;
+  }
+  else
+  {
+  //normal solver setup
+  }
+
+The read function was implemented last week and we just added a simpler version of it, which does not
+require a x- and y-data array (those were needed last week to read the data along the axes along with the actual data).
+Both functions are accessible by overloading the constructor.
+
+Task 7.1.3 & 7.1.4 - Checkpoint testing and automatic loading
+--------------------------------------------------------------
+
+An example log may look like:
+
+.. code:: bash
+
+    LPMGs-Air-6:tsunami_lab lpmg$ ./build/tsunami_lab
+    ####################################
+    ### Tsunami Lab                  ###
+    ###                              ###
+    ### https://scalable.uni-jena.de ###
+    ####################################
+    runtime configuration file: configs/config.json
+    Solution file exists but no checkpoint was found. The solution will be deleted.
+    Setting up solver...
+    Setup done. Operation took 31.5309ms = 3.15309e-05s
+    Writing every 100 time steps
+    Saving checkpoint every 5 seconds
+    entering time loop
+      simulation time / #time steps: 0 / 0
+      writing to netcdf 
+    saving checkpoint to checkpoints/solution.nc
+      simulation time / #time steps: 0.227168 / 100
+      writing to netcdf 
+    saving checkpoint to checkpoints/solution.nc
+    ^C
+    LPMGs-Air-6:tsunami_lab lpmg$ ./build/tsunami_lab
+    ####################################
+    ### Tsunami Lab                  ###
+    ###                              ###
+    ### https://scalable.uni-jena.de ###
+    ####################################
+    runtime configuration file: configs/config.json
+    Found checkpoint file: checkpoints/solution.nc
+
+    Loaded following data from checkpoint: 
+      Cells x:                  1000
+      Cells y:                  1000
+      Simulation size x:        100
+      Simulation size y:        100
+      Offset x:                 0
+      Offset y:                 0
+      Current simulation time:  0.268059
+      Current time step:        118
+
+    Setting up solver...
+    Setup done. Operation took 64.2207ms = 6.42207e-05s
+    Writing every 100 time steps
+    Saving checkpoint every 5 seconds
+    entering time loop
+    saving checkpoint to checkpoints/solution.nc
+    ^C
+
+It can be seen the after aborting the program, it loads from a checkpoint file the next time it is executed.
+If there is a solution file but no checkpoint file for it, the existing solution will simply be deleted.
+If there is a checkpoint but no solution file, the solution file will be set up again and the simulation
+will start with the data provided by the checkpoint file.
+
+The checkpoint frequency is provided using real time seconds. The smallest value is 1. 
+If the provided number is less, checkpointing will be disabled.
+
+We also decided on using a single checkpoint file and just overriding it every time. 
+Furthermore, simply out of convenience, the checkpoint file is deleted after the program ends successfully.
+
+Task 7.2 - Coarse Output
+=====================================
+
+7.2.1 - Implementation
+--------------------------------
+
+First we added new variables in the NetCdf Constructor:
+
+.. code:: cpp
+
+    m_k = i_nk;
+    m_nkx = i_nx / i_nk;
+    m_nky = i_ny / i_nk;
+
+m_nkx and m_nky state how many values we have for the x and y direction after dividing them by k.
+We use these values for the definition of the dimension sizes for x and y.
+
+For each bathymetry, height, momentumX and momentumY we use the following loop. 
+As example for bathymetry:
+
+.. code:: cpp
+
+    t_real *l_b = new t_real[m_nkx * m_nky];
+    l_i = 0;
+    
+    for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
+    {
+        for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+        {
+            for (t_idx l_y = 0; l_y < m_k; l_y++)
+            {
+                for (t_idx l_x = 0; l_x < m_k; l_x++)
+                {
+                    l_b[l_i] += i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
+                }
+            }
+            l_b[l_i] /= m_k * m_k;
+            l_i++;
+        }
+    }
+
+    checkNcErr(nc_put_var_float(m_ncId,
+                                    m_varBId,
+                                    l_b));
+    delete[] l_b;
+
+We go through x and y and add k for each step, in order to skip the already used cells.
+Inside the square we again go through all according cells x and y.
+We use the iteration variables and the stride to get the right values of the array.
+Afterwards, the data gets written into the NetCdf file and the allocated memory is freed.
+
+7.2.2 - Visualization
+--------------------------------
+
+We run a script for a cell size of 50 meters. 
+While running the programm we got the following error:
+
+.. code:: cpp
+
+    ...
+    simulation time / time steps: 2.55646 / 70
+    writing to netcdf
+    saving checkpoint to checkpoints/tohoku_50_5_solution.nc
+    Error: NetCDF: One or more variable sizes violate format constraints
+
+We thought we had fixed this issue by enabling 
+`Large File Support <https://docs.unidata.ucar.edu/nug/current/file_structure_and_performance.html>`_ 
+using the "NC_64BIT_OFFSET" specifier in ``nc_create``. It solved the issue for writing our output data,
+but for some reason not for writing checkpoints. Due to lack of time we were not able to find the issue yet,
+however we are working on it.
+
+Because of the error the solution file was corrupted and we could not open it in paraview to visualize it.

@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Two-dimensional  tsunami event
  **/
 #ifndef TSUNAMI_LAB_SETUPS_TSUNAMI_EVENT_2D
@@ -77,8 +78,8 @@ private:
 public:
   /**
    * Constructor.
-   * @param bathymetryPath path to file containing bathymetry data
-   * @param displacementPath path to file containing bathymetry data
+   * @param i_bathymetryPath path to file containing bathymetry data
+   * @param i_displacementPath path to file containing bathymetry data
    * @param i_netCdf NetCdf instance
    * @param i_stride stride
    **/

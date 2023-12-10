@@ -1,7 +1,8 @@
 /**
- * @author Luca Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Tests the discontinuity setup setup.
  **/
 #include <catch2/catch.hpp>

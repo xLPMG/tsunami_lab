@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  *
  **/
 #ifndef TSUNAMI_LAB_IO_NETCDF
@@ -34,16 +35,23 @@ private:
     t_real m_offsetX = 0;
     // offset in y direction
     t_real m_offsetY = 0;
-    // Id for nc file
-    int m_ncId = 0;
     // error
     int m_err = 0;
+    // amount of cells in x- and y-direction whose output will be grouped together 
+    t_idx m_k = 0;
+    // amount of output values in x-direction
+    t_idx m_nkx = 0;
+    // amount of output values in y-direction
+    t_idx m_nky = 0;
 
-    const char *m_netcdfOutputPath = nullptr;
-    const char *m_checkpointFilePath = nullptr;
+    const char *m_netcdfOutputFile = nullptr;
+    const char *m_checkpointFile = nullptr;
 
     bool m_hasCheckpointFileBeenSetup = false;
     bool m_doesSolutionExist = false;
+
+    // id of nc file
+    int m_ncId = 0;
 
     // dimension ids
     int m_dimXId = 0;
@@ -60,6 +68,7 @@ private:
     int m_varHuId = 0;
     int m_varHvId = 0;
 
+    // id of checkpoint nc file
     int m_ncCheckId = 0;
 
     // dimension ids for checkpointing
@@ -81,6 +90,7 @@ private:
     int m_varCheckSimSizeYId = 0;
     int m_varCheckOffsetXId = 0;
     int m_varCheckOffsetYId = 0;
+    int m_varCheckKId = 0;
 
     // index for timesteps
     t_idx m_writingStepsCount = 0;
@@ -97,7 +107,7 @@ private:
     /**
      * Sets up a netcdf file for writing.
      *
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_file path of the netcdf output file
      */
     void setUpFile(const char *i_file);
 
@@ -110,7 +120,7 @@ private:
 
     /**
      * Loads dimension and variable ids from an existing netcdf file.
-     * 
+     *
      */
     void loadNetCdfIds();
 
@@ -120,29 +130,31 @@ public:
      *
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
+     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together 
      * @param i_simulationSizeX simulation size in x-direction
      * @param i_simulationSizeY simulation size in y-direction
      * @param i_offsetX offset in x-direction
      * @param i_offsetY offset in y-direction
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_netcdfOutputFile path of the netcdf output file
      * @param i_checkpointFile path of the checkpoint file
      */
     NetCdf(t_idx i_nx,
            t_idx i_ny,
+           t_idx i_nk,
            t_real i_simulationSizeX,
            t_real i_simulationSizeY,
            t_real i_offsetX,
            t_real i_offsetY,
-           const char *i_netcdfOutputPath,
-           const char *i_checkpointFilePath);
+           const char *i_netcdfOutputFile,
+           const char *i_checkpointFile);
 
     /**
      *  Constructor for when we have a checkpoint file to read from
-     * @param i_netcdfOutputPath path of the netcdf output file
+     * @param i_netcdfOutputFile path of the netcdf output file
      * @param i_checkpointFile path of the checkpoint file
      */
-    NetCdf(const char *i_netcdfOutputPath,
-           const char *i_checkpointFilePath);
+    NetCdf(const char *i_netcdfOutputFile,
+           const char *i_checkpointFile);
 
     /**
      * Destructor
@@ -207,14 +219,16 @@ public:
     /** Writes checkpoint data to a file.
      *
      * @param i_checkpointFile path of the checkpoint file
+     * @param i_stride stride
      * @param i_h water heights
      * @param i_hu momentum x-direction
      * @param i_hv momentum y-direction
      * @param i_b bathymetry
      * @param i_t simulation time
-     * @param i_timestep timestep
+     * @param i_timeStep timestep
      */
     void writeCheckpoint(const char *i_checkpointFile,
+                         t_idx i_stride,
                          t_real const *i_h,
                          t_real const *i_hu,
                          t_real const *i_hv,
@@ -227,16 +241,18 @@ public:
      * @param i_checkpointFile path of the checkpoint file
      * @param o_nx amount of cells in x-direction
      * @param o_ny amount of cells in y-direction
+     * @param o_nk amount of cells in x- and y-direction whose output will be grouped together 
      * @param o_simulationSizeX simulation size in x-direction
      * @param o_simulationSizeY simulation size in y-direction
      * @param o_offsetX offset in x-direction
      * @param o_offsetY offset in y-direction
      * @param o_t simulation time
-     * @param o_timestep timestep
+     * @param o_timeStep timestep
      */
     void loadCheckpointDimensions(const char *i_checkpointFile,
                                   t_idx &o_nx,
                                   t_idx &o_ny,
+                                  t_idx &o_nk,
                                   t_real &o_simulationSizeX,
                                   t_real &o_simulationSizeY,
                                   t_real &o_offsetX,

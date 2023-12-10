@@ -1,7 +1,8 @@
 /**
- * @author Luca Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Unit tests for the two-dimensional wave propagation patch.
  **/
 #include <catch2/catch.hpp>

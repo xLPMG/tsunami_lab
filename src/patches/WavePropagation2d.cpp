@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * two-dimensional wave propagation patch.
  **/
 #include "WavePropagation2d.h"
@@ -37,10 +38,10 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   {
     for (t_idx l_ce = 0; l_ce < l_totalCells; l_ce++)
     {
-        m_h[l_st][l_ce] = 0;
-        m_huX[l_st][l_ce] = 0;
-        m_huY[l_st][l_ce] = 0;
-        m_b[l_ce] = 0;
+      m_h[l_st][l_ce] = 0;
+      m_huX[l_st][l_ce] = 0;
+      m_huY[l_st][l_ce] = 0;
+      m_b[l_ce] = 0;
     }
   }
 }
@@ -70,20 +71,21 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
   t_real *l_huNewY = m_huY[m_step];
 
   // init new cell quantities
-  for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2)*(m_nCellsY + 2); l_ce++)
+  for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2) * (m_nCellsY + 2); l_ce++)
   {
-      l_hNew[l_ce] = l_hOld[l_ce];
-      l_huNewX[l_ce] = l_huOldX[l_ce];
-      l_huNewY[l_ce] = l_huOldY[l_ce];
+    l_hNew[l_ce] = l_hOld[l_ce];
+    l_huNewX[l_ce] = l_huOldX[l_ce];
+    l_huNewY[l_ce] = l_huOldY[l_ce];
   }
 
   // TODO: break nested loop into chunks to stay within cache
 
   // iterate over edges and update with Riemann solutions
   // X-SWEEP
-  for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
+
+  for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
   {
-    for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
+    for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
     {
       // determine left and right cell-id
       t_idx l_ceL = l_ec + getStride() * l_ed;
@@ -111,7 +113,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
       // compute net-updates
       t_real l_netUpdates[2][2];
 
-      if(l_hL==0 && l_hR==0) continue;
+      if (l_hL == 0 && l_hR == 0)
+        continue;
       solvers::Fwave::netUpdates(l_hL,
                                  l_hR,
                                  l_huL,
@@ -176,7 +179,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
       // compute net-updates
       t_real l_netUpdates[2][2];
 
-      if(l_hD==0 && l_hU==0) continue;
+      if (l_hD == 0 && l_hU == 0)
+        continue;
       solvers::Fwave::netUpdates(l_hD,
                                  l_hU,
                                  l_huD,
@@ -228,7 +232,7 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     l_huY[ceL] = l_huY[ceL + 1];
     l_b[ceL] = l_b[ceL + 1];
     // right column
-    l_h[ceR] =  m_boundaryR == WALL ? 0 : l_h[ceR - 1];
+    l_h[ceR] = m_boundaryR == WALL ? 0 : l_h[ceR - 1];
     l_huX[ceR] = l_huX[ceR - 1];
     l_huY[ceR] = l_huY[ceR - 1];
     l_b[ceR] = l_b[ceR - 1];
@@ -279,15 +283,16 @@ void tsunami_lab::patches::WavePropagation2d::handleReflections(t_real *i_h,
   }
 }
 
-void tsunami_lab::patches::WavePropagation2d::adjustWaterHeight(){
-   
-   for (t_idx l_ix= 1; l_ix < m_nCellsX + 1; l_ix++)
+void tsunami_lab::patches::WavePropagation2d::adjustWaterHeight()
+{
+  for (t_idx l_iy = 1; l_iy < m_nCellsY + 1; l_iy++)
+  {
+    for (t_idx l_ix = 1; l_ix < m_nCellsX + 1; l_ix++)
     {
-         for (t_idx l_iy = 1; l_iy < m_nCellsY + 1; l_iy++)
-         {
-                m_h[m_step][l_ix + l_iy * getStride()] -= m_b[l_ix + l_iy * getStride()];
-                if (m_h[m_step][l_ix + l_iy * getStride()] < 0)
-                    m_h[m_step][l_ix + l_iy * getStride()] = 0;
-         }
+
+      m_h[m_step][l_ix + l_iy * getStride()] -= m_b[l_ix + l_iy * getStride()];
+      if (m_h[m_step][l_ix + l_iy * getStride()] < 0)
+        m_h[m_step][l_ix + l_iy * getStride()] = 0;
     }
+  }
 }

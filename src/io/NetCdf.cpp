@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description
  * Interface for NetCdf
  **/
 #include "NetCdf.h"
@@ -51,23 +52,33 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
     }
     else
     {
-        m_err = nc_create(i_file,     // path
-                          NC_CLOBBER, // cmode
-                          &m_ncId);   // ncidp
+        m_err = nc_create(i_file,                       // path
+                          NC_CLOBBER | NC_64BIT_OFFSET, // cmode
+                          &m_ncId);                     // ncidp
         checkNcErr(m_err);
         m_outputFileOpened = true;
-
-        t_real *l_y = new t_real[m_ny];
-        t_real *l_x = new t_real[m_nx];
-        for (t_idx l_iy = 0; l_iy < m_ny; l_iy++)
+        int l_i = 0;
+        t_real *l_y = new t_real[m_nky]{0};
+        t_real *l_x = new t_real[m_nkx]{0};
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
-            l_y[l_iy] = l_iy * (m_simulationSizeY / m_ny) + m_offsetY;
+            for (t_idx l_iy = 0; l_iy < m_k; l_iy++)
+            {
+                l_y[l_i] += (l_gy + l_iy) * (m_simulationSizeY / m_ny) + m_offsetY;
+            }
+            l_y[l_i] /= m_k;
+            l_i++;
         }
-        for (t_idx l_ix = 0; l_ix < m_nx; l_ix++)
+        l_i = 0;
+        for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
         {
-            l_x[l_ix] = l_ix * (m_simulationSizeX / m_nx) + m_offsetX;
+            for (t_idx l_ix = 0; l_ix < m_k; l_ix++)
+            {
+                l_x[l_i] += (l_gx + l_ix) * (m_simulationSizeX / m_nx) + m_offsetX;
+            }
+            l_x[l_i] /= m_k;
+            l_i++;
         }
-
         // define dimensions
         int m_dimIds[3];
 
@@ -79,13 +90,13 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
 
         m_err = nc_def_dim(m_ncId,     // ncid
                            "y",        // name
-                           m_ny,       // len
+                           m_nky,      // len
                            &m_dimYId); // idp
         checkNcErr(m_err);
 
         m_err = nc_def_dim(m_ncId,     // ncid
                            "x",        // name
-                           m_nx,       // len
+                           m_nkx,      // len
                            &m_dimXId); // idp
         checkNcErr(m_err);
 
@@ -214,9 +225,9 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
     if (std::filesystem::exists(i_checkpointFile))
         std::filesystem::remove(i_checkpointFile);
 
-    m_err = nc_create(i_checkpointFile, // path
-                      NC_CLOBBER,       // cmode
-                      &m_ncCheckId);    // ncidp
+    m_err = nc_create(i_checkpointFile,             // path
+                      NC_CLOBBER | NC_64BIT_OFFSET, // cmode
+                      &m_ncCheckId);                // ncidp
     checkNcErr(m_err);
 
     // define dimensions
@@ -326,6 +337,14 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
                        &m_varCheckOffsetYId); // varidp
     checkNcErr(m_err);
 
+    m_err = nc_def_var(m_ncCheckId,     // ncid
+                       "k",             // name
+                       NC_INT,          // xtype
+                       0,               // ndims
+                       m_dimCheckIds,   // dimidsp
+                       &m_varCheckKId); // varidp
+    checkNcErr(m_err);
+
     m_err = nc_enddef(m_ncCheckId); // ncid
     checkNcErr(m_err);
     t_real *l_y = new t_real[m_ny];
@@ -356,38 +375,43 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
 
 tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
                                 t_idx i_ny,
+                                t_idx i_nk,
                                 t_real i_simulationSizeX,
                                 t_real i_simulationSizeY,
                                 t_real i_offsetX,
                                 t_real i_offsetY,
-                                const char *i_netcdfOutputPath,
-                                const char *i_checkpointFilePath)
+                                const char *i_netcdfOutputFile,
+                                const char *i_checkpointFile)
 {
     m_nx = i_nx;
     m_ny = i_ny;
+    m_k = i_nk;
+    m_nkx = i_nx / i_nk;
+    m_nky = i_ny / i_nk;
     m_simulationSizeX = i_simulationSizeX;
     m_simulationSizeY = i_simulationSizeY;
     m_offsetX = i_offsetX;
     m_offsetY = i_offsetY;
-    m_netcdfOutputPath = i_netcdfOutputPath;
-    m_checkpointFilePath = i_checkpointFilePath;
+    m_netcdfOutputFile = i_netcdfOutputFile;
+    m_checkpointFile = i_checkpointFile;
 
-    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputPath);
+    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
 }
 
-tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputPath,
-                                const char *i_checkpointFilePath)
+tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
+                                const char *i_checkpointFile)
 {
-    m_netcdfOutputPath = i_netcdfOutputPath;
-    m_checkpointFilePath = i_checkpointFilePath;
+    m_netcdfOutputFile = i_netcdfOutputFile;
+    m_checkpointFile = i_checkpointFile;
 
     // those parameters are only needed to satisfy the function call parameters
     t_real l_t = 0;
     t_idx l_timeStep = 0;
 
-    loadCheckpointDimensions(i_checkpointFilePath,
+    loadCheckpointDimensions(i_checkpointFile,
                              m_nx,
                              m_ny,
+                             m_k,
                              m_simulationSizeX,
                              m_simulationSizeY,
                              m_offsetX,
@@ -395,7 +419,9 @@ tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputPath,
                              l_t,
                              l_timeStep);
 
-    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputPath);
+    m_nkx = m_nx / m_k;
+    m_nky = m_ny / m_k;
+    m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -413,29 +439,38 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                                     t_real i_t)
 {
     t_idx start[] = {m_writingStepsCount, 0, 0};
-    t_idx count[] = {1, m_ny, m_nx};
+    t_idx count[] = {1, m_nky, m_nkx};
 
-    t_real *l_data = new t_real[m_nx * m_ny];
+    t_real *l_data = new t_real[m_nkx * m_nky];
     int l_i = 0;
 
     // set up file and write bathymetry on first call
     if (!m_outputFileOpened)
     {
-        setUpFile(m_netcdfOutputPath);
+        setUpFile(m_netcdfOutputFile);
     }
     if (m_writingStepsCount == 0)
     {
-        t_real *l_b = new t_real[m_nx * m_ny];
-        int l_i = 0;
-
-        for (t_idx l_y = 0; l_y < m_ny; l_y++)
+        t_real *l_b = new t_real[m_nkx * m_nky]{0};
+        l_i = 0;
+        if (i_b != nullptr)
         {
-            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
             {
-                l_b[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride];
+                for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+                {
+                    for (t_idx l_y = 0; l_y < m_k; l_y++)
+                    {
+                        for (t_idx l_x = 0; l_x < m_k; l_x++)
+                        {
+                            l_b[l_i] += i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
+                        }
+                    }
+                    l_b[l_i] /= m_k * m_k;
+                    l_i++;
+                }
             }
         }
-
         checkNcErr(nc_put_var_float(m_ncId,
                                     m_varBId,
                                     l_b));
@@ -448,12 +483,24 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                                  &i_t));
     // WRITE HEIGHT
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
+    if (i_h != nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        int l_i = 0;
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
-            l_data[l_i++] = i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride];
+            for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+            {
+                for (t_idx l_y = 0; l_y < m_k; l_y++)
+                {
+                    for (t_idx l_x = 0; l_x < m_k; l_x++)
+                    {
+                        l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride];
+                    }
+                }
+                l_data[l_i] /= m_k * m_k;
+                l_i++;
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncId,
@@ -463,12 +510,24 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                                  l_data));
     // WRITE TOTAL HEIGHT
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
+    if (i_h != nullptr && i_b != nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        int l_i = 0;
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
-            l_data[l_i++] = (i_h == nullptr ? 0 : i_h[l_x + l_y * i_stride]) + (i_b == nullptr ? 0 : i_b[l_x + l_y * i_stride]);
+            for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+            {
+                for (t_idx l_y = 0; l_y < m_k; l_y++)
+                {
+                    for (t_idx l_x = 0; l_x < m_k; l_x++)
+                    {
+                        l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride] + i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
+                    }
+                }
+                l_data[l_i] /= m_k * m_k;
+                l_i++;
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncId,
@@ -478,12 +537,24 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                                  l_data));
     // WRITE MOMENTUM X
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
+    if (i_hu != nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        int l_i = 0;
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
-            l_data[l_i++] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * i_stride];
+            for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+            {
+                for (t_idx l_y = 0; l_y < m_k; l_y++)
+                {
+                    for (t_idx l_x = 0; l_x < m_k; l_x++)
+                    {
+                        l_data[l_i] += i_hu[l_gx + l_x + (l_y + l_gy) * i_stride];
+                    }
+                }
+                l_data[l_i] /= m_k * m_k;
+                l_i++;
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncId,
@@ -494,12 +565,24 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
 
     // WRITE MOMENTUM Y
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
+    if (i_hv != nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        int l_i = 0;
+        for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
-            l_data[l_i++] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * i_stride];
+            for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
+            {
+                for (t_idx l_y = 0; l_y < m_k; l_y++)
+                {
+                    for (t_idx l_x = 0; l_x < m_k; l_x++)
+                    {
+                        l_data[l_i] += i_hv[l_gx + l_x + (l_y + l_gy) * i_stride];
+                    }
+                }
+                l_data[l_i] /= m_k * m_k;
+                l_i++;
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncId,
@@ -606,7 +689,8 @@ void tsunami_lab::io::NetCdf::read(const char *i_file,
     delete[] l_data;
 }
 
-void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
+void tsunami_lab::io::NetCdf::writeCheckpoint(const char *i_checkpointFile,
+                                              t_idx i_stride,
                                               t_real const *i_h,
                                               t_real const *i_hu,
                                               t_real const *i_hv,
@@ -614,10 +698,11 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
                                               t_real i_t,
                                               t_real i_timeStep)
 {
-    setUpCheckpointFile(path);
+    setUpCheckpointFile(i_checkpointFile);
 
     t_idx start[] = {0, 0};
     t_idx count[] = {m_ny, m_nx};
+
     int l_i = 0;
     t_real *l_data = new t_real[m_nx * m_ny];
     // WRITE SIMULATION SIZE X
@@ -628,23 +713,31 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckOffsetXId, start, count, &m_offsetX));
     // WRITE OFFSET Y
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckOffsetYId, start, count, &m_offsetY));
-    // WRITE TIME STEP COUNT
+    // WRITE WRITING STEP COUNT
     float l_writingStepsFloat = float(m_writingStepsCount);
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckWritingStepsCountId, start, count, &l_writingStepsFloat));
-
     // WRITE TIME STEP
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckTimeStepId, start, count, &i_timeStep));
     // WRITE TIME
     checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckTId, start, count, &i_t));
+    // WRITE K
+    float l_kFloat = float(m_k);
+    checkNcErr(nc_put_vara_float(m_ncCheckId, m_varCheckKId, start, count, &l_kFloat));
 
     // WRITE HEIGHT
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_h == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_h == nullptr ? 0 : i_h[l_x + l_y * m_nx];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_h[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -654,12 +747,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
                                  l_data));
     // WRITE MOMENTUM X
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_hu == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_hu == nullptr ? 0 : i_hu[l_x + l_y * m_nx];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_hu[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -670,12 +769,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // WRITE MOMENTUM Y
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_hv == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_hv == nullptr ? 0 : i_hv[l_x + l_y * m_nx];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_hv[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -686,12 +791,18 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // WRITE BATHYMETRY
     l_i = 0;
-
-    for (t_idx l_y = 0; l_y < m_ny; l_y++)
+    if (i_b == nullptr)
     {
-        for (t_idx l_x = 0; l_x < m_nx; l_x++)
+        memset(l_data, 0, m_nx * m_ny * sizeof(t_real));
+    }
+    else
+    {
+        for (t_idx l_y = 0; l_y < m_ny; l_y++)
         {
-            l_data[l_i++] = i_b == nullptr ? 0 : i_b[l_x + l_y * m_nx];
+            for (t_idx l_x = 0; l_x < m_nx; l_x++)
+            {
+                l_data[l_i++] = i_b[l_x + l_y * i_stride];
+            }
         }
     }
     checkNcErr(nc_put_vara_float(m_ncCheckId,
@@ -704,7 +815,10 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 
     // flush all data
     nc_sync(m_ncCheckId);
-    nc_sync(m_ncId);
+    if (m_outputFileOpened)
+    {
+        nc_sync(m_ncId);
+    }
 
     checkNcErr(nc_close(m_ncCheckId));
 }
@@ -712,6 +826,7 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *path,
 void tsunami_lab::io::NetCdf::loadCheckpointDimensions(const char *i_checkpointFile,
                                                        t_idx &o_nx,
                                                        t_idx &o_ny,
+                                                       t_idx &o_nk,
                                                        t_real &o_simulationSizeX,
                                                        t_real &o_simulationSizeY,
                                                        t_real &o_offsetX,
@@ -730,7 +845,6 @@ void tsunami_lab::io::NetCdf::loadCheckpointDimensions(const char *i_checkpointF
     o_nx = m_nx;
     o_ny = m_ny;
     // READ VARIABLES : //
-    t_real *l_data = new t_real[m_nx * m_ny];
 
     // READ SIMULATION SIZE X
     checkNcErr(nc_inq_varid(l_ncIdCheckRead, "simulationSizeX", &l_varDataIdRead));
@@ -765,11 +879,20 @@ void tsunami_lab::io::NetCdf::loadCheckpointDimensions(const char *i_checkpointF
     // READ WRITING STEPS COUNT
     checkNcErr(nc_inq_varid(l_ncIdCheckRead, "writingStepsCount", &l_varDataIdRead));
     checkNcErr(nc_get_var_int(l_ncIdCheckRead, l_varDataIdRead, &l_i));
-    m_writingStepsCount = size_t(l_i);
+    m_writingStepsCount = t_idx(l_i);
+
+    // READ K
+    checkNcErr(nc_inq_varid(l_ncIdCheckRead, "k", &l_varDataIdRead));
+    int l_k = 0;
+    checkNcErr(nc_get_var_int(l_ncIdCheckRead, l_varDataIdRead, &l_k));
+    m_k = t_idx(l_k);
+    o_nk = t_idx(l_k);
+    m_nkx = m_nx / m_k;
+    m_nky = m_ny / m_k;
+
     // start over in case the solution got lost
     if (!m_doesSolutionExist)
         m_writingStepsCount = 0;
 
-    delete[] l_data;
     checkNcErr(nc_close(l_ncIdCheckRead));
 }

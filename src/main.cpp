@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach, Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Entry-point for simulations.
  **/
 
@@ -82,6 +83,8 @@ int main(int i_argc,
   // number of cells in x- and y-direction
   tsunami_lab::t_idx l_nx = 0;
   tsunami_lab::t_idx l_ny = 0;
+  // number of cells which will be grouped in netcdf output
+  tsunami_lab::t_idx l_nk = 1;
   // set simulation size in metres
   tsunami_lab::t_real l_simulationSizeX = 0;
   tsunami_lab::t_real l_simulationSizeY = 0;
@@ -170,6 +173,7 @@ int main(int i_argc,
   // read size config
   l_nx = l_configData.value("nx", 1);
   l_ny = l_configData.value("ny", 1);
+  l_nk = l_configData.value("nk", 1);
   l_simulationSizeX = l_configData.value("simulationSizeX", 10);
   l_simulationSizeY = l_configData.value("simulationSizeY", 1);
   l_offsetX = l_configData.value("offsetX", 0);
@@ -258,6 +262,7 @@ int main(int i_argc,
   {
     tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(l_nx,
                                                                         l_ny,
+                                                                        l_nk,
                                                                         l_simulationSizeX,
                                                                         l_simulationSizeY,
                                                                         l_offsetX,
@@ -286,6 +291,7 @@ int main(int i_argc,
 
     tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(l_nx,
                                                                          l_ny,
+                                                                         l_nk,
                                                                          l_simulationSizeX,
                                                                          l_simulationSizeY,
                                                                          l_offsetX,
@@ -306,6 +312,7 @@ int main(int i_argc,
 
     tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(l_nx,
                                                                           l_ny,
+                                                                          l_nk,
                                                                           l_simulationSizeX,
                                                                           l_simulationSizeY,
                                                                           l_offsetX,
@@ -328,24 +335,10 @@ int main(int i_argc,
   {
     l_netCdf = new tsunami_lab::io::NetCdf(l_netcdfOutputPath,
                                            l_checkPointFilePath);
-  }
-  else
-  {
-    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
-                                           l_ny,
-                                           l_simulationSizeX,
-                                           l_simulationSizeY,
-                                           l_offsetX,
-                                           l_offsetY,
-                                           l_netcdfOutputPath,
-                                           l_checkPointFilePath);
-  }
-  // setup for checkpoint
-  if (l_setupChoice == "CHECKPOINT")
-  {
     l_netCdf->loadCheckpointDimensions(l_checkPointFilePath,
                                        l_nx,
                                        l_ny,
+                                       l_nk,
                                        l_simulationSizeX,
                                        l_simulationSizeY,
                                        l_offsetX,
@@ -363,6 +356,18 @@ int main(int i_argc,
     std::cout << "  Current simulation time:  " << l_simTime << std::endl;
     std::cout << "  Current time step:        " << l_timeStep << std::endl;
     std::cout << std::endl;
+  }
+  else
+  {
+    l_netCdf = new tsunami_lab::io::NetCdf(l_nx,
+                                           l_ny,
+                                           l_nk,
+                                           l_simulationSizeX,
+                                           l_simulationSizeY,
+                                           l_offsetX,
+                                           l_offsetY,
+                                           l_netcdfOutputPath,
+                                           l_checkPointFilePath);
   }
 
   l_dx = l_simulationSizeX / l_nx;
@@ -461,7 +466,6 @@ int main(int i_argc,
       for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
       {
         tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;
-
         // get initial values of the setup
         tsunami_lab::t_real l_h = l_setup->getHeight(l_x,
                                                      l_y);
@@ -473,7 +477,6 @@ int main(int i_argc,
                                                          l_y);
         tsunami_lab::t_real l_b = l_setup->getBathymetry(l_x,
                                                          l_y);
-
         // set initial values in wave propagation solver
         l_waveProp->setHeight(l_cx,
                               l_cy,
@@ -522,24 +525,6 @@ int main(int i_argc,
       delete l_bathymetryLoader;
       std::cout << "Done loading bathymetry." << std::endl;
     }
-    else if (l_bathymetryFilePath.compare(l_bathymetryFilePath.length() - 3, 3, ".nc") == 0)
-    {
-      // TODO
-      //  std::cout << "Loading bathymetry from .nc file: " << l_bathymetryFilePath << std::endl;
-      //  tsunami_lab::t_real *l_b = l_netCdf->read(l_bathymetryFilePath.c_str(),
-      //                                            "bathymetry");
-
-      // for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
-      // {
-      //   for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
-      //   {
-      //     l_waveProp->setBathymetry(l_cx,
-      //                               l_cy,
-      //                               l_b[l_cx + l_nx * l_cy]);
-      //   }
-      // }
-      // std::cout << "Done loading bathymetry." << std::endl;
-    }
     else
     {
       std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
@@ -575,16 +560,17 @@ int main(int i_argc,
   {
     std::cout << "Warning: Checkpoints have been disabled for this run. " << std::endl;
   }
-  std::cout << "entering time loop" << std::endl;
-
-  auto l_lastWrite = std::chrono::system_clock::now();
-  auto l_timeCalculationStart = std::chrono::system_clock::now();
   // set count in case we load from a checkpoint file
   if (l_simTime > 0)
   {
     l_captureCount = std::floor(l_simTime / l_stationFrequency);
   }
-  // iterate over time
+
+  std::cout << "entering time loop" << std::endl;
+
+  auto l_lastWrite = std::chrono::system_clock::now();
+  auto l_timeCalculationStart = std::chrono::system_clock::now();
+  // START LOOP
   while (l_simTime < l_endTime)
   {
     if (l_timeStep % l_writingFrequency == 0)
@@ -644,6 +630,7 @@ int main(int i_argc,
     {
       std::cout << "saving checkpoint to " << l_checkPointFilePathString << std::endl;
       l_netCdf->writeCheckpoint(l_checkPointFilePath,
+                                l_waveProp->getStride(),
                                 l_waveProp->getHeight(),
                                 l_waveProp->getMomentumX(),
                                 l_waveProp->getMomentumY(),
@@ -655,6 +642,7 @@ int main(int i_argc,
     l_timeStep++;
     l_simTime += l_dt;
   }
+  // END LOOP
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     l_s->write();
@@ -674,6 +662,7 @@ int main(int i_argc,
 
   // free memory
   std::cout << "freeing memory" << std::endl;
+  std::filesystem::remove(l_checkPointFilePathString);
   delete l_setup;
   delete l_waveProp;
   delete l_netCdf;

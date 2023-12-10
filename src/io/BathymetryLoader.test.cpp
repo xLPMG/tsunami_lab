@@ -1,7 +1,8 @@
 /**
- * @author Luca-Philipp Grumbach & Richard Hofmann
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
- * @section DESCRIPTION
+ * # Description 
  * Test of the bathymetry loader
  **/
 
@@ -13,9 +14,9 @@ TEST_CASE("Test of the bathymetry loader", "[BathymetryLoader]")
     /**
      * Test csv file:
      *
-     * #dimensions
+     * dimensions
      * DIM,10,1
-     * #x,y,bathymetry
+     * x,y,bathymetry
      * 0,0,0
      * 1,0,1
      * 2,0,2
