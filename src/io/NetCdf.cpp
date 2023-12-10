@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Interface for NetCdf
  **/
 #include "NetCdf.h"
@@ -52,9 +52,9 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
     }
     else
     {
-        m_err = nc_create(i_file,     // path
-                          NC_CLOBBER, // cmode
-                          &m_ncId);   // ncidp
+        m_err = nc_create(i_file,                       // path
+                          NC_CLOBBER | NC_64BIT_OFFSET, // cmode
+                          &m_ncId);                     // ncidp
         checkNcErr(m_err);
         m_outputFileOpened = true;
         int l_i = 0;
@@ -225,9 +225,9 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
     if (std::filesystem::exists(i_checkpointFile))
         std::filesystem::remove(i_checkpointFile);
 
-    m_err = nc_create(i_checkpointFile, // path
-                      NC_CLOBBER,       // cmode
-                      &m_ncCheckId);    // ncidp
+    m_err = nc_create(i_checkpointFile,             // path
+                      NC_CLOBBER | NC_64BIT_OFFSET, // cmode
+                      &m_ncCheckId);                // ncidp
     checkNcErr(m_err);
 
     // define dimensions
@@ -815,7 +815,8 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(const char *i_checkpointFile,
 
     // flush all data
     nc_sync(m_ncCheckId);
-    if (m_outputFileOpened){
+    if (m_outputFileOpened)
+    {
         nc_sync(m_ncId);
     }
 
