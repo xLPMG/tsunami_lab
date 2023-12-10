@@ -123,15 +123,17 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeEigenvalues</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_waveSpeedL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_waveSpeedR</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeEigenvalues</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_hR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uL</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_uR</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">eigenvalueRoe_1</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">eigenvalueRoe_2</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Calculates the roe eigenvalues.</p>
 <p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach, Richard Hofmann</p>
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
+</dd>
+<dt><strong>Author</strong></dt><dd><p>Richard Hofmann</p>
 </dd>
 </dl>
 </p>
-<section id="namespacetsunami__lab_1DESCRIPTION">
-<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1solvers_1_1_fwave_1autotoc_md55">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1solvers_1_1_fwave_1autotoc_md55" title="Link to this heading"></a></h2>
 <p>Fwave solver for the one-dimensional shallow water equations. </p>
 </section>
 <dl class="field-list simple">
@@ -139,10 +141,10 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_hL</strong> – height of the left side. </p></li>
 <li><p><strong>i_hR</strong> – height of the right side. </p></li>
-<li><p><strong>i_uL</strong> – particle velocity of the leftside. </p></li>
-<li><p><strong>i_uR</strong> – particles velocity of the right side. </p></li>
-<li><p><strong>o_waveSpeedL</strong> – will be set to the speed of the wave propagating to the left. </p></li>
-<li><p><strong>o_waveSpeedR</strong> – will be set to the speed of the wave propagating to the right.</p></li>
+<li><p><strong>i_uL</strong> – particle velocity of the left side. </p></li>
+<li><p><strong>i_uR</strong> – particle velocity of the right side. </p></li>
+<li><p><strong>eigenvalueRoe_1</strong> – will be set to the speed of the wave propagating to the left. </p></li>
+<li><p><strong>eigenvalueRoe_2</strong> – will be set to the speed of the wave propagating to the right.</p></li>
 </ul>
 </dd>
 </dl>
@@ -225,8 +227,8 @@
 </dd>
 </dl>
 </p>
-<section id="namespacetsunami__lab_1DESCRIPTION">
-<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1solvers_1_1_roe_1autotoc_md58">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1solvers_1_1_roe_1autotoc_md58" title="Link to this heading"></a></h2>
 <p>Roe Riemann solver for the shallow water equations. </p>
 </section>
 <dl class="field-list simple">

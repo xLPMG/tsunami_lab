@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7. Checkpointing and Coarse Output &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/07.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="6. Tsunami Simulations" href="06.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7. Checkpointing and Coarse Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-7-1-checkpointing">Task 7.1 - Checkpointing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-7-1-1-writing-checkpoints">Task 7.1.1 - Writing checkpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-7-1-2-checkpoint-setup">Task 7.1.2 - CheckPoint setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading">Task 7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-7-2-coarse-output">Task 7.2 - Coarse Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">7.2.1 - Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualization">7.2.2 - Visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">7. Checkpointing and Coarse Output</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/07.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="checkpointing-and-coarse-output">
+<h1>7. Checkpointing and Coarse Output<a class="headerlink" href="#checkpointing-and-coarse-output" title="Link to this heading"></a></h1>
+<p>All project authors contributed to this assignment in equal parts.</p>
+<section id="task-7-1-checkpointing">
+<h2>Task 7.1 - Checkpointing<a class="headerlink" href="#task-7-1-checkpointing" title="Link to this heading"></a></h2>
+<section id="task-7-1-1-writing-checkpoints">
+<h3>Task 7.1.1 - Writing checkpoints<a class="headerlink" href="#task-7-1-1-writing-checkpoints" title="Link to this heading"></a></h3>
+<p>We extended the <code class="docutils literal notranslate"><span class="pre">NetCdf.cpp</span></code> file by a <code class="docutils literal notranslate"><span class="pre">writeCheckpoint()</span></code> function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tsunami_lab::io::NetCdf::writeCheckpoint</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_idx</span><span class="w"> </span><span class="n">i_stride</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">i_h</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">i_hu</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">i_hv</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">i_b</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_t</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_timeStep</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="n">setUpCheckpointFile</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+
+<span class="n">t_idx</span><span class="w"> </span><span class="n">start</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="n">t_idx</span><span class="w"> </span><span class="n">count</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">m_ny</span><span class="p">,</span><span class="w"> </span><span class="n">m_nx</span><span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">l_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="p">];</span>
+<span class="c1">// WRITE SIMULATION SIZE X</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_put_vara_float</span><span class="p">(</span><span class="n">m_ncCheckId</span><span class="p">,</span><span class="w"> </span><span class="n">m_varCheckSimSizeXId</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_simulationSizeX</span><span class="p">));</span>
+<span class="c1">// WRITE SIMULATION SIZE Y</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_put_vara_float</span><span class="p">(</span><span class="n">m_ncCheckId</span><span class="p">,</span><span class="w"> </span><span class="n">m_varCheckSimSizeYId</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m_simulationSizeY</span><span class="p">));</span>
+
+<span class="p">[...]</span>
+
+<span class="c1">// WRITE HEIGHT</span>
+<span class="n">l_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i_h</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">memset</span><span class="p">(</span><span class="n">l_data</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">m_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_ny</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">t_real</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">l_data</span><span class="p">[</span><span class="n">l_i</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_h</span><span class="p">[</span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_put_vara_float</span><span class="p">(</span><span class="n">m_ncCheckId</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">m_varCheckHId</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">start</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">l_data</span><span class="p">));</span>
+
+<span class="p">[...]</span>
+
+<span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_data</span><span class="p">;</span>
+
+<span class="c1">// flush all data</span>
+<span class="n">nc_sync</span><span class="p">(</span><span class="n">m_ncCheckId</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_outputFileOpened</span><span class="p">){</span>
+<span class="w">    </span><span class="n">nc_sync</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_close</span><span class="p">(</span><span class="n">m_ncCheckId</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>First we write single value data, such as the simulation size,
+offset, writing step count, current time step, current time and the k-value from the next task.
+For simplification, we only included the simulation size in the code snippet.</p>
+<p>We then write the arrays, as seen in the example for height. It is the same for
+the momenta and bathymetry data. If the input is a nullptr, we write 0 into the array using <code class="docutils literal notranslate"><span class="pre">memset</span></code>.</p>
+<p>At the end of the function, we not only flush the checkpoint data to the file, but also
+all standard netcdf output data.</p>
+</section>
+<section id="task-7-1-2-checkpoint-setup">
+<h3>Task 7.1.2 - CheckPoint setup<a class="headerlink" href="#task-7-1-2-checkpoint-setup" title="Link to this heading"></a></h3>
+<p>We decided against using a setup, as the code was short enough to be implemented directly into the main class.
+We also hope to get better performance because we can directly access the array from within the main class,
+without making function calls to a separate CheckPoint class.</p>
+<p>We extended the NetCdf class instance initialization in the  <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> by directly loading single value data
+from the checkpoint file in the case of an existing checkpoint. We overload the <code class="docutils literal notranslate"><span class="pre">NetCdf</span></code> constructor with
+a lighter version that only takes the two file paths as its input.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// set up netCdf I/O</span>
+<span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">NetCdf</span><span class="w"> </span><span class="o">*</span><span class="n">l_netCdf</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_setupChoice</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;CHECKPOINT&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">NetCdf</span><span class="p">(</span><span class="n">l_netcdfOutputPath</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_checkPointFilePath</span><span class="p">);</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="o">-&gt;</span><span class="n">loadCheckpointDimensions</span><span class="p">(</span><span class="n">l_checkPointFilePath</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_nx</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_ny</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_nk</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_simulationSizeX</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_simulationSizeY</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_offsetX</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_offsetY</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_simTime</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">l_timeStep</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Loaded following data from checkpoint: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Cells x:                  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_nx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Cells y:                  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_ny</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Simulation size x:        &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_simulationSizeX</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Simulation size y:        &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_simulationSizeY</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Offset x:                 &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_offsetX</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Offset y:                 &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_offsetY</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Current simulation time:  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_simTime</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  Current time step:        &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">l_timeStep</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">NetCdf</span><span class="p">(</span><span class="n">l_nx</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_ny</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_nk</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_simulationSizeX</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_simulationSizeY</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_offsetX</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_offsetY</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_netcdfOutputPath</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">l_checkPointFilePath</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">loadCheckpointDimensions()</span></code> function might have a little misleading name, but <code class="docutils literal notranslate"><span class="pre">Dimensions</span></code> refers to
+values like simulation size, cell amount, offset etc. and not dimensions of the checkpoint file.</p>
+<p>For all other values which are stored in arrays (height, momenta, bathymetry),
+we added following code before the usual solver setup:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">l_setupChoice</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;CHECKPOINT&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_hCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="w">  </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_huCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="w">  </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_hvCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="w">  </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_bCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="p">[</span><span class="n">l_nx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_ny</span><span class="p">];</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">l_checkPointFilePath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_hCheck</span><span class="p">);</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">l_checkPointFilePath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;momentumX&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_huCheck</span><span class="p">);</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">l_checkPointFilePath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;momentumY&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_hvCheck</span><span class="p">);</span>
+<span class="w">  </span><span class="n">l_netCdf</span><span class="o">-&gt;</span><span class="n">read</span><span class="p">(</span><span class="n">l_checkPointFilePath</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bathymetry&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_bCheck</span><span class="p">);</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_cy</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_cx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_cx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_cx</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">l_hMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">l_hCheck</span><span class="p">[</span><span class="n">l_cx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">],</span><span class="w"> </span><span class="n">l_hMax</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setHeight</span><span class="p">(</span><span class="n">l_cx</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_cy</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">l_hCheck</span><span class="p">[</span><span class="n">l_cx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">]);</span>
+
+<span class="w">      </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setMomentumX</span><span class="p">(</span><span class="n">l_cx</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">l_cy</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">l_huCheck</span><span class="p">[</span><span class="n">l_cx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">]);</span>
+
+<span class="w">      </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setMomentumY</span><span class="p">(</span><span class="n">l_cx</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">l_cy</span><span class="p">,</span>
+<span class="w">                               </span><span class="n">l_hvCheck</span><span class="p">[</span><span class="n">l_cx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">]);</span>
+
+<span class="w">      </span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setBathymetry</span><span class="p">(</span><span class="n">l_cx</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">l_cy</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">l_bCheck</span><span class="p">[</span><span class="n">l_cx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l_nx</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_hCheck</span><span class="p">;</span>
+<span class="w">  </span><span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_huCheck</span><span class="p">;</span>
+<span class="w">  </span><span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_hvCheck</span><span class="p">;</span>
+<span class="w">  </span><span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_bCheck</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="c1">//normal solver setup</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The read function was implemented last week and we just added a simpler version of it, which does not
+require a x- and y-data array (those were needed last week to read the data along the axes along with the actual data).
+Both functions are accessible by overloading the constructor.</p>
+</section>
+<section id="task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading">
+<h3>Task 7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading<a class="headerlink" href="#task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading" title="Link to this heading"></a></h3>
+<p>An example log may look like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>LPMGs-Air-6:tsunami_lab<span class="w"> </span>lpmg$<span class="w"> </span>./build/tsunami_lab
+<span class="c1">####################################</span>
+<span class="c1">### Tsunami Lab                  ###</span>
+<span class="c1">###                              ###</span>
+<span class="c1">### https://scalable.uni-jena.de ###</span>
+<span class="c1">####################################</span>
+runtime<span class="w"> </span>configuration<span class="w"> </span>file:<span class="w"> </span>configs/config.json
+Solution<span class="w"> </span>file<span class="w"> </span>exists<span class="w"> </span>but<span class="w"> </span>no<span class="w"> </span>checkpoint<span class="w"> </span>was<span class="w"> </span>found.<span class="w"> </span>The<span class="w"> </span>solution<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>deleted.
+Setting<span class="w"> </span>up<span class="w"> </span>solver...
+Setup<span class="w"> </span><span class="k">done</span>.<span class="w"> </span>Operation<span class="w"> </span>took<span class="w"> </span><span class="m">31</span>.5309ms<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>.15309e-05s
+Writing<span class="w"> </span>every<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="nb">time</span><span class="w"> </span>steps
+Saving<span class="w"> </span>checkpoint<span class="w"> </span>every<span class="w"> </span><span class="m">5</span><span class="w"> </span>seconds
+entering<span class="w"> </span><span class="nb">time</span><span class="w"> </span>loop
+<span class="w">  </span>simulation<span class="w"> </span><span class="nb">time</span><span class="w"> </span>/<span class="w"> </span><span class="c1">#time steps: 0 / 0</span>
+<span class="w">  </span>writing<span class="w"> </span>to<span class="w"> </span>netcdf
+saving<span class="w"> </span>checkpoint<span class="w"> </span>to<span class="w"> </span>checkpoints/solution.nc
+<span class="w">  </span>simulation<span class="w"> </span><span class="nb">time</span><span class="w"> </span>/<span class="w"> </span><span class="c1">#time steps: 0.227168 / 100</span>
+<span class="w">  </span>writing<span class="w"> </span>to<span class="w"> </span>netcdf
+saving<span class="w"> </span>checkpoint<span class="w"> </span>to<span class="w"> </span>checkpoints/solution.nc
+^C
+LPMGs-Air-6:tsunami_lab<span class="w"> </span>lpmg$<span class="w"> </span>./build/tsunami_lab
+<span class="c1">####################################</span>
+<span class="c1">### Tsunami Lab                  ###</span>
+<span class="c1">###                              ###</span>
+<span class="c1">### https://scalable.uni-jena.de ###</span>
+<span class="c1">####################################</span>
+runtime<span class="w"> </span>configuration<span class="w"> </span>file:<span class="w"> </span>configs/config.json
+Found<span class="w"> </span>checkpoint<span class="w"> </span>file:<span class="w"> </span>checkpoints/solution.nc
+
+Loaded<span class="w"> </span>following<span class="w"> </span>data<span class="w"> </span>from<span class="w"> </span>checkpoint:
+<span class="w">  </span>Cells<span class="w"> </span>x:<span class="w">                  </span><span class="m">1000</span>
+<span class="w">  </span>Cells<span class="w"> </span>y:<span class="w">                  </span><span class="m">1000</span>
+<span class="w">  </span>Simulation<span class="w"> </span>size<span class="w"> </span>x:<span class="w">        </span><span class="m">100</span>
+<span class="w">  </span>Simulation<span class="w"> </span>size<span class="w"> </span>y:<span class="w">        </span><span class="m">100</span>
+<span class="w">  </span>Offset<span class="w"> </span>x:<span class="w">                 </span><span class="m">0</span>
+<span class="w">  </span>Offset<span class="w"> </span>y:<span class="w">                 </span><span class="m">0</span>
+<span class="w">  </span>Current<span class="w"> </span>simulation<span class="w"> </span>time:<span class="w">  </span><span class="m">0</span>.268059
+<span class="w">  </span>Current<span class="w"> </span><span class="nb">time</span><span class="w"> </span>step:<span class="w">        </span><span class="m">118</span>
+
+Setting<span class="w"> </span>up<span class="w"> </span>solver...
+Setup<span class="w"> </span><span class="k">done</span>.<span class="w"> </span>Operation<span class="w"> </span>took<span class="w"> </span><span class="m">64</span>.2207ms<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span>.42207e-05s
+Writing<span class="w"> </span>every<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="nb">time</span><span class="w"> </span>steps
+Saving<span class="w"> </span>checkpoint<span class="w"> </span>every<span class="w"> </span><span class="m">5</span><span class="w"> </span>seconds
+entering<span class="w"> </span><span class="nb">time</span><span class="w"> </span>loop
+saving<span class="w"> </span>checkpoint<span class="w"> </span>to<span class="w"> </span>checkpoints/solution.nc
+^C
+</pre></div>
+</div>
+<p>It can be seen the after aborting the program, it loads from a checkpoint file the next time it is executed.
+If there is a solution file but no checkpoint file for it, the existing solution will simply be deleted.
+If there is a checkpoint but no solution file, the solution file will be set up again and the simulation
+will start with the data provided by the checkpoint file.</p>
+<p>The checkpoint frequency is provided using real time seconds. The smallest value is 1.
+If the provided number is less, checkpointing will be disabled.</p>
+<p>We also decided on using a single checkpoint file and just overriding it every time.
+Furthermore, simply out of convenience, the checkpoint file is deleted after the program ends successfully.</p>
+</section>
+</section>
+<section id="task-7-2-coarse-output">
+<h2>Task 7.2 - Coarse Output<a class="headerlink" href="#task-7-2-coarse-output" title="Link to this heading"></a></h2>
+<section id="implementation">
+<h3>7.2.1 - Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h3>
+<p>First we added new variables in the NetCdf Constructor:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">m_k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_nk</span><span class="p">;</span>
+<span class="n">m_nkx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_nx</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_nk</span><span class="p">;</span>
+<span class="n">m_nky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_ny</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_nk</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>m_nkx and m_nky state how many values we have for the x and y direction after dividing them by k.
+We use these values for the definition of the dimension sizes for x and y.</p>
+<p>For each bathymetry, height, momentumX and momentumY we use the following loop.
+As example for bathymetry:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="o">*</span><span class="n">l_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">t_real</span><span class="p">[</span><span class="n">m_nkx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_nky</span><span class="p">];</span>
+<span class="n">l_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_gy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_gy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_gy</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m_k</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_gx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_gx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_gx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m_k</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_k</span><span class="p">;</span><span class="w"> </span><span class="n">l_y</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_k</span><span class="p">;</span><span class="w"> </span><span class="n">l_x</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">l_b</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i_b</span><span class="p">[</span><span class="n">l_gx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">l_y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l_gy</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_stride</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">l_b</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">m_k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_k</span><span class="p">;</span>
+<span class="w">        </span><span class="n">l_i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_put_var_float</span><span class="p">(</span><span class="n">m_ncId</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">m_varBId</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">l_b</span><span class="p">));</span>
+<span class="k">delete</span><span class="p">[]</span><span class="w"> </span><span class="n">l_b</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>We go through x and y and add k for each step, in order to skip the already used cells.
+Inside the square we again go through all according cells x and y.
+We use the iteration variables and the stride to get the right values of the array.
+Afterwards, the data gets written into the NetCdf file and the allocated memory is freed.</p>
+</section>
+<section id="visualization">
+<h3>7.2.2 - Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<p>We run a script for a cell size of 50 meters.
+While running the programm we got the following error:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="n">simulation</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">steps</span><span class="o">:</span><span class="w"> </span><span class="mf">2.55646</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">70</span>
+<span class="n">writing</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">netcdf</span>
+<span class="n">saving</span><span class="w"> </span><span class="n">checkpoint</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">checkpoints</span><span class="o">/</span><span class="n">tohoku_50_5_solution</span><span class="p">.</span><span class="n">nc</span>
+<span class="nl">Error</span><span class="p">:</span><span class="w"> </span><span class="n">NetCDF</span><span class="o">:</span><span class="w"> </span><span class="n">One</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="n">sizes</span><span class="w"> </span><span class="n">violate</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="n">constraints</span>
+</pre></div>
+</div>
+<p>We thought we had fixed this issue by enabling
+<a class="reference external" href="https://docs.unidata.ucar.edu/nug/current/file_structure_and_performance.html">Large File Support</a>
+using the “NC_64BIT_OFFSET” specifier in <code class="docutils literal notranslate"><span class="pre">nc_create</span></code>. It solved the issue for writing our output data,
+but for some reason not for writing checkpoints. Due to lack of time we were not able to find the issue yet,
+however we are working on it.</p>
+<p>Because of the error the solution file was corrupted and we could not open it in paraview to visualize it.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="06.html" class="btn btn-neutral float-left" title="6. Tsunami Simulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -281,12 +281,14 @@
 <span class="sig-name descname"><span class="n"><span class="pre">WavePropagation1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCells</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">i_solver</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 1d wave propagation solver.</p>
 <p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Alexander Breuer (alex.breuer AT uni-jena.de)</p>
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
+</dd>
+<dt><strong>Author</strong></dt><dd><p>Richard Hofmann</p>
 </dd>
 </dl>
 </p>
-<section id="namespacetsunami__lab_1DESCRIPTION">
-<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1patches_1_1_wave_propagation1d_1autotoc_md18">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1patches_1_1_wave_propagation1d_1autotoc_md18" title="Link to this heading"></a></h2>
 <p>One-dimensional wave propagation patch. </p>
 </section>
 <dl class="field-list simple">
@@ -416,7 +418,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_ix</strong> – id of the cell in x-direction. </p></li>
-<li><p><strong>i_h</strong> – bathymetry. </p></li>
+<li><p><strong>i_b</strong> – bathymetry. </p></li>
 </ul>
 </dd>
 </dl>
@@ -446,7 +448,7 @@
 <li><p><strong>o_hR</strong> – water height on the right side </p></li>
 <li><p><strong>o_huL</strong> – water momentum on the left side </p></li>
 <li><p><strong>o_huR</strong> – water momentum on the right side </p></li>
-<li><p><strong>o_bl</strong> – bathymetry on the left side </p></li>
+<li><p><strong>o_bL</strong> – bathymetry on the left side </p></li>
 <li><p><strong>o_bR</strong> – bathymetry on the right side </p></li>
 </ul>
 </dd>
@@ -519,12 +521,14 @@
 <span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryT</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryB</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 2d wave propagation solver.</p>
 <p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach &amp; Richard Hofmann</p>
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
+</dd>
+<dt><strong>Author</strong></dt><dd><p>Richard Hofmann</p>
 </dd>
 </dl>
 </p>
-<section id="namespacetsunami__lab_1DESCRIPTION">
-<h2>DESCRIPTION<a class="headerlink" href="#namespacetsunami__lab_1DESCRIPTION" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1patches_1_1_wave_propagation2d_1autotoc_md21">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1patches_1_1_wave_propagation2d_1autotoc_md21" title="Link to this heading"></a></h2>
 <p>two-dimensional wave propagation patch. </p>
 </section>
 <dl class="field-list simple">
