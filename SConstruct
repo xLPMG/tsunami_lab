@@ -1,10 +1,12 @@
 ##
-# @author Luca-Philipp Grumbach & Richard Hofmann
+# @author Luca-Philipp Grumbach
+# @author Richard Hofmann
 #
-# @section DESCRIPTION
+# # Description
 # Entry-point for builds.
 ##
 import SCons
+import platform
 
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
@@ -13,6 +15,12 @@ print( '### https://scalable.uni-jena.de ###' )
 print( '####################################' )
 print()
 print('runnning build script')
+
+# get OS
+OS = platform.system()
+
+# if a GUI can be built
+buildGUI = False
 
 # configuration
 vars = Variables()
@@ -37,6 +45,31 @@ conf = Configure(env)
 if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         print ('Did not find the netcdf library, exiting!')
         Exit(1)
+
+if OS == "Linux":
+  if not conf.CheckLib('glfw3'):
+    print ('Did not find the glfw3 library, exiting!')
+  else: 
+    buildGUI = True
+
+elif OS == "Darwin":  
+  if not conf.CheckLib('glfw'):
+    print ('Did not find the glfw library, exiting!')
+  else: 
+    buildGUI = True
+
+elif OS == "Windows":
+  if not conf.CheckLib('glfw3'):
+    print ('Did not find the glfw3 library, exiting!')
+  if not conf.CheckLib('gdi32'):
+    print ('Did not find the gdi32 library, exiting!')
+  if not conf.CheckLib('opengl32'):
+    print ('Did not find the opengl32 library, exiting!')
+  if not conf.CheckLib('imm32'):
+    print ('Did not find the imm32 library, exiting!')
+  else: 
+    buildGUI = True
+
 env = conf.Finish()
 
 # generate help message
@@ -80,6 +113,14 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
 # add json
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 
+# add imgui
+env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/' ] )
+env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/backends/' ] )
+
+# add macos frameworks for opengl
+if buildGUI and OS == "Darwin": 
+  env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
+
 # get source files
 VariantDir( variant_dir = 'build/src',
             src_dir     = 'src' )
@@ -87,10 +128,19 @@ VariantDir( variant_dir = 'build/src',
 env.sources = []
 env.tests = []
 env.sanitychecks = []
+env.gui = []
 
 Export('env')
 SConscript( 'build/src/SConscript' )
 Import('env')
+
+env.imguiSources = ['submodules/imgui/imgui.cpp',
+                    'submodules/imgui/imgui_demo.cpp',
+                    'submodules/imgui/imgui_draw.cpp',
+                    'submodules/imgui/imgui_tables.cpp',
+                    'submodules/imgui/imgui_widgets.cpp',
+                    'submodules/imgui/backends/imgui_impl_glfw.cpp', 
+                    'submodules/imgui/backends/imgui_impl_opengl3.cpp']
 
 env.Program( target = 'build/tsunami_lab',
              source = env.sources + env.standalone)
@@ -100,3 +150,7 @@ env.Program( target = 'build/tests',
 
 env.Program( target = 'build/sanitychecks',
              source = env.sources + env.sanitychecks)
+
+if buildGUI:
+  env.Program( target = 'build/gui',
+               source = env.sources + env.gui + env.imguiSources)

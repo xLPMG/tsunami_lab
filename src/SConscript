@@ -1,5 +1,6 @@
 ##
-# @author Alexander Breuer (alex.breuer AT uni-jena.de)
+# @author Luca-Philipp Grumbach
+# @author Richard Hofmann
 #
 # # Description
 # Collects sources for a build.
@@ -61,5 +62,11 @@ l_sanitychecks = [ 'sanitychecks.cpp' ]
 
 for l_sa in l_sanitychecks:
   env.sanitychecks.append( env.Object( l_sa ) )
+
+# gather gui sources
+l_gui = [ 'ui/GUI.cpp' ]
+
+for l_g in l_gui:
+  env.gui.append( env.Object( l_g ) )
 
 Export('env')
