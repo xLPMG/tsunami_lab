@@ -169,6 +169,37 @@ and
   else:
     env.Append( CXXFLAGS = [ env['opt'] ] ) 
 
+The dangers of -Ofast
+^^^^^^^^^^^^^^^^^^^^^^^
+
+One of the options that ``-Ofast`` enables is ``-ffast-math``.
+With that, a whole lot of other options get activated as well, such as
+
+  * -funsafe-math-optimizations
+
+    * enables optimizations that allow arbitrary reassociations and transformations with no accuracy guarantees
+    * does not try to preserve the sign of zeros
+    * due to roundoff errors the associative law of algebra do not necessary hold for floating point numbers 
+      and thus expressions like (x + y) + z are not necessary equal to x + (y + z)
+
+  * -fnofinite-math-only
+    
+    * assumes that arguments and results are not NaNs or +-Infs -> unsafety
+
+  * -fno-rounding-math
+    
+    * assumes that rounding mode is round to nearest
+
+  * -fexcess-precision=fast
+
+    * operations may be carried out in a wider precision than the types specified in the source if that would result in faster code, 
+    * it is unpredictable when rounding to the types specified in the source code takes place
+
+Our sources are
+`<https://gcc.gnu.org/wiki/FloatingPointMath>`_
+and
+`<https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html>`_
+
 8.4 - Compiler reports
 ------------------------
 
