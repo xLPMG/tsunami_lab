@@ -10,9 +10,6 @@
 8.2.1 - Generic compiler support
 ---------------------------------
 
-8.2.2 & 8.2.3 - Test runs
---------------------------
-
 We enabled generic compiler support by adding the following lines to our ``SConstruct`` file
 
 .. code:: python
@@ -33,6 +30,9 @@ Now, scons can be invoked with a compiler of choice, for example by running
 .. code:: bash
 
   CXX=icpc scons
+
+8.2.2 & 8.2.3 - Test runs
+--------------------------
 
 Time measurements
 ^^^^^^^^^^^^^^^^^^^^^^^^^
