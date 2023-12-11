@@ -8,7 +8,8 @@
 #SBATCH --time=10:00:00
 #SBATCH --cpus-per-task=72
 
-
+#load modules
+module load compiler/gcc/11.2.0
 
 # Enter your executable commands here
 # Execute the compiled program
