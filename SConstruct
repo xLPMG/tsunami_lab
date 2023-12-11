@@ -23,7 +23,8 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
+                allowed_values=('release', 'debug', 'osx', 'release+san', 
+                                'debug+san', 'release+osx','osx+san', 'benchmark', 'benchmark+osx')
               ),
   EnumVariable( 'opt',
                 'optimization flag',
@@ -91,6 +92,10 @@ if 'san' in  env['mode']:
   env.Append( LINKFLAGS = [ '-g',
                             '-fsanitize=address',
                             '-fsanitize=undefined' ] )
+
+# enable benchmarking mode
+if 'benchmark' in env['mode']:
+  env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
 
 # add Catch2
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )

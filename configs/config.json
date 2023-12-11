@@ -5,7 +5,7 @@
     "nx":1000,
     "ny":1000,
     "setup":"ARTIFICIAL2D",
-    "endTime":100,
+    "endTime":50,
     "writingFrequency":10,
     "checkpointFrequency": 10
 }
