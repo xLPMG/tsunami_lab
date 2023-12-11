@@ -70,6 +70,8 @@ void setupFolders()
 int main(int i_argc,
          char *i_argv[])
 {
+  auto l_timeStart = std::chrono::high_resolution_clock::now();
+  std::cout << "Timer started." << std::endl;
   // config file path
   std::string l_configFilePath = "configs/config.json";
   // output file name
@@ -499,7 +501,7 @@ int main(int i_argc,
   auto l_timeSetupEnd = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> l_timeSetupMS = l_timeSetupEnd - l_timeSetupStart;
   std::chrono::duration<double> l_timeSetupS = l_timeSetupEnd - l_timeSetupStart;
-  std::cout << "Setup done. Operation took " << l_timeSetupMS.count() << "ms = " << l_timeSetupS.count() / 1000 << "s" << std::endl;
+  std::cout << "Setup done. Operation took " << l_timeSetupMS.count() << "ms = " << l_timeSetupS.count() << "s" << std::endl;
 
   // load bathymetry from file
   if (l_bathymetryFilePath.length() > 0)
@@ -672,6 +674,14 @@ int main(int i_argc,
   }
 
   std::cout << "finished, exiting" << std::endl;
+
+  auto l_timeEnd = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> l_timerMS = l_timeEnd - l_timeStart;
+  std::chrono::duration<double> l_timerS = l_timeEnd - l_timeStart;
+   std::chrono::duration<double, std::ratio<60>> l_timerM = l_timeEnd - l_timeStart;
+  std::cout << "Execution took "<< l_timerMS.count() << "ms"<< std::endl;
+  std::cout << "= " << l_timerS.count() << " seconds"<< std::endl;
+  std::cout << "= " << l_timerM.count() << " minutes"<< std::endl;
 
   return EXIT_SUCCESS;
 }

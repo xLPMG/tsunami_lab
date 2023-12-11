@@ -67,7 +67,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
             {
                 l_y[l_i] += (l_gy + l_iy) * (m_simulationSizeY / m_ny) + m_offsetY;
             }
-            l_y[l_i] * l_averagingFactor;
+            l_y[l_i] *= l_averagingFactor;
             l_i++;
         }
         l_i = 0;
@@ -77,7 +77,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
             {
                 l_x[l_i] += (l_gx + l_ix) * (m_simulationSizeX / m_nx) + m_offsetX;
             }
-            l_x[l_i] * l_averagingFactor;
+            l_x[l_i] *= l_averagingFactor;
             l_i++;
         }
         // define dimensions
@@ -469,7 +469,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                             l_b[l_i] += i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
                         }
                     }
-                    l_b[l_i] * l_averagingFactor;
+                    l_b[l_i] *= l_averagingFactor;
                     l_i++;
                 }
             }
@@ -501,7 +501,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] * l_averagingFactor;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -528,7 +528,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride] + i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] * l_averagingFactor;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -555,7 +555,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_hu[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] * l_averagingFactor;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -583,7 +583,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_hv[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] * l_averagingFactor;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
