@@ -34,7 +34,9 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
-#include <filesystem>
+#ifndef BENCHMARK
+  #include <filesystem>
+#endif
 #include <chrono>
 
 // external libraries

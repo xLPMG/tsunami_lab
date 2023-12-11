@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Implementation of One-dimensional Tsunami event
  **/
 
@@ -11,16 +11,20 @@
 #include <vector>
 #include "../io/Csv.h"
 #include <iostream>
+#ifndef BENCHMARK
 #include <filesystem>
+#endif
 
 tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
 {
+#ifndef BENCHMARK
     if (!std::filesystem::exists(i_file))
     {
         std::cerr << "Error: File not found "
                   << "(TsunamiEvent1d.cpp)" << std::endl;
         exit(1);
     }
+#endif
 
     std::ifstream l_inputFile(i_file);
     m_bathymetry = new std::vector<tsunami_lab::t_real>;
@@ -46,7 +50,7 @@ tsunami_lab::setups::TsunamiEvent1d::~TsunamiEvent1d()
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
                                                                    t_real) const
 {
-    i_x/=250;
+    i_x /= 250;
     if (i_x <= (m_bathymetryDataSize - 1) && m_bathymetry->at(int(i_x)) < 0)
     {
         if (-(m_bathymetry->at(int(i_x))) < m_delta)
@@ -79,7 +83,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumY(t_real,
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_x,
                                                                        t_real) const
 {
-    i_x/=250;
+    i_x /= 250;
     if (i_x <= (m_bathymetryDataSize - 1))
     {
         t_real l_currBath = m_bathymetry->at(int(i_x));
@@ -114,7 +118,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_
 
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::computeD(t_real i_x,
                                                                   t_real) const
-{   
+{
     i_x *= 250;
     if (i_x < 250000 && 175000 < i_x)
     {
