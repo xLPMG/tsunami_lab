@@ -30,6 +30,11 @@ vars.AddVariables(
                 'optimization flag',
                 '-O3',
                 allowed_values=('-O0', '-O1', '-O2', '-O3', '-Ofast')
+              ),
+  EnumVariable( 'report',
+                'flag for enabling reports',
+                '',
+                allowed_values=('', '-qopt-report')
               )
 )
 
