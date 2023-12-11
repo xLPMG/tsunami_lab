@@ -55,6 +55,10 @@ if 'CXX' in os.environ:
 
 print("Using ", env['CXX'], " compiler.")
 
+# enable filesystem for icpc
+if env['CXX'] == "icpc":
+   env.Append( CXXFLAGS = ["-lstdc++fs"] )
+
 # generate help message
 Help( vars.GenerateHelpText( env ) )
 
