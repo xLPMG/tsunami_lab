@@ -79,7 +79,7 @@ int main(int i_argc,
   // output file name
   std::string l_outputFileName = "";
   // load from checkpoint if true
-  bool l_checkpointExists = false;
+  [[maybe_unused]] bool l_checkpointExists = false;
   // setup choice
   std::string l_setupChoice = "";
   // wave propagation patch
@@ -113,14 +113,14 @@ int main(int i_argc,
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
   // frequency at which stations are written
-  tsunami_lab::t_real l_stationFrequency = 0;
+  [[maybe_unused]] tsunami_lab::t_real l_stationFrequency = 0;
   // writing frequency in timesteps
-  tsunami_lab::t_idx l_writingFrequency = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_writingFrequency = 0;
   // netcdf output file
   std::string l_netCdfOutputPathString = "";
   const char *l_netcdfOutputPath = "";
   // frequency at which checkpoints are written
-  tsunami_lab::t_real l_checkpointFrequency = -1;
+  [[maybe_unused]] tsunami_lab::t_real l_checkpointFrequency = -1;
   // checkpoint output file
   std::string l_checkPointFilePathString = "";
   const char *l_checkPointFilePath = "";
@@ -131,14 +131,14 @@ int main(int i_argc,
     NETCDF = 0,
     CSV = 1
   };
-  DataWriter l_dataWriter = NETCDF;
+  [[maybe_unused]] DataWriter l_dataWriter = NETCDF;
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
   tsunami_lab::t_idx l_timeStepMax = 0;
-  tsunami_lab::t_idx l_nOut = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
-  tsunami_lab::t_idx l_captureCount = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_captureCount = 0;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
