@@ -33,8 +33,8 @@ vars.AddVariables(
               ),
   EnumVariable( 'report',
                 'flag for enabling reports',
-                '',
-                allowed_values=('', '-qopt-report')
+                'no',
+                allowed_values=('no', '-qopt-report')
               )
 )
 
@@ -85,6 +85,10 @@ if 'debug' in env['mode']:
                            '-O0' ] )
 else:
   env.Append( CXXFLAGS = [ env['opt'] ] )
+
+# enable reports
+if 'report' in env['report']:
+   env.Append( CXXFLAGS = [ env['report'] ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
