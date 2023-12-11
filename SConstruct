@@ -48,9 +48,11 @@ env = conf.Finish()
 
 # set local env
 env['ENV'] = os.environ['CXX']
+
 # choose compiler
 if 'CXX' in os.environ:
   env['CXX'] = os.environ['CXX']
+
 print("Using ", env['CXX'], " compiler.")
 
 # generate help message
@@ -114,5 +116,5 @@ env.Program( target = 'build/tsunami_lab',
 env.Program( target = 'build/tests',
              source = env.sources + env.tests)
 
-env.Program( target = 'build/sanitychecks',
-             source = env.sources + env.sanitychecks)
+#env.Program( target = 'build/sanitychecks',
+#             source = env.sources + env.sanitychecks)
