@@ -8,7 +8,9 @@
 #include "NetCdf.h"
 #include <iostream>
 #include <netcdf.h>
+#ifndef BENCHMARK
 #include <filesystem>
+#endif
 
 void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
 {
@@ -223,9 +225,10 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
 
 void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
 {
+#ifndef BENCHMARK
     if (std::filesystem::exists(i_checkpointFile))
         std::filesystem::remove(i_checkpointFile);
-
+#endif
     m_err = nc_create(i_checkpointFile,             // path
                       NC_CLOBBER | NC_64BIT_OFFSET, // cmode
                       &m_ncCheckId);                // ncidp
@@ -411,8 +414,9 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     m_offsetY = i_offsetY;
     m_netcdfOutputFile = i_netcdfOutputFile;
     m_checkpointFile = i_checkpointFile;
-
+#ifndef BENCHMARK
     m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
+#endif
 }
 
 tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
@@ -438,7 +442,9 @@ tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
 
     m_nkx = m_nx / m_k;
     m_nky = m_ny / m_k;
+#ifndef BENCHMARK
     m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
+#endif
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
