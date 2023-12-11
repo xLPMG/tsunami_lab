@@ -251,6 +251,22 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
     m_dimCheckIds[1] = m_dimCheckXId;
 
     m_err = nc_def_var(m_ncCheckId,     // ncid
+                       "x",             // name
+                       NC_FLOAT,        // xtype
+                       1,               // ndims
+                       &m_dimCheckXId,  // dimidsp
+                       &m_varCheckXId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncCheckId,     // ncid
+                       "y",             // name
+                       NC_FLOAT,        // xtype
+                       1,               // ndims
+                       &m_dimCheckYId,  // dimidsp
+                       &m_varCheckYId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncCheckId,     // ncid
                        "height",        // name
                        NC_FLOAT,        // xtype
                        2,               // ndims
