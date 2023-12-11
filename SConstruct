@@ -38,7 +38,8 @@ if vars.UnknownVariables():
   exit(1)
 
 # create environment
-env = Environment( variables = vars )
+env = Environment( env = os.environ, 
+                   variables = vars )
 
 conf = Configure(env)
 if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
@@ -47,8 +48,8 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
 env = conf.Finish()
 
 # choose compiler
-if 'CXX' in os.environ:
-  env['CXX'] = os.environ['CXX']
+#if 'CXX' in os.environ:
+#  env['CXX'] = os.environ['CXX']
 print("Using ", env['CXX'], " compiler.")
 
 # generate help message
