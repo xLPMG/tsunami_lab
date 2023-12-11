@@ -9,12 +9,15 @@
 #include <catch2/catch.hpp>
 #include "../constants.h"
 #include <iostream>
-#include <filesystem>
+#ifndef BENCHMARK
+    #include <filesystem>
+#endif
 
 #define private public
 #include "NetCdf.h"
 #undef public
 
+#ifndef BENCHMARK
 TEST_CASE("Test NetCdf reading and writing functionality", "[NetCdf], [ReadFile], [WriteFile]")
 {
     // setup
@@ -228,3 +231,4 @@ TEST_CASE("Test NetCdf checkpointing functionality", "[NetCdf], [Checkpoint]")
     delete[] l_huRead;
     delete[] l_hvRead;
 }
+#endif
