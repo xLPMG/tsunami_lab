@@ -29,12 +29,22 @@ vars.AddVariables(
   EnumVariable( 'opt',
                 'optimization flag',
                 '-O3',
-                allowed_values=('-O0', '-O1', '-O2', '-O3', '-Ofast')
+                allowed_values=('-O0', 
+                                '-O1', 
+                                '-O2', 
+                                '-O3', 
+                                '-Ofast')
               ),
   EnumVariable( 'report',
                 'flag for enabling reports',
-                'no',
-                allowed_values=('no', '-qopt-report')
+                'none',
+                allowed_values=('none', 
+                                '-qopt-report', 
+                                '-qopt-report=1', 
+                                '-qopt-report=2',
+                                '-qopt-report=3',
+                                '-qopt-report=4',
+                                '-qopt-report=5')
               )
 )
 
