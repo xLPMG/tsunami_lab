@@ -1,0 +1,194 @@
+8. Optimization
+*****************
+
+8.1 ARA
+========
+
+8.2 Compilers
+===============
+
+8.2.1 - Generic compiler support
+---------------------------------
+
+8.2.2 & 8.2.3 - Test runs
+--------------------------
+
+We enabled generic compiler support by adding the following lines to our ``SConstruct`` file
+
+.. code:: python
+
+  import os
+
+  ...
+
+  # set local env
+  env['ENV'] = os.environ
+
+  # choose compiler
+  if 'CXX' in os.environ:
+    env['CXX'] = os.environ['CXX']
+
+Now, scons can be invoked with a compiler of choice, for example by running
+
+.. code:: bash
+
+  CXX=icpc scons
+
+Time measurements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For each run, we used the following configuration:
+
+.. code:: json
+
+  {
+    "solver": "fwave",
+    "simulationSizeX": 10000,
+    "simulationSizeY": 10000,
+    "offsetX": 5000,
+    "offsetY": 5000,
+    "nx":2000,
+    "ny":2000,
+    "setup":"ARTIFICIAL2D",
+    "endTime":50
+  }
+
+.. note:: We ran the program in benchmarking mode without file output.
+  
+The results can be seen below. 
+All time values are given in seconds, which we did not include in the table to make it more compact
+for better visibility.
+
+..  list-table:: execution times for different compilers and optimization flags
+    :header-rows: 1
+
+    * - Compiler
+      - Optimization flag 
+      - Setup time
+      - Computation loop time
+      - Total execution time
+    * - g++
+      - -O0 
+      - 0.152468
+      - 741.348
+      - 741.575
+    * - g++
+      - -O2
+      - 0.0615546
+      - 273.039
+      - 273.151
+    * - g++
+      - -Ofast
+      - 0.0607083
+      - 203.635
+      - 203.743
+    * - icpc
+      - -O0 
+      - 0.207138
+      - 1230.19
+      - 1230.48
+    * - icpc
+      - -O2
+      - 0.0724063
+      - 254.169
+      - 254.308
+    * - icpc
+      - -Ofast
+      - 0.0704465
+      - 251.197
+      - 251.33
+
+.. note:: 
+  ``Total execution time`` is not just setup + calculation time. 
+  The total execution timer is invoked directly at the start of the main function 
+  and stopped after the programm finished and all memory has been freed.
+
+For ``g++``, we used the module ``compiler/gcc/11.2.0``.
+
+
+Unfortunately, we were not able to use the latest compiler versions for ``icpc``. 
+When using ``compiler/intel/2020-Update2``, we got errors such as:
+
+.. code-block:: text
+
+  tsunami_lab/build/src/setups/TsunamiEvent1d.cpp:38: undefined reference to `tsunami_lab::io::Csv::splitLine(std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, char, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'
+
+for ``compiler/gcc/11.2.0``. 
+
+With ``compiler/gcc/10.2.0``, there were issues like:
+
+.. code-block:: text
+
+  /cluster/spack/opt/spack/linux-centos7-broadwell/gcc-8.1.0/gcc-10.2.0-ru4xdhhkxnma5i727b7njtnjoh6kff3s/include/c++/10.2.0/tuple(566): error: pack "_UElements" does not have the same number of elements as "_Elements"
+  __and_<is_nothrow_constructible<_Elements, _UElements>...>::value;
+
+Versions ``compiler/intel/2019-Update5`` and ``compiler/intel/2019-Update3`` did not work due to missing licences.
+
+We therefore ended up using ``compiler/intel/2018-Update1`` and ``gcc (GCC) 4.8.5`` which is already available without loading any module.
+This configuration was the only one that worked for us, as we did not manage to fix all the errors that were thrown at us.
+
+Observations from the table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As one would intuitively expect, the higher the optimization level is,
+the quicker the process finished.
+
+One can observe that ``g++`` was faster using both ``-O0`` and ``-Ofast`` flags, 
+however with the ``-O2`` flag, ``icpc`` took the lead.
+Worth noting is also, that the jump from ``-O2`` to ``-Ofast`` was much bigger when using ``g++`` than with ``icpc``.
+
+In conclusion, it can not be said that one compiler always generates faster code than the other.
+For that, we nearly don't have enough data to compare. 
+We would also need to ensure that there are no other intensive processes running which could unintentionally slow down the code.
+Nonetheless, by using the table as a rough estimate it seems that ``g++`` is faster when using ``-O0`` and ``-Ofast`` while ``icpc`` is preferable for ``-O2``.
+
+8.4 - Compiler reports
+------------------------
+
+We added the support for a compiler report flag with the following lines in our ``SConstruct``
+
+.. code:: python
+
+    EnumVariable( 'report',
+                  'flag for enabling reports',
+                  'no',
+                  allowed_values=('no', '-qopt-report')
+                )
+
+To test it out, we ran the code on the ARA machine with following parameters:
+
+.. code:: bash
+
+  CXX=icpc scons mode=benchmark opt=-O2 report=-qopt-report
+
+The generated report for the main class (without the parts about submodules) can be found :download:`here. <../../_static/text/task8-2-4_main_optrpt.txt>`
+
+We can see that most of the for-loops were not vectorized:
+
+.. code:: text
+
+  LOOP BEGIN at build/src/main.cpp(488,5)
+   remark #15333: loop was not vectorized: exception handling for a call prevents vectorization   [ build/src/main.cpp(497,54) ]
+
+   LOOP BEGIN at build/src/main.cpp(492,7)
+      remark #15333: loop was not vectorized: exception handling for a call prevents vectorization   [ build/src/main.cpp(497,54) ]
+   LOOP END
+  LOOP END
+
+This snippet refers to the loops that provide our solver with data from a setup:
+
+.. code:: cpp
+
+    for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
+    {
+      for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
+      {
+      }
+    }  
+
+Looking at the report for our :download:`Fwave <../../_static/text/task8-2-fwave.txt>` solver,
+we see that
+
+
+8.3 Instrumentation and Performance Counters
+==============================================

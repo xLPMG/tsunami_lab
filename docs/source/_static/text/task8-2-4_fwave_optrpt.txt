@@ -1,0 +1,158 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+
+Begin optimization report for: tsunami_lab::solvers::Fwave::computeEigenvalues(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (tsunami_lab::solvers::Fwave::computeEigenvalues(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)) [1] build/src/solvers/Fwave.cpp(17,1)
+  -> INLINE: (20,21) std::sqrt(float)
+  -> INLINE: (21,21) std::sqrt(float)
+  -> INLINE: (29,34) std::sqrt(float)
+
+
+    Report from: Code generation optimizations [cg]
+
+build/src/solvers/Fwave.cpp(17,1):remark #34051: REGISTER ALLOCATION : [_ZN11tsunami_lab7solvers5Fwave18computeEigenvaluesEffffRfS2_] build/src/solvers/Fwave.cpp:17
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :    9[ rsi rdi zmm0-zmm6]
+        
+    Routine temporaries
+        Total         :      31
+            Global    :       0
+            Local     :      31
+        Regenerable   :       0
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: tsunami_lab::solvers::Fwave::computeEigencoefficients(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (tsunami_lab::solvers::Fwave::computeEigencoefficients(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)) [2] build/src/solvers/Fwave.cpp(44,1)
+
+
+    Report from: Code generation optimizations [cg]
+
+build/src/solvers/Fwave.cpp(48,23):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(55,22):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(44,1):remark #34051: REGISTER ALLOCATION : [_ZN11tsunami_lab7solvers5Fwave24computeEigencoefficientsEffffffffRfS2_] build/src/solvers/Fwave.cpp:44
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   14[ rsi rdi zmm0-zmm11]
+        
+    Routine temporaries
+        Total         :      62
+            Global    :      17
+            Local     :      45
+        Regenerable   :       2
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :      24 bytes*
+            Reads     :       4 [4.00e+00 ~ 5.3%]
+            Writes    :       8 [8.00e+00 ~ 10.7%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
+
+Begin optimization report for: tsunami_lab::solvers::Fwave::netUpdates(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real *, tsunami_lab::t_real *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (tsunami_lab::solvers::Fwave::netUpdates(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real *, tsunami_lab::t_real *)) [3] build/src/solvers/Fwave.cpp(77,1)
+  -> INLINE: (86,3) tsunami_lab::solvers::Fwave::computeEigenvalues(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)
+    -> INLINE: (20,21) std::sqrt(float)
+    -> INLINE: (21,21) std::sqrt(float)
+    -> INLINE: (29,34) std::sqrt(float)
+  -> INLINE: (97,3) tsunami_lab::solvers::Fwave::computeEigencoefficients(tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real, tsunami_lab::t_real &, tsunami_lab::t_real &)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at build/src/solvers/Fwave.cpp(118,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between o_netUpdateL[l_qt] (121:5) and o_netUpdateR[l_qt] (134:7)
+   remark #25436: completely unrolled by 2  
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+build/src/solvers/Fwave.cpp(48,23):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(55,22):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(109,16):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(113,16):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(77,1):remark #34051: REGISTER ALLOCATION : [_ZN11tsunami_lab7solvers5Fwave10netUpdatesEffffffPfS2_] build/src/solvers/Fwave.cpp:77
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   39[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm15]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   17[ rax rsi rdi zmm0-zmm13]
+        
+    Routine temporaries
+        Total         :      90
+            Global    :      24
+            Local     :      66
+        Regenerable   :       5
+        Spilled       :       0
+        
+    Routine stack
+        Variables     :      40 bytes*
+            Reads     :       8 [9.00e+00 ~ 5.2%]
+            Writes    :      13 [1.45e+01 ~ 8.3%]
+        Spills        :       0 bytes*
+            Reads     :       0 [0.00e+00 ~ 0.0%]
+            Writes    :       0 [0.00e+00 ~ 0.0%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================
