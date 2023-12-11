@@ -1,10 +1,12 @@
 ##
-# @author Luca-Philipp Grumbach & Richard Hofmann
+# @author Luca-Philipp Grumbach
+# @author Richard Hofmann
 #
-# @section DESCRIPTION
+# # Description
 # Entry-point for builds.
 ##
 import SCons
+import os
 
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
@@ -22,6 +24,11 @@ vars.AddVariables(
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
                 allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
+              ),
+  EnumVariable( 'opt',
+                'optimization flag',
+                '-O3',
+                allowed_values=('-O0', '-O1', '-O2', '-O3', '-fast')
               )
 )
 
@@ -38,6 +45,11 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         print ('Did not find the netcdf library, exiting!')
         Exit(1)
 env = conf.Finish()
+
+# choose compiler
+if 'CXX' in os.environ:
+  env['CXX'] = os.environ['CXX']
+print("Using ", env['CXX'], " compiler.")
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
@@ -60,7 +72,7 @@ if 'debug' in env['mode']:
   env.Append( CXXFLAGS = [ '-g',
                            '-O0' ] )
 else:
-  env.Append( CXXFLAGS = [ '-O3' ] )
+  env.Append( CXXFLAGS = [ env['opt'] ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
