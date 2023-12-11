@@ -46,6 +46,8 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         Exit(1)
 env = conf.Finish()
 
+# set local env
+env['ENV'] = os.environ['CXX']
 # choose compiler
 if 'CXX' in os.environ:
   env['CXX'] = os.environ['CXX']
