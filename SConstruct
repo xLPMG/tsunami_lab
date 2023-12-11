@@ -23,12 +23,28 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
+                allowed_values=('release', 'debug', 'osx', 'release+san', 
+                                'debug+san', 'release+osx','osx+san', 'benchmark', 'benchmark+osx')
               ),
   EnumVariable( 'opt',
                 'optimization flag',
                 '-O3',
-                allowed_values=('-O0', '-O1', '-O2', '-O3', '-fast')
+                allowed_values=('-O0', 
+                                '-O1', 
+                                '-O2', 
+                                '-O3', 
+                                '-Ofast')
+              ),
+  EnumVariable( 'report',
+                'flag for enabling reports',
+                'none',
+                allowed_values=('none', 
+                                '-qopt-report', 
+                                '-qopt-report=1', 
+                                '-qopt-report=2',
+                                '-qopt-report=3',
+                                '-qopt-report=4',
+                                '-qopt-report=5')
               )
 )
 
@@ -80,6 +96,10 @@ if 'debug' in env['mode']:
 else:
   env.Append( CXXFLAGS = [ env['opt'] ] )
 
+# enable reports
+if 'report' in env['report']:
+   env.Append( CXXFLAGS = [ env['report'] ] )
+
 # add sanitizers
 if 'san' in  env['mode']:
   env.Append( CXXFLAGS =  [ '-g',
@@ -91,6 +111,10 @@ if 'san' in  env['mode']:
   env.Append( LINKFLAGS = [ '-g',
                             '-fsanitize=address',
                             '-fsanitize=undefined' ] )
+
+# enable benchmarking mode
+if 'benchmark' in env['mode']:
+  env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
 
 # add Catch2
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )

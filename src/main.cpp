@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Entry-point for simulations.
  **/
 
@@ -34,7 +34,9 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
-#include <filesystem>
+#ifndef BENCHMARK
+  #include <filesystem>
+#endif
 #include <chrono>
 
 // external libraries
@@ -53,6 +55,7 @@ bool endsWith(std::string const &str, std::string const &suffix)
   return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
 }
 
+#ifndef BENCHMARK
 void setupFolders()
 {
   // create solutions folder
@@ -66,6 +69,7 @@ void setupFolders()
   if (!std::filesystem::exists("checkpoints"))
     std::filesystem::create_directory("checkpoints");
 }
+#endif
 
 int main(int i_argc,
          char *i_argv[])
@@ -77,7 +81,7 @@ int main(int i_argc,
   // output file name
   std::string l_outputFileName = "";
   // load from checkpoint if true
-  bool l_checkpointExists = false;
+  [[maybe_unused]] bool l_checkpointExists = false;
   // setup choice
   std::string l_setupChoice = "";
   // wave propagation patch
@@ -111,24 +115,32 @@ int main(int i_argc,
   // keep track of all stations
   std::vector<tsunami_lab::io::Station *> l_stations;
   // frequency at which stations are written
-  tsunami_lab::t_real l_stationFrequency = 0;
+  [[maybe_unused]] tsunami_lab::t_real l_stationFrequency = 0;
   // writing frequency in timesteps
-  tsunami_lab::t_idx l_writingFrequency = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_writingFrequency = 0;
+  // netcdf output file
+  std::string l_netCdfOutputPathString = "";
+  const char *l_netcdfOutputPath = "";
   // frequency at which checkpoints are written
-  tsunami_lab::t_real l_checkpointFrequency = -1;
+  [[maybe_unused]] tsunami_lab::t_real l_checkpointFrequency = -1;
+  // checkpoint output file
+  std::string l_checkPointFilePathString = "";
+  const char *l_checkPointFilePath = "";
+
   // data writer choice
   enum DataWriter
   {
     NETCDF = 0,
     CSV = 1
   };
-  DataWriter l_dataWriter = NETCDF;
+  [[maybe_unused]] DataWriter l_dataWriter = NETCDF;
 
   // set up time and print control
   tsunami_lab::t_idx l_timeStep = 0;
-  tsunami_lab::t_idx l_nOut = 0;
+  tsunami_lab::t_idx l_timeStepMax = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_nOut = 0;
   tsunami_lab::t_real l_simTime = 0;
-  tsunami_lab::t_idx l_captureCount = 0;
+  [[maybe_unused]] tsunami_lab::t_idx l_captureCount = 0;
 
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -140,19 +152,22 @@ int main(int i_argc,
     l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
 
-  // set up folders
+// set up folders
+#ifndef BENCHMARK
   setupFolders();
+#endif
 
   // read configuration data from file
   std::ifstream l_configFile(l_configFilePath);
   json l_configData = json::parse(l_configFile);
+#ifndef BENCHMARK
   l_outputFileName = l_configData.value("outputFileName", "solution");
-  std::string l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
-  const char *l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
+  l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
+  l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
 
   // check if checkpoint exists
-  std::string l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
-  const char *l_checkPointFilePath = l_checkPointFilePathString.c_str();
+  l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
+  l_checkPointFilePath = l_checkPointFilePathString.c_str();
   l_checkpointExists = std::filesystem::exists(l_checkPointFilePathString);
   // checkpoint file found
   if (l_checkpointExists)
@@ -170,7 +185,11 @@ int main(int i_argc,
     }
     l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
   }
-
+#else
+  l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  if (l_setupChoice == "CHECKPOINT")
+    std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
+#endif
   l_solver = l_configData.value("solver", "fwave");
   // read size config
   l_nx = l_configData.value("nx", 1);
@@ -214,6 +233,7 @@ int main(int i_argc,
 
   // read station data
   l_stationFrequency = l_configData.value("stationFrequency", 1);
+#ifndef BENCHMARK
   std::string l_outputMethod = l_configData.value("outputMethod", "netcdf");
   if (l_outputMethod == "netcdf" || l_outputMethod == "NETCDF")
   {
@@ -223,7 +243,7 @@ int main(int i_argc,
   {
     l_dataWriter = CSV;
   }
-
+#endif
   // construct setup
   tsunami_lab::setups::Setup *l_setup;
   if (l_setupChoice == "GENERALDISCONTINUITY1D")
@@ -331,7 +351,8 @@ int main(int i_argc,
     l_setup = nullptr;
   }
 
-  // set up netCdf I/O
+// set up netCdf I/O
+#ifndef BENCHMARK
   tsunami_lab::io::NetCdf *l_netCdf;
   if (l_setupChoice == "CHECKPOINT")
   {
@@ -371,7 +392,7 @@ int main(int i_argc,
                                            l_netcdfOutputPath,
                                            l_checkPointFilePath);
   }
-
+#endif
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
 
@@ -392,7 +413,7 @@ int main(int i_argc,
                                                              l_boundaryT,
                                                              l_boundaryB);
   }
-
+#ifndef BENCHMARK
   // set up stations
   if (l_configData.contains("stations"))
   {
@@ -415,12 +436,13 @@ int main(int i_argc,
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-
+#endif
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   std::cout << "Setting up solver..." << std::endl;
   auto l_timeSetupStart = std::chrono::high_resolution_clock::now();
-  // set up solver
+// set up solver
+#ifndef BENCHMARK
   if (l_setupChoice == "CHECKPOINT")
   {
     tsunami_lab::t_real *l_hCheck = new tsunami_lab::t_real[l_nx * l_ny];
@@ -459,7 +481,9 @@ int main(int i_argc,
     delete[] l_hvCheck;
     delete[] l_bCheck;
   }
-  else
+#endif
+
+  if (l_setupChoice != "CHECKPOINT")
   {
     for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
     {
@@ -548,11 +572,13 @@ int main(int i_argc,
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
     l_dt *= 0.5;
   }
-
+  // calculate max time steps
+  l_timeStepMax = std::ceil(l_endTime / l_dt) + 1;
+  std::cout << "Note: max " << l_timeStepMax << " steps will be computed." << std::endl;
   // derive scaling for a time step
   tsunami_lab::t_real l_scalingX = l_dt / l_dx;
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
-
+#ifndef BENCHMARK
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   if (l_checkpointFrequency > 0)
   {
@@ -567,14 +593,15 @@ int main(int i_argc,
   {
     l_captureCount = std::floor(l_simTime / l_stationFrequency);
   }
-
-  std::cout << "entering time loop" << std::endl;
-
   auto l_lastWrite = std::chrono::system_clock::now();
+#endif
+  std::cout << "entering time loop" << std::endl;
   auto l_timeCalculationStart = std::chrono::system_clock::now();
+
   // START LOOP
   while (l_simTime < l_endTime)
   {
+#ifndef BENCHMARK
     if (l_timeStep % l_writingFrequency == 0)
     {
       std::cout << "  simulation time / #time steps: "
@@ -615,8 +642,10 @@ int main(int i_argc,
       }
       }
     }
+#endif
     l_waveProp->setGhostOutflow();
     l_waveProp->timeStep(l_scalingX, l_scalingY);
+#ifndef BENCHMARK
     // write stations
     if (l_simTime >= l_stationFrequency * l_captureCount)
     {
@@ -641,14 +670,17 @@ int main(int i_argc,
                                 l_timeStep);
       l_lastWrite = std::chrono::system_clock::now();
     }
+#endif
     l_timeStep++;
     l_simTime += l_dt;
   }
-  // END LOOP
+// END LOOP
+#ifndef BENCHMARK
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     l_s->write();
   }
+#endif
   auto l_timeCalculationEnd = std::chrono::system_clock::now();
   std::cout << "finished time loop" << std::endl;
 
@@ -664,24 +696,26 @@ int main(int i_argc,
 
   // free memory
   std::cout << "freeing memory" << std::endl;
-  std::filesystem::remove(l_checkPointFilePathString);
   delete l_setup;
   delete l_waveProp;
+#ifndef BENCHMARK
+  std::filesystem::remove(l_checkPointFilePathString);
   delete l_netCdf;
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
     delete l_s;
   }
-
+#endif
   std::cout << "finished, exiting" << std::endl;
 
   auto l_timeEnd = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> l_timerMS = l_timeEnd - l_timeStart;
   std::chrono::duration<double> l_timerS = l_timeEnd - l_timeStart;
-   std::chrono::duration<double, std::ratio<60>> l_timerM = l_timeEnd - l_timeStart;
-  std::cout << "Execution took "<< l_timerMS.count() << "ms"<< std::endl;
-  std::cout << "= " << l_timerS.count() << " seconds"<< std::endl;
-  std::cout << "= " << l_timerM.count() << " minutes"<< std::endl;
-
+  std::chrono::duration<double, std::ratio<60>> l_timerM = l_timeEnd - l_timeStart;
+  std::cout << std::endl;
+  std::cout << "Execution took " << l_timerMS.count() << "ms" << std::endl;
+  std::cout << "= " << l_timerS.count() << " seconds" << std::endl;
+  std::cout << "= " << l_timerM.count() << " minutes" << std::endl;
+  std::cout << std::endl;
   return EXIT_SUCCESS;
 }

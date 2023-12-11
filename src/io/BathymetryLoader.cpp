@@ -2,12 +2,14 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Loads bathymetry data from files
  **/
 #include "BathymetryLoader.h"
 #include "Csv.h"
+#ifndef BENCHMARK
 #include <filesystem>
+#endif
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -19,11 +21,13 @@ tsunami_lab::io::BathymetryLoader::~BathymetryLoader()
 
 void tsunami_lab::io::BathymetryLoader::loadBathymetry(const std::string &i_file)
 {
+#ifndef BENCHMARK
     if (!std::filesystem::exists(i_file))
     {
         std::cerr << "Error: File not found!" << std::endl;
         exit(1);
     }
+#endif
 
     std::ifstream l_inputFile(i_file);
 
