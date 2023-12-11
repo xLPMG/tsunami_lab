@@ -142,6 +142,33 @@ For that, we nearly don't have enough data to compare.
 We would also need to ensure that there are no other intensive processes running which could unintentionally slow down the code.
 Nonetheless, by using the table as a rough estimate it seems that ``g++`` is faster when using ``-O0`` and ``-Ofast`` while ``icpc`` is preferable for ``-O2``.
 
+8.2.3 - Optimization flags
+---------------------------
+
+To allow for an easy switch between optimization flag, we added following code to our SConstruct:
+
+.. code:: python
+
+  EnumVariable( 'opt',
+                'optimization flag',
+                '-O3',
+                allowed_values=('-O0', 
+                                '-O1', 
+                                '-O2', 
+                                '-O3', 
+                                '-Ofast')
+
+and 
+
+.. code:: python
+
+  # set optimization mode
+  if 'debug' in env['mode']:
+    env.Append( CXXFLAGS = [ '-g',
+                             '-O0' ] )
+  else:
+    env.Append( CXXFLAGS = [ env['opt'] ] ) 
+
 8.4 - Compiler reports
 ------------------------
 
@@ -149,11 +176,16 @@ We added the support for a compiler report flag with the following lines in our 
 
 .. code:: python
 
-    EnumVariable( 'report',
-                  'flag for enabling reports',
-                  'no',
-                  allowed_values=('no', '-qopt-report')
-                )
+  EnumVariable( 'report',
+                'flag for enabling reports',
+                'none',
+                allowed_values=('none', 
+                                '-qopt-report', 
+                                '-qopt-report=1', 
+                                '-qopt-report=2',
+                                '-qopt-report=3',
+                                '-qopt-report=4',
+                                '-qopt-report=5')
 
 To test it out, we ran the code on the ARA machine with following parameters:
 
@@ -163,7 +195,7 @@ To test it out, we ran the code on the ARA machine with following parameters:
 
 The generated report for the main class (without the parts about submodules) can be found :download:`here. <../../_static/text/task8-2-4_main_optrpt.txt>`
 
-We can see that most of the for-loops were not vectorized:
+We can see that five for-loops were not vectorized. For example:
 
 .. code:: text
 
@@ -186,8 +218,85 @@ This snippet refers to the loops that provide our solver with data from a setup:
       }
     }  
 
-Looking at the report for our :download:`Fwave <../../_static/text/task8-2-fwave.txt>` solver,
-we see that
+F-Wave optimization report
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The full report can be found :download:`here. <../../_static/text/task8-2-4_fwave_optrpt.txt>`
+
+Starting with the ``computeEigenvalues()`` function, the report tells us that the lines
+
+.. code:: cpp
+
+  t_real l_hSqrtL = std::sqrt(i_hL);
+  t_real l_hSqrtR = std::sqrt(i_hR);
+  t_real l_ghSqrtRoe = m_gSqrt * std::sqrt(l_hRoe);
+
+are inline:
+
+.. code:: text
+
+  -> INLINE: (20,21) std::sqrt(float)
+  -> INLINE: (21,21) std::sqrt(float)
+  -> INLINE: (29,34) std::sqrt(float)
+
+This means that the call to std::sqrt(float) will be replaced with the actual implementation of that function.
+
+For ``computeEigencoefficients``, we can see that 
+
+.. code:: cpp
+
+    t_real l_rInv[2][2] = {{0}};
+    ...
+    t_real l_fDelta[2] = {0};
+
+are implemented by the compiler using ``memset``:
+
+.. code:: text
+
+  build/src/solvers/Fwave.cpp(48,23):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+  build/src/solvers/Fwave.cpp(55,22):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+
+For ``netUpdates``, the report tells us that
+
+.. code::
+
+  INLINE REPORT: (tsunami_lab::solvers::Fwave::netUpdates( [...] )) [3] build/src/solvers/Fwave.cpp(77,1)
+  -> INLINE: (86,3) tsunami_lab::solvers::Fwave::computeEigenvalues( [...] )
+    [...]
+  -> INLINE: (97,3) tsunami_lab::solvers::Fwave::computeEigencoefficients( [...] )
+
+We can conclude that the compiler is able to inline our calls to ``computeEigenvalues`` and ``computeEigencoefficients``.
+
+WavePropagation2d optimization report
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The full report can be found :download:`here. <../../_static/text/task8-2-4_waveprop2d_optrpt.txt>`
+
+To keep it short, the report tells us that the loops for the x- and y-sweep (which compute the net update)
+could not be vectorized:
+
+.. code:: text
+
+  LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(86,3)
+   remark #15543: loop was not vectorized: loop with function call not considered an optimization candidate.
+
+   LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(88,5)
+      remark #15523: loop was not vectorized: loop control variable l_ec was found, but loop iteration count cannot be computed before executing the loop
+   LOOP END
+  LOOP END
+
+  LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(152,3)
+   remark #15543: loop was not vectorized: loop with function call not considered an optimization candidate.
+
+   LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(154,5)
+      remark #15523: loop was not vectorized: loop control variable l_ed was found, but loop iteration count cannot be computed before executing the loop
+   LOOP END
+  LOOP END
+
+.. note:: 
+  
+  Lines 86 and 88 are the two for-loops for y- and x-axis of the x-sweep and 
+  lines 152 and 154 are the two for-loops for y- and x-axis of the y-sweep. 
 
 
 8.3 Instrumentation and Performance Counters
