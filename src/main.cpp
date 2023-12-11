@@ -696,10 +696,10 @@ int main(int i_argc,
 
   // free memory
   std::cout << "freeing memory" << std::endl;
-  std::filesystem::remove(l_checkPointFilePathString);
   delete l_setup;
   delete l_waveProp;
 #ifndef BENCHMARK
+  std::filesystem::remove(l_checkPointFilePathString);
   delete l_netCdf;
   for (tsunami_lab::io::Station *l_s : l_stations)
   {
