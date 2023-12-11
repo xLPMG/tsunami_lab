@@ -57,14 +57,16 @@ Help( vars.GenerateHelpText( env ) )
 # add default flags
 if 'osx' in env['mode']:
   env.Append( CXXFLAGS = [ '-std=c++17',
-                         '-Wall',
-                         '-Wextra' ] )
+                           '-Wall',
+                           '-Wextra',
+                           '-g' ] )
 else:
   env.Append( CXXFLAGS = [ '-std=c++17',
-                        '-Wall',
-                        '-Wextra',
-                        '-Werror',
-                        '-Wpedantic' ] )
+                           '-Wall',
+                           '-Wextra',
+                           '-Werror',
+                           '-Wpedantic',
+                           '-g' ] )
 
 
 # set optimization mode
