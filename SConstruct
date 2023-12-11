@@ -47,7 +47,7 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
 env = conf.Finish()
 
 # set local env
-env['ENV'] = os.environ['CXX']
+env['ENV'] = os.environ
 
 # choose compiler
 if 'CXX' in os.environ:
@@ -116,5 +116,5 @@ env.Program( target = 'build/tsunami_lab',
 env.Program( target = 'build/tests',
              source = env.sources + env.tests)
 
-#env.Program( target = 'build/sanitychecks',
-#             source = env.sources + env.sanitychecks)
+env.Program( target = 'build/sanitychecks',
+             source = env.sources + env.sanitychecks)
