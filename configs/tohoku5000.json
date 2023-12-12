@@ -1,0 +1,9 @@
+{
+    "solver": "fwave",
+    "setup":"TOHOKU",
+    "outputFileName":"tohoku_5000_solution",
+    "nx":540,
+    "ny":300,
+    "endTime":15000,
+    "writingFrequency":100
+}
