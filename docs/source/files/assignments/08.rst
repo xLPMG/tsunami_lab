@@ -4,6 +4,42 @@
 8.1 ARA
 ========
 
+8.1.1
+-------------------
+
+First we cloned our github repository to "beegfs" and transfered the bythymetry and displacement data with "wget https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz -O tsunami_lab_data_in.tar.xz" there.
+
+Because of scons we have to execute "module load tools/python/3.8" and "pip install --user scons" first and load the compiler via "module load compiler/gcc/11.2.0".
+
+
+
+Sbatch: 
+
+.. code-block:: text
+
+    #!/bin/bash
+    #SBATCH --job-name=tohoku_1000
+    #SBATCH --output=tohoku_1000.out
+    #SBATCH --error=tohoku_1000.err
+    #SBATCH --partition=s_hadoop
+    #SBATCH --nodes=1
+    #SBATCH --ntasks=1
+    #SBATCH --time=10:00:00
+    #SBATCH --cpus-per-task=72
+
+    #load modules
+    module load compiler/gcc/11.2.0
+
+    # Enter your executable commands here
+    # Execute the compiled program
+    scons
+    ./build/tsunami_lab
+
+We use only use one nodes, therefore nodes and ntasks are set to one and cpus-per-task to 72.
+
+
+
+
 8.2 Compilers
 ===============
 
