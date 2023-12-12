@@ -565,12 +565,10 @@ int main(int i_argc,
   if (l_ny == 1)
   {
     l_dt = 0.5 * l_dx / l_speedMax;
-    l_dt *= 0.8;
   }
   else
   {
     l_dt = 0.45 * std::min(l_dx, l_dy) / l_speedMax;
-    l_dt *= 0.5;
   }
   // calculate max time steps
   l_timeStepMax = std::ceil(l_endTime / l_dt) + 1;
