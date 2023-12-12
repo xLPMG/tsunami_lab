@@ -35,9 +35,7 @@ Sbatch:
     scons
     ./build/tsunami_lab
 
-We use only use one nodes, therefore nodes and ntasks are set to one and cpus-per-task to 72.
-
-
+Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``cpus-per-task`` to 72.
 
 
 8.2 Compilers

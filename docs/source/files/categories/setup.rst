@@ -51,7 +51,45 @@ for Linux/Windows. If you are on MacOS, use
 
     scons mode="osx"
 
+If you wish to build the project for benchmarking without file output, run
+
+.. code:: bash
+
+    scons mode=benchmark
+
+for Linux/Windows. If you are on MacOS, use
+
+.. code:: bash
+
+    scons mode=benchmark+osx
+
+
 For further run configurations view the SConstruct file at the root of the tsunami_lab directory.
+
+Additional build parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You may specify a compiler of your choice, for example ``icpc`` by running
+
+.. code:: bash
+
+    CXX=icpc scons
+
+If you wish to specify an optimization flag, you can do that by adding ``opt=<flag>``, for example:
+
+.. code:: bash
+
+    scons opt=-O2
+
+Currently we support ``-O0``, ``-O1``, ``-O2``, ``-O3`` and ``-Ofast``. The default is ``-O3``.
+
+Generating a report is possible for ``icpc``. To enable it, specify it using
+
+.. code:: bash
+
+    scons report=-qopt-report=<N>
+
+Replace <N> with a number from 1 to 5 for the level of detail. 
 
 5. Building the documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
