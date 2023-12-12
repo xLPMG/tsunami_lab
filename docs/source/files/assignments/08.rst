@@ -43,11 +43,8 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
 .. note:: 
 
   The code was compiled using ``scons mode=benchmark opt=-O2``.
-
-
   The benchmarking mode disables all file output.
 
-  
   The private PC uses an UbuntuVM.
 
 ..  list-table:: execution times on different devices
@@ -70,9 +67,9 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
       - 42.7966s
     * - private
       - chile1000.json
-      - x
-      - x
-      - x
+      - 139.167s
+      - 4017.46s
+      - 4160.25s
     * - ARA
       - chile1000.json
       - x
@@ -98,6 +95,11 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
       - x
       - x
       - x
+
+.. note:: 
+  ``Total execution time`` is not just setup + calculation time. 
+  The total execution timer is invoked directly at the start of the main function 
+  and stopped after the programm finished and all memory has been freed.
 
 8.2 Compilers
 ===============
