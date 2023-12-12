@@ -13,5 +13,5 @@ module load compiler/gcc/11.2.0
 
 # Enter your executable commands here
 # Execute the compiled program
-scons
+scons mode=benchmark opt=-O2
 ./build/tsunami_lab configs/chile1000.json
