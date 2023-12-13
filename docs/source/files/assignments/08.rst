@@ -9,11 +9,10 @@
 
 First we cloned our github repository to "beegfs" and transfered the bythymetry and displacement data with "wget https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz -O tsunami_lab_data_in.tar.xz" there.
 
-Because of scons we have to execute "module load tools/python/3.8" and "pip install --user scons" first and load the compiler via "module load compiler/gcc/11.2.0".
+To use scons, we have to execute "module load tools/python/3.8" and "pip install --user scons" first and then load the compiler via "module load compiler/gcc/11.2.0".
 
 
-
-Sbatch: 
+sbatch file: 
 
 .. code-block:: text
 
@@ -43,7 +42,7 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
 .. note:: 
 
   The code was compiled using ``scons mode=benchmark opt=-O2``.
-  The benchmarking mode disables all file output.
+  The benchmarking mode disables all file output (and also skips all imports of ``<filesystem>``).
 
 Setups
 ^^^^^^^^^^
@@ -68,12 +67,12 @@ Results
       - Config
       - Setup time
       - Computation time
-      - Total execution time
+      - Total time
       - Cells
       - Setup time per cell
       - Calculation time per cell
     * - private
-      - chile5000.json
+      - chile5000
       - 5.56396s
       - 31.6052s
       - 41.3911s
@@ -81,7 +80,7 @@ Results
       - 0.01347ms
       - 0.07652ms
     * - ARA
-      - chile5000.json
+      - chile5000
       - 5.06402s
       - 31.6528s
       - 42.7966s
@@ -89,7 +88,7 @@ Results
       - 0.01226ms
       - 0.07664ms
     * - private
-      - chile1000.json
+      - chile1000
       - 139.167s
       - 4017.46s
       - 4160.25s
@@ -97,7 +96,7 @@ Results
       - 0.01348ms
       - 0.3891ms
     * - ARA
-      - chile1000.json
+      - chile1000
       - 127.257s
       - 4204.83s
       - 4338.24s
@@ -105,7 +104,7 @@ Results
       - 0.01233ms
       - 0.40725ms
     * - private
-      - tohoku5000.json
+      - tohoku5000
       - 1.70329s
       - 14.6443s
       - 22.5213s
@@ -113,7 +112,7 @@ Results
       - 0.01051ms
       - 0.09040ms
     * - ARA
-      - tohoku5000.json
+      - tohoku5000
       - 1.49705s
       - 14.8791s
       - 18.9277s
@@ -121,7 +120,7 @@ Results
       - 0.00924ms
       - 0.09184ms
     * - private
-      - tohoku1000.json
+      - tohoku1000
       - 41.2804s
       - 1888.40s
       - 1931.84s
@@ -129,7 +128,7 @@ Results
       - 0.01019ms
       - 0.46627ms
     * - ARA
-      - tohoku1000.json
+      - tohoku1000
       - 37.7817s
       - 1949.85s
       - 1990.99s
@@ -138,7 +137,7 @@ Results
       - 0.48144ms
 
 .. note:: 
-  ``Total execution time`` is not just setup + calculation time. 
+  ``Total time`` is not just setup + calculation time. 
   The total execution timer is invoked directly at the start of the main function 
   and stopped after the program has finished and all memory has been freed.
 
@@ -477,3 +476,34 @@ could not be vectorized:
 
 8.3 Instrumentation and Performance Counters
 ==============================================
+
+Individual phase ideas
+========================
+
+For the individual phase, we plan on building a graphical user interface using `ImGui <https://github.com/ocornut/imgui>`_.
+
+We plan to implement following features:
+
+* run a simulation with the click of a button
+* stop a simulation with the click of a button
+* specify simulation parameters (size, cells, endTime, etc.)
+* specify file paths (netCdf output, checkpoint, bathymetry, displacement)
+* save and load config files
+* enable/disable checkpoints
+* monitor time status in
+
+  * ``simTime / endTime``
+
+  * ``timeStep / maxTimeSteps``
+
+  * current execution time (real time)
+
+  * estimated real time left
+
+* monitor CPU usage
+* monitor Memory usage
+* trigger a re-compilation with parameters
+
+In case there is time left, we want to try to implement a `python script <https://kitware.github.io/paraview-docs/latest/python/>`_ (which can be called via the gui)
+that calls Paraview and renders an animation from a solution file, without the need for the Paraview Gui. 
+However this part of the project is entirely optional and we are unsure if we will have the capabilities to implement it.
