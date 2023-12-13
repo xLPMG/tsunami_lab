@@ -72,9 +72,9 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
       - 4160.25s
     * - ARA
       - chile1000.json
-      - x
-      - x
-      - x
+      - 127.257s
+      - 4204.83s
+      - 4338.24s
     * - private
       - tohoku5000.json
       - x
@@ -83,8 +83,8 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
     * - ARA
       - tohoku5000.json
       -  1.49705s
-      - 14.8791 seconds
-      - 18.9277 seconds
+      - 14.8791s
+      - 18.9277s
     * - private
       - tohoku1000.json
       - x
@@ -93,8 +93,8 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
     * - ARA
       - tohoku1000.json
       - 37.7817s
-      - 1949.85 seconds
-      - 1990.99 seconds
+      - 1949.85s
+      - 1990.99s
 
 .. note:: 
   ``Total execution time`` is not just setup + calculation time. 
