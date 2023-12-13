@@ -45,7 +45,21 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
   The code was compiled using ``scons mode=benchmark opt=-O2``.
   The benchmarking mode disables all file output.
 
-  The private PC uses an UbuntuVM.
+Setups
+^^^^^^^^^^
+
+If you are interested, you can view the used configurations here:
+
+:download:`chile5000.json <../../_static/text/chile5000.json>`
+|
+:download:`chile1000.json <../../_static/text/chile1000.json>`
+|
+:download:`tohoku5000.json <../../_static/text/tohoku5000.json>`
+|
+:download:`tohoku1000.json <../../_static/text/tohoku1000.json>`
+
+Results
+^^^^^^^^^^
 
 ..  list-table:: execution times on different devices
     :header-rows: 1
@@ -53,53 +67,87 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
     * - Device
       - Config
       - Setup time
-      - Computation loop time
+      - Computation time
       - Total execution time
+      - Cells
+      - Setup time per cell
+      - Calculation time per cell
     * - private
       - chile5000.json
       - 5.56396s
       - 31.6052s
       - 41.3911s
+      - 413.000
+      - 0.01347ms
+      - 0.07652ms
     * - ARA
       - chile5000.json
       - 5.06402s
       - 31.6528s
       - 42.7966s
+      - 413.000
+      - 0.01226ms
+      - 0.07664ms
     * - private
       - chile1000.json
       - 139.167s
       - 4017.46s
       - 4160.25s
+      - 10.325.000
+      - 0.01348ms
+      - 0.3891ms
     * - ARA
       - chile1000.json
       - 127.257s
       - 4204.83s
       - 4338.24s
+      - 10.325.000
+      - 0.01233ms
+      - 0.40725ms
     * - private
       - tohoku5000.json
-      - x
-      - x
-      - x
+      - 1.70329s
+      - 14.6443s
+      - 22.5213s
+      - 162.000
+      - 0.01051ms
+      - 0.09040ms
     * - ARA
       - tohoku5000.json
-      -  1.49705s
+      - 1.49705s
       - 14.8791s
       - 18.9277s
+      - 162.000
+      - 0.00924ms
+      - 0.09184ms
     * - private
       - tohoku1000.json
-      - x
-      - x
-      - x
+      - 41.2804s
+      - 1888.40s
+      - 1931.84s
+      - 4.050.000
+      - 0.01019ms
+      - 0.46627ms
     * - ARA
       - tohoku1000.json
       - 37.7817s
       - 1949.85s
       - 1990.99s
+      - 4.050.000
+      - 0.00933ms
+      - 0.48144ms
 
 .. note:: 
   ``Total execution time`` is not just setup + calculation time. 
   The total execution timer is invoked directly at the start of the main function 
-  and stopped after the programm finished and all memory has been freed.
+  and stopped after the program has finished and all memory has been freed.
+
+Observations
+^^^^^^^^^^^^^^
+
+In every scenario, ARA had a faster setup time but slower computation times.
+We conclude that ARA has faster data/file access (because the setup heavily depends on data reading speed from a file)
+while the private PC seems to have better single core performance.
 
 8.2 Compilers
 ===============
