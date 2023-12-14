@@ -197,11 +197,7 @@ For each run, we used the following configuration:
     "endTime":50
   }
 
-.. note:: We ran the program in benchmarking mode without file output.
-  
-The results can be seen below. 
-All time values are given in seconds, which we did not include in the table to make it more compact
-for better visibility.
+We ran the ``tsunami_lab`` program in benchmarking mode without file output. The results can be seen below.
 
 ..  list-table:: execution times for different compilers and optimization flags
     :header-rows: 1
@@ -209,41 +205,41 @@ for better visibility.
     * - Compiler
       - Optimization flag 
       - Setup time
-      - Computation loop time
-      - Total execution time
+      - Computation time
+      - Total time
     * - g++
       - -O0 
-      - 0.152468
-      - 741.348
-      - 741.575
+      - 0.152468s
+      - 741.348s
+      - 741.575s
     * - g++
       - -O2
-      - 0.0615546
-      - 273.039
-      - 273.151
+      - 0.0615546s
+      - 273.039s
+      - 273.151s
     * - g++
       - -Ofast
-      - 0.0607083
-      - 203.635
-      - 203.743
+      - 0.0607083s
+      - 203.635s
+      - 203.743s
     * - icpc
       - -O0 
-      - 0.207138
-      - 1230.19
-      - 1230.48
+      - 0.207138s
+      - 1230.19s
+      - 1230.48s
     * - icpc
       - -O2
-      - 0.0724063
-      - 254.169
-      - 254.308
+      - 0.0724063s
+      - 254.169s
+      - 254.308s
     * - icpc
       - -Ofast
-      - 0.0704465
-      - 251.197
-      - 251.33
+      - 0.0704465s
+      - 251.197s
+      - 251.33s
 
 .. note:: 
-  ``Total execution time`` is not just setup + calculation time. 
+  ``Total time`` is not just setup + calculation time. 
   The total execution timer is invoked directly at the start of the main function 
   and stopped after the programm finished and all memory has been freed.
 
