@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Fwave solver for the one-dimensional shallow water equations.
  **/
 #include "Fwave.h"
@@ -44,12 +44,7 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients(t_real i_hL,
 {
   // compute inverse of right eigenvector-matrix
   t_real l_detInv = 1 / (eigenvalueRoe_2 - eigenvalueRoe_1);
-
-  t_real l_rInv[2][2] = {{0}};
-  l_rInv[0][0] = l_detInv * eigenvalueRoe_2;
-  l_rInv[0][1] = -l_detInv;
-  l_rInv[1][0] = -l_detInv * eigenvalueRoe_1;
-  l_rInv[1][1] = l_detInv;
+  t_real l_rInv[2][2] = {{l_detInv * eigenvalueRoe_2, -l_detInv}, {-l_detInv * eigenvalueRoe_1, l_detInv}};
 
   // compute f delta
   t_real l_fDelta[2] = {0};
