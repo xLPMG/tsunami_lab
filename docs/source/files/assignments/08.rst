@@ -509,6 +509,29 @@ could not be vectorized:
 8.3 Instrumentation and Performance Counters
 ==============================================
 
+
+8.3.5 - Code optimizations
+---------------------------
+
+TsunamiEvent2d speedup
+^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to increase the speed of this setup, we introduced a variable ``lastnegativeIndex`` for the X and Y direction for the bathymetry and displacement.
+The idea is the following: 
+When making a bathymetry or displacement query on the array, we need to find the point of the data grid which is closest to our queried point.
+With a naive implementation, we traverse the full arrays for x- and y-values every time. 
+If the first half of the array is filled with negative numbers due to an offset and the queried point has positive coordinates, we waste time traversing the negative part of the array.
+We can optimize this if we traverse the array on initilization and save the index of the last negative number. 
+After that, all array entries will be positive.
+If we look for a positive coodinate, we will start searching from the saved index on and skip the negative part of the array. 
+
+
+We tested this for the ``chile1000`` scenario (Chile Tsunami Simulation with 1000m cell size) in benchmarking mode:
+
+Setup time:
+* Before: 222.709s
+* After: 140.509s
+
 Individual phase ideas
 ========================
 

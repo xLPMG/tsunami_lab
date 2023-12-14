@@ -28,7 +28,7 @@ vars.AddVariables(
               ),
   EnumVariable( 'opt',
                 'optimization flag',
-                '-O3',
+                '-O2',
                 allowed_values=('-O0', 
                                 '-O1', 
                                 '-O2', 
