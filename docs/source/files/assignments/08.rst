@@ -518,19 +518,81 @@ TsunamiEvent2d speedup
 
 In order to increase the speed of this setup, we introduced a variable ``lastnegativeIndex`` for the X and Y direction for the bathymetry and displacement.
 The idea is the following: 
-When making a bathymetry or displacement query on the array, we need to find the point of the data grid which is closest to our queried point.
-With a naive implementation, we traverse the full arrays for x- and y-values every time. 
+When making a bathymetry or displacement query on the arrays, we need to find the point of the data grid which is closest to our queried point.
+With a naive implementation, we traverse the full arrays for x- and y-values every time until we have discovered the closest point.
+Since the values are monotonically increasing, we start from index 0 and in the worst case, traverse the whole array.
+
+
 If the first half of the array is filled with negative numbers due to an offset and the queried point has positive coordinates, we waste time traversing the negative part of the array.
-We can optimize this if we traverse the array on initilization and save the index of the last negative number. 
-After that, all array entries will be positive.
-If we look for a positive coodinate, we will start searching from the saved index on and skip the negative part of the array. 
+We can optimize this if we traverse the array on initialization and save the index of the last negative number before the values turn positive. 
+Now if we look for a positive coodinate, we will start searching from the saved index on and skip the negative part of the array. 
 
 
 We tested this for the ``chile1000`` scenario (Chile Tsunami Simulation with 1000m cell size) in benchmarking mode:
 
 Setup time:
+
 * Before: 222.709s
 * After: 140.509s
+
+We can observe a 36.9% decrease in time.
+
+
+Code snippets of the implementation:
+
+1. traverse the x- and y-axis data for the bathymetry and note last negative index (initialized to 0)
+
+.. code:: cpp
+
+  if (m_xDataB[0] < 0 && m_xDataB[m_nxB - 1] > 0)
+  {
+    for (t_idx l_ix = 1; l_ix < m_nxB; l_ix++)
+    {
+      if (m_xDataB[l_ix - 1] < 0 && m_xDataB[l_ix] >= 0)
+      {                
+        m_lastNegativeIndexBX = l_ix - 1;
+        break;
+      }
+    }
+  }
+
+2. use the saved index if the queried point is >= 0
+
+.. code:: cpp
+
+  tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray(t_real i_x,
+                                                                                  t_real i_y) const
+  {
+  [...]
+  t_idx l_ix = i_x >= 0 ? m_lastNegativeIndexBX : 1;
+
+    for (; l_ix < m_nxB; l_ix++)
+    {
+    [...]
+    }
+
+Coarse Output optimization
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Inside the ``write()`` function in ``NetCdf.cpp`` we calculated
+
+.. code:: cpp  
+  
+  l_data[l_i] /= m_k * m_k;
+
+to get the average value of the ``m_k * m_k`` cells which we summed up. To optimize this, we compute 
+
+.. code:: cpp
+
+  t_real l_averagingFactor = 1 / m_k * m_k;
+
+once and then reuse it wherever we need it:
+
+.. code:: cpp
+
+  l_b[l_i] *= l_averagingFactor;
+
+This way, the division only happens once.
 
 Individual phase ideas
 ========================
