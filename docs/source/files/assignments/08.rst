@@ -4,8 +4,8 @@
 8.1 ARA
 ========
 
-8.1.1
--------------------
+8.1.1 - Uploading and running the code
+----------------------------------------
 
 First we cloned our github repository to "beegfs" and transfered the bythymetry and displacement data with "wget https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz -O tsunami_lab_data_in.tar.xz" there.
 
@@ -36,7 +36,7 @@ sbatch file:
 
 Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``cpus-per-task`` to 72.
 
-8.1.2 Visualization
+8.1.2 - Visualizations
 --------------------------
 
 **Tohoku 5000**
@@ -48,7 +48,7 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
     </video> 
 
 
-**Tohoku 5000**
+**Tohoku 1000**
 
 .. raw:: html
 
@@ -509,15 +509,15 @@ could not be vectorized:
 8.3 Instrumentation and Performance Counters
 ==============================================
 
-8.3.1 VTune
-_______________
+8.3.1 to 8.3.4 - VTune
+-----------------------
 
 For this part we used Intel VTune.
 First we used the gui to specify our reports.
 
 Then we used the following batch script to run the hotspots measurement:
 
-.. code:: text
+.. code:: bash
   
   #!/bin/bash
   #SBATCH --job-name=vTune
@@ -533,21 +533,36 @@ Then we used the following batch script to run the hotspots measurement:
 
   /cluster/intel/vtune_profiler_2020.2.0.610396/bin64/vtune -collect hotspots -app-working-dir /beegfs/xe63nel/tsunami_lab/build -- /beegfs/xe63nel/tsunami_lab/build/tsunami_lab ../configs/config.json
 
+Hotspots
+^^^^^^^^^^
 
-**Hotspots**
+..  image:: ../../_static/assets/task_8-3-1_hotspot_bottomUp.png
 
-..  image:: ../../_static/assets/task_8-3-1_hotspot.png
+..  image:: ../../_static/assets/task_8-3-1_hotspot_topDown.png
 
+The most compute-intensive part is the ``computeEigencoefficients()`` function. This was to be expected, since it computes
 
-**Threads**
+* the inverse of right eigenvector-matrix
+
+* :math:`\Delta f`
+
+* :math:`\Delta x \Psi_{i-1/2}`
+
+* the two eigencoefficients as the product of the inverse of right eigenvector-matrix and :math:`\Delta f`
+
+for all cell edges every time step.
+
+It was interesting to see (although it should not come as a surprise) that the ``timeStep()`` function used up almost 99% 
+of the CPU time. 
+
+Threads
+^^^^^^^^^^
 
 ..  image:: ../../_static/assets/task_8-3-1_threads.png
 
 ..  image:: ../../_static/assets/task_8-3-1_threads_chart.png
 
-The poor result for the thread report was expected, because we obviously only compute sequentially.
-
-
+The poor result for the thread report was also expected, because we only compute sequentially.
 
 8.3.5 - Code optimizations
 ---------------------------

@@ -35,7 +35,7 @@
 #include <fstream>
 #include <limits>
 #ifndef BENCHMARK
-  #include <filesystem>
+#include <filesystem>
 #endif
 #include <chrono>
 
@@ -46,16 +46,28 @@
 using json = nlohmann::json;
 using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
 
-bool endsWith(std::string const &str, std::string const &suffix)
+/**
+ *  Determines if a string ends with another string.
+ *
+ * @param i_str input string to check
+ * @param i_suffix possible suffix of i_str
+ * @return true if i_str ends with i_suffix, otherwise false.
+ */
+bool endsWith(std::string const &i_str, std::string const &i_suffix)
 {
-  if (str.length() < suffix.length())
+  if (i_str.length() < i_suffix.length())
   {
     return false;
   }
-  return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
+  return i_str.compare(i_str.length() - i_suffix.length(), i_suffix.length(), i_suffix) == 0;
 }
 
 #ifndef BENCHMARK
+/**
+ *  Sets up the required folder structure.
+ *
+ *  @return void
+ */
 void setupFolders()
 {
   // create solutions folder
@@ -71,9 +83,21 @@ void setupFolders()
 }
 #endif
 
+/**
+ *  Main function.
+ *
+ * @param i_argc number of arguments
+ * @param i_argv arguments
+ * @return exit code
+ */
 int main(int i_argc,
          char *i_argv[])
 {
+
+  //------------------------------------------//
+  //---------------Initializers---------------//
+  //------------------------------------------//
+
   auto l_timeStart = std::chrono::high_resolution_clock::now();
   std::cout << "Timer started." << std::endl;
   // config file path
@@ -146,11 +170,19 @@ int main(int i_argc,
   std::cout << "### Tsunami Lab                  ###" << std::endl;
   std::cout << "###                              ###" << std::endl;
   std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
+  std::cout << "###                              ###" << std::endl;
+  std::cout << "### by Luca-Philipp Grumbach     ###" << std::endl;
+  std::cout << "### and Richard Hofmann          ###" << std::endl;
+  std::cout << "###                              ###" << std::endl;
   std::cout << "####################################" << std::endl;
 
   if (i_argc == 2)
     l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
+
+//-------------------------------------------//
+//--------------File I/O Config--------------//
+//-------------------------------------------//
 
 // set up folders
 #ifndef BENCHMARK
@@ -190,6 +222,11 @@ int main(int i_argc,
   if (l_setupChoice == "CHECKPOINT")
     std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
 #endif
+
+  //------------------------------------------//
+  //------------Load configuration------------//
+  //------------------------------------------//
+
   l_solver = l_configData.value("solver", "fwave");
   // read size config
   l_nx = l_configData.value("nx", 1);
@@ -244,7 +281,9 @@ int main(int i_argc,
     l_dataWriter = CSV;
   }
 #endif
-  // construct setup
+  //-------------------------------------------//
+  //--------------Construct setup--------------//
+  //-------------------------------------------//
   tsunami_lab::setups::Setup *l_setup;
   if (l_setupChoice == "GENERALDISCONTINUITY1D")
   {
@@ -351,7 +390,9 @@ int main(int i_argc,
     l_setup = nullptr;
   }
 
-// set up netCdf I/O
+//------------------------------------------//
+//-------------NetCdf I/O setup-------------//
+//------------------------------------------//
 #ifndef BENCHMARK
   tsunami_lab::io::NetCdf *l_netCdf;
   if (l_setupChoice == "CHECKPOINT")
@@ -396,23 +437,9 @@ int main(int i_argc,
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
 
-  // construct solver
-  if (l_ny == 1)
-  {
-    l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
-                                                             l_solver,
-                                                             l_boundaryL,
-                                                             l_boundaryR);
-  }
-  else
-  {
-    l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
-                                                             l_ny,
-                                                             l_boundaryL,
-                                                             l_boundaryR,
-                                                             l_boundaryT,
-                                                             l_boundaryB);
-  }
+//-------------------------------------------//
+//---------------Load stations---------------//
+//-------------------------------------------//
 #ifndef BENCHMARK
   // set up stations
   if (l_configData.contains("stations"))
@@ -437,6 +464,27 @@ int main(int i_argc,
     }
   }
 #endif
+
+  //------------------------------------------//
+  //-------------Construct solver-------------//
+  //------------------------------------------//
+
+  if (l_ny == 1)
+  {
+    l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
+                                                             l_solver,
+                                                             l_boundaryL,
+                                                             l_boundaryR);
+  }
+  else
+  {
+    l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
+                                                             l_ny,
+                                                             l_boundaryL,
+                                                             l_boundaryR,
+                                                             l_boundaryT,
+                                                             l_boundaryB);
+  }
   // maximum observed height in the setup
   tsunami_lab::t_real l_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   std::cout << "Setting up solver..." << std::endl;
@@ -556,7 +604,9 @@ int main(int i_argc,
       std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
     }
   }
-
+  //------------------------------------------//
+  //-------------Derive time step-------------//
+  //------------------------------------------//
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * l_hMax);
 
@@ -576,6 +626,8 @@ int main(int i_argc,
   // derive scaling for a time step
   tsunami_lab::t_real l_scalingX = l_dt / l_dx;
   tsunami_lab::t_real l_scalingY = l_dt / l_dy;
+
+  // options for checkpointing
 #ifndef BENCHMARK
   std::cout << "Writing every " << l_writingFrequency << " time steps" << std::endl;
   if (l_checkpointFrequency > 0)
@@ -594,11 +646,17 @@ int main(int i_argc,
   auto l_lastWrite = std::chrono::system_clock::now();
 #endif
   std::cout << "entering time loop" << std::endl;
+  // start measuring calculation time
   auto l_timeCalculationStart = std::chrono::system_clock::now();
 
-  // START LOOP
+  //------------------------------------------//
+  //----------------START LOOP----------------//
+  //------------------------------------------//
   while (l_simTime < l_endTime)
   {
+    //------------------------------------------//
+    //---------------Write output---------------//
+    //------------------------------------------//
 #ifndef BENCHMARK
     if (l_timeStep % l_writingFrequency == 0)
     {
@@ -640,10 +698,6 @@ int main(int i_argc,
       }
       }
     }
-#endif
-    l_waveProp->setGhostOutflow();
-    l_waveProp->timeStep(l_scalingX, l_scalingY);
-#ifndef BENCHMARK
     // write stations
     if (l_simTime >= l_stationFrequency * l_captureCount)
     {
@@ -669,16 +723,18 @@ int main(int i_argc,
       l_lastWrite = std::chrono::system_clock::now();
     }
 #endif
+    //------------------------------------------//
+    //------------Update loop params------------//
+    //------------------------------------------//
+    l_waveProp->setGhostOutflow();
+    l_waveProp->timeStep(l_scalingX, l_scalingY);
     l_timeStep++;
     l_simTime += l_dt;
   }
-// END LOOP
-#ifndef BENCHMARK
-  for (tsunami_lab::io::Station *l_s : l_stations)
-  {
-    l_s->write();
-  }
-#endif
+  //------------------------------------------//
+  //-----------------END LOOP-----------------//
+  //------------------------------------------//
+  // stop measuring calculation time
   auto l_timeCalculationEnd = std::chrono::system_clock::now();
   std::cout << "finished time loop" << std::endl;
 
@@ -691,6 +747,13 @@ int main(int i_argc,
   std::cout << "= " << l_timeCalculationS.count() << " seconds" << std::endl;
   std::cout << "= " << l_timeCalculationM.count() << " minutes" << std::endl;
   std::cout << std::endl;
+
+#ifndef BENCHMARK
+  for (tsunami_lab::io::Station *l_s : l_stations)
+  {
+    l_s->write();
+  }
+#endif
 
   // free memory
   std::cout << "freeing memory" << std::endl;

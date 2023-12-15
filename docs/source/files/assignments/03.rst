@@ -3,7 +3,7 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 3.1 - Non-zero Source Term
+3.1 - Non-zero Source Term
 ==================================
 
 For introducing the bathymetry into our f-wave-solver we have got the following setting
@@ -20,7 +20,7 @@ For introducing the bathymetry into our f-wave-solver we have got the following 
 .. Note::
   :math:`\Delta x \Psi_{i-1/2}` summarizes the effect of the bathymetry:
 
-Task 3.1.1
+3.1.1
 ----------------
 
 **File: Fwave.cpp**
@@ -147,7 +147,7 @@ If there has to be one, the bathymetry is set to 0,
 3.2. Reflecting Boundary Conditions
 ======================================
 
-Task 3.2.1 
+3.2.1 
 --------------------------
 
 Following setup has to be implemented 
@@ -178,7 +178,7 @@ Following setup has to be implemented
     o_huL = -i_hu[i_ceR];
   }
 
-Task 3.2.2
+3.2.2
 --------------------------
 
 The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
@@ -204,7 +204,7 @@ It can be seen that this is indeed the one-sided version of the Shock-Shock prob
 3.3. Hydraulic Jumps
 ============================
 
-Task 3.3.1
+3.3.1
 --------------
 The following equation is given for the Froude number
 
@@ -267,7 +267,7 @@ The maximum value and its positions gets updated everytime a value is larger tha
 
 As a result, we get the value of 0.584458 for the subcritical and 1.2263 for the supercritical flow. Both at position 10.
 
-Task 3.3.2
+3.3.2
 ------------
 
 For the implementation of the setups we used the statements from above.
@@ -402,12 +402,12 @@ Subcritical
 3.4. 1D Tsunami Simulation
 ================================
 
-Task 3.4.1
+3.4.1
 --------------------------
 We have used the `GEBCO grid <https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`__ from 2021 to collect the bathymetry data.
 With `the Generic Mapping Tool <https://www.generic-mapping-tools.org>`__ we cut data and transformed it into a `csv` file. 
 
-Task 3.4.2
+3.4.2
 --------------------------
 For this task we used the function *splitline()* that we implemented last week.
 
@@ -430,7 +430,7 @@ This function takes one line as a stringstream of the `csv` file as one input
 and the character which separates the different values as another.
 There is a pointer to the vector of strings, which represents the, by the separator character, separated values of the `csv` file.
 
-Task 3.4.3
+3.4.3
 --------------------------
 
 Following setup is given 
@@ -580,7 +580,7 @@ For the bathymetry we first check if there is a legal access for the vector. Aft
 Similar to ``getBathymetry()`` we check for the access and also whether :math:`b_{in}` < 0 or not.
 Depending on that, we return the maximum of either :math:`-b_{in}` and :math:`\delta` or 0.
 
-Task 3.4.4
+3.4.4
 --------------------------
 
 *Visualisation*

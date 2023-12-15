@@ -3,10 +3,10 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 7.1 - Checkpointing
+7.1 - Checkpointing
 =====================================
 
-Task 7.1.1 - Writing checkpoints
+7.1.1 - Writing checkpoints
 -------------------------------------------
 
 We extended the ``NetCdf.cpp`` file by a ``writeCheckpoint()`` function:
@@ -81,7 +81,7 @@ the momenta and bathymetry data. If the input is a nullptr, we write 0 into the 
 At the end of the function, we not only flush the checkpoint data to the file, but also 
 all standard netcdf output data.
 
-Task 7.1.2 - CheckPoint setup
+7.1.2 - CheckPoint setup
 -------------------------------------------
 
 We decided against using a setup, as the code was short enough to be implemented directly into the main class.
@@ -190,7 +190,7 @@ The read function was implemented last week and we just added a simpler version 
 require a x- and y-data array (those were needed last week to read the data along the axes along with the actual data).
 Both functions are accessible by overloading the constructor.
 
-Task 7.1.3 & 7.1.4 - Checkpoint testing and automatic loading
+7.1.3 & 7.1.4 - Checkpoint testing and automatic loading
 --------------------------------------------------------------
 
 An example log may look like:
@@ -255,7 +255,7 @@ If the provided number is less, checkpointing will be disabled.
 We also decided on using a single checkpoint file and just overriding it every time. 
 Furthermore, simply out of convenience, the checkpoint file is deleted after the program ends successfully.
 
-Task 7.2 - Coarse Output
+7.2 - Coarse Output
 =====================================
 
 7.2.1 - Implementation
