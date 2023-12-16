@@ -627,9 +627,24 @@ to
 
 .. code:: cpp
 
-  t_real l_rInv[2][2] = {{l_detInv * eigenvalueRoe_2, -l_detInv}, {-l_detInv * eigenvalueRoe_1, l_detInv}};
+  t_real l_rInv[4] = {l_detInv * eigenvalueRoe_2, -l_detInv, -l_detInv * eigenvalueRoe_1, l_detInv};
 
-in order to skip the unnecessary step of initializing the array to 0.
+in order to skip the unnecessary step of initializing the array to 0. Furthermore, we now use a one dimensional array for better performance.
+
+Equally we did this for
+
+.. code:: cpp 
+
+  t_real l_fDelta[2] = {0};
+  l_fDelta[0] = i_huR - i_huL;
+  l_fDelta[1] = (i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL);
+
+to 
+
+.. code:: cpp
+
+    t_real l_fDelta[2] = {{i_huR - i_huL}, {(i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL)}};
+
 
 Coarse Output optimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

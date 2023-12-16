@@ -34,9 +34,9 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   m_b = new t_real[l_totalCells];
 
   // init to zero
-  for (unsigned short l_st = 0; l_st < 2; l_st++)
+  for (unsigned short l_st =  2; l_st--; )
   {
-    for (t_idx l_ce = 0; l_ce < l_totalCells; l_ce++)
+    for (t_idx l_ce = l_totalCells; l_ce--; )
     {
       m_h[l_st][l_ce] = 0;
       m_huX[l_st][l_ce] = 0;
@@ -48,7 +48,7 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
 
 tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
 {
-  for (unsigned short l_st = 0; l_st < 2; l_st++)
+  for (unsigned short l_st =  2; l_st--;)
   {
     delete[] m_h[l_st];
     delete[] m_huX[l_st];
@@ -222,7 +222,7 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
   t_real *l_huY = m_huY[m_step];
   t_real *l_b = m_b;
 
-  for (t_idx i = 1; i < m_nCellsY; i++)
+  for (t_idx i =  m_nCellsY; i--; )
   {
     t_idx ceL = getStride() * i;
     t_idx ceR = ceL + m_nCellsX + 1;
@@ -237,7 +237,7 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     l_huY[ceR] = l_huY[ceR - 1];
     l_b[ceR] = l_b[ceR - 1];
   }
-  for (t_idx i = 0; i < m_nCellsX + 2; i++)
+  for (t_idx i =  m_nCellsX + 2; i--; )
   {
     t_idx ceB = i;
     t_idx ceT = i + (m_nCellsY + 1) * getStride();

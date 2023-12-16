@@ -44,12 +44,10 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients(t_real i_hL,
 {
   // compute inverse of right eigenvector-matrix
   t_real l_detInv = 1 / (eigenvalueRoe_2 - eigenvalueRoe_1);
-  t_real l_rInv[2][2] = {{l_detInv * eigenvalueRoe_2, -l_detInv}, {-l_detInv * eigenvalueRoe_1, l_detInv}};
+  t_real l_rInv[4] = {l_detInv * eigenvalueRoe_2, -l_detInv, -l_detInv * eigenvalueRoe_1, l_detInv};
 
   // compute f delta
-  t_real l_fDelta[2] = {0};
-  l_fDelta[0] = i_huR - i_huL;
-  l_fDelta[1] = (i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL);
+  t_real l_fDelta[2] = {i_huR - i_huL, (i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL)};
 
   // computing delta x psi
   t_real l_xPsi;
@@ -57,8 +55,8 @@ void tsunami_lab::solvers::Fwave::computeEigencoefficients(t_real i_hL,
   l_fDelta[1] -= l_xPsi;
 
   // compute alpha
-  alpha_1 = l_rInv[0][0] * l_fDelta[0] + l_rInv[0][1] * l_fDelta[1];
-  alpha_2 = l_rInv[1][0] * l_fDelta[0] + l_rInv[1][1] * l_fDelta[1];
+  alpha_1 = l_rInv[0] * l_fDelta[0] + l_rInv[1] * l_fDelta[1];
+  alpha_2 = l_rInv[2] * l_fDelta[0] + l_rInv[3] * l_fDelta[1];
 }
 
 void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
@@ -75,8 +73,8 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
   t_real l_uR = i_hR != 0 ? (i_huR / i_hR) : 0;
 
   // compute eigenvalues
-  t_real eigenvalueRoe_1 = 0;
-  t_real eigenvalueRoe_2 = 0;
+  t_real eigenvalueRoe_1;
+  t_real eigenvalueRoe_2;
 
   computeEigenvalues(i_hL,
                      i_hR,
@@ -86,8 +84,8 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
                      eigenvalueRoe_2);
 
   // compute eigencoefficients
-  t_real eigencoefficientRoe_1 = 0;
-  t_real eigencoefficientRoe_2 = 0;
+  t_real eigencoefficientRoe_1;
+  t_real eigencoefficientRoe_2;
 
   computeEigencoefficients(i_hL,
                            i_hR,
@@ -101,16 +99,11 @@ void tsunami_lab::solvers::Fwave::netUpdates(t_real i_hL,
                            eigencoefficientRoe_2);
 
   // compute waves Z_p
-  t_real z1[2] = {0};
-  z1[0] = eigencoefficientRoe_1;
-  z1[1] = eigencoefficientRoe_1 * eigenvalueRoe_1;
+  t_real z1[2] = {eigencoefficientRoe_1, eigencoefficientRoe_1 * eigenvalueRoe_1};
 
-  t_real z2[2] = {0};
-  z2[0] = eigencoefficientRoe_2;
-  z2[1] = eigencoefficientRoe_2 * eigenvalueRoe_2;
-
+  t_real z2[2] = {eigencoefficientRoe_2, eigencoefficientRoe_2 * eigenvalueRoe_2};
   // set net-updates depending on wave speeds
-  for (unsigned short l_qt = 0; l_qt < 2; l_qt++)
+  for (unsigned short l_qt = 2; l_qt--; )
   {
     // init
     o_netUpdateL[l_qt] = 0;
