@@ -437,34 +437,6 @@ int main(int i_argc,
   l_dx = l_simulationSizeX / l_nx;
   l_dy = l_simulationSizeY / l_ny;
 
-//-------------------------------------------//
-//---------------Load stations---------------//
-//-------------------------------------------//
-#ifndef BENCHMARK
-  // set up stations
-  if (l_configData.contains("stations"))
-  {
-    std::cout << "Setting up stations..." << std::endl;
-    std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
-    for (json &elem : l_configData["stations"])
-    {
-      // location in meters
-      tsunami_lab::t_real l_x = elem.at("locX");
-      tsunami_lab::t_real l_y = elem.at("locY");
-
-      // location cell
-      tsunami_lab::t_idx l_cx = (l_x - l_offsetX) / l_dx;
-      tsunami_lab::t_idx l_cy = (l_y - l_offsetY) / l_dy;
-
-      l_stations.push_back(new tsunami_lab::io::Station(l_cx,
-                                                        l_cy,
-                                                        elem.at("name"),
-                                                        l_waveProp));
-      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
-    }
-  }
-#endif
-
   //------------------------------------------//
   //-------------Construct solver-------------//
   //------------------------------------------//
@@ -604,6 +576,33 @@ int main(int i_argc,
       std::cerr << "Error: Don't know how to read file " << l_bathymetryFilePath << std::endl;
     }
   }
+  //-------------------------------------------//
+//---------------Load stations---------------//
+//-------------------------------------------//
+#ifndef BENCHMARK
+  // set up stations
+  if (l_configData.contains("stations"))
+  {
+    std::cout << "Setting up stations..." << std::endl;
+    std::cout << "Frequency for all stations is " << l_stationFrequency << std::endl;
+    for (json &elem : l_configData["stations"])
+    {
+      // location in meters
+      tsunami_lab::t_real l_x = elem.at("locX");
+      tsunami_lab::t_real l_y = elem.at("locY");
+
+      // location cell
+      tsunami_lab::t_idx l_cx = (l_x - l_offsetX) / l_dx;
+      tsunami_lab::t_idx l_cy = (l_y - l_offsetY) / l_dy;
+
+      l_stations.push_back(new tsunami_lab::io::Station(l_cx,
+                                                        l_cy,
+                                                        elem.at("name"),
+                                                        l_waveProp));
+      std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
+    }
+  }
+#endif
   //------------------------------------------//
   //-------------Derive time step-------------//
   //------------------------------------------//
