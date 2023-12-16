@@ -3,10 +3,10 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 2.0
+2.0
 ===============
 
-Task 2.0.1 - F-Wave solver integration
+2.0.1 - F-Wave solver integration
 -----------------------------------------
 
 To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:
@@ -47,7 +47,7 @@ In the ``WavePropagation1d.cpp`` file, we make use of simple if-conditions to ut
     if(m_solver=="roe") { ... }
     else if(m_solver=="fwave") { ... }
 
-Task 2.0.2 - Sanity check using middle_states.csv
+2.0.2 - Sanity check using middle_states.csv
 ----------------------------------------------------
 
 Code documentation
@@ -188,7 +188,7 @@ from inside the ``tsunami_lab`` folder.
     Since the path of the ``middle_states.csv`` file is hard coded, it is imperative
     to execute the ``sanitychecks`` executable from the root directoy of the project.
 
-Task 2.0.3 - Continuous Integration
+2.0.3 - Continuous Integration
 -------------------------------------
 
 The project code is automatically tested using GitHub actions on push and pull-requests, as well as
@@ -200,7 +200,7 @@ every night at 12am. This applies only to the `main` branch.
 The compiled data is pushed into the `gh-pages` branch and from there hosted using GitHub pages.
 View the ``.github/workflows/docs.yml`` file for further information.
 
-Task 2.1 Shock and Rarefaction Waves
+2.1 Shock and Rarefaction Waves
 =======================================
 
 Since :math:`h_l = h_r`, both setups only require one shared height input `i_h` for both sides. 
@@ -209,7 +209,7 @@ as we can derive the other momentum easily. For further information see :ref:`ns
 
 Since for both problems the `getMomentumY()` function returns 0 in all cases, we won't address it any further.
 
-Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
+2.1.1 - Implementation of Shock-Shock and Rare-Rare problems
 -------------------------------------------------------------------
 Initial conditions are the following: 
 
@@ -278,7 +278,7 @@ Only this time :math:`(hu)_r` equals :math:`-(hu)_l`, when :math:`x_i \le x_\tex
         return i_x <= m_xdis ? -m_momentumLeft : m_momentumLeft;
     }
 
-Task 2.1.2 - Observations
+2.1.2 - Observations
 --------------------------
 
 Discontinuity location in this scenerio is 5
@@ -378,10 +378,10 @@ As shown in the table, the wave speeds are swapped around for the Shock-Shock an
 A conclusion of the shown equation is, that the wave speed is impacted by the velocity. The size of u determines, what amount the wave speed on one side increases and on the other decreases.
 The sum of the wave speed stays the same.
 
-Task 2.2 - Dam-Break
+2.2 - Dam-Break
 ======================
 
-Task 2.2.1 
+2.2.1 
 --------------------------
 
 Visualizations
@@ -475,10 +475,10 @@ Since :math:`hu_r = h_r * u_r`, we get that :math:`u_r = 2`.
 We conclude that a negative :math:`u_r` increases :math:`h^*` while a positive :math:`u_r` decreases it.
 The larger the absolute value of :math:`u_r`, the stronger the corresponding impact.
 
-Task 2.2.2
+2.2.2
 --------------------------
 
-We have given 
+We were given
 
 .. math:: 
     \begin{split}q=\begin{bmatrix}

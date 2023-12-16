@@ -7,7 +7,7 @@ All project authors contributed to this assignment in equal parts.
     The projects :ref:`usage` has undergone major changes during this assignment. 
     We strongly advice to visit that page (again).
 
-Task 4.1 - Dimensional Splitting
+4.1 - Dimensional Splitting
 ==================================
 
 4.1.1 - 2D support

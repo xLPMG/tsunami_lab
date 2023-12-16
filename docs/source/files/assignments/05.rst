@@ -3,10 +3,10 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 5.1 - NetCdf Output
+5.1 - NetCdf Output
 =========================
 
-Task 5.1.1 - Installing and linking NetCdf
+5.1.1 - Installing and linking NetCdf
 -------------------------------------------
 
 Since both authors use MacOS, we simply installed ``NetCdf`` using Homebrew:
@@ -48,7 +48,7 @@ We chose this implementation as it automatically works on most systems (at least
 as long as the netcdf library was correctly installed.
 See :ref:`setup` for download links.
 
-Task 5.1.2 - Writing netCDF files
+5.1.2 - Writing netCDF files
 ------------------------------------
 
 As instructed, we created a ``NetCdf`` class within the ``tsunami_lab::io`` namespace.
@@ -191,10 +191,10 @@ All that is left to do is to actually write the values like so:
 ``nc_put_vara_float`` takes the nc and variable id, the start and count values and the data pointer as input.
 
 
-Task 5.2 - NetCdf Input
+5.2 - NetCdf Input
 ==============================
 
-Task 5.2.1 - ArtificialTsunami2d
+5.2.1 - ArtificialTsunami2d
 -----------------------------------------
 
 Following equations were given:
@@ -250,7 +250,7 @@ Afterwards it calls both the computeF and computeG function:
 For the bathymetry we return ``-100 + computeD(i_x, i_y)``.
 
     
-Task 5.2.2 - NetCDF read
+5.2.2 - NetCDF read
 -----------------------------------------
 
 The read function first checks for x and y dimensions and gets the respective IDs:
@@ -291,7 +291,7 @@ Lastly, we need to add stride into the array:
         }
     }
 
-Task 5.2.3 -TsunamiEvent2d
+5.2.3 -TsunamiEvent2d
 -----------------------------------------
 Following setup is given:
 
@@ -434,7 +434,7 @@ For the following functions we implemented the equations from above:
     }
 
 
-Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
+5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d
 --------------------------------------------------------------------
 
 **Visualization**
