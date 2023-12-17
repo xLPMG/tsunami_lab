@@ -64,7 +64,8 @@ for l_sa in l_sanitychecks:
   env.sanitychecks.append( env.Object( l_sa ) )
 
 # gather gui sources
-l_gui = [ 'ui/GUI.cpp' ]
+l_gui = [ 'ui/GUI.cpp',
+          'ui/SystemMonitor.cpp' ]
 
 for l_g in l_gui:
   env.gui.append( env.Object( l_g ) )

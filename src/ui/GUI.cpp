@@ -2,6 +2,10 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
+
+// GUI components
+#include "SystemMonitor.h"
+
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -175,6 +179,9 @@ int main(int, char **)
             }
             ImGui::TextUnformatted(logText.c_str());
         }
+
+        // System Monitor
+        tsunami_lab::ui::SystemMonitor::show();
 
         // Rendering
         ImGui::Render();

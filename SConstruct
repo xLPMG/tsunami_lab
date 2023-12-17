@@ -14,7 +14,7 @@ print( '###                              ###' )
 print( '### https://scalable.uni-jena.de ###' )
 print( '####################################' )
 print()
-print('runnning build script')
+print('running build script')
 
 # get OS
 OS = platform.system()
@@ -93,7 +93,7 @@ if 'debug' in env['mode']:
   env.Append( CXXFLAGS = [ '-g',
                            '-O0' ] )
 else:
-  env.Append( CXXFLAGS = [ '-O3' ] )
+  env.Append( CXXFLAGS = [ '-O2' ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
