@@ -66,8 +66,13 @@ Since we only want to use one node, we set ``nodes`` and ``ntasks`` to 1 and ``c
       <source src="../../_static/assets/task_8-1-2_chile_5000.mp4" type="video/mp4">
     </video> 
 
-TODO add Chile_1000
+**Chile 1000**
 
+.. raw:: html
+
+    <video width="100%" height="auto" controls>
+      <source src="../../_static/assets/task_8-1-2_chile_1000.mp4" type="video/mp4">
+    </video> 
 
 
 Comparing to the simulations from assignment 6, it is clear that all simulations behave equally.
