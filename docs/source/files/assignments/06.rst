@@ -3,10 +3,10 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 6.1 - 2010 M 8.8 Chile Event
+6.1 - 2010 M 8.8 Chile Event
 =====================================
 
-Task 6.1.1 - Visualization of input
+6.1.1 - Visualization of input
 -------------------------------------------
 
 
@@ -18,8 +18,7 @@ scaling interval[-2,2].
 
 scaling interval[-10000,10000].
 
-   
-Task 6.1.2 - Simulations
+6.1.2 - Simulations
 -------------------------------------------
 
 `Chile 1000` 
@@ -43,10 +42,10 @@ grid size: 1000
 grid size: 5000
 
 
-Task 6.2 - 2011 M 9.1 Tohoku Event
+6.2 - 2011 M 9.1 Tohoku Event
 =====================================
 
-Task 6.2.1 - Visualization of input
+6.2.1 - Visualization of input
 -------------------------------------------
 
 ..  image:: ../../_static/assets/task_6-2-1_tohoku_dis.png
@@ -84,8 +83,8 @@ Computational demand: per timestep we update 4050000 cells.
 grid size: 5000
 
 
-Task 6.2.2 - Soma
--------------------------------------------
+6.2.2 - Soma
+--------------
 
 We have put the station at x=120000 and y=50000.
 

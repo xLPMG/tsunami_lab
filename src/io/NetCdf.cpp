@@ -8,7 +8,9 @@
 #include "NetCdf.h"
 #include <iostream>
 #include <netcdf.h>
+#ifndef BENCHMARK
 #include <filesystem>
+#endif
 
 void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
 {
@@ -60,13 +62,14 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
         int l_i = 0;
         t_real *l_y = new t_real[m_nky]{0};
         t_real *l_x = new t_real[m_nkx]{0};
+        t_real l_averagingFactor = 1 / m_k;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_iy = 0; l_iy < m_k; l_iy++)
             {
                 l_y[l_i] += (l_gy + l_iy) * (m_simulationSizeY / m_ny) + m_offsetY;
             }
-            l_y[l_i] /= m_k;
+            l_y[l_i] *= l_averagingFactor;
             l_i++;
         }
         l_i = 0;
@@ -76,7 +79,7 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
             {
                 l_x[l_i] += (l_gx + l_ix) * (m_simulationSizeX / m_nx) + m_offsetX;
             }
-            l_x[l_i] /= m_k;
+            l_x[l_i] *= l_averagingFactor;
             l_i++;
         }
         // define dimensions
@@ -222,9 +225,10 @@ void tsunami_lab::io::NetCdf::setUpFile(const char *i_file)
 
 void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
 {
+#ifndef BENCHMARK
     if (std::filesystem::exists(i_checkpointFile))
         std::filesystem::remove(i_checkpointFile);
-
+#endif
     m_err = nc_create(i_checkpointFile,             // path
                       NC_CLOBBER | NC_64BIT_OFFSET, // cmode
                       &m_ncCheckId);                // ncidp
@@ -248,6 +252,22 @@ void tsunami_lab::io::NetCdf::setUpCheckpointFile(const char *i_checkpointFile)
     // define variables
     m_dimCheckIds[0] = m_dimCheckYId;
     m_dimCheckIds[1] = m_dimCheckXId;
+
+    m_err = nc_def_var(m_ncCheckId,     // ncid
+                       "x",             // name
+                       NC_FLOAT,        // xtype
+                       1,               // ndims
+                       &m_dimCheckXId,  // dimidsp
+                       &m_varCheckXId); // varidp
+    checkNcErr(m_err);
+
+    m_err = nc_def_var(m_ncCheckId,     // ncid
+                       "y",             // name
+                       NC_FLOAT,        // xtype
+                       1,               // ndims
+                       &m_dimCheckYId,  // dimidsp
+                       &m_varCheckYId); // varidp
+    checkNcErr(m_err);
 
     m_err = nc_def_var(m_ncCheckId,     // ncid
                        "height",        // name
@@ -394,8 +414,9 @@ tsunami_lab::io::NetCdf::NetCdf(t_idx i_nx,
     m_offsetY = i_offsetY;
     m_netcdfOutputFile = i_netcdfOutputFile;
     m_checkpointFile = i_checkpointFile;
-
+#ifndef BENCHMARK
     m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
+#endif
 }
 
 tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
@@ -421,7 +442,9 @@ tsunami_lab::io::NetCdf::NetCdf(const char *i_netcdfOutputFile,
 
     m_nkx = m_nx / m_k;
     m_nky = m_ny / m_k;
+#ifndef BENCHMARK
     m_doesSolutionExist = std::filesystem::exists(i_netcdfOutputFile);
+#endif
 }
 
 tsunami_lab::io::NetCdf::~NetCdf()
@@ -443,6 +466,9 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
 
     t_real *l_data = new t_real[m_nkx * m_nky];
     int l_i = 0;
+
+    t_real l_averagingFactor = 1/ m_k * m_k;
+
 
     // set up file and write bathymetry on first call
     if (!m_outputFileOpened)
@@ -466,7 +492,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                             l_b[l_i] += i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
                         }
                     }
-                    l_b[l_i] /= m_k * m_k;
+                    l_b[l_i] *= l_averagingFactor;
                     l_i++;
                 }
             }
@@ -498,7 +524,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] /= m_k * m_k;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -525,7 +551,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_h[l_gx + l_x + (l_y + l_gy) * i_stride] + i_b[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] /= m_k * m_k;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -552,7 +578,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_hu[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] /= m_k * m_k;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }
@@ -580,7 +606,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
                         l_data[l_i] += i_hv[l_gx + l_x + (l_y + l_gy) * i_stride];
                     }
                 }
-                l_data[l_i] /= m_k * m_k;
+                l_data[l_i] *= l_averagingFactor;
                 l_i++;
             }
         }

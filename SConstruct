@@ -1,10 +1,12 @@
 ##
-# @author Luca-Philipp Grumbach & Richard Hofmann
+# @author Luca-Philipp Grumbach
+# @author Richard Hofmann
 #
-# @section DESCRIPTION
+# # Description
 # Entry-point for builds.
 ##
 import SCons
+import os
 
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
@@ -12,7 +14,7 @@ print( '###                              ###' )
 print( '### https://scalable.uni-jena.de ###' )
 print( '####################################' )
 print()
-print('runnning build script')
+print('running build script')
 
 # configuration
 vars = Variables()
@@ -21,7 +23,28 @@ vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 'debug+san', 'release+osx','osx+san')
+                allowed_values=('release', 'debug', 'osx', 'release+san', 
+                                'debug+san', 'release+osx','osx+san', 'benchmark', 'benchmark+osx')
+              ),
+  EnumVariable( 'opt',
+                'optimization flag',
+                '-O2',
+                allowed_values=('-O0', 
+                                '-O1', 
+                                '-O2', 
+                                '-O3', 
+                                '-Ofast')
+              ),
+  EnumVariable( 'report',
+                'flag for enabling reports',
+                'none',
+                allowed_values=('none', 
+                                '-qopt-report', 
+                                '-qopt-report=1', 
+                                '-qopt-report=2',
+                                '-qopt-report=3',
+                                '-qopt-report=4',
+                                '-qopt-report=5')
               )
 )
 
@@ -39,20 +62,31 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         Exit(1)
 env = conf.Finish()
 
+# set local env
+env['ENV'] = os.environ
+
+# choose compiler
+if 'CXX' in os.environ:
+  env['CXX'] = os.environ['CXX']
+
+print("Using ", env['CXX'], " compiler.")
+
 # generate help message
 Help( vars.GenerateHelpText( env ) )
 
 # add default flags
 if 'osx' in env['mode']:
   env.Append( CXXFLAGS = [ '-std=c++17',
-                         '-Wall',
-                         '-Wextra' ] )
+                           '-Wall',
+                           '-Wextra',
+                           '-g' ] )
 else:
   env.Append( CXXFLAGS = [ '-std=c++17',
-                        '-Wall',
-                        '-Wextra',
-                        '-Werror',
-                        '-Wpedantic' ] )
+                           '-Wall',
+                           '-Wextra',
+                           '-Werror',
+                           '-Wpedantic',
+                           '-g' ] )
 
 
 # set optimization mode
@@ -60,7 +94,11 @@ if 'debug' in env['mode']:
   env.Append( CXXFLAGS = [ '-g',
                            '-O0' ] )
 else:
-  env.Append( CXXFLAGS = [ '-O3' ] )
+  env.Append( CXXFLAGS = [ env['opt'] ] )
+
+# enable reports
+if 'report' in env['report']:
+   env.Append( CXXFLAGS = [ env['report'] ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
@@ -73,6 +111,10 @@ if 'san' in  env['mode']:
   env.Append( LINKFLAGS = [ '-g',
                             '-fsanitize=address',
                             '-fsanitize=undefined' ] )
+
+# enable benchmarking mode
+if 'benchmark' in env['mode']:
+  env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
 
 # add Catch2
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
