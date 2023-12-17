@@ -47,26 +47,28 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
         Exit(1)
 
 if OS == "Linux":
-  if not conf.CheckLib('glfw3'):
-    print ('Did not find the glfw3 library, exiting!')
+  if not conf.CheckLib('glfw'):
+    print ('Did not find the glfw library!')
+  elif not conf.CheckLib('GL'):
+    print ('Did not find the GL library!')
   else: 
     buildGUI = True
 
 elif OS == "Darwin":  
   if not conf.CheckLib('glfw'):
-    print ('Did not find the glfw library, exiting!')
+    print ('Did not find the glfw library!')
   else: 
     buildGUI = True
 
 elif OS == "Windows":
   if not conf.CheckLib('glfw3'):
-    print ('Did not find the glfw3 library, exiting!')
-  if not conf.CheckLib('gdi32'):
-    print ('Did not find the gdi32 library, exiting!')
-  if not conf.CheckLib('opengl32'):
-    print ('Did not find the opengl32 library, exiting!')
-  if not conf.CheckLib('imm32'):
-    print ('Did not find the imm32 library, exiting!')
+    print ('Did not find the glfw3 library!')
+  elif not conf.CheckLib('gdi32'):
+    print ('Did not find the gdi32 library!')
+  elif not conf.CheckLib('opengl32'):
+    print ('Did not find the opengl32 library!')
+  elif not conf.CheckLib('imm32'):
+    print ('Did not find the imm32 library!')
   else: 
     buildGUI = True
 
@@ -117,7 +119,7 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/' ] )
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/backends/' ] )
 
-# add macos frameworks for opengl
+# add other OS specific flags
 if buildGUI and OS == "Darwin": 
   env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
 

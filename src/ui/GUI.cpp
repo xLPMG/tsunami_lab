@@ -32,11 +32,11 @@ static void glfw_error_callback(int error, const char *description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-void exec(std::string i_cmd, std::string i_outputFile)
+int exec(std::string i_cmd, std::string i_outputFile)
 {
     std::string commandString = (i_cmd + " > " + i_outputFile + " 2>&1 &").data();
     const char *commandChars = commandString.data();
-    system(commandChars);
+    return system(commandChars);
 }
 
 void setupFolders()
