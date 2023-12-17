@@ -1,0 +1,10 @@
+{
+    "solver": "fwave",
+    "setup":"CHILE",
+    "outputFileName":"chile_5000_solution",
+    "nx":700,
+    "ny":590,
+    "endTime":15000,
+    "writingFrequency":500,
+    "checkpointFrequency": 10
+}

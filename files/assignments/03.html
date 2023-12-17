@@ -59,26 +59,26 @@
 <li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">3. Bathymetry &amp; Boundary Conditions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#task-3-1-non-zero-source-term">Task 3.1 - Non-zero Source Term</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-1-1">Task 3.1.1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">3.1.2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-zero-source-term">3.1 - Non-zero Source Term</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">3.1.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">3.1.2</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#reflecting-boundary-conditions">3.2. Reflecting Boundary Conditions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-2-1">Task 3.2.1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-2-2">Task 3.2.2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">3.2.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">3.2.2</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#hydraulic-jumps">3.3. Hydraulic Jumps</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-3-1">Task 3.3.1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-3-2">Task 3.3.2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">3.3.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">3.3.2</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#d-tsunami-simulation">3.4. 1D Tsunami Simulation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-4-1">Task 3.4.1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-4-2">Task 3.4.2</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-4-3">Task 3.4.3</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-3-4-4">Task 3.4.4</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">3.4.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">3.4.2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">3.4.3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">3.4.4</a></li>
 </ul>
 </li>
 </ul>
@@ -87,6 +87,7 @@
 <li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -120,8 +121,8 @@
   <section id="bathymetry-boundary-conditions">
 <h1>3. Bathymetry &amp; Boundary Conditions<a class="headerlink" href="#bathymetry-boundary-conditions" title="Link to this heading"></a></h1>
 <p>All project authors contributed to this assignment in equal parts.</p>
-<section id="task-3-1-non-zero-source-term">
-<h2>Task 3.1 - Non-zero Source Term<a class="headerlink" href="#task-3-1-non-zero-source-term" title="Link to this heading"></a></h2>
+<section id="non-zero-source-term">
+<h2>3.1 - Non-zero Source Term<a class="headerlink" href="#non-zero-source-term" title="Link to this heading"></a></h2>
 <p>For introducing the bathymetry into our f-wave-solver we have got the following setting</p>
 <div class="math notranslate nohighlight">
 \[\Delta f - \Delta x \Psi_{i-1/2} =  \sum_{p=1}^2 Z_p.\]</div>
@@ -134,8 +135,8 @@
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(\Delta x \Psi_{i-1/2}\)</span> summarizes the effect of the bathymetry:</p>
 </div>
-<section id="task-3-1-1">
-<h3>Task 3.1.1<a class="headerlink" href="#task-3-1-1" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>3.1.1<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <p><strong>File: Fwave.cpp</strong></p>
 <p>Inside the computeEigencoefficients function we compute <span class="math notranslate nohighlight">\(\Delta x \Psi_{i-1/2}\)</span></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_xPsi</span><span class="p">;</span>
@@ -147,8 +148,8 @@
 </pre></div>
 </div>
 </section>
-<section id="id1">
-<h3>3.1.2<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>3.1.2<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <p>We decide to hard code a simple example:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setBathymetry</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">45</span><span class="p">);</span>
 <span class="n">l_waveProp</span><span class="o">-&gt;</span><span class="n">setBathymetry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">45</span><span class="p">);</span>
@@ -238,8 +239,8 @@ If there has to be one, the bathymetry is set to 0,</p>
 </section>
 <section id="reflecting-boundary-conditions">
 <h2>3.2. Reflecting Boundary Conditions<a class="headerlink" href="#reflecting-boundary-conditions" title="Link to this heading"></a></h2>
-<section id="task-3-2-1">
-<h3>Task 3.2.1<a class="headerlink" href="#task-3-2-1" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>3.2.1<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>Following setup has to be implemented</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}h_{i} &amp;:= h_{i-1} \\
@@ -265,8 +266,8 @@ b_{i} &amp;:= b_{i-1}\end{split}\end{split}\]</div>
 </pre></div>
 </div>
 </section>
-<section id="task-3-2-2">
-<h3>Task 3.2.2<a class="headerlink" href="#task-3-2-2" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>3.2.2<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <p>The following simulation has a reflecting boundary on the right side, and an outflow boundary condition on the left side.
 We have set <span class="math notranslate nohighlight">\(q_l\)</span> initially to <span class="math notranslate nohighlight">\(\begin{bmatrix} 10 \\ 10 \end{bmatrix}\)</span>.</p>
 <video width="100%" height="auto" controls>
@@ -278,8 +279,8 @@ We have set <span class="math notranslate nohighlight">\(q_l\)</span> initially 
 </section>
 <section id="hydraulic-jumps">
 <h2>3.3. Hydraulic Jumps<a class="headerlink" href="#hydraulic-jumps" title="Link to this heading"></a></h2>
-<section id="task-3-3-1">
-<h3>Task 3.3.1<a class="headerlink" href="#task-3-3-1" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>3.3.1<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <p>The following equation is given for the Froude number</p>
 <div class="math notranslate nohighlight">
 \[F := \frac{u}{\sqrt{gh}}.\]</div>
@@ -329,8 +330,8 @@ We have set <span class="math notranslate nohighlight">\(q_l\)</span> initially 
 The maximum value and its positions gets updated everytime a value is larger than the current one.</p>
 <p>As a result, we get the value of 0.584458 for the subcritical and 1.2263 for the supercritical flow. Both at position 10.</p>
 </section>
-<section id="task-3-3-2">
-<h3>Task 3.3.2<a class="headerlink" href="#task-3-3-2" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>3.3.2<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <p>For the implementation of the setups we used the statements from above.</p>
 <section id="supercritical">
 <h4>Supercritical<a class="headerlink" href="#supercritical" title="Link to this heading"></a></h4>
@@ -443,13 +444,13 @@ It can also be seen that the momentum is not constant over the entire domain.</p
 </section>
 <section id="d-tsunami-simulation">
 <h2>3.4. 1D Tsunami Simulation<a class="headerlink" href="#d-tsunami-simulation" title="Link to this heading"></a></h2>
-<section id="task-3-4-1">
-<h3>Task 3.4.1<a class="headerlink" href="#task-3-4-1" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>3.4.1<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <p>We have used the <a class="reference external" href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO grid</a> from 2021 to collect the bathymetry data.
 With <a class="reference external" href="https://www.generic-mapping-tools.org">the Generic Mapping Tool</a> we cut data and transformed it into a <cite>csv</cite> file.</p>
 </section>
-<section id="task-3-4-2">
-<h3>Task 3.4.2<a class="headerlink" href="#task-3-4-2" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>3.4.2<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <p>For this task we used the function <em>splitline()</em> that we implemented last week.</p>
 <p>(<strong>File: Csv.cpp</strong>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">io</span><span class="o">::</span><span class="n">Csv</span><span class="o">::</span><span class="n">splitLine</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
@@ -468,8 +469,8 @@ With <a class="reference external" href="https://www.generic-mapping-tools.org">
 and the character which separates the different values as another.
 There is a pointer to the vector of strings, which represents the, by the separator character, separated values of the <cite>csv</cite> file.</p>
 </section>
-<section id="task-3-4-3">
-<h3>Task 3.4.3<a class="headerlink" href="#task-3-4-3" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>3.4.3<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <p>Following setup is given</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{split}
@@ -601,8 +602,8 @@ As long as there is a new line in the csv file, the loop continues and writes th
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">getBathymetry()</span></code> we check for the access and also whether <span class="math notranslate nohighlight">\(b_{in}\)</span> &lt; 0 or not.
 Depending on that, we return the maximum of either <span class="math notranslate nohighlight">\(-b_{in}\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> or 0.</p>
 </section>
-<section id="task-3-4-4">
-<h3>Task 3.4.4<a class="headerlink" href="#task-3-4-4" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>3.4.4<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <p><em>Visualisation</em></p>
 <video width="100%" height="auto" controls>
   <source src="../../_static/assets/tsunamiEvent1d_01.mp4" type="video/mp4">

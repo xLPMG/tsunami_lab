@@ -61,22 +61,23 @@
 <li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">5. Large Data Input and Output</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#task-5-1-netcdf-output">Task 5.1 - NetCdf Output</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-1-1-installing-and-linking-netcdf">Task 5.1.1 - Installing and linking NetCdf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-1-2-writing-netcdf-files">Task 5.1.2 - Writing netCDF files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#netcdf-output">5.1 - NetCdf Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installing-and-linking-netcdf">5.1.1 - Installing and linking NetCdf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#writing-netcdf-files">5.1.2 - Writing netCDF files</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#task-5-2-netcdf-input">Task 5.2 - NetCdf Input</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-2-1-artificialtsunami2d">Task 5.2.1 - ArtificialTsunami2d</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-2-2-netcdf-read">Task 5.2.2 - NetCDF read</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-2-3-tsunamievent2d">Task 5.2.3 -TsunamiEvent2d</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d">Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#netcdf-input">5.2 - NetCdf Input</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#artificialtsunami2d">5.2.1 - ArtificialTsunami2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#netcdf-read">5.2.2 - NetCDF read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tsunamievent2d">5.2.3 -TsunamiEvent2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparison-of-tsunamievent2d-and-artificialtsunami2d">5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -110,10 +111,10 @@
   <section id="large-data-input-and-output">
 <h1>5. Large Data Input and Output<a class="headerlink" href="#large-data-input-and-output" title="Link to this heading"></a></h1>
 <p>All project authors contributed to this assignment in equal parts.</p>
-<section id="task-5-1-netcdf-output">
-<h2>Task 5.1 - NetCdf Output<a class="headerlink" href="#task-5-1-netcdf-output" title="Link to this heading"></a></h2>
-<section id="task-5-1-1-installing-and-linking-netcdf">
-<h3>Task 5.1.1 - Installing and linking NetCdf<a class="headerlink" href="#task-5-1-1-installing-and-linking-netcdf" title="Link to this heading"></a></h3>
+<section id="netcdf-output">
+<h2>5.1 - NetCdf Output<a class="headerlink" href="#netcdf-output" title="Link to this heading"></a></h2>
+<section id="installing-and-linking-netcdf">
+<h3>5.1.1 - Installing and linking NetCdf<a class="headerlink" href="#installing-and-linking-netcdf" title="Link to this heading"></a></h3>
 <p>Since both authors use MacOS, we simply installed <code class="docutils literal notranslate"><span class="pre">NetCdf</span></code> using Homebrew:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>netcdf
 </pre></div>
@@ -146,8 +147,8 @@ If it is, we can proceed.</p>
 as long as the netcdf library was correctly installed.
 See <a class="reference internal" href="../categories/setup.html#setup"><span class="std std-ref">Setup</span></a> for download links.</p>
 </section>
-<section id="task-5-1-2-writing-netcdf-files">
-<h3>Task 5.1.2 - Writing netCDF files<a class="headerlink" href="#task-5-1-2-writing-netcdf-files" title="Link to this heading"></a></h3>
+<section id="writing-netcdf-files">
+<h3>5.1.2 - Writing netCDF files<a class="headerlink" href="#writing-netcdf-files" title="Link to this heading"></a></h3>
 <p>As instructed, we created a <code class="docutils literal notranslate"><span class="pre">NetCdf</span></code> class within the <code class="docutils literal notranslate"><span class="pre">tsunami_lab::io</span></code> namespace.
 Its constructor takes the file path, amount of cells in x- and y-direction and the stride as its input.
 This is because those parameters will not change between calls of the <code class="docutils literal notranslate"><span class="pre">write()</span></code> function within the same instance.</p>
@@ -267,10 +268,10 @@ and has no relation with the actual time step value.</p>
 <p><code class="docutils literal notranslate"><span class="pre">nc_put_vara_float</span></code> takes the nc and variable id, the start and count values and the data pointer as input.</p>
 </section>
 </section>
-<section id="task-5-2-netcdf-input">
-<h2>Task 5.2 - NetCdf Input<a class="headerlink" href="#task-5-2-netcdf-input" title="Link to this heading"></a></h2>
-<section id="task-5-2-1-artificialtsunami2d">
-<h3>Task 5.2.1 - ArtificialTsunami2d<a class="headerlink" href="#task-5-2-1-artificialtsunami2d" title="Link to this heading"></a></h3>
+<section id="netcdf-input">
+<h2>5.2 - NetCdf Input<a class="headerlink" href="#netcdf-input" title="Link to this heading"></a></h2>
+<section id="artificialtsunami2d">
+<h3>5.2.1 - ArtificialTsunami2d<a class="headerlink" href="#artificialtsunami2d" title="Link to this heading"></a></h3>
 <p>Following equations were given:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{aligned}
@@ -312,8 +313,8 @@ Afterwards it calls both the computeF and computeG function:</p>
 </div>
 <p>For the bathymetry we return <code class="docutils literal notranslate"><span class="pre">-100</span> <span class="pre">+</span> <span class="pre">computeD(i_x,</span> <span class="pre">i_y)</span></code>.</p>
 </section>
-<section id="task-5-2-2-netcdf-read">
-<h3>Task 5.2.2 - NetCDF read<a class="headerlink" href="#task-5-2-2-netcdf-read" title="Link to this heading"></a></h3>
+<section id="netcdf-read">
+<h3>5.2.2 - NetCDF read<a class="headerlink" href="#netcdf-read" title="Link to this heading"></a></h3>
 <p>The read function first checks for x and y dimensions and gets the respective IDs:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// get dimension ids</span>
 <span class="n">checkNcErr</span><span class="p">(</span><span class="n">nc_inq_dimid</span><span class="p">(</span><span class="n">l_ncIdRead</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">l_varXIdRead</span><span class="p">));</span>
@@ -347,8 +348,8 @@ Afterwards it calls both the computeF and computeG function:</p>
 </pre></div>
 </div>
 </section>
-<section id="task-5-2-3-tsunamievent2d">
-<h3>Task 5.2.3 -TsunamiEvent2d<a class="headerlink" href="#task-5-2-3-tsunamievent2d" title="Link to this heading"></a></h3>
+<section id="tsunamievent2d">
+<h3>5.2.3 -TsunamiEvent2d<a class="headerlink" href="#tsunamievent2d" title="Link to this heading"></a></h3>
 <p>Following setup is given:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}\begin{split}
@@ -472,8 +473,8 @@ This shall lead to a more efficient computation. We do this for bathymetry and d
 </pre></div>
 </div>
 </section>
-<section id="task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d">
-<h3>Task 5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d<a class="headerlink" href="#task-5-2-4-comparison-of-tsunamievent2d-and-artificialtsunami2d" title="Link to this heading"></a></h3>
+<section id="comparison-of-tsunamievent2d-and-artificialtsunami2d">
+<h3>5.2.4 - comparison of TsunamiEvent2d and ArtificialTsunami2d<a class="headerlink" href="#comparison-of-tsunamievent2d-and-artificialtsunami2d" title="Link to this heading"></a></h3>
 <p><strong>Visualization</strong></p>
 <p>We can observe, that both setups behave equally.</p>
 <p><cite>ArtificialTsunami2d</cite></p>

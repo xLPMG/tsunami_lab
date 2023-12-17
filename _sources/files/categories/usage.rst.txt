@@ -53,6 +53,10 @@ As of now, these are:
      - number of cells in y-direction
      - integer
      - >0
+   * - nk
+     - number of cells in x- and y-direction to be averaged into one in the output file
+     - integer
+     - >0
    * - simulationSizeX
      - simulation size in x-direction
      - float
@@ -93,6 +97,10 @@ As of now, these are:
      - domain offset from 0 in y direction
      - float
      - metres
+   * - checkpointFrequency
+     - frequency of checkpoints in real time
+     - float
+     - seconds
 
 as well as another two with more complicated parameters:
 

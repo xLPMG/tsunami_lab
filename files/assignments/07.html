@@ -23,7 +23,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="next" title="8. Optimization" href="08.html" />
     <link rel="prev" title="6. Tsunami Simulations" href="06.html" /> 
 </head>
 
@@ -62,19 +62,20 @@
 <li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">7. Checkpointing and Coarse Output</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#task-7-1-checkpointing">Task 7.1 - Checkpointing</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-7-1-1-writing-checkpoints">Task 7.1.1 - Writing checkpoints</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-7-1-2-checkpoint-setup">Task 7.1.2 - CheckPoint setup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading">Task 7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#checkpointing">7.1 - Checkpointing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#writing-checkpoints">7.1.1 - Writing checkpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#checkpoint-setup">7.1.2 - CheckPoint setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#checkpoint-testing-and-automatic-loading">7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#task-7-2-coarse-output">Task 7.2 - Coarse Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#coarse-output">7.2 - Coarse Output</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#implementation">7.2.1 - Implementation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#visualization">7.2.2 - Visualization</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -108,10 +109,10 @@
   <section id="checkpointing-and-coarse-output">
 <h1>7. Checkpointing and Coarse Output<a class="headerlink" href="#checkpointing-and-coarse-output" title="Link to this heading"></a></h1>
 <p>All project authors contributed to this assignment in equal parts.</p>
-<section id="task-7-1-checkpointing">
-<h2>Task 7.1 - Checkpointing<a class="headerlink" href="#task-7-1-checkpointing" title="Link to this heading"></a></h2>
-<section id="task-7-1-1-writing-checkpoints">
-<h3>Task 7.1.1 - Writing checkpoints<a class="headerlink" href="#task-7-1-1-writing-checkpoints" title="Link to this heading"></a></h3>
+<section id="checkpointing">
+<h2>7.1 - Checkpointing<a class="headerlink" href="#checkpointing" title="Link to this heading"></a></h2>
+<section id="writing-checkpoints">
+<h3>7.1.1 - Writing checkpoints<a class="headerlink" href="#writing-checkpoints" title="Link to this heading"></a></h3>
 <p>We extended the <code class="docutils literal notranslate"><span class="pre">NetCdf.cpp</span></code> file by a <code class="docutils literal notranslate"><span class="pre">writeCheckpoint()</span></code> function:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tsunami_lab::io::NetCdf::writeCheckpoint</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span>
 <span class="w">                                          </span><span class="n">t_idx</span><span class="w"> </span><span class="n">i_stride</span><span class="p">,</span>
@@ -180,8 +181,8 @@ the momenta and bathymetry data. If the input is a nullptr, we write 0 into the 
 <p>At the end of the function, we not only flush the checkpoint data to the file, but also
 all standard netcdf output data.</p>
 </section>
-<section id="task-7-1-2-checkpoint-setup">
-<h3>Task 7.1.2 - CheckPoint setup<a class="headerlink" href="#task-7-1-2-checkpoint-setup" title="Link to this heading"></a></h3>
+<section id="checkpoint-setup">
+<h3>7.1.2 - CheckPoint setup<a class="headerlink" href="#checkpoint-setup" title="Link to this heading"></a></h3>
 <p>We decided against using a setup, as the code was short enough to be implemented directly into the main class.
 We also hope to get better performance because we can directly access the array from within the main class,
 without making function calls to a separate CheckPoint class.</p>
@@ -282,8 +283,8 @@ we added following code before the usual solver setup:</p>
 require a x- and y-data array (those were needed last week to read the data along the axes along with the actual data).
 Both functions are accessible by overloading the constructor.</p>
 </section>
-<section id="task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading">
-<h3>Task 7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading<a class="headerlink" href="#task-7-1-3-7-1-4-checkpoint-testing-and-automatic-loading" title="Link to this heading"></a></h3>
+<section id="checkpoint-testing-and-automatic-loading">
+<h3>7.1.3 &amp; 7.1.4 - Checkpoint testing and automatic loading<a class="headerlink" href="#checkpoint-testing-and-automatic-loading" title="Link to this heading"></a></h3>
 <p>An example log may look like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>LPMGs-Air-6:tsunami_lab<span class="w"> </span>lpmg$<span class="w"> </span>./build/tsunami_lab
 <span class="c1">####################################</span>
@@ -343,8 +344,8 @@ If the provided number is less, checkpointing will be disabled.</p>
 Furthermore, simply out of convenience, the checkpoint file is deleted after the program ends successfully.</p>
 </section>
 </section>
-<section id="task-7-2-coarse-output">
-<h2>Task 7.2 - Coarse Output<a class="headerlink" href="#task-7-2-coarse-output" title="Link to this heading"></a></h2>
+<section id="coarse-output">
+<h2>7.2 - Coarse Output<a class="headerlink" href="#coarse-output" title="Link to this heading"></a></h2>
 <section id="implementation">
 <h3>7.2.1 - Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h3>
 <p>First we added new variables in the NetCdf Constructor:</p>
@@ -413,7 +414,7 @@ however we are working on it.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="06.html" class="btn btn-neutral float-left" title="6. Tsunami Simulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="08.html" class="btn btn-neutral float-right" title="8. Optimization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

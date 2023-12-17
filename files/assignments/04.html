@@ -60,7 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">4. Two-Dimensional Solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#task-4-1-dimensional-splitting">Task 4.1 - Dimensional Splitting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dimensional-splitting">4.1 - Dimensional Splitting</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#d-support">4.1.1 - 2D support</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#circular-dam-break">4.1.2 - Circular Dam Break</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#visualization">Visualization</a></li>
@@ -77,6 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -115,8 +116,8 @@
 <p>The projects <a class="reference internal" href="../categories/usage.html#usage"><span class="std std-ref">Usage</span></a> has undergone major changes during this assignment.
 We strongly advice to visit that page (again).</p>
 </div>
-<section id="task-4-1-dimensional-splitting">
-<h2>Task 4.1 - Dimensional Splitting<a class="headerlink" href="#task-4-1-dimensional-splitting" title="Link to this heading"></a></h2>
+<section id="dimensional-splitting">
+<h2>4.1 - Dimensional Splitting<a class="headerlink" href="#dimensional-splitting" title="Link to this heading"></a></h2>
 <section id="d-support">
 <h3>4.1.1 - 2D support<a class="headerlink" href="#d-support" title="Link to this heading"></a></h3>
 <p>We started by splitting <code class="docutils literal notranslate"><span class="pre">l_dxy</span></code> into two variables <code class="docutils literal notranslate"><span class="pre">l_dx</span></code> and <code class="docutils literal notranslate"><span class="pre">l_dy</span></code>:</p>

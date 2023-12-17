@@ -54,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#initializing-updating-submodules">2. Initializing &amp; updating submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-requirements">3. Installing requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-the-project">4. Building the project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-build-parameters">Additional build parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-the-documentation">5. Building the documentation</a></li>
 </ul>
 </li>
@@ -130,7 +131,32 @@ brew<span class="w"> </span>install<span class="w"> </span>gcc
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span><span class="s2">&quot;osx&quot;</span>
 </pre></div>
 </div>
+<p>If you wish to build the project for benchmarking without file output, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>benchmark
+</pre></div>
+</div>
+<p>for Linux/Windows. If you are on MacOS, use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>benchmark+osx
+</pre></div>
+</div>
 <p>For further run configurations view the SConstruct file at the root of the tsunami_lab directory.</p>
+</section>
+<section id="additional-build-parameters">
+<h2>Additional build parameters<a class="headerlink" href="#additional-build-parameters" title="Link to this heading"></a></h2>
+<p>You may specify a compiler of your choice, for example <code class="docutils literal notranslate"><span class="pre">icpc</span></code> by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CXX</span><span class="o">=</span>icpc<span class="w"> </span>scons
+</pre></div>
+</div>
+<p>If you wish to specify an optimization flag, you can do that by adding <code class="docutils literal notranslate"><span class="pre">opt=&lt;flag&gt;</span></code>, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">opt</span><span class="o">=</span>-O2
+</pre></div>
+</div>
+<p>Currently we support <code class="docutils literal notranslate"><span class="pre">-O0</span></code>, <code class="docutils literal notranslate"><span class="pre">-O1</span></code>, <code class="docutils literal notranslate"><span class="pre">-O2</span></code>, <code class="docutils literal notranslate"><span class="pre">-O3</span></code> and <code class="docutils literal notranslate"><span class="pre">-Ofast</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">-O3</span></code>.</p>
+<p>Generating a report is possible for <code class="docutils literal notranslate"><span class="pre">icpc</span></code>. To enable it, specify it using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">report</span><span class="o">=</span>-qopt-report<span class="o">=</span>&lt;N&gt;
+</pre></div>
+</div>
+<p>Replace &lt;N&gt; with a number from 1 to 5 for the level of detail.</p>
 </section>
 <section id="building-the-documentation">
 <h2>5. Building the documentation<a class="headerlink" href="#building-the-documentation" title="Link to this heading"></a></h2>

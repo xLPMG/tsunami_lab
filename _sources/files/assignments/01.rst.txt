@@ -3,10 +3,10 @@
 
 All project authors contributed to this assignment in equal parts.
 
-Task 1.2 - Getting Started
+1.2 - Getting Started
 ============================
 
-Task 1.2.2 - Visualizations
+1.2.2 - Visualizations
 ----------------------------
 
 Roe solver with input 500 (cells in x direction)
@@ -17,7 +17,7 @@ Roe solver with input 500 (cells in x direction)
       <source src="../../_static/assets/roe_solver_visualization.mp4" type="video/mp4">
     </video> 
 
-Task 1.3 - F-wave Solver
+1.3 - F-wave Solver
 ============================
 
 File: Fwave.cpp (and Fwave.h)

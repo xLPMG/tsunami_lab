@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8. Optimization &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/08.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="7. Checkpointing and Coarse Output" href="07.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8. Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ara">8.1 ARA</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#uploading-and-running-the-code">8.1.1 - Uploading and running the code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualizations">8.1.2 - Visualizations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#private-pc-vs-ara">8.1.3 - Private PC vs ARA</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#compilers">8.2 Compilers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generic-compiler-support">8.2.1 - Generic compiler support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-runs">8.2.2 &amp; 8.2.3 - Test runs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#optimization-flags">8.2.3 - Optimization flags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compiler-reports">8.2.4 - Compiler reports</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#instrumentation-and-performance-counters">8.3 Instrumentation and Performance Counters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#to-8-3-4-vtune">8.3.1 to 8.3.4 - VTune</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-optimizations">8.3.5 - Code optimizations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#individual-phase-ideas">Individual phase ideas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">8. Optimization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/08.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="optimization">
+<h1>8. Optimization<a class="headerlink" href="#optimization" title="Link to this heading"></a></h1>
+<section id="ara">
+<h2>8.1 ARA<a class="headerlink" href="#ara" title="Link to this heading"></a></h2>
+<section id="uploading-and-running-the-code">
+<h3>8.1.1 - Uploading and running the code<a class="headerlink" href="#uploading-and-running-the-code" title="Link to this heading"></a></h3>
+<p>First we cloned our github repository to “beegfs” and transfered the bythymetry and displacement data with “wget <a class="reference external" href="https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz">https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz</a> -O tsunami_lab_data_in.tar.xz” there.</p>
+<p>To use scons, we have to execute “module load tools/python/3.8” and “pip install –user scons” first and then load the compiler via “module load compiler/gcc/11.2.0”.</p>
+<p>sbatch file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+#SBATCH --job-name=tohoku_1000
+#SBATCH --output=tohoku_1000.out
+#SBATCH --error=tohoku_1000.err
+#SBATCH --partition=s_hadoop
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --time=10:00:00
+#SBATCH --cpus-per-task=72
+
+#load modules
+module load compiler/gcc/11.2.0
+
+# Enter your executable commands here
+# Execute the compiled program
+scons
+./build/tsunami_lab
+</pre></div>
+</div>
+<p>Since we only want to use one node, we set <code class="docutils literal notranslate"><span class="pre">nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> to 1 and <code class="docutils literal notranslate"><span class="pre">cpus-per-task</span></code> to 72.</p>
+</section>
+<section id="visualizations">
+<h3>8.1.2 - Visualizations<a class="headerlink" href="#visualizations" title="Link to this heading"></a></h3>
+<p><strong>Tohoku 5000</strong></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_8-1-2_tohoku_5000.mp4" type="video/mp4">
+</video><p><strong>Tohoku 1000</strong></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_8-1-2_tohoku_1000.mp4" type="video/mp4">
+</video><p><strong>Chile 5000</strong></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_8-1-2_chile_5000.mp4" type="video/mp4">
+</video><p><strong>Chile 1000</strong></p>
+<video width="100%" height="auto" controls>
+  <source src="../../_static/assets/task_8-1-2_chile_1000.mp4" type="video/mp4">
+</video><p>Comparing to the simulations from assignment 6, it is clear that all simulations behave equally.</p>
+</section>
+<section id="private-pc-vs-ara">
+<h3>8.1.3 - Private PC vs ARA<a class="headerlink" href="#private-pc-vs-ara" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code was compiled using <code class="docutils literal notranslate"><span class="pre">scons</span> <span class="pre">mode=benchmark</span> <span class="pre">opt=-O2</span></code>.
+The benchmarking mode disables all file output (and also skips all imports of <code class="docutils literal notranslate"><span class="pre">&lt;filesystem&gt;</span></code>).</p>
+</div>
+<section id="setups">
+<h4>Setups<a class="headerlink" href="#setups" title="Link to this heading"></a></h4>
+<p>If you are interested, you can view the used configurations here:</p>
+<p><a class="reference download internal" download="" href="../../_downloads/280fa773db2e9abf092625e8e0a88f97/chile5000.json"><code class="xref download docutils literal notranslate"><span class="pre">chile5000.json</span></code></a>
+|
+<a class="reference download internal" download="" href="../../_downloads/4a3c750b63012edb574f7e9e8f7ae9ba/chile1000.json"><code class="xref download docutils literal notranslate"><span class="pre">chile1000.json</span></code></a>
+|
+<a class="reference download internal" download="" href="../../_downloads/5c999f83e7acb1ab4930eb543d46d0ce/tohoku5000.json"><code class="xref download docutils literal notranslate"><span class="pre">tohoku5000.json</span></code></a>
+|
+<a class="reference download internal" download="" href="../../_downloads/2e6f9385d835214d56f5e47ea89348be/tohoku1000.json"><code class="xref download docutils literal notranslate"><span class="pre">tohoku1000.json</span></code></a></p>
+</section>
+<section id="results">
+<h4>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h4>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">execution times on different devices</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Device</p></th>
+<th class="head"><p>Config</p></th>
+<th class="head"><p>Setup time</p></th>
+<th class="head"><p>Computation time</p></th>
+<th class="head"><p>Total time</p></th>
+<th class="head"><p>Cells</p></th>
+<th class="head"><p>Setup time per cell</p></th>
+<th class="head"><p>Calculation time per cell</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>private</p></td>
+<td><p>chile5000</p></td>
+<td><p>5.56396s</p></td>
+<td><p>31.6052s</p></td>
+<td><p>41.3911s</p></td>
+<td><p>413.000</p></td>
+<td><p>0.01347ms</p></td>
+<td><p>0.07652ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>ARA</p></td>
+<td><p>chile5000</p></td>
+<td><p>5.06402s</p></td>
+<td><p>31.6528s</p></td>
+<td><p>42.7966s</p></td>
+<td><p>413.000</p></td>
+<td><p>0.01226ms</p></td>
+<td><p>0.07664ms</p></td>
+</tr>
+<tr class="row-even"><td><p>private</p></td>
+<td><p>chile1000</p></td>
+<td><p>139.167s</p></td>
+<td><p>4017.46s</p></td>
+<td><p>4160.25s</p></td>
+<td><p>10.325.000</p></td>
+<td><p>0.01348ms</p></td>
+<td><p>0.3891ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>ARA</p></td>
+<td><p>chile1000</p></td>
+<td><p>127.257s</p></td>
+<td><p>4204.83s</p></td>
+<td><p>4338.24s</p></td>
+<td><p>10.325.000</p></td>
+<td><p>0.01233ms</p></td>
+<td><p>0.40725ms</p></td>
+</tr>
+<tr class="row-even"><td><p>private</p></td>
+<td><p>tohoku5000</p></td>
+<td><p>1.70329s</p></td>
+<td><p>14.6443s</p></td>
+<td><p>22.5213s</p></td>
+<td><p>162.000</p></td>
+<td><p>0.01051ms</p></td>
+<td><p>0.09040ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>ARA</p></td>
+<td><p>tohoku5000</p></td>
+<td><p>1.49705s</p></td>
+<td><p>14.8791s</p></td>
+<td><p>18.9277s</p></td>
+<td><p>162.000</p></td>
+<td><p>0.00924ms</p></td>
+<td><p>0.09184ms</p></td>
+</tr>
+<tr class="row-even"><td><p>private</p></td>
+<td><p>tohoku1000</p></td>
+<td><p>41.2804s</p></td>
+<td><p>1888.40s</p></td>
+<td><p>1931.84s</p></td>
+<td><p>4.050.000</p></td>
+<td><p>0.01019ms</p></td>
+<td><p>0.46627ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>ARA</p></td>
+<td><p>tohoku1000</p></td>
+<td><p>37.7817s</p></td>
+<td><p>1949.85s</p></td>
+<td><p>1990.99s</p></td>
+<td><p>4.050.000</p></td>
+<td><p>0.00933ms</p></td>
+<td><p>0.48144ms</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Total</span> <span class="pre">time</span></code> is not just setup + calculation time.
+The total execution timer is invoked directly at the start of the main function
+and stopped after the program has finished and all memory has been freed.</p>
+</div>
+</section>
+<section id="observations">
+<h4>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h4>
+<p>In every scenario, ARA had a faster setup time but slower computation times.
+We conclude that ARA has faster data/file access (because the setup heavily depends on data reading speed from a file)
+while the private PC seems to have better single core performance.</p>
+</section>
+</section>
+</section>
+<section id="compilers">
+<h2>8.2 Compilers<a class="headerlink" href="#compilers" title="Link to this heading"></a></h2>
+<section id="generic-compiler-support">
+<h3>8.2.1 - Generic compiler support<a class="headerlink" href="#generic-compiler-support" title="Link to this heading"></a></h3>
+<p>We enabled generic compiler support by adding the following lines to our <code class="docutils literal notranslate"><span class="pre">SConstruct</span></code> file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="o">...</span>
+
+<span class="c1"># set local env</span>
+<span class="n">env</span><span class="p">[</span><span class="s1">&#39;ENV&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
+
+<span class="c1"># choose compiler</span>
+<span class="k">if</span> <span class="s1">&#39;CXX&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+  <span class="n">env</span><span class="p">[</span><span class="s1">&#39;CXX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CXX&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now, scons can be invoked with a compiler of choice, for example by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CXX</span><span class="o">=</span>icpc<span class="w"> </span>scons
+</pre></div>
+</div>
+</section>
+<section id="test-runs">
+<h3>8.2.2 &amp; 8.2.3 - Test runs<a class="headerlink" href="#test-runs" title="Link to this heading"></a></h3>
+<section id="time-measurements">
+<h4>Time measurements<a class="headerlink" href="#time-measurements" title="Link to this heading"></a></h4>
+<p>For each run, we used the following configuration:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;solver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fwave&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;simulationSizeX&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;simulationSizeY&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;offsetX&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;offsetY&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;nx&quot;</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ny&quot;</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;setup&quot;</span><span class="p">:</span><span class="s2">&quot;ARTIFICIAL2D&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;endTime&quot;</span><span class="p">:</span><span class="mi">50</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We ran the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> program in benchmarking mode without file output. The results can be seen below.</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">execution times for different compilers and optimization flags</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Compiler</p></th>
+<th class="head"><p>Optimization flag</p></th>
+<th class="head"><p>Setup time</p></th>
+<th class="head"><p>Computation time</p></th>
+<th class="head"><p>Total time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>g++</p></td>
+<td><p>-O0</p></td>
+<td><p>0.152468s</p></td>
+<td><p>741.348s</p></td>
+<td><p>741.575s</p></td>
+</tr>
+<tr class="row-odd"><td><p>g++</p></td>
+<td><p>-O2</p></td>
+<td><p>0.0615546s</p></td>
+<td><p>273.039s</p></td>
+<td><p>273.151s</p></td>
+</tr>
+<tr class="row-even"><td><p>g++</p></td>
+<td><p>-Ofast</p></td>
+<td><p>0.0607083s</p></td>
+<td><p>203.635s</p></td>
+<td><p>203.743s</p></td>
+</tr>
+<tr class="row-odd"><td><p>icpc</p></td>
+<td><p>-O0</p></td>
+<td><p>0.207138s</p></td>
+<td><p>1230.19s</p></td>
+<td><p>1230.48s</p></td>
+</tr>
+<tr class="row-even"><td><p>icpc</p></td>
+<td><p>-O2</p></td>
+<td><p>0.0724063s</p></td>
+<td><p>254.169s</p></td>
+<td><p>254.308s</p></td>
+</tr>
+<tr class="row-odd"><td><p>icpc</p></td>
+<td><p>-Ofast</p></td>
+<td><p>0.0704465s</p></td>
+<td><p>251.197s</p></td>
+<td><p>251.33s</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Total</span> <span class="pre">time</span></code> is not just setup + calculation time.
+The total execution timer is invoked directly at the start of the main function
+and stopped after the programm finished and all memory has been freed.</p>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">g++</span></code>, we used the module <code class="docutils literal notranslate"><span class="pre">compiler/gcc/11.2.0</span></code>.</p>
+<p>Unfortunately, we were not able to use the latest compiler versions for <code class="docutils literal notranslate"><span class="pre">icpc</span></code>.
+When using <code class="docutils literal notranslate"><span class="pre">compiler/intel/2020-Update2</span></code>, we got errors such as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tsunami_lab/build/src/setups/TsunamiEvent1d.cpp:38: undefined reference to `tsunami_lab::io::Csv::splitLine(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;, char, std::vector&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;, std::allocator&lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; &gt; &gt;&amp;)&#39;
+</pre></div>
+</div>
+<p>for <code class="docutils literal notranslate"><span class="pre">compiler/gcc/11.2.0</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">compiler/gcc/10.2.0</span></code>, there were issues like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-8.1.0/gcc-10.2.0-ru4xdhhkxnma5i727b7njtnjoh6kff3s/include/c++/10.2.0/tuple(566): error: pack &quot;_UElements&quot; does not have the same number of elements as &quot;_Elements&quot;
+__and_&lt;is_nothrow_constructible&lt;_Elements, _UElements&gt;...&gt;::value;
+</pre></div>
+</div>
+<p>Versions <code class="docutils literal notranslate"><span class="pre">compiler/intel/2019-Update5</span></code> and <code class="docutils literal notranslate"><span class="pre">compiler/intel/2019-Update3</span></code> did not work due to missing licences.</p>
+<p>We therefore ended up using <code class="docutils literal notranslate"><span class="pre">compiler/intel/2018-Update1</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">(GCC)</span> <span class="pre">4.8.5</span></code> which is already available without loading any module.
+This configuration was the only one that worked for us, as we did not manage to fix all the errors that were thrown at us.</p>
+</section>
+<section id="observations-from-the-table">
+<h4>Observations from the table<a class="headerlink" href="#observations-from-the-table" title="Link to this heading"></a></h4>
+<p>As one would intuitively expect, the higher the optimization level is,
+the quicker the process finished.</p>
+<p>One can observe that <code class="docutils literal notranslate"><span class="pre">g++</span></code> was faster using both <code class="docutils literal notranslate"><span class="pre">-O0</span></code> and <code class="docutils literal notranslate"><span class="pre">-Ofast</span></code> flags,
+however with the <code class="docutils literal notranslate"><span class="pre">-O2</span></code> flag, <code class="docutils literal notranslate"><span class="pre">icpc</span></code> took the lead.
+Worth noting is also, that the jump from <code class="docutils literal notranslate"><span class="pre">-O2</span></code> to <code class="docutils literal notranslate"><span class="pre">-Ofast</span></code> was much bigger when using <code class="docutils literal notranslate"><span class="pre">g++</span></code> than with <code class="docutils literal notranslate"><span class="pre">icpc</span></code>.</p>
+<p>In conclusion, it can not be said that one compiler always generates faster code than the other.
+For that, we nearly don’t have enough data to compare.
+We would also need to ensure that there are no other intensive processes running which could unintentionally slow down the code.
+Nonetheless, by using the table as a rough estimate it seems that <code class="docutils literal notranslate"><span class="pre">g++</span></code> is faster when using <code class="docutils literal notranslate"><span class="pre">-O0</span></code> and <code class="docutils literal notranslate"><span class="pre">-Ofast</span></code> while <code class="docutils literal notranslate"><span class="pre">icpc</span></code> is preferable for <code class="docutils literal notranslate"><span class="pre">-O2</span></code>.</p>
+</section>
+</section>
+<section id="optimization-flags">
+<h3>8.2.3 - Optimization flags<a class="headerlink" href="#optimization-flags" title="Link to this heading"></a></h3>
+<p>To allow for an easy switch between optimization flag, we added following code to our SConstruct:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">EnumVariable</span><span class="p">(</span> <span class="s1">&#39;opt&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;optimization flag&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;-O3&#39;</span><span class="p">,</span>
+              <span class="n">allowed_values</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;-O0&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-O1&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-O2&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-O3&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-Ofast&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set optimization mode</span>
+<span class="k">if</span> <span class="s1">&#39;debug&#39;</span> <span class="ow">in</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]:</span>
+  <span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span> <span class="n">CXXFLAGS</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;-g&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;-O0&#39;</span> <span class="p">]</span> <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span> <span class="n">CXXFLAGS</span> <span class="o">=</span> <span class="p">[</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;opt&#39;</span><span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+<section id="the-dangers-of-ofast">
+<h4>The dangers of -Ofast<a class="headerlink" href="#the-dangers-of-ofast" title="Link to this heading"></a></h4>
+<p>One of the options that <code class="docutils literal notranslate"><span class="pre">-Ofast</span></code> enables is <code class="docutils literal notranslate"><span class="pre">-ffast-math</span></code>.
+With that, a whole lot of other options get activated as well, such as</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>-funsafe-math-optimizations</p>
+<ul>
+<li><p>enables optimizations that allow arbitrary reassociations and transformations with no accuracy guarantees</p></li>
+<li><p>does not try to preserve the sign of zeros</p></li>
+<li><p>due to roundoff errors the associative law of algebra do not necessary hold for floating point numbers
+and thus expressions like (x + y) + z are not necessary equal to x + (y + z)</p></li>
+</ul>
+</li>
+<li><p>-fnofinite-math-only</p>
+<ul>
+<li><p>assumes that arguments and results are not NaNs or +-Infs -&gt; unsafety</p></li>
+</ul>
+</li>
+<li><p>-fno-rounding-math</p>
+<ul>
+<li><p>assumes that rounding mode is round to nearest</p></li>
+</ul>
+</li>
+<li><p>-fexcess-precision=fast</p>
+<ul>
+<li><p>operations may be carried out in a wider precision than the types specified in the source if that would result in faster code,</p></li>
+<li><p>it is unpredictable when rounding to the types specified in the source code takes place</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p>Our sources are
+<a class="reference external" href="https://gcc.gnu.org/wiki/FloatingPointMath">https://gcc.gnu.org/wiki/FloatingPointMath</a>
+and
+<a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html">https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html</a></p>
+</section>
+</section>
+<section id="compiler-reports">
+<h3>8.2.4 - Compiler reports<a class="headerlink" href="#compiler-reports" title="Link to this heading"></a></h3>
+<p>We added the support for a compiler report flag with the following lines in our <code class="docutils literal notranslate"><span class="pre">SConstruct</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">EnumVariable</span><span class="p">(</span> <span class="s1">&#39;report&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;flag for enabling reports&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+              <span class="n">allowed_values</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report=1&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report=2&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report=3&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report=4&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;-qopt-report=5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To test it out, we ran the code on the ARA machine with following parameters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CXX</span><span class="o">=</span>icpc<span class="w"> </span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>benchmark<span class="w"> </span><span class="nv">opt</span><span class="o">=</span>-O2<span class="w"> </span><span class="nv">report</span><span class="o">=</span>-qopt-report
+</pre></div>
+</div>
+<p>The generated report for the main class (without the parts about submodules) can be found <a class="reference download internal" download="" href="../../_downloads/28b7f59cf71cfc151debee8ed2057987/task8-2-4_main_optrpt.txt"><code class="xref download docutils literal notranslate"><span class="pre">here.</span></code></a></p>
+<p>We can see that five for-loops were not vectorized. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>LOOP BEGIN at build/src/main.cpp(488,5)
+ remark #15333: loop was not vectorized: exception handling for a call prevents vectorization   [ build/src/main.cpp(497,54) ]
+
+ LOOP BEGIN at build/src/main.cpp(492,7)
+    remark #15333: loop was not vectorized: exception handling for a call prevents vectorization   [ build/src/main.cpp(497,54) ]
+ LOOP END
+LOOP END
+</pre></div>
+</div>
+<p>This snippet refers to the loops that provide our solver with data from a setup:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_cy</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_ny</span><span class="p">;</span><span class="w"> </span><span class="n">l_cy</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_cx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_cx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_nx</span><span class="p">;</span><span class="w"> </span><span class="n">l_cx</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="f-wave-optimization-report">
+<h4>F-Wave optimization report<a class="headerlink" href="#f-wave-optimization-report" title="Link to this heading"></a></h4>
+<p>The full report can be found <a class="reference download internal" download="" href="../../_downloads/12a161ce465f5bf553ef0796f807d032/task8-2-4_fwave_optrpt.txt"><code class="xref download docutils literal notranslate"><span class="pre">here.</span></code></a></p>
+<p>Starting with the <code class="docutils literal notranslate"><span class="pre">computeEigenvalues()</span></code> function, the report tells us that the lines</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_hSqrtL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i_hL</span><span class="p">);</span>
+<span class="n">t_real</span><span class="w"> </span><span class="n">l_hSqrtR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i_hR</span><span class="p">);</span>
+<span class="n">t_real</span><span class="w"> </span><span class="n">l_ghSqrtRoe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_gSqrt</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">l_hRoe</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>are inline:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-&gt; INLINE: (20,21) std::sqrt(float)
+-&gt; INLINE: (21,21) std::sqrt(float)
+-&gt; INLINE: (29,34) std::sqrt(float)
+</pre></div>
+</div>
+<p>This means that the call to std::sqrt(float) will be replaced with the actual implementation of that function.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">computeEigencoefficients</span></code>, we can see that</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_rInv</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="mi">0</span><span class="p">}};</span>
+<span class="p">...</span>
+<span class="n">t_real</span><span class="w"> </span><span class="n">l_fDelta</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>are implemented by the compiler using <code class="docutils literal notranslate"><span class="pre">memset</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>build/src/solvers/Fwave.cpp(48,23):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+build/src/solvers/Fwave.cpp(55,22):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">netUpdates</span></code>, the report tells us that</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">INLINE</span><span class="w"> </span><span class="n">REPORT</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">solvers</span><span class="o">::</span><span class="n">Fwave</span><span class="o">::</span><span class="n">netUpdates</span><span class="p">(</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="n">build</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">solvers</span><span class="o">/</span><span class="n">Fwave</span><span class="p">.</span><span class="n">cpp</span><span class="p">(</span><span class="mi">77</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="w"> </span><span class="n">INLINE</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">86</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">solvers</span><span class="o">::</span><span class="n">Fwave</span><span class="o">::</span><span class="n">computeEigenvalues</span><span class="p">(</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">[...]</span>
+<span class="o">-&gt;</span><span class="w"> </span><span class="n">INLINE</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">97</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">solvers</span><span class="o">::</span><span class="n">Fwave</span><span class="o">::</span><span class="n">computeEigencoefficients</span><span class="p">(</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can conclude that the compiler is able to inline our calls to <code class="docutils literal notranslate"><span class="pre">computeEigenvalues</span></code> and <code class="docutils literal notranslate"><span class="pre">computeEigencoefficients</span></code>.</p>
+</section>
+<section id="wavepropagation2d-optimization-report">
+<h4>WavePropagation2d optimization report<a class="headerlink" href="#wavepropagation2d-optimization-report" title="Link to this heading"></a></h4>
+<p>The full report can be found <a class="reference download internal" download="" href="../../_downloads/e982ad8266cb1965134df692debf8b1b/task8-2-4_waveprop2d_optrpt.txt"><code class="xref download docutils literal notranslate"><span class="pre">here.</span></code></a></p>
+<p>To keep it short, the report tells us that the loops for the x- and y-sweep (which compute the net update)
+could not be vectorized:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(86,3)
+ remark #15543: loop was not vectorized: loop with function call not considered an optimization candidate.
+
+ LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(88,5)
+    remark #15523: loop was not vectorized: loop control variable l_ec was found, but loop iteration count cannot be computed before executing the loop
+ LOOP END
+LOOP END
+
+LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(152,3)
+ remark #15543: loop was not vectorized: loop with function call not considered an optimization candidate.
+
+ LOOP BEGIN at build/src/patches/WavePropagation2d.cpp(154,5)
+    remark #15523: loop was not vectorized: loop control variable l_ed was found, but loop iteration count cannot be computed before executing the loop
+ LOOP END
+LOOP END
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Lines 86 and 88 are the two for-loops for y- and x-axis of the x-sweep and
+lines 152 and 154 are the two for-loops for y- and x-axis of the y-sweep.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="instrumentation-and-performance-counters">
+<h2>8.3 Instrumentation and Performance Counters<a class="headerlink" href="#instrumentation-and-performance-counters" title="Link to this heading"></a></h2>
+<section id="to-8-3-4-vtune">
+<h3>8.3.1 to 8.3.4 - VTune<a class="headerlink" href="#to-8-3-4-vtune" title="Link to this heading"></a></h3>
+<p>First we used the gui of Intel vTune to specify our reports.</p>
+<p>Then the following batch script was used to run the hotspots measurement:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --job-name=vTune</span>
+<span class="c1">#SBATCH --output=vTune.out</span>
+<span class="c1">#SBATCH --error=vTune.err</span>
+<span class="c1">#SBATCH --partition=s_hadoop</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks=1</span>
+<span class="c1">#SBATCH --time=10:00:00</span>
+<span class="c1">#SBATCH --cpus-per-task=72</span>
+
+module<span class="w"> </span>load<span class="w"> </span>compiler/intel/2020-Update2
+
+/cluster/intel/vtune_profiler_2020.2.0.610396/bin64/vtune<span class="w"> </span>-collect<span class="w"> </span>hotspots<span class="w"> </span>-app-working-dir<span class="w"> </span>/beegfs/xe63nel/tsunami_lab/build<span class="w"> </span>--<span class="w"> </span>/beegfs/xe63nel/tsunami_lab/build/tsunami_lab<span class="w"> </span>../configs/config.json
+</pre></div>
+</div>
+<section id="hotspots">
+<h4>Hotspots<a class="headerlink" href="#hotspots" title="Link to this heading"></a></h4>
+<img alt="../../_images/task_8-3-1_hotspot_bottomUp.png" src="../../_images/task_8-3-1_hotspot_bottomUp.png" />
+<img alt="../../_images/task_8-3-1_hotspot_topDown.png" src="../../_images/task_8-3-1_hotspot_topDown.png" />
+<p>The most compute-intensive part is the <code class="docutils literal notranslate"><span class="pre">computeEigencoefficients()</span></code> function. This was to be expected, since it computes</p>
+<ul class="simple">
+<li><p>the inverse of right eigenvector-matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta f\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta x \Psi_{i-1/2}\)</span></p></li>
+<li><p>the two eigencoefficients as the product of the inverse of right eigenvector-matrix and <span class="math notranslate nohighlight">\(\Delta f\)</span></p></li>
+</ul>
+<p>for all cell edges every time step.</p>
+<p>It was interesting to see (although it should not come as a surprise) that the <code class="docutils literal notranslate"><span class="pre">timeStep()</span></code> function used up almost 99%
+of the CPU time.</p>
+</section>
+<section id="threads">
+<h4>Threads<a class="headerlink" href="#threads" title="Link to this heading"></a></h4>
+<img alt="../../_images/task_8-3-1_threads.png" src="../../_images/task_8-3-1_threads.png" />
+<img alt="../../_images/task_8-3-1_threads_chart.png" src="../../_images/task_8-3-1_threads_chart.png" />
+<p>The poor result for the thread report was also expected, because we only compute sequentially.</p>
+</section>
+</section>
+<section id="code-optimizations">
+<h3>8.3.5 - Code optimizations<a class="headerlink" href="#code-optimizations" title="Link to this heading"></a></h3>
+<section id="tsunamievent2d-speedup">
+<h4>TsunamiEvent2d speedup<a class="headerlink" href="#tsunamievent2d-speedup" title="Link to this heading"></a></h4>
+<p>In order to increase the speed of this setup, we introduced a variable <code class="docutils literal notranslate"><span class="pre">lastnegativeIndex</span></code> for the X and Y direction for the bathymetry and displacement.
+The idea is the following:
+When making a bathymetry or displacement query on the arrays, we need to find the point of the data grid which is closest to our queried point.
+With a naive implementation, we traverse the full arrays for x- and y-values every time until we have discovered the closest point.
+Since the values are monotonically increasing, we start from index 0 and in the worst case, traverse the whole array.</p>
+<p>If the first half of the array is filled with negative numbers due to an offset and the queried point has positive coordinates, we waste time traversing the negative part of the array.
+We can optimize this if we traverse the array on initialization and save the index of the last negative number before the values turn positive.
+Now if we look for a positive coodinate, we will start searching from the saved index on and skip the negative part of the array.</p>
+<p>We tested this for the <code class="docutils literal notranslate"><span class="pre">chile1000</span></code> scenario (Chile Tsunami Simulation with 1000m cell size) in benchmarking mode:</p>
+<p>Setup time:</p>
+<ul class="simple">
+<li><p>Before: 222.709s</p></li>
+<li><p>After: 140.509s</p></li>
+</ul>
+<p>We can observe a 36.9% decrease in time.</p>
+<p>Code snippets of the implementation:</p>
+<ol class="arabic simple">
+<li><p>traverse the x- and y-axis data for the bathymetry and note last negative index (initialized to 0)</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_xDataB</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">m_nxB</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">t_idx</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nxB</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m_xDataB</span><span class="p">[</span><span class="n">l_ix</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">m_lastNegativeIndexBX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>use the saved index if the queried point is &gt;= 0</p></li>
+</ol>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">tsunami_lab</span><span class="o">::</span><span class="n">t_real</span><span class="w"> </span><span class="nf">tsunami_lab::setups::TsunamiEvent2d::getBathymetryFromArray</span><span class="p">(</span><span class="n">t_real</span><span class="w"> </span><span class="n">i_x</span><span class="p">,</span>
+<span class="w">                                                                                </span><span class="n">t_real</span><span class="w"> </span><span class="n">i_y</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="p">[...]</span>
+<span class="n">t_idx</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">m_lastNegativeIndexBX</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">l_ix</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m_nxB</span><span class="p">;</span><span class="w"> </span><span class="n">l_ix</span><span class="o">++</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">  </span><span class="p">[...]</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="f-wave-solver-optimization">
+<h4>F-Wave solver optimization<a class="headerlink" href="#f-wave-solver-optimization" title="Link to this heading"></a></h4>
+<p>In <code class="docutils literal notranslate"><span class="pre">computeEigencoefficients</span></code>, we changed</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_rInv</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="mi">0</span><span class="p">}};</span>
+<span class="n">l_rInv</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_detInv</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eigenvalueRoe_2</span><span class="p">;</span>
+<span class="n">l_rInv</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">l_detInv</span><span class="p">;</span>
+<span class="n">l_rInv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">l_detInv</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eigenvalueRoe_1</span><span class="p">;</span>
+<span class="n">l_rInv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_detInv</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_rInv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">l_detInv</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eigenvalueRoe_2</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">l_detInv</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">l_detInv</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eigenvalueRoe_1</span><span class="p">,</span><span class="w"> </span><span class="n">l_detInv</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>in order to skip the unnecessary step of initializing the array to 0. Furthermore, we now use a one dimensional array for better performance.</p>
+<p>Equally we did this for</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_fDelta</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">l_fDelta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i_huR</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_huL</span><span class="p">;</span>
+<span class="n">l_fDelta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i_huR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_huR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_hR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t_real</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hR</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">i_huL</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_huL</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_hL</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t_real</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hL</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_fDelta</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="n">i_huR</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i_huL</span><span class="p">},</span><span class="w"> </span><span class="p">{(</span><span class="n">i_huR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_huR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_hR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t_real</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hR</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">i_huL</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_huL</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">i_hL</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t_real</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_g</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hL</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i_hL</span><span class="p">)}};</span>
+</pre></div>
+</div>
+<p>Furthermore, we established a constant for <code class="code docutils literal notranslate"><span class="pre">t_real(0.5)</span> <span class="pre">*</span> <span class="pre">m_g</span></code>:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">t_real</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="n">l_gHalf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4.903325</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="coarse-output-optimization">
+<h4>Coarse Output optimization<a class="headerlink" href="#coarse-output-optimization" title="Link to this heading"></a></h4>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">write()</span></code> function in <code class="docutils literal notranslate"><span class="pre">NetCdf.cpp</span></code> we calculated</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">l_data</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">m_k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_k</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>to get the average value of the <code class="docutils literal notranslate"><span class="pre">m_k</span> <span class="pre">*</span> <span class="pre">m_k</span></code> cells which we summed up. To optimize this, we compute</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">t_real</span><span class="w"> </span><span class="n">l_averagingFactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">m_k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m_k</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>once and then reuse it wherever we need it:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">l_b</span><span class="p">[</span><span class="n">l_i</span><span class="p">]</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">l_averagingFactor</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This way, the division only happens once.</p>
+</section>
+</section>
+</section>
+<section id="individual-phase-ideas">
+<h2>Individual phase ideas<a class="headerlink" href="#individual-phase-ideas" title="Link to this heading"></a></h2>
+<p>For the individual phase, we plan on building a graphical user interface using <a class="reference external" href="https://github.com/ocornut/imgui">ImGui</a>.</p>
+<p>We plan to implement following features:</p>
+<ul class="simple">
+<li><p>run a simulation with the click of a button</p></li>
+<li><p>stop a simulation with the click of a button</p></li>
+<li><p>specify simulation parameters (size, cells, endTime, etc.)</p></li>
+<li><p>specify file paths (netCdf output, checkpoint, bathymetry, displacement)</p></li>
+<li><p>save and load config files</p></li>
+<li><p>enable/disable checkpoints</p></li>
+<li><p>monitor time status in</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">simTime</span> <span class="pre">/</span> <span class="pre">endTime</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeStep</span> <span class="pre">/</span> <span class="pre">maxTimeSteps</span></code></p></li>
+<li><p>current execution time (real time)</p></li>
+<li><p>estimated real time left</p></li>
+</ul>
+</li>
+<li><p>monitor system info</p></li>
+<li><p>trigger a re-compilation with parameters</p></li>
+</ul>
+<p>In case there is time left, we want to try to implement a <a class="reference external" href="https://kitware.github.io/paraview-docs/latest/python/">python script</a> (which can be called via the gui)
+that calls Paraview and renders an animation from a solution file, without the need for the Paraview Gui.
+However this part of the project is entirely optional and we are unsure if we will have the capabilities to implement it.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="07.html" class="btn btn-neutral float-left" title="7. Checkpointing and Coarse Output" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

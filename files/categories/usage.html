@@ -135,55 +135,65 @@ As of now, these are:</p>
 <td><p>integer</p></td>
 <td><p>&gt;0</p></td>
 </tr>
-<tr class="row-odd"><td><p>simulationSizeX</p></td>
+<tr class="row-odd"><td><p>nk</p></td>
+<td><p>number of cells in x- and y-direction to be averaged into one in the output file</p></td>
+<td><p>integer</p></td>
+<td><p>&gt;0</p></td>
+</tr>
+<tr class="row-even"><td><p>simulationSizeX</p></td>
 <td><p>simulation size in x-direction</p></td>
 <td><p>float</p></td>
 <td><p>metres, &gt;0</p></td>
 </tr>
-<tr class="row-even"><td><p>simulationSizeY</p></td>
+<tr class="row-odd"><td><p>simulationSizeY</p></td>
 <td><p>simulation size in y-direction</p></td>
 <td><p>float</p></td>
 <td><p>metres, &gt;0</p></td>
 </tr>
-<tr class="row-odd"><td><p>hasBoundaryL</p></td>
+<tr class="row-even"><td><p>hasBoundaryL</p></td>
 <td><p>is there a boundary on the left?</p></td>
 <td><p>boolean</p></td>
 <td><p>true or false</p></td>
 </tr>
-<tr class="row-even"><td><p>hasBoundaryR</p></td>
+<tr class="row-odd"><td><p>hasBoundaryR</p></td>
 <td><p>is there a boundary on the right?</p></td>
 <td><p>boolean</p></td>
 <td><p>true or false</p></td>
 </tr>
-<tr class="row-odd"><td><p>hasBoundaryT</p></td>
+<tr class="row-even"><td><p>hasBoundaryT</p></td>
 <td><p>is there a boundary at the top?</p></td>
 <td><p>boolean</p></td>
 <td><p>true or false</p></td>
 </tr>
-<tr class="row-even"><td><p>hasBoundaryB</p></td>
+<tr class="row-odd"><td><p>hasBoundaryB</p></td>
 <td><p>is there a boundary at the bottom?</p></td>
 <td><p>boolean</p></td>
 <td><p>true or false</p></td>
 </tr>
-<tr class="row-odd"><td><p>endTime</p></td>
+<tr class="row-even"><td><p>endTime</p></td>
 <td><p>how much time will be simulated</p></td>
 <td><p>float</p></td>
 <td><p>seconds</p></td>
 </tr>
-<tr class="row-even"><td><p>stationFrequency</p></td>
+<tr class="row-odd"><td><p>stationFrequency</p></td>
 <td><p>frequency at which stations will capture data</p></td>
 <td><p>float</p></td>
 <td><p>seconds</p></td>
 </tr>
-<tr class="row-odd"><td><p>offsetX</p></td>
+<tr class="row-even"><td><p>offsetX</p></td>
 <td><p>domain offset from 0 in x direction</p></td>
 <td><p>float</p></td>
 <td><p>metres</p></td>
 </tr>
-<tr class="row-even"><td><p>offsetY</p></td>
+<tr class="row-odd"><td><p>offsetY</p></td>
 <td><p>domain offset from 0 in y direction</p></td>
 <td><p>float</p></td>
 <td><p>metres</p></td>
+</tr>
+<tr class="row-even"><td><p>checkpointFrequency</p></td>
+<td><p>frequency of checkpoints in real time</p></td>
+<td><p>float</p></td>
+<td><p>seconds</p></td>
 </tr>
 </tbody>
 </table>

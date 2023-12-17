@@ -58,20 +58,20 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2. Finite Volume Discretization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#task-2-0">Task 2.0</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-0-1-f-wave-solver-integration">Task 2.0.1 - F-Wave solver integration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-0-2-sanity-check-using-middle-states-csv">Task 2.0.2 - Sanity check using middle_states.csv</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-0-3-continuous-integration">Task 2.0.3 - Continuous Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.0</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#f-wave-solver-integration">2.0.1 - F-Wave solver integration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sanity-check-using-middle-states-csv">2.0.2 - Sanity check using middle_states.csv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#continuous-integration">2.0.3 - Continuous Integration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#task-2-1-shock-and-rarefaction-waves">Task 2.1 Shock and Rarefaction Waves</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems">Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-1-2-observations">Task 2.1.2 - Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shock-and-rarefaction-waves">2.1 Shock and Rarefaction Waves</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-of-shock-shock-and-rare-rare-problems">2.1.1 - Implementation of Shock-Shock and Rare-Rare problems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#observations">2.1.2 - Observations</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#task-2-2-dam-break">Task 2.2 - Dam-Break</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-2-1">Task 2.2.1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#task-2-2-2">Task 2.2.2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dam-break">2.2 - Dam-Break</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">2.2.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">2.2.2</a></li>
 </ul>
 </li>
 </ul>
@@ -81,6 +81,7 @@
 <li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
@@ -114,10 +115,10 @@
   <section id="finite-volume-discretization">
 <h1>2. Finite Volume Discretization<a class="headerlink" href="#finite-volume-discretization" title="Link to this heading"></a></h1>
 <p>All project authors contributed to this assignment in equal parts.</p>
-<section id="task-2-0">
-<h2>Task 2.0<a class="headerlink" href="#task-2-0" title="Link to this heading"></a></h2>
-<section id="task-2-0-1-f-wave-solver-integration">
-<h3>Task 2.0.1 - F-Wave solver integration<a class="headerlink" href="#task-2-0-1-f-wave-solver-integration" title="Link to this heading"></a></h3>
+<section id="id1">
+<h2>2.0<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="f-wave-solver-integration">
+<h3>2.0.1 - F-Wave solver integration<a class="headerlink" href="#f-wave-solver-integration" title="Link to this heading"></a></h3>
 <p>To allow for an easy change of which solver will be used, we implemented another input parameter into the main class:</p>
 <p>(<strong>File: main.cpp</strong>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">i_argc</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">){</span>
@@ -151,8 +152,8 @@ This allows for an easy implementation without setters and getters:</p>
 </pre></div>
 </div>
 </section>
-<section id="task-2-0-2-sanity-check-using-middle-states-csv">
-<h3>Task 2.0.2 - Sanity check using middle_states.csv<a class="headerlink" href="#task-2-0-2-sanity-check-using-middle-states-csv" title="Link to this heading"></a></h3>
+<section id="sanity-check-using-middle-states-csv">
+<h3>2.0.2 - Sanity check using middle_states.csv<a class="headerlink" href="#sanity-check-using-middle-states-csv" title="Link to this heading"></a></h3>
 <section id="code-documentation">
 <h4>Code documentation<a class="headerlink" href="#code-documentation" title="Link to this heading"></a></h4>
 <p>Before we can start calculating and checking results, we need a way to read the data from the <cite>csv</cite> file.</p>
@@ -273,8 +274,8 @@ to execute the <code class="docutils literal notranslate"><span class="pre">sani
 </div>
 </section>
 </section>
-<section id="task-2-0-3-continuous-integration">
-<h3>Task 2.0.3 - Continuous Integration<a class="headerlink" href="#task-2-0-3-continuous-integration" title="Link to this heading"></a></h3>
+<section id="continuous-integration">
+<h3>2.0.3 - Continuous Integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h3>
 <p>The project code is automatically tested using GitHub actions on push and pull-requests, as well as
 every night at 12am. This applies to the <cite>main</cite> and <cite>dev</cite> branch.
 View the <code class="docutils literal notranslate"><span class="pre">.github/workflows/main.yml</span></code> file for further information.</p>
@@ -284,14 +285,14 @@ The compiled data is pushed into the <cite>gh-pages</cite> branch and from there
 View the <code class="docutils literal notranslate"><span class="pre">.github/workflows/docs.yml</span></code> file for further information.</p>
 </section>
 </section>
-<section id="task-2-1-shock-and-rarefaction-waves">
-<h2>Task 2.1 Shock and Rarefaction Waves<a class="headerlink" href="#task-2-1-shock-and-rarefaction-waves" title="Link to this heading"></a></h2>
+<section id="shock-and-rarefaction-waves">
+<h2>2.1 Shock and Rarefaction Waves<a class="headerlink" href="#shock-and-rarefaction-waves" title="Link to this heading"></a></h2>
 <p>Since <span class="math notranslate nohighlight">\(h_l = h_r\)</span>, both setups only require one shared height input <cite>i_h</cite> for both sides.
 And because of <span class="math notranslate nohighlight">\((hu)_r = -(hu)_l\)</span>, it suffices to either take <span class="math notranslate nohighlight">\((hu)_l\)</span> or <span class="math notranslate nohighlight">\((hu)_r\)</span> as the second input,
 as we can derive the other momentum easily. For further information see <a class="reference internal" href="../namespaces/setups.html#ns-setups"><span class="std std-ref">Setups</span></a>.</p>
 <p>Since for both problems the <cite>getMomentumY()</cite> function returns 0 in all cases, we won’t address it any further.</p>
-<section id="task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems">
-<h3>Task 2.1.1 - Implementation of Shock-Shock and Rare-Rare problems<a class="headerlink" href="#task-2-1-1-implementation-of-shock-shock-and-rare-rare-problems" title="Link to this heading"></a></h3>
+<section id="implementation-of-shock-shock-and-rare-rare-problems">
+<h3>2.1.1 - Implementation of Shock-Shock and Rare-Rare problems<a class="headerlink" href="#implementation-of-shock-shock-and-rare-rare-problems" title="Link to this heading"></a></h3>
 <p>Initial conditions are the following:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}q_l=
@@ -350,11 +351,11 @@ Only this time <span class="math notranslate nohighlight">\((hu)_r\)</span> equa
 </div>
 </section>
 </section>
-<section id="task-2-1-2-observations">
-<h3>Task 2.1.2 - Observations<a class="headerlink" href="#task-2-1-2-observations" title="Link to this heading"></a></h3>
+<section id="observations">
+<h3>2.1.2 - Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h3>
 <p>Discontinuity location in this scenerio is 5</p>
-<table class="docutils align-default" id="id2">
-<caption><span class="caption-text">wave speeds</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">wave speeds</span><a class="headerlink" href="#id6" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 16.7%" />
 <col style="width: 16.7%" />
@@ -459,8 +460,8 @@ Only this time <span class="math notranslate nohighlight">\((hu)_r\)</span> equa
 </tr>
 </tbody>
 </table>
-<section id="observations">
-<h4>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h4>
+<section id="id2">
+<h4>Observations<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
 <p>As shown in the table, the wave speeds are swapped around for the Shock-Shock and Rare-Rare problems.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -471,10 +472,10 @@ The sum of the wave speed stays the same.</p>
 </section>
 </section>
 </section>
-<section id="task-2-2-dam-break">
-<h2>Task 2.2 - Dam-Break<a class="headerlink" href="#task-2-2-dam-break" title="Link to this heading"></a></h2>
-<section id="task-2-2-1">
-<h3>Task 2.2.1<a class="headerlink" href="#task-2-2-1" title="Link to this heading"></a></h3>
+<section id="dam-break">
+<h2>2.2 - Dam-Break<a class="headerlink" href="#dam-break" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3>2.2.1<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <section id="visualizations">
 <h4>Visualizations<a class="headerlink" href="#visualizations" title="Link to this heading"></a></h4>
 <p>Roe solver with input 100 (cells in x direction)</p>
@@ -500,8 +501,8 @@ The sum of the wave speed stays the same.</p>
 <p>The momentum is approximately 60</p>
 </div>
 </section>
-<section id="id1">
-<h4>Observations<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<section id="id4">
+<h4>Observations<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <p>As seen in the simulations, the momentum is getting higher, as <span class="math notranslate nohighlight">\(h_l\)</span> and the difference between <span class="math notranslate nohighlight">\(h_l\)</span> and <span class="math notranslate nohighlight">\(h_r\)</span> grow.
 In the end, the water approaches a height between <span class="math notranslate nohighlight">\(h_l\)</span> and <span class="math notranslate nohighlight">\(h_r\)</span>.</p>
 </section>
@@ -536,9 +537,9 @@ In the end, the water approaches a height between <span class="math notranslate 
 The larger the absolute value of <span class="math notranslate nohighlight">\(u_r\)</span>, the stronger the corresponding impact.</p>
 </section>
 </section>
-<section id="task-2-2-2">
-<h3>Task 2.2.2<a class="headerlink" href="#task-2-2-2" title="Link to this heading"></a></h3>
-<p>We have given</p>
+<section id="id5">
+<h3>2.2.2<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>We were given</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}q=\begin{bmatrix}
        h \\ u*h
