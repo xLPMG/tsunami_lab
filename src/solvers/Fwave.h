@@ -23,6 +23,8 @@ class tsunami_lab::solvers::Fwave
 private:
   //! gravity constant
   static t_real constexpr m_g = 9.80665;
+  static t_real constexpr l_gHalf = 4.903325;
+
   //! square root of gravity
   static t_real constexpr m_gSqrt = 3.131557121;
 

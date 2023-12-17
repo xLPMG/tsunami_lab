@@ -665,6 +665,13 @@ to
 
     t_real l_fDelta[2] = {{i_huR - i_huL}, {(i_huR * i_huR / i_hR + t_real(0.5) * m_g * i_hR * i_hR) - (i_huL * i_huL / i_hL + t_real(0.5) * m_g * i_hL * i_hL)}};
 
+Furthermore, we established a constant for :code:`t_real(0.5) * m_g`:
+
+.. code:: 
+
+    static t_real constexpr l_gHalf = 4.903325;
+
+
 
 Coarse Output optimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

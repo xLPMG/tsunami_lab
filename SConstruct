@@ -14,7 +14,7 @@ print( '###                              ###' )
 print( '### https://scalable.uni-jena.de ###' )
 print( '####################################' )
 print()
-print('runnning build script')
+print('running build script')
 
 # configuration
 vars = Variables()
