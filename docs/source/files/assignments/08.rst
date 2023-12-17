@@ -381,7 +381,7 @@ Our sources are
 and
 `<https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html>`_
 
-8.4 - Compiler reports
+8.2.4 - Compiler reports
 ------------------------
 
 We added the support for a compiler report flag with the following lines in our ``SConstruct``
@@ -517,10 +517,9 @@ could not be vectorized:
 8.3.1 to 8.3.4 - VTune
 -----------------------
 
-For this part we used Intel VTune.
-First we used the gui to specify our reports.
+First we used the gui of Intel vTune to specify our reports.
 
-Then we used the following batch script to run the hotspots measurement:
+Then the following batch script was used to run the hotspots measurement:
 
 .. code:: bash
   
@@ -719,8 +718,8 @@ We plan to implement following features:
 
   * estimated real time left
 
-* monitor CPU usage
-* monitor Memory usage
+* monitor system info
+
 * trigger a re-compilation with parameters
 
 In case there is time left, we want to try to implement a `python script <https://kitware.github.io/paraview-docs/latest/python/>`_ (which can be called via the gui)

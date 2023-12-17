@@ -15,7 +15,6 @@ void tsunami_lab::solvers::Fwave::computeEigenvalues(t_real i_hL,
                                                      t_real &eigenvalueRoe_1,
                                                      t_real &eigenvalueRoe_2)
 {
-
   // pre-compute square-root ops
   t_real l_hSqrtL = std::sqrt(i_hL);
   t_real l_hSqrtR = std::sqrt(i_hR);

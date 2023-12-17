@@ -98,11 +98,6 @@ private:
     // tracks if file was opened for writing
     bool m_outputFileOpened = false;
 
-    //Square of m_k
-    t_real m_kSquare = 0;
-    //average factor
-    t_real m_averagingFactor = 0;
-
     /**
      * checks for error in Cdf file
      * @param i_err error
