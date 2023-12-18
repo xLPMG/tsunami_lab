@@ -45,6 +45,14 @@ vars.AddVariables(
                                 '-qopt-report=3',
                                 '-qopt-report=4',
                                 '-qopt-report=5')
+              ),
+  EnumVariable( 'mpi',
+                'flag for enabling mpi',
+                'none',
+                allowed_values=('none', 
+                                'gnu', 
+                                'osx',
+                                'intel')
               )
 )
 
@@ -99,6 +107,14 @@ else:
 # enable reports
 if 'report' in env['report']:
    env.Append( CXXFLAGS = [ env['report'] ] )
+
+# enable mpi
+if 'gnu' in env['mpi']:
+   env.Append( CXXFLAGS = [ '-fopenmp' ] )
+if 'osx' in env['mpi']:
+   env.Append( CXXFLAGS = [ '-openmp' ] )
+if 'intel' in env['mpi']:
+   env.Append( CXXFLAGS = [ '-qopenmp' ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
