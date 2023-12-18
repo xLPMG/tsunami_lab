@@ -51,7 +51,6 @@ vars.AddVariables(
                 'none',
                 allowed_values=('none', 
                                 'gnu', 
-                                'osx',
                                 'intel')
               )
 )
@@ -64,12 +63,6 @@ if vars.UnknownVariables():
 # create environment
 env = Environment( variables = vars )
 
-conf = Configure(env)
-if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
-        print ('Did not find the netcdf library, exiting!')
-        Exit(1)
-env = conf.Finish()
-
 # set local env
 env['ENV'] = os.environ
 
@@ -78,6 +71,13 @@ if 'CXX' in os.environ:
   env['CXX'] = os.environ['CXX']
 
 print("Using ", env['CXX'], " compiler.")
+
+conf = Configure(env)
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
+  print ('Did not find the netcdf library, exiting!')
+  exit(1)
+        
+env = conf.Finish()
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
@@ -111,8 +111,6 @@ if 'report' in env['report']:
 # enable mpi
 if 'gnu' in env['mpi']:
    env.Append( CXXFLAGS = [ '-fopenmp' ] )
-if 'osx' in env['mpi']:
-   env.Append( CXXFLAGS = [ '-openmp' ] )
 if 'intel' in env['mpi']:
    env.Append( CXXFLAGS = [ '-qopenmp' ] )
 
