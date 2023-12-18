@@ -119,6 +119,8 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/' ] )
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/backends/' ] )
 
+env.Append( CXXFLAGS = [ '-isystem', 'lib/systeminfo.h' ] )
+
 # add other OS specific flags
 if buildGUI and OS == "Darwin": 
   env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))

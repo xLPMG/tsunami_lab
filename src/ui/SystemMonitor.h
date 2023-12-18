@@ -18,6 +18,8 @@ namespace tsunami_lab
 
 class tsunami_lab::ui::SystemMonitor
 {
+private:
+    static void updateData();
 public:
     static void show();
 };
