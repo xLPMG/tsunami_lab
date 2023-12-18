@@ -46,6 +46,7 @@ void tsunami_lab::ui::SystemMonitor::show()
     res = std::to_string(systeminfo::getTotalRAM());
     ImGui::Text("Total RAM: %sMB", res.c_str());
 
+
     res = std::to_string(systeminfo::getUsedRAM());
     ImGui::Text("Used RAM: %sMB", res.c_str());
 

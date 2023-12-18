@@ -52,7 +52,7 @@ namespace systeminfo
 
     float getCPUUsage()
     {
-        std::string result = exec("ps -o %cpu | awk '{s+=$1} END {print s}'");
+        std::string result = exec("top -l  2 | grep -E \"^CPU\" | tail -1 | awk '{ print $3 + $5\"%\" }' | sed s/\\%/\\/");
         std::replace(result.begin(), result.end(), ',', '.');
         return std::stof(result)/ getCPUCores();
     }
