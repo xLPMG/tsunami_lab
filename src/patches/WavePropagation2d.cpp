@@ -8,6 +8,7 @@
 #include "WavePropagation2d.h"
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
+//#include <omp.h>
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
