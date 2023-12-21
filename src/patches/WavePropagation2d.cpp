@@ -158,36 +158,36 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
       t_idx l_ceB = l_ec * getStride() + l_ed;
       t_idx l_ceT = l_ceB + getStride();
 
-      t_real l_hD = l_hOld[l_ceB];
-      t_real l_hU = l_hOld[l_ceT];
-      t_real l_huD = l_huOldY[l_ceB];
-      t_real l_huU = l_huOldY[l_ceT];
-      t_real l_bD = m_b[l_ceB];
-      t_real l_bU = m_b[l_ceT];
+      t_real l_hB = l_hOld[l_ceB];
+      t_real l_hT = l_hOld[l_ceT];
+      t_real l_huB = l_huOldY[l_ceB];
+      t_real l_huT = l_huOldY[l_ceT];
+      t_real l_bB = m_b[l_ceB];
+      t_real l_bT = m_b[l_ceT];
 
       // handle reflections
       handleReflections(l_hOld,
                         l_huOldY,
                         l_ceB,
                         l_ceT,
-                        l_hD,
-                        l_hU,
-                        l_huD,
-                        l_huU,
-                        l_bD,
-                        l_bU);
+                        l_hB,
+                        l_hT,
+                        l_huB,
+                        l_huT,
+                        l_bB,
+                        l_bT);
 
       // compute net-updates
       t_real l_netUpdates[2][2];
 
-      if (l_hD == 0 && l_hU == 0)
+      if (l_hB == 0 && l_hT == 0)
         continue;
-      solvers::Fwave::netUpdates(l_hD,
-                                 l_hU,
-                                 l_huD,
-                                 l_huU,
-                                 l_bD,
-                                 l_bU,
+      solvers::Fwave::netUpdates(l_hB,
+                                 l_hT,
+                                 l_huB,
+                                 l_huT,
+                                 l_bB,
+                                 l_bT,
                                  l_netUpdates[0],
                                  l_netUpdates[1]);
 
