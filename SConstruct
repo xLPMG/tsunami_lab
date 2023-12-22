@@ -53,8 +53,8 @@ vars.AddVariables(
                                 '-qopt-report=4',
                                 '-qopt-report=5')
               ),
-  EnumVariable( 'mpi',
-                'flag for enabling mpi',
+  EnumVariable( 'mp',
+                'flag for enabling openmp',
                 'none',
                 allowed_values=('none', 
                                 'gnu', 
