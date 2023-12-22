@@ -8,7 +8,7 @@
 #include "WavePropagation2d.h"
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
-//#include <omp.h>
+#include <omp.h>
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
@@ -84,6 +84,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
   // iterate over edges and update with Riemann solutions
   // X-SWEEP
 
+  #pragma omp parallel for
   for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
   {
     for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
@@ -150,6 +151,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
   }
 
   // Y-SWEEP
+  #pragma omp parallel for
   for (t_idx l_ec = 0; l_ec < m_nCellsY + 1; l_ec++)
   {
     for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
