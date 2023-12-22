@@ -53,7 +53,7 @@ vars.AddVariables(
                                 '-qopt-report=4',
                                 '-qopt-report=5')
               ),
-  EnumVariable( 'mp',
+  EnumVariable( 'omp',
                 'flag for enabling openmp',
                 'none',
                 allowed_values=('none', 
@@ -139,10 +139,10 @@ if 'report' in env['report']:
 #####################
 #      OPENMP       #
 #####################
-if 'gnu' in env['mpi']:
+if 'gnu' in env['omp']:
   env.Append( CXXFLAGS = [ '-fopenmp' ] )
   env.Append( LINKFLAGS = [ '-fopenmp' ] )
-if 'intel' in env['mpi']:
+if 'intel' in env['omp']:
   env.Append( CXXFLAGS = [ '-qopenmp' ] )
   env.Append( LINKFLAGS = [ '-qopenmp' ] )
 
