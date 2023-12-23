@@ -142,9 +142,11 @@ if 'report' in env['report']:
 if 'gnu' in env['omp']:
   env.Append( CXXFLAGS = [ '-fopenmp' ] )
   env.Append( LINKFLAGS = [ '-fopenmp' ] )
+  env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
 if 'intel' in env['omp']:
   env.Append( CXXFLAGS = [ '-qopenmp' ] )
   env.Append( LINKFLAGS = [ '-qopenmp' ] )
+  env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
 
 #####################
 #    SANITIZERS    #

@@ -3,12 +3,14 @@
  * @author Richard Hofmann
  *
  * # Description 
- * two-dimensional wave propagation patch.
+ * Two-dimensional wave propagation patch.
  **/
 #include "WavePropagation2d.h"
 #include "../solvers/Roe.h"
 #include "../solvers/Fwave.h"
+#ifdef USEOMP
 #include <omp.h>
+#endif
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
@@ -225,6 +227,7 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
   t_real *l_huY = m_huY[m_step];
   t_real *l_b = m_b;
 
+  #pragma omp parallel for
   for (t_idx i = 1; i < m_nCellsY; i++)
   {
     t_idx ceL = getStride() * i;
@@ -240,6 +243,8 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     l_huY[ceR] = l_huY[ceR - 1];
     l_b[ceR] = l_b[ceR - 1];
   }
+
+  #pragma omp parallel for
   for (t_idx i = 0; i < m_nCellsX + 2; i++)
   {
     t_idx ceB = i;
