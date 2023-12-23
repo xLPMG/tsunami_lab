@@ -1,0 +1,95 @@
+9. Parallelization
+*****************
+
+9.1 OpenMP
+============
+
+9.1.1 - Parallelization with OpenMP
+----------------------------------------
+
+An easy way to parallelize our for loops is using 
+
+.. code:: cpp
+
+    #pragma omp parallel for
+
+example:
+
+.. code:: cpp
+
+    #pragma omp parallel for
+    for (unsigned short l_st = 0; l_st < 2; l_st++){
+    ...
+
+9.1.2 - Parallelization speedup
+------------------------------------------
+
+We have used following batch script for ara:
+
+.. code:: batch
+
+    #!/bin/bash
+    #SBATCH --job-name=tohoku_1000
+    #SBATCH --output=tohoku_1000.out
+    #SBATCH --error=tohoku_1000.err
+    #SBATCH --partition=s_hadoop
+    #SBATCH --nodes=1
+    #SBATCH --ntasks=1
+    #SBATCH --time=10:00:00
+    #SBATCH --cpus-per-task=72
+
+    ./build/tsunami_lab configs/tohoku1000.json
+
+And got following results:
+
+**Without parallelization**
+
+.. code:: text
+
+    Note: max 10520 steps will be computed.
+    entering time loop
+    finished time loop
+
+    Calculation time: 1.94101e+06ms
+    = 1941.01 seconds
+    = 32.3501 minutes
+
+**With parallelization**
+
+.. code:: text
+
+    Note: max 10520 steps will be computed.
+    entering time loop
+    finished time loop
+
+    Calculation time: 75507.5ms
+    = 75.5075 seconds
+    = 1.25846 minutes
+
+.. note::
+
+    We compiled in benchamrk mode (no IO).
+
+Speedup: TODO
+
+Use more Threads: TODO
+
+9.1.3 - 2D for loop parallelization
+------------------------------------------
+
+The results from above used parallelization in the outer loop.
+The parallelized inner loops leads to following time:
+
+.. code:: text
+
+    Calculation time: 791389ms
+    = 791.389 seconds
+    = 13.1898 minutes
+
+
+It is clear, that parallelizing the outer loop is more effficient.
+
+9.1.4 - Pinning
+------------------------------------------
+
+TODO
