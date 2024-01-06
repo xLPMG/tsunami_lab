@@ -1,5 +1,5 @@
 9. Parallelization
-*****************
+********************
 
 9.1 OpenMP
 ============
@@ -54,7 +54,7 @@ And got following results:
     = 1941.01 seconds
     = 32.3501 minutes
 
-**With parallelization**
+**With parallelization on 72 cores with 72 threads**
 
 .. code:: text
 
@@ -68,11 +68,26 @@ And got following results:
 
 .. note::
 
-    We compiled in benchamrk mode (no IO).
+    We compiled in benchmark mode (no IO).
 
-Speedup: TODO
+Speedup: :math:`\frac{1941}{75.5} = 25.7`
 
-Use more Threads: TODO
+**With parallelization on 72 cores with 144 threads**
+
+.. code:: text
+
+    Note: max 10520 steps will be computed.
+    entering time loop
+    finished time loop
+
+    Calculation time: 215822ms
+    = 215.822 seconds
+    = 3.59704 minutes
+
+Speedup: :math:`\frac{1941}{215} = 8.99`
+
+We can see that having twice the amount of threads resulted in a much slower computation.
+We conclude that using more threads than cores results in a slowed down performance.
 
 9.1.3 - 2D for loop parallelization
 ------------------------------------------
