@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9. Parallelization &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/09.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="8. Optimization" href="08.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9. Parallelization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#openmp">9.1 OpenMP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parallelization-with-openmp">9.1.1 - Parallelization with OpenMP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parallelization-speedup">9.1.2 - Parallelization speedup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#d-for-loop-parallelization">9.1.3 - 2D for loop parallelization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pinning-and-scheduling">9.1.4 - Pinning and Scheduling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">9. Parallelization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/09.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parallelization">
+<h1>9. Parallelization<a class="headerlink" href="#parallelization" title="Link to this heading"></a></h1>
+<section id="openmp">
+<h2>9.1 OpenMP<a class="headerlink" href="#openmp" title="Link to this heading"></a></h2>
+<section id="parallelization-with-openmp">
+<h3>9.1.1 - Parallelization with OpenMP<a class="headerlink" href="#parallelization-with-openmp" title="Link to this heading"></a></h3>
+<p>An easy way to parallelize our for loops is using</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for</span>
+</pre></div>
+</div>
+<p>example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">short</span><span class="w"> </span><span class="n">l_st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">l_st</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">l_st</span><span class="o">++</span><span class="p">){</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="parallelization-speedup">
+<h3>9.1.2 - Parallelization speedup<a class="headerlink" href="#parallelization-speedup" title="Link to this heading"></a></h3>
+<p>We have used following batch script for ara:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+#SBATCH --job-name=tohoku_1000
+#SBATCH --output=tohoku_1000.out
+#SBATCH --error=tohoku_1000.err
+#SBATCH --partition=s_hadoop
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --time=10:00:00
+#SBATCH --cpus-per-task=72
+
+./build/tsunami_lab configs/tohoku1000.json
+</pre></div>
+</div>
+<p>And got following results:</p>
+<p><strong>Without parallelization</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
+entering time loop
+finished time loop
+
+Calculation time: 1.94101e+06ms
+= 1941.01 seconds
+= 32.3501 minutes
+</pre></div>
+</div>
+<p><strong>With parallelization on 72 cores with 72 threads</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
+entering time loop
+finished time loop
+
+Calculation time: 75507.5ms
+= 75.5075 seconds
+= 1.25846 minutes
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We compiled in benchmark mode (no IO).</p>
+</div>
+<p>Speedup: <span class="math notranslate nohighlight">\(\frac{1941}{75.5} = 25.7\)</span></p>
+<p><strong>With parallelization on 72 cores with 144 threads</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
+entering time loop
+finished time loop
+
+Calculation time: 215822ms
+= 215.822 seconds
+= 3.59704 minutes
+</pre></div>
+</div>
+<p>Speedup: <span class="math notranslate nohighlight">\(\frac{1941}{215} = 8.99\)</span></p>
+<p>We can see that having twice the amount of threads resulted in a much slower computation.
+We conclude that using more threads than cores results in a slowed down performance.</p>
+</section>
+<section id="d-for-loop-parallelization">
+<h3>9.1.3 - 2D for loop parallelization<a class="headerlink" href="#d-for-loop-parallelization" title="Link to this heading"></a></h3>
+<p>The results from above used parallelization in the outer loop.
+The parallelized inner loops leads to following time:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 791389ms
+= 791.389 seconds
+= 13.1898 minutes
+</pre></div>
+</div>
+<p>It is clear, that parallelizing the outer loop is more effficient.</p>
+</section>
+<section id="pinning-and-scheduling">
+<h3>9.1.4 - Pinning and Scheduling<a class="headerlink" href="#pinning-and-scheduling" title="Link to this heading"></a></h3>
+<p><strong>Scheduling</strong></p>
+<p>The upper implementation used the basic <code class="code docutils literal notranslate"><span class="pre">scheduling(static)</span></code>.</p>
+<p>For <code class="code docutils literal notranslate"><span class="pre">scheduling(dynamic)</span></code> we get:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 1.57024e+06ms
+    = 1570.24 seconds
+    = 26.1706 minutes
+</pre></div>
+</div>
+<p>For <code class="code docutils literal notranslate"><span class="pre">scheduling(guided)</span></code> we get:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 95218ms
+    = 95.218 seconds
+    = 1.58697 minutes
+</pre></div>
+</div>
+<p>For <code class="code docutils literal notranslate"><span class="pre">scheduling(auto)</span></code> we get:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 84546.7ms
+    = 84.5467 seconds
+    = 1.40911 minutes
+</pre></div>
+</div>
+<p><strong>Pinning</strong></p>
+<p>Using <code class="code docutils literal notranslate"><span class="pre">OMP_PLACES={0}:36:1</span></code> we get:</p>
+<img alt="../../_images/task_9-4-1_Pinning_36.png" src="../../_images/task_9-4-1_Pinning_36.png" />
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 1.39672e+06ms
+    = 1396.72 seconds
+    = 23.2786 minutes
+</pre></div>
+</div>
+<p>Using <code class="code docutils literal notranslate"><span class="pre">OMP_PLACES={0,36}:18:1</span></code> we get:</p>
+<img alt="../../_images/task_9-4-1_Pinning_18.png" src="../../_images/task_9-4-1_Pinning_18.png" />
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 1.43714e+06ms
+= 1437.14 seconds
+= 23.9523 minutes
+</pre></div>
+</div>
+<p>It shows that using the first strategy is more efficient for computation.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="08.html" class="btn btn-neutral float-left" title="8. Optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
