@@ -33,6 +33,7 @@ jobs:
           sudo apt-get install valgrind
           sudo apt-get install cppcheck
           sudo apt-get install libnetcdf-dev
+          sudo apt-get install libomp-dev
           git submodule init
           git submodule update
 
@@ -42,21 +43,21 @@ jobs:
 
       - name: Sanitize
         run: |
-          scons mode=debug+san
+          scons mode=debug+san omp=gnu
           ./build/tests
-          ./build/tsunami_lab minimalConfig.json
-          scons mode=release+san
+          ./build/tsunami_lab configs/minimalConfig.json
+          scons mode=release+san omp=gnu
           ./build/tests
-          ./build/tsunami_lab minimalConfig.json
+          ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Valgrind
         run: |
-          scons mode=debug
+          scons mode=debug omp=gnu
           valgrind ./build/tests
-          valgrind ./build/tsunami_lab minimalConfig.json
+          valgrind ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Release
         run: |
-          scons
+          scons omp=gnu
           ./build/tests
-          ./build/tsunami_lab minimalConfig.json
+          ./build/tsunami_lab configs/minimalConfig.json

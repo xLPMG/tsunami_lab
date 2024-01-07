@@ -42,6 +42,9 @@
 // external libraries
 #include <nlohmann/json.hpp>
 #include <netcdf.h>
+#ifdef USEOMP
+#include <omp.h>
+#endif
 
 using json = nlohmann::json;
 using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
@@ -473,6 +476,8 @@ int main(int i_argc,
     l_netCdf->read(l_checkPointFilePath, "momentumX", &l_huCheck);
     l_netCdf->read(l_checkPointFilePath, "momentumY", &l_hvCheck);
     l_netCdf->read(l_checkPointFilePath, "bathymetry", &l_bCheck);
+
+    #pragma omp parallel for
     for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
     {
       for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
@@ -505,10 +510,10 @@ int main(int i_argc,
 
   if (l_setupChoice != "CHECKPOINT")
   {
+    #pragma omp parallel for
     for (tsunami_lab::t_idx l_cy = 0; l_cy < l_ny; l_cy++)
     {
       tsunami_lab::t_real l_y = l_cy * l_dy + l_offsetY;
-
       for (tsunami_lab::t_idx l_cx = 0; l_cx < l_nx; l_cx++)
       {
         tsunami_lab::t_real l_x = l_cx * l_dx + l_offsetX;

@@ -4,8 +4,8 @@
     "simulationSizeY": 10000,
     "offsetX": 5000,
     "offsetY": 5000,
-    "nx":2000,
-    "ny":2000,
+    "nx":1000,
+    "ny":1000,
     "setup":"ARTIFICIAL2D",
     "endTime":50
 }

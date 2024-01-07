@@ -6,6 +6,7 @@
 # Entry-point for builds.
 ##
 import SCons
+import platform
 import os
 
 print( '####################################' )
@@ -16,15 +17,21 @@ print( '####################################' )
 print()
 print('running build script')
 
-# configuration
+#####################
+#      GET OS       #
+#####################
+OS = platform.system()
+
+#####################
+#  READ ARGUMENTS   #
+#####################
 vars = Variables()
 
 vars.AddVariables(
   EnumVariable( 'mode',
                 'compile modes, option \'san\' enables address and undefined behavior sanitizers',
                 'release',
-                allowed_values=('release', 'debug', 'osx', 'release+san', 
-                                'debug+san', 'release+osx','osx+san', 'benchmark', 'benchmark+osx')
+                allowed_values=('release', 'debug', 'release+san', 'debug+san', 'benchmark')
               ),
   EnumVariable( 'opt',
                 'optimization flag',
@@ -45,6 +52,13 @@ vars.AddVariables(
                                 '-qopt-report=3',
                                 '-qopt-report=4',
                                 '-qopt-report=5')
+              ),
+  EnumVariable( 'omp',
+                'flag for enabling openmp',
+                'none',
+                allowed_values=('none', 
+                                'gnu', 
+                                'intel')
               )
 )
 
@@ -53,29 +67,48 @@ if vars.UnknownVariables():
   print( "build configuration corrupted, don't know what to do with: " + str(vars.UnknownVariables().keys()) )
   exit(1)
 
-# create environment
+#####################
+#  SET ENVIRONMENT  #
+#####################
 env = Environment( variables = vars )
-
-conf = Configure(env)
-if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
-        print ('Did not find the netcdf library, exiting!')
-        Exit(1)
-env = conf.Finish()
 
 # set local env
 env['ENV'] = os.environ
 
-# choose compiler
+#####################
+#  COMPILER OPTION  #
+#####################
 if 'CXX' in os.environ:
   env['CXX'] = os.environ['CXX']
-
 print("Using ", env['CXX'], " compiler.")
+
+#####################
+#  LOAD LIBRARIES   #
+#####################
+
+# macOS magic for finding libraries with gcc
+if OS == "Darwin":
+  env.Append( CXXFLAGS = [  '-I/usr/local/include/' ] )
+  env.Append ( LIBPATH = [ '/usr/local/lib' ])
+
+conf = Configure(env)
+
+# NETCDF library
+if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
+  print ('Did not find the c++ netcdf library, will try C.')
+  if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
+    print ('Did not find the C netcdf library, exiting!')
+    exit(1)
+        
+env = conf.Finish()
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
 
-# add default flags
-if 'osx' in env['mode']:
+#####################
+#   DEFAULT FLAGS   #
+#####################
+if OS == "Darwin":
   env.Append( CXXFLAGS = [ '-std=c++17',
                            '-Wall',
                            '-Wextra',
@@ -88,19 +121,36 @@ else:
                            '-Wpedantic',
                            '-g' ] )
 
-
-# set optimization mode
+#####################
+# OPTIMIZATION MODE #
+#####################
 if 'debug' in env['mode']:
   env.Append( CXXFLAGS = [ '-g',
                            '-O0' ] )
 else:
   env.Append( CXXFLAGS = [ env['opt'] ] )
 
-# enable reports
+#####################
+#      REPORTS      #
+#####################
 if 'report' in env['report']:
    env.Append( CXXFLAGS = [ env['report'] ] )
 
-# add sanitizers
+#####################
+#      OPENMP       #
+#####################
+if 'gnu' in env['omp']:
+  env.Append( CXXFLAGS = [ '-fopenmp' ] )
+  env.Append( LINKFLAGS = [ '-fopenmp' ] )
+  env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
+if 'intel' in env['omp']:
+  env.Append( CXXFLAGS = [ '-qopenmp' ] )
+  env.Append( LINKFLAGS = [ '-qopenmp' ] )
+  env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
+
+#####################
+#    SANITIZERS    #
+#####################
 if 'san' in  env['mode']:
   env.Append( CXXFLAGS =  [ '-g',
                             '-fsanitize=float-divide-by-zero',
@@ -112,17 +162,25 @@ if 'san' in  env['mode']:
                             '-fsanitize=address',
                             '-fsanitize=undefined' ] )
 
-# enable benchmarking mode
+#####################
+# BENCHMARKING MODE #
+#####################
 if 'benchmark' in env['mode']:
   env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
 
-# add Catch2
+#####################
+# CATCH 2 SUBMODULE #
+#####################
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
 
-# add json
+#####################
+#  JSON  SUBMODULE  #
+#####################
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 
-# get source files
+#####################
+# GET SOURCE FILES  #
+#####################
 VariantDir( variant_dir = 'build/src',
             src_dir     = 'src' )
 
@@ -134,6 +192,9 @@ Export('env')
 SConscript( 'build/src/SConscript' )
 Import('env')
 
+#####################
+#  SPECIFY TARGETS  #
+#####################
 env.Program( target = 'build/tsunami_lab',
              source = env.sources + env.standalone)
 
