@@ -81,11 +81,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     l_huNewY[l_ce] = l_huOldY[l_ce];
   }
 
-  // TODO: break nested loop into chunks to stay within cache
-
   // iterate over edges and update with Riemann solutions
   // X-SWEEP
-
   #pragma omp parallel for
   for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
   {
