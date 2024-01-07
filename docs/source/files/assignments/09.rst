@@ -104,7 +104,58 @@ The parallelized inner loops leads to following time:
 
 It is clear, that parallelizing the outer loop is more effficient.
 
-9.1.4 - Pinning
+9.1.4 - Pinning and Scheduling
 ------------------------------------------
 
-TODO
+**Scheduling**
+
+The upper implementation used the basic :code:`scheduling(static)`.
+
+For :code:`scheduling(dynamic)` we get:
+
+.. code:: text
+        
+        Calculation time: 1.57024e+06ms
+            = 1570.24 seconds
+            = 26.1706 minutes
+
+For :code:`scheduling(guided)` we get:
+
+.. code:: text
+
+        Calculation time: 95218ms
+            = 95.218 seconds
+            = 1.58697 minutes
+
+
+For :code:`scheduling(auto)` we get: 
+
+.. code:: text
+
+        Calculation time: 84546.7ms
+            = 84.5467 seconds
+            = 1.40911 minutes
+
+**Pinning** 
+
+Using :code:`OMP_PLACES={0}:36:1` we get:
+
+..  image:: ../../_static/assets/task_9-4-1_Pinning_36.png
+
+.. code:: text
+            
+        Calculation time: 1.39672e+06ms
+            = 1396.72 seconds
+            = 23.2786 minutes
+
+Using :code:`OMP_PLACES={0,36}:18:1` we get:
+
+..  image:: ../../_static/assets/task_9-4-1_Pinning_18.png
+
+.. code:: text
+
+        Calculation time: 1.43714e+06ms
+        = 1437.14 seconds
+        = 23.9523 minutes
+
+It shows that using the first strategy is more efficient for computation.
