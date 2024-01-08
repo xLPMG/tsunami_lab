@@ -25,7 +25,7 @@ private:
   tsunami_lab::Launcher* m_launcher;
 
 public:
-  int launch(tsunami_lab::Launcher launcher);
+  int launch(tsunami_lab::Launcher *launcher);
 };
 
 #endif

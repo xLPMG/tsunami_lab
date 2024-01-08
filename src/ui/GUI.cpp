@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Entry point of the GUI.
  **/
 
@@ -34,7 +34,6 @@
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 500;
-std::string LOG_FILE = "logs/run.log";
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -49,9 +48,9 @@ int exec(std::string i_cmd, std::string i_outputFile)
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
+int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher *launcher)
 {
-    m_launcher = &launcher;
+    m_launcher = launcher;
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -87,6 +86,9 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
+    glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -111,16 +113,35 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
     bool showSimulationParameterWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    unsigned char *pixels = new unsigned char[100 * 100 * 3];
+    for (int y = 0; y < 100; ++y)
+    {
+        for (int x = 0; x < 100; ++x)
+        {
+            pixels[y * 100 * 3 + x * 3 + 0] = 0xff; // R
+            pixels[y * 100 * 3 + x * 3 + 1] = 0x00; // G
+            pixels[y * 100 * 3 + x * 3 + 2] = 0x00; // B
+        }
+    }
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
         // Poll and handle events (inputs, window resize, etc.)
         glfwPollEvents();
+        glfwSwapBuffers(window);
+
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // OPENGL DRAWING TEST
+        glDrawPixels(100, 100, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+        // END OPENGL DRAWING TEST
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
+
         ImGui::NewFrame();
 
         if (show_demo_window)
@@ -144,8 +165,9 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
             ImGui::End();
         }
 
-        //Runtime customization
-        if(showRTCustWindow){
+        // Runtime customization
+        if (showRTCustWindow)
+        {
             tsunami_lab::ui::RTCustWindow::show();
         }
 
@@ -178,11 +200,7 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        glfwSwapBuffers(window);
     }
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();

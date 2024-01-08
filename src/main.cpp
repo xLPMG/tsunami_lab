@@ -28,7 +28,7 @@ int main(int i_argc,
   if (i_argc > 2){
     launcher->loadConfigDataFromFile(i_argv[1]);
   }
-  gui.launch(*launcher);
+  gui.launch(launcher);
 #else
   if (i_argc > 2)
   {
