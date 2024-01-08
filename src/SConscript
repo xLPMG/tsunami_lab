@@ -26,7 +26,8 @@ l_sources = [ 'solvers/Roe.cpp',
               'io/BathymetryLoader.cpp',
               'io/Station.cpp',
               'calculations/Froude.cpp',
-              'io/NetCdf.cpp']
+              'io/NetCdf.cpp',
+              'Launcher.cpp' ]
 
 for l_so in l_sources:
   env.sources.append( env.Object( l_so ) )
