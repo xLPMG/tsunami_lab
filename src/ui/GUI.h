@@ -1,3 +1,6 @@
+#ifndef TSUNAMI_LAB_UI_GUI
+#define TSUNAMI_LAB_UI_GUI
+
 namespace tsunami_lab
 {
   namespace ui
@@ -8,8 +11,11 @@ namespace tsunami_lab
 
 class tsunami_lab::ui::GUI
 {
-public:
-    int launch();
 private:
-    void setupFolders();
+  void setupFolders();
+
+public:
+  int launch();
 };
+
+#endif
