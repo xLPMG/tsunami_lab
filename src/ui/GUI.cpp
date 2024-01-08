@@ -34,6 +34,7 @@
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 500;
+const char* LOG_FILE = "log.txt";
 
 static void glfw_error_callback(int error, const char *description)
 {

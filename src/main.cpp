@@ -32,11 +32,11 @@ int main(int i_argc,
 #else
   if (i_argc > 2)
   {
-    return launcher->start("");
+    return launcher->start(i_argv[1]);
   }
   else
   {
-    return launcher->start(i_argv[1]);
+    return launcher->start("");
   }
 #endif
 }
