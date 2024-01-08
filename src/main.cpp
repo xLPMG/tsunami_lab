@@ -555,7 +555,6 @@ void loadBathymetry(std::string *i_file)
 
 void loadStations()
 {
-#ifndef BENCHMARK
   // set up stations
   if (l_configData.contains("stations"))
   {
@@ -578,7 +577,20 @@ void loadStations()
       std::cout << "Added station " << elem.at("name") << " at x: " << l_x << " and y: " << l_y << std::endl;
     }
   }
-#endif
+}
+
+void addStation(tsunami_lab::t_real i_locationX,
+                tsunami_lab::t_real i_locationY,
+                std::string i_stationName)
+{
+  // location cell
+  tsunami_lab::t_idx l_cx = (i_locationX - l_offsetX) / l_dx;
+  tsunami_lab::t_idx l_cy = (i_locationY - l_offsetY) / l_dy;
+
+  l_stations.push_back(new tsunami_lab::io::Station(l_cx,
+                                                    l_cy,
+                                                    i_stationName,
+                                                    l_waveProp));
 }
 
 void deriveTimeStep()
@@ -767,7 +779,9 @@ int main(int i_argc,
 #endif
   constructSolver();
   loadBathymetry(&l_bathymetryFilePath);
+#ifndef BENCHMARK
   loadStations();
+#endif
   deriveTimeStep();
 
   //------------------------------------------//

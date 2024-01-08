@@ -48,13 +48,13 @@ jobs:
           scons mode=debug+san omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
-          scons mode=release+san omp=gnu
+          scons mode=release+san omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Valgrind
         run: |
-          scons mode=debug omp=gnu gui=no gui=no
+          scons mode=debug omp=gnu gui=no
           valgrind ./build/tests
           valgrind ./build/tsunami_lab configs/minimalConfig.json
 
