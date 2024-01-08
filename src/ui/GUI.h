@@ -22,10 +22,7 @@ namespace tsunami_lab
 class tsunami_lab::ui::GUI
 {
 private:
-
   tsunami_lab::Launcher* m_launcher;
-
-  void setupFolders();
 
 public:
   int launch(tsunami_lab::Launcher launcher);

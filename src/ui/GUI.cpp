@@ -29,6 +29,9 @@
 #include <fstream>
 #include <sstream>
 
+// ui components
+#include "RTCustWindow.h"
+
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 500;
 std::string LOG_FILE = "logs/run.log";
@@ -45,19 +48,10 @@ int exec(std::string i_cmd, std::string i_outputFile)
     return system(commandChars);
 }
 
-void tsunami_lab::ui::GUI::setupFolders()
-{
-    if (!std::filesystem::exists("logs"))
-        std::filesystem::create_directory("logs");
-
-    std::filesystem::remove(LOG_FILE);
-}
-
 // Main code
 int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
 {
     m_launcher = &launcher;
-    setupFolders();
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -113,10 +107,10 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
 
     // Our state
     bool show_demo_window = false;
+    bool showRTCustWindow = false;
     bool showSimulationParameterWindow = false;
-    bool showLogWindow = false;
+
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    std::string logText = "";
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -137,8 +131,8 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
+            ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-            ImGui::Checkbox("Show log", &showLogWindow);
 
             if (ImGui::Button("Run simulation"))
                 exec("./build/tsunami_lab", LOG_FILE);
@@ -148,6 +142,11 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
             ImGui::End();
+        }
+
+        //Runtime customization
+        if(showRTCustWindow){
+            tsunami_lab::ui::RTCustWindow::show();
         }
 
         // Simulation parameters
@@ -174,19 +173,6 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
                 showSimulationParameterWindow = false;
             ImGui::End();
         }
-
-        if (showLogWindow)
-        {
-            if (ImGui::Button("Load"))
-            {
-                std::ifstream t(LOG_FILE);
-                std::stringstream buffer;
-                buffer << t.rdbuf();
-                logText = buffer.str();
-            }
-            ImGui::TextUnformatted(logText.c_str());
-        }
-
         // Rendering
         ImGui::Render();
         int display_w, display_h;
