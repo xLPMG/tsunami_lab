@@ -59,6 +59,11 @@ vars.AddVariables(
                 allowed_values=('none', 
                                 'gnu', 
                                 'intel')
+              ),
+  EnumVariable( 'gui',
+                'enables the GUI',
+                'yes',
+                allowed_values=('yes', 'no')
               )
 )
 
@@ -99,7 +104,36 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
   if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','C'):
     print ('Did not find the C netcdf library, exiting!')
     exit(1)
-        
+
+# GUI libraries
+if 'yes' in env['gui']:
+  if OS == "Linux":
+    if not conf.CheckLib('glfw'):
+      print ('Did not find the glfw library!')
+      exit(1)
+    elif not conf.CheckLib('GL'):
+      print ('Did not find the GL library!')
+      exit(1)
+
+  elif OS == "Darwin":  
+    if not conf.CheckLib('glfw'):
+      print ('Did not find the glfw library!')
+      exit(1)
+
+  elif OS == "Windows":
+    if not conf.CheckLib('glfw3'):
+      print ('Did not find the glfw3 library!')
+      exit(1)
+    elif not conf.CheckLib('gdi32'):
+      print ('Did not find the gdi32 library!')
+      exit(1)
+    elif not conf.CheckLib('opengl32'):
+      print ('Did not find the opengl32 library!')
+      exit(1)
+    elif not conf.CheckLib('imm32'):
+      print ('Did not find the imm32 library!')
+      exit(1)
+
 env = conf.Finish()
 
 # generate help message
@@ -179,6 +213,17 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/Catch2/single_include' ] )
 env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 
 #####################
+#  IMGUI SUBMODULE  #
+#####################
+if 'yes' in env['gui']:
+  env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/' ] )
+  env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/backends/' ] )
+  # add other OS specific flags
+  if OS == "Darwin": 
+    env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
+  # tell code that gui is enabled
+  env.Append( CXXFLAGS = [ '-DGUI' ] )
+#####################
 # GET SOURCE FILES  #
 #####################
 VariantDir( variant_dir = 'build/src',
@@ -187,16 +232,30 @@ VariantDir( variant_dir = 'build/src',
 env.sources = []
 env.tests = []
 env.sanitychecks = []
+env.gui = []
 
 Export('env')
 SConscript( 'build/src/SConscript' )
 Import('env')
 
+if 'yes' in env['gui']:
+  env.imguiSources = ['submodules/imgui/imgui.cpp',
+                      'submodules/imgui/imgui_demo.cpp',
+                      'submodules/imgui/imgui_draw.cpp',
+                      'submodules/imgui/imgui_tables.cpp',
+                      'submodules/imgui/imgui_widgets.cpp',
+                      'submodules/imgui/backends/imgui_impl_glfw.cpp', 
+                      'submodules/imgui/backends/imgui_impl_opengl3.cpp']
+
 #####################
 #  SPECIFY TARGETS  #
 #####################
-env.Program( target = 'build/tsunami_lab',
-             source = env.sources + env.standalone)
+if 'yes' in env['gui']:
+  env.Program( target = 'build/tsunami_lab',
+               source = env.sources + env.standalone + env.imguiSources + env.gui )
+else:
+  env.Program( target = 'build/tsunami_lab',
+               source = env.sources + env.standalone)
 
 env.Program( target = 'build/tests',
              source = env.sources + env.tests)

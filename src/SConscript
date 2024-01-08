@@ -63,4 +63,11 @@ l_sanitychecks = [ 'sanitychecks.cpp' ]
 for l_sa in l_sanitychecks:
   env.sanitychecks.append( env.Object( l_sa ) )
 
+# gather gui sources
+if 'yes' in env['gui']:
+  l_gui = [ 'ui/GUI.cpp' ]
+
+  for l_g in l_gui:
+    env.gui.append( env.Object( l_g ) )
+
 Export('env')

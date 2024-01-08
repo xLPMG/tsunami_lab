@@ -39,6 +39,11 @@
 #endif
 #include <chrono>
 
+// gui
+#ifdef GUI
+#include "ui/GUI.h"
+#endif
+
 // external libraries
 #include <nlohmann/json.hpp>
 #include <netcdf.h>
@@ -182,6 +187,13 @@ int main(int i_argc,
   if (i_argc == 2)
     l_configFilePath = i_argv[1];
   std::cout << "runtime configuration file: " << l_configFilePath << std::endl;
+//-------------------------------------------//
+//--------------------GUI--------------------//
+//-------------------------------------------//
+#ifdef GUI
+tsunami_lab::ui::GUI gui;
+gui.launch();
+#endif
 
 //-------------------------------------------//
 //--------------File I/O Config--------------//
