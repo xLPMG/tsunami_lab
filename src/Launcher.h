@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Class that launches and controls the simulation.
  **/
 
@@ -47,6 +47,81 @@ namespace tsunami_lab
 class tsunami_lab::Launcher
 {
 private:
+    //------------------------------------------//
+    //----------------VARIABLES-----------------//
+    //------------------------------------------//
+    // config parameters
+    std::string m_configFilePath = "configs/config.json";
+    json m_configData;
+
+    // input parameters
+    std::string m_bathymetryFilePath = "";
+    std::string m_displacementFilePath = "";
+
+    // output parameters
+    std::string m_outputFileName = "";
+    tsunami_lab::t_real m_stationFrequency = 0;
+    tsunami_lab::t_idx m_writingFrequency = 0;
+    std::string m_netCdfOutputPathString = "";
+    const char *m_netcdfOutputPath = "";
+    enum DataWriter
+    {
+        NETCDF = 0,
+        CSV = 1
+    };
+    DataWriter m_dataWriter = NETCDF;
+    tsunami_lab::io::NetCdf *m_netCdf;
+
+    // checkpointing
+    bool m_checkpointExists = false;
+    tsunami_lab::t_real m_checkpointFrequency = -1;
+    std::string m_checkPointFilePathString = "";
+    const char *m_checkPointFilePath = "";
+
+    // setup parameters
+    std::string m_setupChoice = "";
+    tsunami_lab::setups::Setup *m_setup;
+
+    // simulation parameters
+    std::string m_solver = "";
+    tsunami_lab::patches::WavePropagation *m_waveProp;
+    tsunami_lab::t_idx m_nx = 0;
+    tsunami_lab::t_idx m_ny = 0;
+    tsunami_lab::t_idx m_nk = 1;
+    tsunami_lab::t_real m_simulationSizeX = 0;
+    tsunami_lab::t_real m_simulationSizeY = 0;
+    tsunami_lab::t_real m_offsetX = 0;
+    tsunami_lab::t_real m_offsetY = 0;
+    tsunami_lab::t_real m_dx = 0;
+    tsunami_lab::t_real m_dy = 0;
+    tsunami_lab::t_real m_endTime = 0;
+
+    // boundary conditions
+    Boundary m_boundaryL = Boundary::OUTFLOW;
+    Boundary m_boundaryR = Boundary::OUTFLOW;
+    Boundary m_boundaryT = Boundary::OUTFLOW;
+    Boundary m_boundaryB = Boundary::OUTFLOW;
+
+    // stations
+    std::vector<tsunami_lab::io::Station *> m_stations;
+
+    // time and print control
+    tsunami_lab::t_idx m_timeStep = 0;
+    tsunami_lab::t_idx m_timeStepMax = 0;
+    tsunami_lab::t_real m_simTime = 0;
+    tsunami_lab::t_idx m_nOut = 0;
+    tsunami_lab::t_idx m_captureCount = 0;
+
+    // simulation variables
+    tsunami_lab::t_real m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
+    tsunami_lab::t_real m_dt = 0;
+    tsunami_lab::t_real m_scalingX;
+    tsunami_lab::t_real m_scalingY;
+
+    //------------------------------------------//
+    //-------------END OF VARIABLES-------------//
+    //------------------------------------------//
+
     /**
      *  Determines if a string ends with another string.
      *
@@ -111,6 +186,13 @@ private:
      *  @return void
      */
     void loadStations();
+
+    /**
+     *  Helper method that writes out station data to files.
+     *
+     *  @return void
+     */
+    void writeStations();
 
     /**
      *  Helper method for the derivation of a time step.
