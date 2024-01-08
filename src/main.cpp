@@ -39,4 +39,6 @@ int main(int i_argc,
     return launcher->start("");
   }
 #endif
+
+delete launcher;
 }
