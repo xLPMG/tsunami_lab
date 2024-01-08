@@ -34,7 +34,7 @@
 
 const unsigned int WINDOW_WIDTH = 800;
 const unsigned int WINDOW_HEIGHT = 500;
-const char* LOG_FILE = "log.txt";
+const char *LOG_FILE = "log.txt";
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -114,6 +114,7 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher *launcher)
     bool showSimulationParameterWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
     unsigned char *pixels = new unsigned char[100 * 100 * 3];
     for (int y = 0; y < 100; ++y)
     {

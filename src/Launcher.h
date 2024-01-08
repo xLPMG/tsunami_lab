@@ -209,6 +209,44 @@ private:
     void freeMemory();
 
 public:
+    //------------------------------------------//
+    //-----------------GETTERS------------------//
+    //------------------------------------------//
+
+    void getWaveProp(tsunami_lab::patches::WavePropagation &o_waveprop){
+        o_waveprop = *m_waveProp;
+    }
+
+    void getSetupChoice(std::string &o_setupChoice){
+        o_setupChoice = m_setupChoice;
+    }   
+
+    //------------------------------------------//
+    //-----------------SETTERS------------------//
+    //------------------------------------------//
+
+    void setSetupChoice(std::string i_setupChoice){
+        m_setupChoice = i_setupChoice;
+    }
+
+    //------------------------------------------//
+    //----------------FUNCTIONS-----------------//
+    //------------------------------------------//
+
+    /**
+     *  Creates a WavePropagation object.
+     *
+     *  @return void
+     */
+    void createWaveProp();
+
+    /**
+     *  Calls the netcdf writeCheckpoint function with necessary parameters.
+     *
+     *  @return void
+     */
+    void writeCheckpoint();
+
     /**
      *  Loads the config data from a file
      *

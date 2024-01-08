@@ -288,10 +288,11 @@ void tsunami_lab::Launcher::setUpNetCdf()
   }
 }
 
-void tsunami_lab::Launcher::constructSolver()
+void tsunami_lab::Launcher::createWaveProp()
 {
-  m_dx = m_simulationSizeX / m_nx;
-  m_dy = m_simulationSizeY / m_ny;
+  if (m_waveProp != nullptr)
+    delete m_waveProp;
+
   if (m_ny == 1)
   {
     m_waveProp = new tsunami_lab::patches::WavePropagation1d(m_nx,
@@ -308,6 +309,13 @@ void tsunami_lab::Launcher::constructSolver()
                                                              m_boundaryT,
                                                              m_boundaryB);
   }
+}
+
+void tsunami_lab::Launcher::constructSolver()
+{
+  m_dx = m_simulationSizeX / m_nx;
+  m_dy = m_simulationSizeY / m_ny;
+  createWaveProp();
   std::cout << "Setting up solver..." << std::endl;
 // set up solver
 #ifndef BENCHMARK
@@ -519,6 +527,18 @@ void tsunami_lab::Launcher::deriveTimeStep()
 #endif
 }
 
+void tsunami_lab::Launcher::writeCheckpoint()
+{
+  m_netCdf->writeCheckpoint(m_checkPointFilePath,
+                            m_waveProp->getStride(),
+                            m_waveProp->getHeight(),
+                            m_waveProp->getMomentumX(),
+                            m_waveProp->getMomentumY(),
+                            m_waveProp->getBathymetry(),
+                            m_simTime,
+                            m_timeStep);
+}
+
 void tsunami_lab::Launcher::runCalculation()
 {
   auto l_lastWrite = std::chrono::system_clock::now();
@@ -582,14 +602,7 @@ void tsunami_lab::Launcher::runCalculation()
         std::chrono::system_clock::now() - l_lastWrite >= std::chrono::duration<float>(m_checkpointFrequency))
     {
       std::cout << "saving checkpoint to " << m_checkPointFilePathString << std::endl;
-      m_netCdf->writeCheckpoint(m_checkPointFilePath,
-                                m_waveProp->getStride(),
-                                m_waveProp->getHeight(),
-                                m_waveProp->getMomentumX(),
-                                m_waveProp->getMomentumY(),
-                                m_waveProp->getBathymetry(),
-                                m_simTime,
-                                m_timeStep);
+      writeCheckpoint();
       l_lastWrite = std::chrono::system_clock::now();
     }
 #endif
