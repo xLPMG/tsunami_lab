@@ -1,3 +1,11 @@
+/**
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
+ *
+ * # Description 
+ * Entry point of the GUI.
+ **/
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -46,8 +54,9 @@ void tsunami_lab::ui::GUI::setupFolders()
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch()
+int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher launcher)
 {
+    m_launcher = &launcher;
     setupFolders();
 
     glfwSetErrorCallback(glfw_error_callback);

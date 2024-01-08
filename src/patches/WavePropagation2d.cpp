@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Two-dimensional wave propagation patch.
  **/
 #include "WavePropagation2d.h"
@@ -28,7 +28,9 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
 
   // allocate memory including a single ghost cell on each side
   t_idx l_totalCells = (m_nCellsX + 2) * (m_nCellsY + 2);
-  #pragma omp parallel for
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
     m_h[l_st] = new t_real[l_totalCells];
@@ -37,8 +39,10 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   }
   m_b = new t_real[l_totalCells];
 
-  // init to zero
-  #pragma omp parallel for collapse(2)
+// init to zero
+#ifdef USEOMP
+#pragma omp parallel for collapse(2)
+#endif
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
     for (t_idx l_ce = 0; l_ce < l_totalCells; l_ce++)
@@ -53,7 +57,9 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
 
 tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
 {
-  #pragma omp parallel for
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
     delete[] m_h[l_st];
@@ -76,8 +82,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
   t_real *l_huNewX = m_huX[m_step];
   t_real *l_huNewY = m_huY[m_step];
 
-  // init new cell quantities
-  #pragma omp parallel for
+// init new cell quantities
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx l_ce = 0; l_ce < (m_nCellsX + 2) * (m_nCellsY + 2); l_ce++)
   {
     l_hNew[l_ce] = l_hOld[l_ce];
@@ -85,9 +93,11 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     l_huNewY[l_ce] = l_huOldY[l_ce];
   }
 
-  // iterate over edges and update with Riemann solutions
-  // X-SWEEP
-  #pragma omp parallel for
+// iterate over edges and update with Riemann solutions
+// X-SWEEP
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx l_ed = 0; l_ed < m_nCellsY + 1; l_ed++)
   {
     for (t_idx l_ec = 1; l_ec < m_nCellsX; l_ec++)
@@ -153,8 +163,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scalingX,
     }
   }
 
-  // Y-SWEEP
-  #pragma omp parallel for
+// Y-SWEEP
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx l_ec = 0; l_ec < m_nCellsY + 1; l_ec++)
   {
     for (t_idx l_ed = 1; l_ed < m_nCellsX; l_ed++)
@@ -228,7 +240,9 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
   t_real *l_huY = m_huY[m_step];
   t_real *l_b = m_b;
 
-  #pragma omp parallel for
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx i = 1; i < m_nCellsY; i++)
   {
     t_idx ceL = getStride() * i;
@@ -245,7 +259,9 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     l_b[ceR] = l_b[ceR - 1];
   }
 
-  #pragma omp parallel for
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx i = 0; i < m_nCellsX + 2; i++)
   {
     t_idx ceB = i;
@@ -294,7 +310,9 @@ void tsunami_lab::patches::WavePropagation2d::handleReflections(t_real *i_h,
 
 void tsunami_lab::patches::WavePropagation2d::adjustWaterHeight()
 {
-  #pragma omp parallel for
+#ifdef USEOMP
+#pragma omp parallel for
+#endif
   for (t_idx l_iy = 1; l_iy < m_nCellsY + 1; l_iy++)
   {
     for (t_idx l_ix = 1; l_ix < m_nCellsX + 1; l_ix++)
