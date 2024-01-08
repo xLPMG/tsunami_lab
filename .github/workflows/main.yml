@@ -54,7 +54,7 @@ jobs:
 
       - name: Valgrind
         run: |
-          scons mode=debug omp=gnu gui=no
+          scons mode=debug omp=gnu gui=no gui=no
           valgrind ./build/tests
           valgrind ./build/tsunami_lab configs/minimalConfig.json
 
