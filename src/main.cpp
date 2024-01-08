@@ -173,6 +173,34 @@ void setupFolders()
 }
 #endif
 
+void configureFiles()
+{
+  l_outputFileName = l_configData.value("outputFileName", "solution");
+  l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
+  l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
+
+  // check if checkpoint exists
+  l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
+  l_checkPointFilePath = l_checkPointFilePathString.c_str();
+  l_checkpointExists = std::filesystem::exists(l_checkPointFilePathString);
+  // checkpoint file found
+  if (l_checkpointExists)
+  {
+    std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
+    l_setupChoice = "CHECKPOINT";
+  }
+  else
+  {
+    // no checkpoint but solution file exists
+    if (std::filesystem::exists(l_netCdfOutputPathString))
+    {
+      std::cout << "Solution file exists but no checkpoint was found. The solution will be deleted." << std::endl;
+      std::filesystem::remove(l_netCdfOutputPathString);
+    }
+    l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
+  }
+}
+
 void loadConfiguration()
 {
   l_solver = l_configData.value("solver", "fwave");
@@ -725,30 +753,7 @@ int main(int i_argc,
   std::ifstream l_configFile(l_configFilePath);
   l_configData = json::parse(l_configFile);
 #ifndef BENCHMARK
-  l_outputFileName = l_configData.value("outputFileName", "solution");
-  l_netCdfOutputPathString = "solutions/" + l_outputFileName + ".nc";
-  l_netcdfOutputPath = l_netCdfOutputPathString.c_str();
-
-  // check if checkpoint exists
-  l_checkPointFilePathString = "checkpoints/" + l_outputFileName + ".nc";
-  l_checkPointFilePath = l_checkPointFilePathString.c_str();
-  l_checkpointExists = std::filesystem::exists(l_checkPointFilePathString);
-  // checkpoint file found
-  if (l_checkpointExists)
-  {
-    std::cout << "Found checkpoint file: " << l_checkPointFilePath << std::endl;
-    l_setupChoice = "CHECKPOINT";
-  }
-  else
-  {
-    // no checkpoint but solution file exists
-    if (std::filesystem::exists(l_netCdfOutputPathString))
-    {
-      std::cout << "Solution file exists but no checkpoint was found. The solution will be deleted." << std::endl;
-      std::filesystem::remove(l_netCdfOutputPathString);
-    }
-    l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
-  }
+  configureFiles();
 #else
   l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
   if (l_setupChoice == "CHECKPOINT")

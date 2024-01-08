@@ -45,7 +45,7 @@ jobs:
 
       - name: Sanitize
         run: |
-          scons mode=debug+san omp=gnu
+          scons mode=debug+san omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
           scons mode=release+san omp=gnu
@@ -54,12 +54,12 @@ jobs:
 
       - name: Valgrind
         run: |
-          scons mode=debug omp=gnu
+          scons mode=debug omp=gnu gui=no
           valgrind ./build/tests
           valgrind ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Release
         run: |
-          scons omp=gnu
+          scons omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
