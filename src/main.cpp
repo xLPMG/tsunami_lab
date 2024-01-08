@@ -22,7 +22,7 @@ int main(int i_argc,
          char *i_argv[])
 {
   tsunami_lab::Launcher *launcher = new tsunami_lab::Launcher;
-
+  int exitCode = 0;
 #ifdef USEGUI
   tsunami_lab::ui::GUI gui;
   if (i_argc > 2){
@@ -32,13 +32,14 @@ int main(int i_argc,
 #else
   if (i_argc > 2)
   {
-    return launcher->start(i_argv[1]);
+    exitCode = launcher->start(i_argv[1]);
   }
   else
   {
-    return launcher->start("");
+    exitCode = launcher->start("");
   }
 #endif
 
 delete launcher;
+return exitCode;
 }
