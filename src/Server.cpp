@@ -12,6 +12,7 @@ int main(int i_argc, char *i_argv[])
     tsunami_lab::Launcher launcher;
 
 #ifdef USEGUI
+
     if (i_argc > 2)
     {
         PORT = atoi(i_argv[1]);

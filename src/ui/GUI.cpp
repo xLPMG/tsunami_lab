@@ -12,6 +12,7 @@
 #include "GUI.h"
 #include <stdio.h>
 #include <iostream>
+#include <unistd.h>
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -158,7 +159,7 @@ int tsunami_lab::ui::GUI::launch(int PORT)
 
             if (ImGui::Button("Run")) {
                 m_communicator.sendToServer("FVSTART");
-                sleep(0.1);
+                usleep(1000);
                 m_communicator.sendToServer("configs/chile5000.json");
             }
 
