@@ -9,6 +9,10 @@
 #ifndef TSUNAMI_LAB_LAUNCHER_H
 #define TSUNAMI_LAB_LAUNCHER_H
 
+#ifdef USEOMP
+#include <omp.h>
+#endif
+
 // waveprop patches
 #include "patches/WavePropagation1d.h"
 #include "patches/WavePropagation2d.h"
@@ -84,7 +88,7 @@ private:
 
     // simulation parameters
     std::string m_solver = "";
-    tsunami_lab::patches::WavePropagation *m_waveProp = nullptr;
+    tsunami_lab::patches::WavePropagation *m_waveProp;
     tsunami_lab::t_idx m_nx = 0;
     tsunami_lab::t_idx m_ny = 0;
     tsunami_lab::t_idx m_nk = 1;
@@ -213,8 +217,8 @@ public:
     //-----------------GETTERS------------------//
     //------------------------------------------//
 
-    void getWaveProp(tsunami_lab::patches::WavePropagation &o_waveprop){
-        o_waveprop = *m_waveProp;
+    tsunami_lab::patches::WavePropagation *getWaveProp(){
+        return m_waveProp;
     }
 
     void getSetupChoice(std::string &o_setupChoice){

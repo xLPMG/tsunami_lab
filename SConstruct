@@ -174,14 +174,23 @@ if 'report' in env['report']:
 #      OPENMP       #
 #####################
 if 'gnu' in env['omp']:
-  env.Append( CXXFLAGS = [ '-fopenmp' ] )
-  env.Append( LINKFLAGS = [ '-fopenmp' ] )
-  env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
+  if OS == "Darwin":
+    env.Append( CXXFLAGS = [ '-Xpreprocessor', '-fopenmp' ] )
+    env.Append( LINKFLAGS = [ '-Xpreprocessor', '-fopenmp' ] )
+    env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
+  else:
+    env.Append( CXXFLAGS = [ '-fopenmp' ] )
+    env.Append( LINKFLAGS = [ '-fopenmp' ] )
+    env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
 if 'intel' in env['omp']:
   env.Append( CXXFLAGS = [ '-qopenmp' ] )
   env.Append( LINKFLAGS = [ '-qopenmp' ] )
   env.Append( CXXFLAGS = [ '-DUSEOMP' ] )
 
+if OS == "Darwin":
+  env.Append( CXXFLAGS = [ '-I/usr/local/opt/libomp/include' ] )
+  env.Append( LINKFLAGS = [ '-L/usr/local/opt/libomp/lib' ] )
+  env.Append( LINKFLAGS = [ '-lomp' ] )
 #####################
 #    SANITIZERS    #
 #####################
