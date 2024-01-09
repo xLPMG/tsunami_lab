@@ -1,5 +1,6 @@
 #include "Launcher.h"
 #include "Communicator.hpp"
+#include "constants.h"
 #define USEGUI 1
 
 int PORT = 8080;
@@ -22,20 +23,20 @@ int main(int i_argc, char *i_argv[])
     while (!EXIT)
     {
         std::string data = communicator.receiveFromClient();
-        if (strcmp(data.c_str(), "shutdown") == 0)
+        if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
         {
             EXIT = true;
             launcher->exit();
         }
-        else if (strcmp(data.c_str(), "exit_launcher") == 0 && launcher != nullptr)
+        else if (strcmp(data.c_str(), tsunami_lab::KEY_EXIT_LAUNCHER) == 0 && launcher != nullptr)
         {
             launcher->exit();
         }
-        else if (strcmp(data.c_str(), "revive_launcher") == 0)
+        else if (strcmp(data.c_str(), tsunami_lab::KEY_REVIVE_LAUNCHER) == 0)
         {
             launcher->revive();
         }
-        else if (strcmp(data.c_str(), "restart") == 0)
+        else if (strcmp(data.c_str(), tsunami_lab::KEY_RESTART_SERVER) == 0)
         {
             // TODO
             EXIT = true;
@@ -48,21 +49,21 @@ int main(int i_argc, char *i_argv[])
             // VOIDS
             if (data[1] == 'V')
             {
-                if (strcmp(data.c_str(), "FV_START") == 0)
+                if (strcmp(data.c_str(), tsunami_lab::KEY_START_SIMULATION) == 0)
                 {
                     std::string config = communicator.receiveFromClient();
                     launcher->start(config);
                 }
-                else if (strcmp(data.c_str(), "FV_WRITE_CHECKPOINT") == 0)
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
                 {
                     launcher->writeCheckpoint();
                 }
-                else if (strcmp(data.c_str(), "FV_LOAD_CONFIG_JSON") == 0)
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_JSON) == 0)
                 {
                     std::string config = communicator.receiveFromClient();
                     launcher->loadConfigDataJsonString(config);
                 }
-                else if (strcmp(data.c_str(), "FV_LOAD_CONFIG_FILE") == 0)
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_FILE) == 0)
                 {
                     std::string configFile = communicator.receiveFromClient();
                     launcher->loadConfigDataFromFile(configFile);

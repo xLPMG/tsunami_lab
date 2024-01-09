@@ -8,6 +8,7 @@
 #define TSUNAMI_LAB_CONSTANTS_H
 
 #include <cstddef>
+#include <string>
 
 namespace tsunami_lab
 {
@@ -16,6 +17,16 @@ namespace tsunami_lab
 
   //! floating point type
   typedef float t_real;
+
+  //! keywords for client-server communication
+  inline static const char* KEY_SHUTDOWN_SERVER = "shutdown";
+  inline static const char* KEY_RESTART_SERVER = "restart";
+  inline static const char* KEY_EXIT_LAUNCHER = "exit_launcher";
+  inline static const char* KEY_REVIVE_LAUNCHER = "revive_launcher";
+  inline static const char* KEY_START_SIMULATION = "FV_START";
+  inline static const char* KEY_WRITE_CHECKPOINT = "FV_WRITE_CHECKPOINT";
+  inline static const char* KEY_LOAD_CONFIG_JSON = "FV_LOAD_CONFIG_JSON";
+  inline static const char* KEY_LOAD_CONFIG_FILE = "FV_LOAD_CONFIG_FILE";
 }
 
 #endif

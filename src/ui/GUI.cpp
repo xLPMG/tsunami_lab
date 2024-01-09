@@ -159,22 +159,22 @@ int tsunami_lab::ui::GUI::launch(int PORT)
 
             if (ImGui::Button("Run"))
             {
-                if(m_communicator.sendToServer("FV_START") == 0){
+                if(m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0){
                 usleep(1000);
                 m_communicator.sendToServer("configs/chile5000.json");
                 }
             }
             if (ImGui::Button("Shutdown server"))
             {
-                m_communicator.sendToServer("shutdown");
+                m_communicator.sendToServer(tsunami_lab::KEY_SHUTDOWN_SERVER);
             }
             if (ImGui::Button("Exit simulation"))
             {
-                m_communicator.sendToServer("exit_launcher");
+                m_communicator.sendToServer(tsunami_lab::KEY_EXIT_LAUNCHER);
             }
             if (ImGui::Button("Revive simulation"))
             {
-                m_communicator.sendToServer("revive_launcher");
+                m_communicator.sendToServer(tsunami_lab::KEY_REVIVE_LAUNCHER);
             }
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
