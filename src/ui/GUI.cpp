@@ -158,7 +158,7 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher *launcher)
             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
 
             if (ImGui::Button("Run simulation"))
-                exec("./build/tsunami_lab", LOG_FILE);
+                m_launcher->start("configs/chile5000.json");
 
             ImGui::ColorEdit3("clear color", (float *)&clear_color);
 

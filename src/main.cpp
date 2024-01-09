@@ -5,11 +5,12 @@
  * # Description
  * Entry point into the program.
  **/
+#define USEGUI 1
+#include <thread>
 #include "Launcher.h"
 #ifdef USEGUI
 #include "ui/GUI.h"
 #endif
-
 /**
  * @brief Main function for the tsunami wave equation solver.
  *
@@ -21,16 +22,19 @@
 int main(int i_argc,
          char *i_argv[])
 {
-  tsunami_lab::Launcher *launcher = new tsunami_lab::Launcher;
   int exitCode = 0;
 #ifdef USEGUI
   tsunami_lab::ui::GUI gui;
+  tsunami_lab::Launcher launcher;
+  std::thread t(&tsunami_lab::ui::GUI::launch, &gui, &launcher);
   if (i_argc > 2){
-    launcher->loadConfigDataFromFile(i_argv[1]);
+    launcher.loadConfigDataFromFile(i_argv[1]);
   }
-  exitCode = gui.launch(launcher);
+  t.join();
+  //exitCode = gui.launch(launcher);
 
 #else
+  tsunami_lab::Launcher *launcher = new tsunami_lab::Launcher;
   if (i_argc > 2)
   {
     exitCode = launcher->start(i_argv[1]);
@@ -40,7 +44,5 @@ int main(int i_argc,
     exitCode = launcher->start("");
   }
 #endif
-
-delete launcher;
 return exitCode;
 }

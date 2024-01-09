@@ -290,8 +290,6 @@ void tsunami_lab::Launcher::setUpNetCdf()
 
 void tsunami_lab::Launcher::createWaveProp()
 {
-  delete m_waveProp;
-
   if (m_ny == 1)
   {
     m_waveProp = new tsunami_lab::patches::WavePropagation1d(m_nx,
@@ -666,7 +664,6 @@ int tsunami_lab::Launcher::start(std::string i_config)
   if (l_setupChoice == "CHECKPOINT")
     std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
 #endif
-
   loadConfiguration();
   constructSetup();
 #ifndef BENCHMARK
