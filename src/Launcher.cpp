@@ -471,8 +471,8 @@ void tsunami_lab::Launcher::writeStations()
 }
 
 void tsunami_lab::Launcher::addStation(tsunami_lab::t_real i_locationX,
-                                       tsunami_lab::t_real i_locationY,
-                                       std::string i_stationName)
+                                     tsunami_lab::t_real i_locationY,
+                                     std::string i_stationName)
 {
   // location cell
   tsunami_lab::t_idx l_cx = (i_locationX - m_offsetX) / m_dx;

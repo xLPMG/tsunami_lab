@@ -9,8 +9,6 @@
 #ifndef TSUNAMI_LAB_UI_GUI
 #define TSUNAMI_LAB_UI_GUI
 
-#include "../Launcher.h"
-
 namespace tsunami_lab
 {
   namespace ui
@@ -21,11 +19,9 @@ namespace tsunami_lab
 
 class tsunami_lab::ui::GUI
 {
-private:
-  tsunami_lab::Launcher* m_launcher;
-
 public:
-  int launch(tsunami_lab::Launcher *launcher);
+  int launch();
+  int main();
 };
 
 #endif

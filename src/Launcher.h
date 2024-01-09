@@ -6,8 +6,8 @@
  * Class that launches and controls the simulation.
  **/
 
-#ifndef TSUNAMI_LAB_LAUNCHER_H
-#define TSUNAMI_LAB_LAUNCHER_H
+#ifndef TSUNAMI_LAB_Launcher_H
+#define TSUNAMI_LAB_Launcher_H
 
 #ifdef USEOMP
 #include <omp.h>
@@ -280,6 +280,9 @@ public:
     void runCalculation();
 
     int start(std::string i_config);
+
+    void startLauncher();
+    int main(int i_argc, char *i_argv[]);
 };
 
 #endif

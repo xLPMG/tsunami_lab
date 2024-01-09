@@ -211,6 +211,8 @@ if 'san' in  env['mode']:
 if 'benchmark' in env['mode']:
   env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
 
+
+env.Append( CXXFLAGS = [ '-isystem', 'include' ] )
 #####################
 # CATCH 2 SUBMODULE #
 #####################
@@ -259,15 +261,16 @@ if 'yes' in env['gui']:
 #####################
 #  SPECIFY TARGETS  #
 #####################
-if 'yes' in env['gui']:
-  env.Program( target = 'build/tsunami_lab',
-               source = env.sources + env.standalone + env.imguiSources + env.gui )
-else:
-  env.Program( target = 'build/tsunami_lab',
-               source = env.sources + env.standalone)
+
+env.Program( target = 'build/tsunami_lab',
+               source = env.sources + env.standalone )
 
 env.Program( target = 'build/tests',
              source = env.sources + env.tests)
 
 env.Program( target = 'build/sanitychecks',
              source = env.sources + env.sanitychecks)
+
+if 'yes' in env['gui']:
+  env.Program( target = 'build/gui',
+               source = env.sources + env.gui + env.imguiSources )

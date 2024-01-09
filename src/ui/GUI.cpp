@@ -11,6 +11,7 @@
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
 #include <stdio.h>
+#include <iostream>
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -49,10 +50,8 @@ int exec(std::string i_cmd, std::string i_outputFile)
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher *launcher)
+int tsunami_lab::ui::GUI::launch()
 {
-    m_launcher = launcher;
-
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -156,9 +155,6 @@ int tsunami_lab::ui::GUI::launch(tsunami_lab::Launcher *launcher)
             ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-
-            if (ImGui::Button("Run simulation"))
-                m_launcher->start("configs/chile5000.json");
 
             ImGui::ColorEdit3("clear color", (float *)&clear_color);
 

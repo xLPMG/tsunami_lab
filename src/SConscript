@@ -8,7 +8,8 @@
 Import('env')
 
 # gather sources
-l_sources = [ 'solvers/Roe.cpp',
+l_sources = [ 'Launcher.cpp',
+              'solvers/Roe.cpp',
               'solvers/Fwave.cpp',
               'patches/WavePropagation1d.cpp',
               'patches/WavePropagation2d.cpp',
@@ -26,13 +27,12 @@ l_sources = [ 'solvers/Roe.cpp',
               'io/BathymetryLoader.cpp',
               'io/Station.cpp',
               'calculations/Froude.cpp',
-              'io/NetCdf.cpp',
-              'Launcher.cpp' ]
+              'io/NetCdf.cpp' ]
 
 for l_so in l_sources:
   env.sources.append( env.Object( l_so ) )
 
-env.standalone = env.Object( "main.cpp" )
+env.standalone = env.Object( "Server.cpp" )
 
 # gather unit tests
 l_tests = [ 'tests.cpp',
@@ -66,7 +66,8 @@ for l_sa in l_sanitychecks:
 
 # gather gui sources
 if 'yes' in env['gui']:
-  l_gui = [ 'ui/GUI.cpp',
+  l_gui = [ 'Client.cpp',
+            'ui/GUI.cpp',
             'ui/RTCustWindow.cpp' ]
 
   for l_g in l_gui:
