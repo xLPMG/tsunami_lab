@@ -29,6 +29,7 @@
 #include "../constants.h"
 #include <fstream>
 #include <sstream>
+#include "Communicator.hpp"
 
 // ui components
 #include "RTCustWindow.h"
@@ -50,8 +51,11 @@ int exec(std::string i_cmd, std::string i_outputFile)
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch()
+int tsunami_lab::ui::GUI::launch(int PORT)
 {
+    // SET UP CONNECTION
+    m_communicator.startClient(PORT);
+
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -124,7 +128,6 @@ int tsunami_lab::ui::GUI::launch()
             pixels[y * 100 * 3 + x * 3 + 2] = 0x00; // B
         }
     }
-
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -151,6 +154,12 @@ int tsunami_lab::ui::GUI::launch()
         // Main window
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
+
+            if (ImGui::Button("Run")) {
+                m_communicator.sendToServer("FVSTART");
+                sleep(0.1);
+                m_communicator.sendToServer("configs/chile5000.json");
+            }
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
