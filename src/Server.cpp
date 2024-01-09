@@ -9,7 +9,7 @@ int main(int i_argc, char *i_argv[])
 {
     int exitCode = 0;
 
-    tsunami_lab::Launcher launcher;
+    tsunami_lab::Launcher *launcher = new tsunami_lab::Launcher;
 
 #ifdef USEGUI
 
@@ -22,19 +22,55 @@ int main(int i_argc, char *i_argv[])
     while (!EXIT)
     {
         std::string data = communicator.receiveFromClient();
-        if (strcmp(data.c_str(), "exit") == 0){
+        if (strcmp(data.c_str(), "shutdown") == 0)
+        {
             EXIT = true;
-        //FUNCTION CALLS
-        }else if(data[0]=='F'){
-            // VOIDS
-            if(data[1]=='V'){
-                if(strcmp(data.c_str(), "FVSTART") == 0){
-                    std::string config = communicator.receiveFromClient();
-                    launcher.start(config);
-                }
-            // CLIENT WILL WAIT FOR RETURN
-            }else if(data[1]=='R'){
+            launcher->exit();
+        }
+        else if (strcmp(data.c_str(), "exit_launcher") == 0 && launcher != nullptr)
+        {
+            launcher->exit();
+        }
+        else if (strcmp(data.c_str(), "revive_launcher") == 0)
+        {
+            launcher->revive();
+        }
+        else if (strcmp(data.c_str(), "restart") == 0)
+        {
+            // TODO
+            EXIT = true;
+            launcher->exit();
 
+            // FUNCTION CALLS
+        }
+        else if (data[0] == 'F')
+        {
+            // VOIDS
+            if (data[1] == 'V')
+            {
+                if (strcmp(data.c_str(), "FV_START") == 0)
+                {
+                    std::string config = communicator.receiveFromClient();
+                    launcher->start(config);
+                }
+                else if (strcmp(data.c_str(), "FV_WRITE_CHECKPOINT") == 0)
+                {
+                    launcher->writeCheckpoint();
+                }
+                else if (strcmp(data.c_str(), "FV_LOAD_CONFIG_JSON") == 0)
+                {
+                    std::string config = communicator.receiveFromClient();
+                    launcher->loadConfigDataJsonString(config);
+                }
+                else if (strcmp(data.c_str(), "FV_LOAD_CONFIG_FILE") == 0)
+                {
+                    std::string configFile = communicator.receiveFromClient();
+                    launcher->loadConfigDataFromFile(configFile);
+                }
+                // CLIENT WILL WAIT FOR RETURN MESSAGE
+            }
+            else if (data[1] == 'R')
+            {
             }
         }
     }
@@ -42,12 +78,13 @@ int main(int i_argc, char *i_argv[])
 #else
     if (i_argc > 2)
     {
-        launcher.start(i_argv[1]);
+        launcher->start(i_argv[1]);
     }
     else
     {
-        launcher.start("");
+        launcher->start("");
     }
 #endif
+    delete launcher;
     return exitCode;
 }

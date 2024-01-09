@@ -58,6 +58,8 @@ private:
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
+    bool SHOULD_EXIT = false;
+
     // input parameters
     std::string m_bathymetryFilePath = "";
     std::string m_displacementFilePath = "";
@@ -217,25 +219,44 @@ public:
     //-----------------GETTERS------------------//
     //------------------------------------------//
 
-    tsunami_lab::patches::WavePropagation *getWaveProp(){
+    tsunami_lab::patches::WavePropagation *getWaveProp()
+    {
         return m_waveProp;
     }
 
-    void getSetupChoice(std::string &o_setupChoice){
+    void getSetupChoice(std::string &o_setupChoice)
+    {
         o_setupChoice = m_setupChoice;
-    }   
+    }
 
     //------------------------------------------//
     //-----------------SETTERS------------------//
     //------------------------------------------//
 
-    void setSetupChoice(std::string i_setupChoice){
+    void setSetupChoice(std::string i_setupChoice)
+    {
         m_setupChoice = i_setupChoice;
     }
 
     //------------------------------------------//
     //----------------FUNCTIONS-----------------//
     //------------------------------------------//
+
+    /**
+     *  Tells the launcher to exit (softly).
+     *
+     * @return void
+     */
+    void exit();
+
+    /**
+     *  Prepares the launcher to be started again after exiting.
+     *
+     * @return void
+     */
+    void revive(){
+        SHOULD_EXIT = false;
+    };
 
     /**
      *  Creates a WavePropagation object.
@@ -258,6 +279,14 @@ public:
      *  @return void
      */
     void loadConfigDataFromFile(std::string i_configFilePath);
+
+    /**
+     *  Loads the config data from an input json string.
+     *
+     *  @param i_config config data in json format
+     *  @return void
+     */
+    void loadConfigDataJsonString(std::string i_config);
 
     /**
      *  Sets up a station.

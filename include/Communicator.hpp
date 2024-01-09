@@ -1,7 +1,7 @@
 /**
  * @author Luca-Philipp Grumbach
  *
- * # Description 
+ * # Description
  * Library to easily create a client-server connection and handle its communication and logging.
  **/
 #ifndef COMMUNICATOR
@@ -78,7 +78,7 @@ namespace xlpmg
             sockValread = read(sockClient_fd, buffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
-            clientLog.append("Received: ");                                 
+            clientLog.append("Received: ");
             clientLog.append(buffer);
             clientLog.append("\n");
             return std::string(buffer);
@@ -86,12 +86,14 @@ namespace xlpmg
 
         /// @brief Sends a message to the server.
         /// @param message String to send.
-        void sendToServer(std::string message)
+        int sendToServer(std::string message)
         {
             send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
-            clientLog.append("Sent: "); 
+            clientLog.append("Sent: ");
             clientLog.append(message);
             clientLog.append("\n");
+
+            return strcmp(receiveFromServer().c_str(), "OK");
         }
 
         /// @brief Gets the log data of the client.
@@ -170,6 +172,7 @@ namespace xlpmg
             sockValread = read(new_socket, buffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
+            send(new_socket, "OK", strlen("OK"), 0);
             return std::string(buffer);
         }
 

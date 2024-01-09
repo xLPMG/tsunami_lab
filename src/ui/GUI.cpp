@@ -157,10 +157,24 @@ int tsunami_lab::ui::GUI::launch(int PORT)
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
 
-            if (ImGui::Button("Run")) {
-                m_communicator.sendToServer("FVSTART");
+            if (ImGui::Button("Run"))
+            {
+                if(m_communicator.sendToServer("FV_START") == 0){
                 usleep(1000);
                 m_communicator.sendToServer("configs/chile5000.json");
+                }
+            }
+            if (ImGui::Button("Shutdown server"))
+            {
+                m_communicator.sendToServer("shutdown");
+            }
+            if (ImGui::Button("Exit simulation"))
+            {
+                m_communicator.sendToServer("exit_launcher");
+            }
+            if (ImGui::Button("Revive simulation"))
+            {
+                m_communicator.sendToServer("revive_launcher");
             }
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
@@ -176,7 +190,8 @@ int tsunami_lab::ui::GUI::launch(int PORT)
         }
 
         // Client log
-        if(showClientLog) {
+        if (showClientLog)
+        {
             ImGui::Begin("Client log");
             m_communicator.getClientLog(m_clientLog);
             ImGui::TextUnformatted(m_clientLog.c_str());

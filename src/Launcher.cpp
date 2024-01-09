@@ -52,6 +52,11 @@ void tsunami_lab::Launcher::loadConfigDataFromFile(std::string i_configFilePath)
   m_configData = json::parse(l_configFile);
 }
 
+void tsunami_lab::Launcher::loadConfigDataJsonString(std::string i_config)
+{
+  m_configData = json::parse(i_config);
+}
+
 void tsunami_lab::Launcher::configureFiles()
 {
   m_outputFileName = m_configData.value("outputFileName", "solution");
@@ -92,6 +97,8 @@ void tsunami_lab::Launcher::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
+  if (SHOULD_EXIT)
+    return;
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
   if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
@@ -334,6 +341,8 @@ void tsunami_lab::Launcher::constructSolver()
     {
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
+        if (SHOULD_EXIT)
+          return;
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
 
         m_waveProp->setHeight(l_cx,
@@ -370,6 +379,8 @@ void tsunami_lab::Launcher::constructSolver()
       tsunami_lab::t_real l_y = l_cy * m_dy + m_offsetY;
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
+        if (SHOULD_EXIT)
+          return;
         tsunami_lab::t_real l_x = l_cx * m_dx + m_offsetX;
         // get initial values of the setup
         tsunami_lab::t_real l_h = m_setup->getHeight(l_x,
@@ -418,6 +429,8 @@ void tsunami_lab::Launcher::loadBathymetry(std::string *i_file)
         tsunami_lab::t_real l_y = l_cy * m_dy;
         for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
         {
+          if (SHOULD_EXIT)
+            return;
           tsunami_lab::t_real l_x = l_cx * m_dx;
           tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
           m_waveProp->setBathymetry(l_cx,
@@ -471,8 +484,8 @@ void tsunami_lab::Launcher::writeStations()
 }
 
 void tsunami_lab::Launcher::addStation(tsunami_lab::t_real i_locationX,
-                                     tsunami_lab::t_real i_locationY,
-                                     std::string i_stationName)
+                                       tsunami_lab::t_real i_locationY,
+                                       std::string i_stationName)
 {
   // location cell
   tsunami_lab::t_idx l_cx = (i_locationX - m_offsetX) / m_dx;
@@ -539,7 +552,7 @@ void tsunami_lab::Launcher::writeCheckpoint()
 void tsunami_lab::Launcher::runCalculation()
 {
   auto l_lastWrite = std::chrono::system_clock::now();
-  while (m_simTime < m_endTime)
+  while (m_simTime < m_endTime && !SHOULD_EXIT)
   {
     //------------------------------------------//
     //---------------Write output---------------//
@@ -648,15 +661,24 @@ int tsunami_lab::Launcher::start(std::string i_config)
     std::cout << "runtime configuration file: " << m_configFilePath << std::endl;
   }
 
-//-------------------------------------------//
-//--------------File I/O Config--------------//
-//-------------------------------------------//
+  //-------------------------------------------//
+  //--------------File I/O Config--------------//
+  //-------------------------------------------//
 
-// set up folders
+  // set up folders
+  if (SHOULD_EXIT)
+    return 0;
+
 #ifndef BENCHMARK
   setupFolders();
 #endif
+
+  if (SHOULD_EXIT)
+    return 0;
   loadConfigDataFromFile(m_configFilePath);
+
+  if (SHOULD_EXIT)
+    return 0;
 #ifndef BENCHMARK
   configureFiles();
 #else
@@ -664,21 +686,44 @@ int tsunami_lab::Launcher::start(std::string i_config)
   if (l_setupChoice == "CHECKPOINT")
     std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
 #endif
+
+  if (SHOULD_EXIT)
+    return 0;
   loadConfiguration();
+
+  if (SHOULD_EXIT)
+    return 0;
   constructSetup();
+
+  if (SHOULD_EXIT)
+    return 0;
 #ifndef BENCHMARK
   setUpNetCdf();
 #endif
+
+  if (SHOULD_EXIT)
+    return 0;
   constructSolver();
+
+  if (SHOULD_EXIT)
+    return 0;
   loadBathymetry(&m_bathymetryFilePath);
+
+  if (SHOULD_EXIT)
+    return 0;
 #ifndef BENCHMARK
   loadStations();
 #endif
+
+  if (SHOULD_EXIT)
+    return 0;
   deriveTimeStep();
 
   //------------------------------------------//
   //---------------CALCULATION----------------//
   //------------------------------------------//
+  if (SHOULD_EXIT)
+    return 0;
   std::cout << "entering time loop" << std::endl;
   runCalculation();
   std::cout << "finished time loop" << std::endl;
@@ -692,4 +737,10 @@ int tsunami_lab::Launcher::start(std::string i_config)
   freeMemory();
   std::cout << "finished, exiting" << std::endl;
   return EXIT_SUCCESS;
+}
+
+void tsunami_lab::Launcher::exit()
+{
+  SHOULD_EXIT = true;
+  freeMemory();
 }
