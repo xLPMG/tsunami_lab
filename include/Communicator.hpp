@@ -89,7 +89,7 @@ namespace xlpmg
         int sendToServer(std::string message)
         {
             send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
-            clientLog.append("Sent: ");
+            clientLog.append("Sent    : ");
             clientLog.append(message);
             clientLog.append("\n");
 
