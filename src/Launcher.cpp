@@ -290,8 +290,7 @@ void tsunami_lab::Launcher::setUpNetCdf()
 
 void tsunami_lab::Launcher::createWaveProp()
 {
-  if (m_waveProp != nullptr)
-    delete m_waveProp;
+  delete m_waveProp;
 
   if (m_ny == 1)
   {

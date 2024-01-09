@@ -84,7 +84,7 @@ private:
 
     // simulation parameters
     std::string m_solver = "";
-    tsunami_lab::patches::WavePropagation *m_waveProp;
+    tsunami_lab::patches::WavePropagation *m_waveProp = nullptr;
     tsunami_lab::t_idx m_nx = 0;
     tsunami_lab::t_idx m_ny = 0;
     tsunami_lab::t_idx m_nk = 1;
