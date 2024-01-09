@@ -1,3 +1,9 @@
+/**
+ * @author Luca-Philipp Grumbach
+ *
+ * # Description 
+ * Library to easily create a client-server connection and handle its communication and logging.
+ **/
 #ifndef COMMUNICATOR
 #define COMMUNICATOR
 
@@ -15,10 +21,18 @@ namespace xlpmg
     {
     private:
         char buffer[BUFF_SIZE] = {0};
+        std::string clientLog = "";
         int sockStatus, sockValread, sockClient_fd;
         int server_fd, new_socket;
 
     public:
+        ////////////////////
+        //     CLIENT     //
+        ////////////////////
+
+        /// @brief Creates a client socket and searches for a server.
+        /// @param PORT Port for communication with server.
+        /// @return 0 on success, -1 for errors.
         int startClient(int PORT)
         {
             struct sockaddr_in serv_addr;
@@ -49,26 +63,50 @@ namespace xlpmg
             return sockStatus;
         }
 
+        /// @brief Stops all connections of the client socket.
         void stopClient()
         {
             // closing the connected socket
             close(sockClient_fd);
         }
 
+        /// @brief Receives a message from the server.
+        /// @return Message as string.
         std::string receiveFromServer()
         {
             memset(buffer, 0, BUFF_SIZE);
             sockValread = read(sockClient_fd, buffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
+            clientLog.append("Received: ");                                 
+            clientLog.append(buffer);
+            clientLog.append("\n");
             return std::string(buffer);
         }
 
+        /// @brief Sends a message to the server.
+        /// @param message String to send.
         void sendToServer(std::string message)
         {
             send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
+            clientLog.append("Sent: "); 
+            clientLog.append(message);
+            clientLog.append("\n");
         }
 
+        /// @brief Gets the log data of the client.
+        /// @param o_clientLog Pointer to the string which the log will be written into.
+        void getClientLog(std::string &o_clientLog)
+        {
+            o_clientLog = clientLog;
+        }
+
+        ////////////////////
+        //     SERVER     //
+        ////////////////////
+
+        /// @brief Creates a server socket and waits for connections.
+        /// @param PORT Port for communication with client.
         void startServer(int PORT)
         {
             ssize_t valread;
@@ -115,6 +153,7 @@ namespace xlpmg
             }
         }
 
+        /// @brief Stops all connections of the server.
         void stopServer()
         {
             // closing the connected socket
@@ -123,6 +162,8 @@ namespace xlpmg
             close(server_fd);
         }
 
+        /// @brief Receives a message froma  client.
+        /// @return Message as string.
         std::string receiveFromClient()
         {
             memset(buffer, 0, BUFF_SIZE);
@@ -132,6 +173,8 @@ namespace xlpmg
             return std::string(buffer);
         }
 
+        /// @brief Sends a message to a client.
+        /// @param message Message to send.
         void sendToClient(std::string message)
         {
             send(new_socket, message.c_str(), strlen(message.c_str()), 0);

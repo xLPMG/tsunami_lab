@@ -114,6 +114,7 @@ int tsunami_lab::ui::GUI::launch(int PORT)
     // Our state
     bool show_demo_window = false;
     bool showRTCustWindow = false;
+    bool showClientLog = false;
     bool showSimulationParameterWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -164,11 +165,21 @@ int tsunami_lab::ui::GUI::launch(int PORT)
             ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+            ImGui::Checkbox("Show client log", &showClientLog);
 
             ImGui::ColorEdit3("clear color", (float *)&clear_color);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
+            ImGui::End();
+        }
+
+        // Client log
+        if(showClientLog) {
+            ImGui::Begin("Client log");
+            m_communicator.getClientLog(m_clientLog);
+            ImGui::TextUnformatted(m_clientLog.c_str());
+            ImGui::SetScrollHereY(1.0f);
             ImGui::End();
         }
 

@@ -23,6 +23,7 @@ class tsunami_lab::ui::GUI
 {
 private:
   xlpmg::Communicator m_communicator;
+  std::string m_clientLog;
 public:
   int launch(int PORT);
 };
