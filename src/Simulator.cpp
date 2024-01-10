@@ -6,7 +6,7 @@
  * Class that launches and controls the simulation.
  **/
 
-#include "Launcher.h"
+#include "Simulator.h"
 
 // c libraries
 #include <cstdlib>
@@ -15,6 +15,7 @@
 #include <fstream>
 #include <limits>
 #include <chrono>
+#include <future>
 
 #ifndef NOFILESYSTEM
 #include <filesystem>
@@ -25,14 +26,14 @@
 #include <omp.h>
 #endif
 
-bool tsunami_lab::Launcher::endsWith(std::string const &i_str, std::string const &i_suffix)
+bool tsunami_lab::Simulator::endsWith(std::string const &i_str, std::string const &i_suffix)
 {
   if (i_str.length() < i_suffix.length())
     return false;
   return i_str.compare(i_str.length() - i_suffix.length(), i_suffix.length(), i_suffix) == 0;
 }
 
-void tsunami_lab::Launcher::setupFolders()
+void tsunami_lab::Simulator::setupFolders()
 {
   // create solutions folder
   if (!std::filesystem::exists("solutions"))
@@ -46,18 +47,18 @@ void tsunami_lab::Launcher::setupFolders()
     std::filesystem::create_directory("checkpoints");
 }
 
-void tsunami_lab::Launcher::loadConfigDataFromFile(std::string i_configFilePath)
+void tsunami_lab::Simulator::loadConfigDataFromFile(std::string i_configFilePath)
 {
   std::ifstream l_configFile(i_configFilePath);
   m_configData = json::parse(l_configFile);
 }
 
-void tsunami_lab::Launcher::loadConfigDataJsonString(std::string i_config)
+void tsunami_lab::Simulator::loadConfigDataJsonString(std::string i_config)
 {
   m_configData = json::parse(i_config);
 }
 
-void tsunami_lab::Launcher::configureFiles()
+void tsunami_lab::Simulator::configureFiles()
 {
   m_outputFileName = m_configData.value("outputFileName", "solution");
   m_netCdfOutputPathString = "solutions/" + m_outputFileName + ".nc";
@@ -85,7 +86,7 @@ void tsunami_lab::Launcher::configureFiles()
   }
 }
 
-void tsunami_lab::Launcher::loadConfiguration()
+void tsunami_lab::Simulator::loadConfiguration()
 {
   m_solver = m_configData.value("solver", "fwave");
   // read size config
@@ -97,8 +98,6 @@ void tsunami_lab::Launcher::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
-  if (SHOULD_EXIT)
-    return;
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
   if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
@@ -151,7 +150,7 @@ void tsunami_lab::Launcher::loadConfiguration()
   }
 }
 
-void tsunami_lab::Launcher::constructSetup()
+void tsunami_lab::Simulator::constructSetup()
 {
   if (m_setupChoice == "GENERALDISCONTINUITY1D")
   {
@@ -259,7 +258,7 @@ void tsunami_lab::Launcher::constructSetup()
   }
 }
 
-void tsunami_lab::Launcher::setUpNetCdf()
+void tsunami_lab::Simulator::setUpNetCdf()
 {
   if (m_setupChoice == "CHECKPOINT")
   {
@@ -301,7 +300,7 @@ void tsunami_lab::Launcher::setUpNetCdf()
   }
 }
 
-void tsunami_lab::Launcher::createWaveProp()
+void tsunami_lab::Simulator::createWaveProp()
 {
   if (m_ny == 1)
   {
@@ -321,7 +320,7 @@ void tsunami_lab::Launcher::createWaveProp()
   }
 }
 
-void tsunami_lab::Launcher::constructSolver()
+void tsunami_lab::Simulator::constructSolver()
 {
   m_dx = m_simulationSizeX / m_nx;
   m_dy = m_simulationSizeY / m_ny;
@@ -346,13 +345,6 @@ void tsunami_lab::Launcher::constructSolver()
     {
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
-        if (SHOULD_EXIT)
-        {
-        #ifdef USEOMP
-        #pragma omp cancel for
-        #endif
-          return;
-        }
 
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
 
@@ -388,13 +380,6 @@ void tsunami_lab::Launcher::constructSolver()
       tsunami_lab::t_real l_y = l_cy * m_dy + m_offsetY;
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
-        if (SHOULD_EXIT)
-        {
-        #ifdef USEOMP
-        #pragma omp cancel for
-        #endif
-          return;
-        }
         tsunami_lab::t_real l_x = l_cx * m_dx + m_offsetX;
         // get initial values of the setup
         tsunami_lab::t_real l_h = m_setup->getHeight(l_x,
@@ -428,7 +413,7 @@ void tsunami_lab::Launcher::constructSolver()
   }
 }
 
-void tsunami_lab::Launcher::loadBathymetry(std::string *i_file)
+void tsunami_lab::Simulator::loadBathymetry(std::string *i_file)
 {
   // load bathymetry from file
   if (m_bathymetryFilePath.length() > 0)
@@ -443,8 +428,6 @@ void tsunami_lab::Launcher::loadBathymetry(std::string *i_file)
         tsunami_lab::t_real l_y = l_cy * m_dy;
         for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
         {
-          if (SHOULD_EXIT)
-            return;
           tsunami_lab::t_real l_x = l_cx * m_dx;
           tsunami_lab::t_real l_b = l_bathymetryLoader->getBathymetry(l_x, l_y);
           m_waveProp->setBathymetry(l_cx,
@@ -463,7 +446,7 @@ void tsunami_lab::Launcher::loadBathymetry(std::string *i_file)
   }
 }
 
-void tsunami_lab::Launcher::loadStations()
+void tsunami_lab::Simulator::loadStations()
 {
   // set up stations
   if (m_configData.contains("stations"))
@@ -489,7 +472,7 @@ void tsunami_lab::Launcher::loadStations()
   }
 }
 
-void tsunami_lab::Launcher::writeStations()
+void tsunami_lab::Simulator::writeStations()
 {
   for (tsunami_lab::io::Station *l_s : m_stations)
   {
@@ -497,9 +480,9 @@ void tsunami_lab::Launcher::writeStations()
   }
 }
 
-void tsunami_lab::Launcher::addStation(tsunami_lab::t_real i_locationX,
-                                       tsunami_lab::t_real i_locationY,
-                                       std::string i_stationName)
+void tsunami_lab::Simulator::addStation(tsunami_lab::t_real i_locationX,
+                                        tsunami_lab::t_real i_locationY,
+                                        std::string i_stationName)
 {
   // location cell
   tsunami_lab::t_idx l_cx = (i_locationX - m_offsetX) / m_dx;
@@ -511,7 +494,7 @@ void tsunami_lab::Launcher::addStation(tsunami_lab::t_real i_locationX,
                                                     m_waveProp));
 }
 
-void tsunami_lab::Launcher::deriveTimeStep()
+void tsunami_lab::Simulator::deriveTimeStep()
 {
   // derive maximum wave speed in setup; the momentum is ignored
   tsunami_lab::t_real l_speedMax = std::sqrt(9.81 * m_hMax);
@@ -552,7 +535,7 @@ void tsunami_lab::Launcher::deriveTimeStep()
   }
 }
 
-void tsunami_lab::Launcher::writeCheckpoint()
+void tsunami_lab::Simulator::writeCheckpoint()
 {
   m_netCdf->writeCheckpoint(m_checkPointFilePath,
                             m_waveProp->getStride(),
@@ -564,10 +547,10 @@ void tsunami_lab::Launcher::writeCheckpoint()
                             m_timeStep);
 }
 
-void tsunami_lab::Launcher::runCalculation()
+void tsunami_lab::Simulator::runCalculation()
 {
   auto l_lastWrite = std::chrono::system_clock::now();
-  while (m_simTime < m_endTime && !SHOULD_EXIT)
+  while (m_simTime < m_endTime)
   {
     //------------------------------------------//
     //---------------Write output---------------//
@@ -642,7 +625,7 @@ void tsunami_lab::Launcher::runCalculation()
   }
 }
 
-void tsunami_lab::Launcher::freeMemory()
+void tsunami_lab::Simulator::freeMemory()
 {
   delete m_setup;
   delete m_waveProp;
@@ -660,7 +643,7 @@ void tsunami_lab::Launcher::freeMemory()
 //-------------------------------------------//
 //----------------ENTRY POINT----------------//
 //-------------------------------------------//
-int tsunami_lab::Launcher::start(std::string i_config)
+int tsunami_lab::Simulator::start(std::string i_config)
 {
   std::cout << "####################################" << std::endl;
   std::cout << "### Tsunami Lab                  ###" << std::endl;
@@ -683,20 +666,11 @@ int tsunami_lab::Launcher::start(std::string i_config)
   //-------------------------------------------//
 
   // set up folders
-  if (SHOULD_EXIT)
-    return 0;
-
   if (m_useFileIO)
   {
     setupFolders();
   }
-
-  if (SHOULD_EXIT)
-    return 0;
   loadConfigDataFromFile(m_configFilePath);
-
-  if (SHOULD_EXIT)
-    return 0;
   if (m_useFileIO)
   {
     configureFiles();
@@ -708,45 +682,29 @@ int tsunami_lab::Launcher::start(std::string i_config)
       std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
   }
 
-  if (SHOULD_EXIT)
-    return 0;
   loadConfiguration();
 
-  if (SHOULD_EXIT)
-    return 0;
   constructSetup();
 
-  if (SHOULD_EXIT)
-    return 0;
   if (m_useFileIO)
   {
     setUpNetCdf();
   }
 
-  if (SHOULD_EXIT)
-    return 0;
   constructSolver();
 
-  if (SHOULD_EXIT)
-    return 0;
   loadBathymetry(&m_bathymetryFilePath);
 
-  if (SHOULD_EXIT)
-    return 0;
   if (m_useFileIO)
   {
     loadStations();
   }
 
-  if (SHOULD_EXIT)
-    return 0;
   deriveTimeStep();
 
   //------------------------------------------//
   //---------------CALCULATION----------------//
   //------------------------------------------//
-  if (SHOULD_EXIT)
-    return 0;
   std::cout << "entering time loop" << std::endl;
   runCalculation();
   std::cout << "finished time loop" << std::endl;
@@ -761,10 +719,4 @@ int tsunami_lab::Launcher::start(std::string i_config)
   freeMemory();
   std::cout << "finished, exiting" << std::endl;
   return EXIT_SUCCESS;
-}
-
-void tsunami_lab::Launcher::exit()
-{
-  SHOULD_EXIT = true;
-  freeMemory();
 }

@@ -6,8 +6,8 @@
  * Class that launches and controls the simulation.
  **/
 
-#ifndef TSUNAMI_LAB_Launcher_H
-#define TSUNAMI_LAB_Launcher_H
+#ifndef TSUNAMI_LAB_Simulator_H
+#define TSUNAMI_LAB_Simulator_H
 
 #ifdef USEOMP
 #include <omp.h>
@@ -40,15 +40,16 @@
 #include <netcdf.h>
 
 #include <string>
+#include <atomic>
 using json = nlohmann::json;
 using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
 
 namespace tsunami_lab
 {
-    class Launcher;
+    class Simulator;
 }
 
-class tsunami_lab::Launcher
+class tsunami_lab::Simulator
 {
 private:
     //------------------------------------------//
@@ -58,7 +59,6 @@ private:
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
-    bool SHOULD_EXIT = false;
     bool m_useFileIO = true;
 
     // input parameters
@@ -135,7 +135,7 @@ private:
      * @param i_str input string to check
      * @param i_suffix possible suffix of i_str
      * @return true if i_str ends with i_suffix, otherwise false.
-     */
+     */#include <atomic>
     bool endsWith(std::string const &i_str, std::string const &i_suffix);
 
     /**
@@ -216,6 +216,8 @@ private:
     void freeMemory();
 
 public:
+
+    std::atomic<bool> END = false;
     //------------------------------------------//
     //-----------------GETTERS------------------//
     //------------------------------------------//
@@ -242,22 +244,6 @@ public:
     //------------------------------------------//
     //----------------FUNCTIONS-----------------//
     //------------------------------------------//
-
-    /**
-     *  Tells the launcher to exit (softly).
-     *
-     * @return void
-     */
-    void exit();
-
-    /**
-     *  Prepares the launcher to be started again after exiting.
-     *
-     * @return void
-     */
-    void revive(){
-        SHOULD_EXIT = false;
-    };
 
     /**
      *  Creates a WavePropagation object.
@@ -320,9 +306,6 @@ public:
     }
 
     int start(std::string i_config);
-
-    void startLauncher();
-    int main(int i_argc, char *i_argv[]);
 };
 
 #endif

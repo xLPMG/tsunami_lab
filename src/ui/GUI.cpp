@@ -135,7 +135,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     bool btnConnectDisabled = false;
     bool btnDisonnectDisabled = true;
 
-    //outflow conditions
+    // outflow conditions
     bool outflowL = false;
     bool outflowR = false;
     bool outflowT = false;
@@ -198,11 +198,11 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::Text("This GUI was created in the final phase of the tsunami lab during the winter semester 2023/24 at FSU Jena. ");
                 ImGui::Text("For information on the project, visit our documentation at");
                 ImGui::Indent();
-                ImGui::TextColored(ImVec4(0,1,0,1), "https://xlpmg.github.io/tsunami_lab/");
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://xlpmg.github.io/tsunami_lab/");
                 ImGui::Unindent();
                 ImGui::Text("The source code can be found at");
                 ImGui::Indent();
-                ImGui::TextColored(ImVec4(0,1,0,1), "https://github.com/xLPMG/tsunami_lab");
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://github.com/xLPMG/tsunami_lab");
                 ImGui::Unindent();
 
                 ImGui::SeparatorText("GUI USAGE:");
@@ -254,6 +254,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             }
             // END OF CONNECTION THINGS
 
+            if (ImGui::Button("Create"))
+            {
+                m_communicator.sendToServer("Screate_simulator");
+            }
             if (ImGui::Button("Run"))
             {
                 if (m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0)
@@ -305,11 +309,15 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             ImGui::Begin("Runtime parameters");
 
-            
-            ImGui::Checkbox("Benchmark mode", &benchmarkMode);ImGui::SameLine(); HelpMarker("In and output gets deactivated for measurment.");
-            ImGui::Checkbox("Report", &reportMode);ImGui::SameLine(); HelpMarker("Creates reports for.....");
-            ImGui::Checkbox("Checkpointing", &Checkpointing);ImGui::SameLine(); HelpMarker("Activates Checkpointing.");
-
+            ImGui::Checkbox("Benchmark mode", &benchmarkMode);
+            ImGui::SameLine();
+            HelpMarker("In and output gets deactivated for measurment.");
+            ImGui::Checkbox("Report", &reportMode);
+            ImGui::SameLine();
+            HelpMarker("Creates reports for.....");
+            ImGui::Checkbox("Checkpointing", &Checkpointing);
+            ImGui::SameLine();
+            HelpMarker("Activates Checkpointing.");
 
             if (ImGui::BeginMenu("Outflow"))
             {
@@ -318,9 +326,9 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::Checkbox("Outlflow Top", &outflowT);
                 ImGui::Checkbox("Outlflow Bottom", &outflowB);
                 ImGui::EndMenu();
-            } 
-            ImGui::SameLine(); HelpMarker("Determines whether the waves leaves the corresponding domain.");
-
+            }
+            ImGui::SameLine();
+            HelpMarker("Determines whether the waves leaves the corresponding domain.");
 
             // ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
 
@@ -348,7 +356,9 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::Combo("Compiler Optimization Flag", &item_current, items, IM_ARRAYSIZE(items));
             ImGui::Checkbox("Use OpenMp", &openMp);
 
-            if (ImGui::Button("Recompile")){}
+            if (ImGui::Button("Recompile"))
+            {
+            }
 
             if (ImGui::Button("Close"))
                 showSimulationParameterWindow = false;
@@ -364,7 +374,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             static tsunami_lab::t_real l_simulationSizeX = 0;
             static tsunami_lab::t_real l_simulationSizeY = 0;
             static tsunami_lab::t_real endTime = 1000;
-            static int writingFrequency = 100; //todo: change int to t_idx
+            static int writingFrequency = 100; // todo: change int to t_idx
 
             ImGui::Begin("Simulation parameters");
 
@@ -379,12 +389,13 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             l_simulationSizeY = abs(l_simulationSizeY);
 
             ImGui::InputFloat("Endtime", &endTime);
-            //ImGui::InputFloat("Writingfrequency", &writingFrequency);
-             ImGui::SeparatorText("Sliders");
+            // ImGui::InputFloat("Writingfrequency", &writingFrequency);
+            ImGui::SeparatorText("Sliders");
             {
-                //static float f1 = 0.123f, f2 = 0.0f;
+                // static float f1 = 0.123f, f2 = 0.0f;
                 ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
-                ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
+                ImGui::SameLine();
+                HelpMarker("CTRL+click to input value.");
             }
             endTime = abs(endTime);
             writingFrequency = abs(writingFrequency);

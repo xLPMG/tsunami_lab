@@ -1,19 +1,19 @@
-#include "Launcher.h"
+#include "Simulator.h"
 #include "Communicator.hpp"
 #include "constants.h"
+#include <thread>
 #define USEGUI 1
 
 int PORT = 8080;
 bool EXIT = false;
+std::thread simulationThread;
 
 int main(int i_argc, char *i_argv[])
 {
     int exitCode = 0;
 
-    tsunami_lab::Launcher *launcher = new tsunami_lab::Launcher;
-
 #ifdef USEGUI
-
+    tsunami_lab::Simulator *simulator = nullptr;
     if (i_argc > 2)
     {
         PORT = atoi(i_argv[1]);
@@ -29,69 +29,78 @@ int main(int i_argc, char *i_argv[])
             if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
             {
                 EXIT = true;
-                launcher->exit();
             }
-            else if (strcmp(data.c_str(), tsunami_lab::KEY_EXIT_LAUNCHER) == 0 && launcher != nullptr)
+            else if (strcmp(data.c_str(), "Screate_simulator") == 0)
             {
-                launcher->exit();
+                if (simulator != nullptr)
+                {
+                    delete simulator;
+                }
+                simulator = new tsunami_lab::Simulator;
             }
-            else if (strcmp(data.c_str(), tsunami_lab::KEY_REVIVE_LAUNCHER) == 0)
+            else if (strcmp(data.c_str(), "") == 0)
             {
-                launcher->revive();
+                if (simulator != nullptr)
+                {
+                    delete simulator;
+                }
+                simulator = new tsunami_lab::Simulator;
             }
-            else if (strcmp(data.c_str(), tsunami_lab::KEY_RESTART_SERVER) == 0)
+
+            else if (strcmp(data.c_str(), tsunami_lab::KEY_KILL_SIMULATION) == 0)
             {
-                // TODO
-                EXIT = true;
-                launcher->exit();
+                std::string config = communicator.receiveFromClient();
+                // simulationThread = std::thread(&tsunami_lab::Simulator::start, &simulator);
             }
         }
         // FUNCTION CALLS
-        else if (data[0] == 'F')
+        else if (data[0] == 'F' && simulator != nullptr)
         {
             // VOIDS
             if (data[1] == 'V')
             {
-                if (strcmp(data.c_str(), tsunami_lab::KEY_START_SIMULATION) == 0)
+                if (strcmp(data.c_str(), tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
+                {
+                    simulator->writeCheckpoint();
+                }
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_START_SIMULATION) == 0)
                 {
                     std::string config = communicator.receiveFromClient();
-                    launcher->start(config);
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
-                {
-                    launcher->writeCheckpoint();
+                    std::cout << "start" << std::endl;
+                    simulator->start(config);
                 }
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_JSON) == 0)
                 {
                     std::string config = communicator.receiveFromClient();
-                    launcher->loadConfigDataJsonString(config);
+                    simulator->loadConfigDataJsonString(config);
                 }
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_FILE) == 0)
                 {
                     std::string configFile = communicator.receiveFromClient();
-                    launcher->loadConfigDataFromFile(configFile);
+                    simulator->loadConfigDataFromFile(configFile);
                 }
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
                 {
                     std::string toggle = communicator.receiveFromClient();
                     if (strcmp(toggle.c_str(), "true") == 0)
                     {
-                        launcher->toggleFileIO(true);
+                        simulator->toggleFileIO(true);
                     }
                     else
                     {
-                        launcher->toggleFileIO(false);
+                        simulator->toggleFileIO(false);
                     }
                 }
             }
             // CLIENT WILL WAIT FOR RETURN MESSAGE
-            else if (data[1] == 'R')
+            else if (data[1] == 'R' && simulator != nullptr)
             {
             }
         }
     }
 
 #else
+    tsunami_lab::Simulator *launcher = new tsunami_lab::Simulator;
     if (i_argc > 2)
     {
         launcher->start(i_argv[1]);
@@ -100,7 +109,8 @@ int main(int i_argc, char *i_argv[])
     {
         launcher->start("");
     }
-#endif
     delete launcher;
+#endif
+    simulationThread.join();
     return exitCode;
 }

@@ -40,6 +40,9 @@ namespace tsunami_lab
   //! launcher will start its main loop
   inline const char* KEY_START_SIMULATION = "FV_START";
 
+    //! launcher will start its main loop
+  inline const char* KEY_KILL_SIMULATION = "Skill";
+
   //! launcher will write a checkpoint
   inline const char* KEY_WRITE_CHECKPOINT = "FV_WRITE_CHECKPOINT";
 

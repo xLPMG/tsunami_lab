@@ -8,7 +8,7 @@
 Import('env')
 
 # gather sources
-l_sources = [ 'Launcher.cpp',
+l_sources = [ 'Simulator.cpp',
               'solvers/Roe.cpp',
               'solvers/Fwave.cpp',
               'patches/WavePropagation1d.cpp',

@@ -43,10 +43,10 @@ namespace xlpmg
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
-                printf("\n Socket creation error \n");
                 clientLog.append("Error   : Socket creation error \n");
                 return -1;
             }
+            clientLog.append("Socket created.\n");
 
             setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
             setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
@@ -58,8 +58,6 @@ namespace xlpmg
             // form
             if (inet_pton(AF_INET, IPADDRESS, &serv_addr.sin_addr) <= 0)
             {
-                printf(
-                    "\nInvalid address/ Address not supported \n");
                 clientLog.append("Error   : Invalid address/ Address not supported \n");
                 return -1;
             }
@@ -67,10 +65,12 @@ namespace xlpmg
             if ((sockStatus = connect(sockClient_fd, (struct sockaddr *)&serv_addr,
                                       sizeof(serv_addr))) < 0)
             {
-                printf("\nConnection Failed \n");
                 clientLog.append("Error   : Connection Failed \n");
                 return -1;
             }
+            clientLog.append("Socket connected to ");
+            clientLog.append(IPADDRESS);
+            clientLog.append(":"+std::to_string(PORT)+".\n");
             return sockStatus;
         }
 
@@ -87,7 +87,6 @@ namespace xlpmg
         {
             if (sockClient_fd < 0)
             {
-                printf("\nReading failed: Socket not initialized \n");
                 clientLog.append("Error   : Reading failed: Socket not initialized. \n");
                 return "FAIL";
             }
@@ -97,7 +96,6 @@ namespace xlpmg
                                                // terminator at the end
             if (sockValread < 0)
             {
-                printf("\nError reading from socket \n");
                 clientLog.append("Error   : Read failed or timed out. \n");
                 return "FAIL";
             }
@@ -116,7 +114,6 @@ namespace xlpmg
         {
             if (sockClient_fd < 0)
             {
-                printf("\nSending failed: Socket not initialized \n");
                 clientLog.append("Error   : Sending failed: Socket not initialized \n");
                 return 1;
             }
