@@ -35,8 +35,8 @@
 // ui components
 #include "RTCustWindow.h"
 
-const unsigned int WINDOW_WIDTH = 800;
-const unsigned int WINDOW_HEIGHT = 500;
+const unsigned int WINDOW_WIDTH = 1500;
+const unsigned int WINDOW_HEIGHT = 1000;
 const char *LOG_FILE = "log.txt";
 
 static void glfw_error_callback(int error, const char *description)
@@ -190,10 +190,26 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::Begin("Welcome to the Tsunami Simulator GUI! (NOT CONNECTED)");
             }
 
+            if (ImGui::CollapsingHeader("Help"))
+            {
+                ImGui::SeparatorText("ABOUT:");
+                ImGui::Text("This GUI was created in the final phase of the tsunami lab during the winter semester 2023/24 at FSU Jena. ");
+                ImGui::Text("For information on the project, visit our documentation at");
+                ImGui::Indent();
+                ImGui::TextColored(ImVec4(0,1,0,1), "https://xlpmg.github.io/tsunami_lab/");
+                ImGui::Unindent();
+                ImGui::Text("The source code can be found at");
+                ImGui::Indent();
+                ImGui::TextColored(ImVec4(0,1,0,1), "https://github.com/xLPMG/tsunami_lab");
+                ImGui::Unindent();
+
+                ImGui::SeparatorText("GUI USAGE:");
+            }
+
             // CONNECTION THINGS
             if (ImGui::CollapsingHeader("Connectivity"))
             {
-                ImGui::InputText("IP address", &IPADDRESS[0], ((int)(sizeof(IPADDRESS) / sizeof(*(IPADDRESS)))));
+                ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
                 ImGui::InputInt("Port", &PORT, 0, 20000);
                 PORT = abs(PORT);
 
@@ -233,9 +249,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                         connected = true;
                     }
                 }
-
             }
-            // END OF CONNECtiON THINGS
+            // END OF CONNECTION THINGS
 
             if (ImGui::Button("Run"))
             {
@@ -358,5 +373,4 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     glfwTerminate();
 
     return 0;
-    
 }
