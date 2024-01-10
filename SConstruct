@@ -64,6 +64,11 @@ vars.AddVariables(
                 'enables the GUI',
                 'yes',
                 allowed_values=('yes', 'no')
+              ),
+  EnumVariable( 'use_filesystem',
+                'enables or disabled the filesystem usage',
+                'yes',
+                allowed_values=('yes', 'no')
               )
 )
 
@@ -206,11 +211,10 @@ if 'san' in  env['mode']:
                             '-fsanitize=undefined' ] )
 
 #####################
-# BENCHMARKING MODE #
+#   NO FILESYSTEM   #
 #####################
-if 'benchmark' in env['mode']:
-  env.Append( CXXFLAGS =  [ '-DBENCHMARK' ] )
-
+if 'no' in env['use_filesystem']:
+  env.Append( CXXFLAGS =  [ '-DNOFILESYSTEM' ] )
 
 env.Append( CXXFLAGS = [ '-isystem', 'include' ] )
 #####################

@@ -23,27 +23,30 @@ int main(int i_argc, char *i_argv[])
     while (!EXIT)
     {
         std::string data = communicator.receiveFromClient();
-        if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
+        // SYSTEM CALLS
+        if (data[0] == 'S')
         {
-            EXIT = true;
-            launcher->exit();
+            if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
+            {
+                EXIT = true;
+                launcher->exit();
+            }
+            else if (strcmp(data.c_str(), tsunami_lab::KEY_EXIT_LAUNCHER) == 0 && launcher != nullptr)
+            {
+                launcher->exit();
+            }
+            else if (strcmp(data.c_str(), tsunami_lab::KEY_REVIVE_LAUNCHER) == 0)
+            {
+                launcher->revive();
+            }
+            else if (strcmp(data.c_str(), tsunami_lab::KEY_RESTART_SERVER) == 0)
+            {
+                // TODO
+                EXIT = true;
+                launcher->exit();
+            }
         }
-        else if (strcmp(data.c_str(), tsunami_lab::KEY_EXIT_LAUNCHER) == 0 && launcher != nullptr)
-        {
-            launcher->exit();
-        }
-        else if (strcmp(data.c_str(), tsunami_lab::KEY_REVIVE_LAUNCHER) == 0)
-        {
-            launcher->revive();
-        }
-        else if (strcmp(data.c_str(), tsunami_lab::KEY_RESTART_SERVER) == 0)
-        {
-            // TODO
-            EXIT = true;
-            launcher->exit();
-
-            // FUNCTION CALLS
-        }
+        // FUNCTION CALLS
         else if (data[0] == 'F')
         {
             // VOIDS
@@ -68,8 +71,20 @@ int main(int i_argc, char *i_argv[])
                     std::string configFile = communicator.receiveFromClient();
                     launcher->loadConfigDataFromFile(configFile);
                 }
-                // CLIENT WILL WAIT FOR RETURN MESSAGE
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
+                {
+                    std::string toggle = communicator.receiveFromClient();
+                    if (strcmp(toggle.c_str(), "true") == 0)
+                    {
+                        launcher->toggleFileIO(true);
+                    }
+                    else
+                    {
+                        launcher->toggleFileIO(false);
+                    }
+                }
             }
+            // CLIENT WILL WAIT FOR RETURN MESSAGE
             else if (data[1] == 'R')
             {
             }

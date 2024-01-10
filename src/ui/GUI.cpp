@@ -382,7 +382,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             //ImGui::InputFloat("Writingfrequency", &writingFrequency);
              ImGui::SeparatorText("Sliders");
             {
-                static float f1 = 0.123f, f2 = 0.0f;
+                //static float f1 = 0.123f, f2 = 0.0f;
                 ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
                 ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
             }

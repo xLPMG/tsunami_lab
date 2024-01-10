@@ -59,6 +59,7 @@ private:
     json m_configData;
 
     bool SHOULD_EXIT = false;
+    bool m_useFileIO = true;
 
     // input parameters
     std::string m_bathymetryFilePath = "";
@@ -307,6 +308,16 @@ public:
      *  @return void
      */
     void runCalculation();
+
+    /**
+     *  Enables or disables file I/O.
+     *
+     *  @param i_useFileIO true if file I/O should be enabled.
+     *  @return void
+     */
+    void toggleFileIO(bool i_useFileIO){
+        m_useFileIO = i_useFileIO;
+    }
 
     int start(std::string i_config);
 

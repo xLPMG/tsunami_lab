@@ -16,7 +16,7 @@
 #include <limits>
 #include <chrono>
 
-#ifndef BENCHMARK
+#ifndef NOFILESYSTEM
 #include <filesystem>
 #endif
 
@@ -124,6 +124,11 @@ void tsunami_lab::Launcher::loadConfiguration()
   else if (l_boundaryStringB == "wall" || l_boundaryStringB == "WALL")
     m_boundaryB = Boundary::WALL;
 
+  m_useFileIO = m_configData.value("useFileIO", true);
+#ifdef NOFILESYSTEM
+  m_useFileIO = false;
+#endif
+
   m_bathymetryFilePath = m_configData.value("bathymetry", "");
   m_displacementFilePath = m_configData.value("displacement", "");
 
@@ -132,17 +137,18 @@ void tsunami_lab::Launcher::loadConfiguration()
 
   // read station data
   m_stationFrequency = m_configData.value("stationFrequency", 1);
-#ifndef BENCHMARK
-  std::string l_outputMethod = m_configData.value("outputMethod", "netcdf");
-  if (l_outputMethod == "netcdf" || l_outputMethod == "NETCDF")
+  if (m_useFileIO)
   {
-    m_dataWriter = NETCDF;
+    std::string l_outputMethod = m_configData.value("outputMethod", "netcdf");
+    if (l_outputMethod == "netcdf" || l_outputMethod == "NETCDF")
+    {
+      m_dataWriter = NETCDF;
+    }
+    else if (l_outputMethod == "csv" || l_outputMethod == "CSV")
+    {
+      m_dataWriter = CSV;
+    }
   }
-  else if (l_outputMethod == "csv" || l_outputMethod == "CSV")
-  {
-    m_dataWriter = CSV;
-  }
-#endif
 }
 
 void tsunami_lab::Launcher::constructSetup()
@@ -321,9 +327,8 @@ void tsunami_lab::Launcher::constructSolver()
   m_dy = m_simulationSizeY / m_ny;
   createWaveProp();
   std::cout << "Setting up solver..." << std::endl;
-// set up solver
-#ifndef BENCHMARK
-  if (m_setupChoice == "CHECKPOINT")
+  // set up solver
+  if (m_setupChoice == "CHECKPOINT" && m_useFileIO)
   {
     tsunami_lab::t_real *l_hCheck = new tsunami_lab::t_real[m_nx * m_ny];
     tsunami_lab::t_real *l_huCheck = new tsunami_lab::t_real[m_nx * m_ny];
@@ -367,9 +372,7 @@ void tsunami_lab::Launcher::constructSolver()
     delete[] l_hvCheck;
     delete[] l_bCheck;
   }
-#endif
-
-  if (m_setupChoice != "CHECKPOINT")
+  else
   {
 #ifdef USEOMP
 #pragma omp parallel for
@@ -519,22 +522,23 @@ void tsunami_lab::Launcher::deriveTimeStep()
   m_scalingY = m_dt / m_dy;
 
   // options for checkpointing
-#ifndef BENCHMARK
-  std::cout << "Writing every " << m_writingFrequency << " time steps" << std::endl;
-  if (m_checkpointFrequency > 0)
+  if (m_useFileIO)
   {
-    std::cout << "Saving checkpoint every " << m_checkpointFrequency << " seconds" << std::endl;
+    std::cout << "Writing every " << m_writingFrequency << " time steps" << std::endl;
+    if (m_checkpointFrequency > 0)
+    {
+      std::cout << "Saving checkpoint every " << m_checkpointFrequency << " seconds" << std::endl;
+    }
+    else
+    {
+      std::cout << "Warning: Checkpoints have been disabled for this run. " << std::endl;
+    }
+    // set count in case we load from a checkpoint file
+    if (m_simTime > 0)
+    {
+      m_captureCount = std::floor(m_simTime / m_stationFrequency);
+    }
   }
-  else
-  {
-    std::cout << "Warning: Checkpoints have been disabled for this run. " << std::endl;
-  }
-  // set count in case we load from a checkpoint file
-  if (m_simTime > 0)
-  {
-    m_captureCount = std::floor(m_simTime / m_stationFrequency);
-  }
-#endif
 }
 
 void tsunami_lab::Launcher::writeCheckpoint()
@@ -557,65 +561,66 @@ void tsunami_lab::Launcher::runCalculation()
     //------------------------------------------//
     //---------------Write output---------------//
     //------------------------------------------//
-#ifndef BENCHMARK
-    if (m_timeStep % m_writingFrequency == 0)
+    if (m_useFileIO)
     {
-      std::cout << "  simulation time / #time steps: "
-                << m_simTime << " / " << m_timeStep << std::endl;
+      if (m_timeStep % m_writingFrequency == 0)
+      {
+        std::cout << "  simulation time / #time steps: "
+                  << m_simTime << " / " << m_timeStep << std::endl;
 
-      switch (m_dataWriter)
-      {
-      case NETCDF:
-      {
-        std::cout << "  writing to netcdf " << std::endl;
-        m_netCdf->write(m_waveProp->getStride(),
-                        m_waveProp->getHeight(),
-                        m_waveProp->getMomentumX(),
-                        m_waveProp->getMomentumY(),
-                        m_waveProp->getBathymetry(),
-                        m_simTime);
-        break;
+        switch (m_dataWriter)
+        {
+        case NETCDF:
+        {
+          std::cout << "  writing to netcdf " << std::endl;
+          m_netCdf->write(m_waveProp->getStride(),
+                          m_waveProp->getHeight(),
+                          m_waveProp->getMomentumX(),
+                          m_waveProp->getMomentumY(),
+                          m_waveProp->getBathymetry(),
+                          m_simTime);
+          break;
+        }
+        case CSV:
+        {
+          std::string l_csvOutputPath = "solutions/" + m_outputFileName + "_" + std::to_string(m_nOut) + ".csv";
+          std::cout << "  writing wave field to " << l_csvOutputPath << std::endl;
+          std::ofstream l_file;
+          l_file.open(l_csvOutputPath);
+          tsunami_lab::io::Csv::write(m_dx,
+                                      m_dy,
+                                      m_nx,
+                                      m_ny,
+                                      m_waveProp->getStride(),
+                                      m_waveProp->getHeight(),
+                                      m_waveProp->getMomentumX(),
+                                      m_waveProp->getMomentumY(),
+                                      m_waveProp->getBathymetry(),
+                                      l_file);
+          l_file.close();
+          m_nOut++;
+          break;
+        }
+        }
       }
-      case CSV:
+      // write stations
+      if (m_simTime >= m_stationFrequency * m_captureCount)
       {
-        std::string l_csvOutputPath = "solutions/" + m_outputFileName + "_" + std::to_string(m_nOut) + ".csv";
-        std::cout << "  writing wave field to " << l_csvOutputPath << std::endl;
-        std::ofstream l_file;
-        l_file.open(l_csvOutputPath);
-        tsunami_lab::io::Csv::write(m_dx,
-                                    m_dy,
-                                    m_nx,
-                                    m_ny,
-                                    m_waveProp->getStride(),
-                                    m_waveProp->getHeight(),
-                                    m_waveProp->getMomentumX(),
-                                    m_waveProp->getMomentumY(),
-                                    m_waveProp->getBathymetry(),
-                                    l_file);
-        l_file.close();
-        m_nOut++;
-        break;
+        for (tsunami_lab::io::Station *l_s : m_stations)
+        {
+          l_s->capture(m_simTime);
+        }
+        ++m_captureCount;
       }
+      // write checkpoint
+      if (m_checkpointFrequency > 0 &&
+          std::chrono::system_clock::now() - l_lastWrite >= std::chrono::duration<float>(m_checkpointFrequency))
+      {
+        std::cout << "saving checkpoint to " << m_checkPointFilePathString << std::endl;
+        writeCheckpoint();
+        l_lastWrite = std::chrono::system_clock::now();
       }
     }
-    // write stations
-    if (m_simTime >= m_stationFrequency * m_captureCount)
-    {
-      for (tsunami_lab::io::Station *l_s : m_stations)
-      {
-        l_s->capture(m_simTime);
-      }
-      ++m_captureCount;
-    }
-    // write checkpoint
-    if (m_checkpointFrequency > 0 &&
-        std::chrono::system_clock::now() - l_lastWrite >= std::chrono::duration<float>(m_checkpointFrequency))
-    {
-      std::cout << "saving checkpoint to " << m_checkPointFilePathString << std::endl;
-      writeCheckpoint();
-      l_lastWrite = std::chrono::system_clock::now();
-    }
-#endif
     //------------------------------------------//
     //------------Update loop params------------//
     //------------------------------------------//
@@ -630,14 +635,15 @@ void tsunami_lab::Launcher::freeMemory()
 {
   delete m_setup;
   delete m_waveProp;
-#ifndef BENCHMARK
-  std::filesystem::remove(m_checkPointFilePathString);
-  delete m_netCdf;
-  for (tsunami_lab::io::Station *l_s : m_stations)
+  if (m_useFileIO)
   {
-    delete l_s;
+    std::filesystem::remove(m_checkPointFilePathString);
+    delete m_netCdf;
+    for (tsunami_lab::io::Station *l_s : m_stations)
+    {
+      delete l_s;
+    }
   }
-#endif
 }
 
 //-------------------------------------------//
@@ -669,9 +675,10 @@ int tsunami_lab::Launcher::start(std::string i_config)
   if (SHOULD_EXIT)
     return 0;
 
-#ifndef BENCHMARK
-  setupFolders();
-#endif
+  if (m_useFileIO)
+  {
+    setupFolders();
+  }
 
   if (SHOULD_EXIT)
     return 0;
@@ -679,13 +686,16 @@ int tsunami_lab::Launcher::start(std::string i_config)
 
   if (SHOULD_EXIT)
     return 0;
-#ifndef BENCHMARK
-  configureFiles();
-#else
-  l_setupChoice = l_configData.value("setup", "CIRCULARDAMBREAK2D");
-  if (l_setupChoice == "CHECKPOINT")
-    std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
-#endif
+  if (m_useFileIO)
+  {
+    configureFiles();
+  }
+  else
+  {
+    m_setupChoice = m_configData.value("setup", "CIRCULARDAMBREAK2D");
+    if (m_setupChoice == "CHECKPOINT")
+      std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
+  }
 
   if (SHOULD_EXIT)
     return 0;
@@ -697,9 +707,10 @@ int tsunami_lab::Launcher::start(std::string i_config)
 
   if (SHOULD_EXIT)
     return 0;
-#ifndef BENCHMARK
-  setUpNetCdf();
-#endif
+  if (m_useFileIO)
+  {
+    setUpNetCdf();
+  }
 
   if (SHOULD_EXIT)
     return 0;
@@ -711,9 +722,10 @@ int tsunami_lab::Launcher::start(std::string i_config)
 
   if (SHOULD_EXIT)
     return 0;
-#ifndef BENCHMARK
-  loadStations();
-#endif
+  if (m_useFileIO)
+  {
+    loadStations();
+  }
 
   if (SHOULD_EXIT)
     return 0;
@@ -728,10 +740,11 @@ int tsunami_lab::Launcher::start(std::string i_config)
   runCalculation();
   std::cout << "finished time loop" << std::endl;
 
-// write station data to files
-#ifndef BENCHMARK
-  writeStations();
-#endif
+  // write station data to files
+  if (m_useFileIO)
+  {
+    writeStations();
+  }
 
   // free memory
   freeMemory();
