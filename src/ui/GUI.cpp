@@ -51,7 +51,7 @@ int exec(std::string i_cmd, std::string i_outputFile)
     return system(commandChars);
 }
 
-static void HelpMarker(const char* desc)
+static void HelpMarker(const char *desc)
 {
     ImGui::TextDisabled("(?)");
     if (ImGui::BeginItemTooltip())
@@ -64,10 +64,9 @@ static void HelpMarker(const char* desc)
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch(int PORT)
+int tsunami_lab::ui::GUI::launch(int i_PORT)
 {
-    // SET UP CONNECTION
-    m_communicator.startClient(PORT);
+    PORT = i_PORT;
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -125,13 +124,18 @@ int tsunami_lab::ui::GUI::launch(int PORT)
     // Load Fonts here
 
     // Our state
+    bool connected = false;
+
     bool show_demo_window = false;
     bool showRTCustWindow = false;
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
 
-    //Outflow conditions
+    bool btnConnectDisabled = false;
+    bool btnDisonnectDisabled = true;
+
+    // Outflow conditions
     bool outflowL = false;
     bool outflowR = false;
     bool outflowT = false;
@@ -139,7 +143,6 @@ int tsunami_lab::ui::GUI::launch(int PORT)
 
     bool benchmarkMode = false;
     bool reportMode = false;
-
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -178,13 +181,68 @@ int tsunami_lab::ui::GUI::launch(int PORT)
 
         // Main window
         {
-            ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
+            if (connected)
+            {
+                ImGui::Begin("Welcome to the Tsunami Simulator GUI! (CONNECTED)");
+            }
+            else
+            {
+                ImGui::Begin("Welcome to the Tsunami Simulator GUI! (NOT CONNECTED)");
+            }
+
+            // CONNECTION THINGS
+            if (ImGui::CollapsingHeader("Connectivity"))
+            {
+                ImGui::InputText("IP address", &IPADDRESS[0], ((int)(sizeof(IPADDRESS) / sizeof(*(IPADDRESS)))));
+                ImGui::InputInt("Port", &PORT, 0, 20000);
+                PORT = abs(PORT);
+
+                ImGui::BeginDisabled(btnConnectDisabled);
+                if (ImGui::Button("Connect"))
+                {
+                    // SET UP CONNECTION
+                    if (m_communicator.startClient(IPADDRESS, PORT) == 0)
+                    {
+                        btnConnectDisabled = true;
+                        btnDisonnectDisabled = false;
+                        connected = true;
+                    }
+                }
+                ImGui::EndDisabled();
+
+                ImGui::SameLine();
+
+                ImGui::BeginDisabled(btnDisonnectDisabled);
+                if (ImGui::Button("Disconnect"))
+                {
+                    m_communicator.stopClient();
+                    btnConnectDisabled = false;
+                    btnDisonnectDisabled = true;
+                    connected = false;
+                }
+                ImGui::EndDisabled();
+
+                ImGui::SameLine();
+
+                if (ImGui::Button("Check"))
+                {
+                    if (m_communicator.sendToServer("CHECK") != 0)
+                    {
+                        btnConnectDisabled = false;
+                        btnDisonnectDisabled = true;
+                        connected = true;
+                    }
+                }
+
+            }
+            // END OF CONNECtiON THINGS
 
             if (ImGui::Button("Run"))
             {
-                if(m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0){
-                usleep(1000);
-                m_communicator.sendToServer("configs/chile5000.json");
+                if (m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0)
+                {
+                    usleep(1000);
+                    m_communicator.sendToServer("configs/chile5000.json");
                 }
             }
             if (ImGui::Button("Shutdown server"))
@@ -226,10 +284,9 @@ int tsunami_lab::ui::GUI::launch(int PORT)
         // Runtime customization
         if (showRTCustWindow)
         {
-            //tsunami_lab::ui::RTCustWindow::show();
+            // tsunami_lab::ui::RTCustWindow::show();
             ImGui::Checkbox("Activate Benchmark mode", &benchmarkMode);
             ImGui::Checkbox("Activate Report", &reportMode);
-
 
             if (ImGui::BeginMenu("Outflow"))
             {
@@ -240,10 +297,7 @@ int tsunami_lab::ui::GUI::launch(int PORT)
                 ImGui::EndMenu();
             }
 
-            
-
-            //ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
-
+            // ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
 
             // ImGui::SeparatorText("Sliders");
             // {
@@ -254,12 +308,12 @@ int tsunami_lab::ui::GUI::launch(int PORT)
             //     // static float angle = 0.0f;
             //     // ImGui::SliderAngle("slider angle", &angle);
             // }
-            
         }
 
-        if(showCompilerOptionsWindow){
+        if (showCompilerOptionsWindow)
+        {
 
-            const char* items[] = { "O0","O1","O2" };
+            const char *items[] = {"O0", "O1", "O2"};
             static int item_current = 0;
             ImGui::Combo("Compiler Optimization Flag", &item_current, items, IM_ARRAYSIZE(items));
         }
@@ -304,4 +358,5 @@ int tsunami_lab::ui::GUI::launch(int PORT)
     glfwTerminate();
 
     return 0;
+    
 }

@@ -21,8 +21,9 @@ namespace xlpmg
     {
     private:
         char buffer[BUFF_SIZE] = {0};
+        int TIMEOUT = 2;
         std::string clientLog = "";
-        int sockStatus, sockValread, sockClient_fd;
+        int sockStatus, sockValread, sockClient_fd = -1;
         int server_fd, new_socket;
 
     public:
@@ -33,24 +34,33 @@ namespace xlpmg
         /// @brief Creates a client socket and searches for a server.
         /// @param PORT Port for communication with server.
         /// @return 0 on success, -1 for errors.
-        int startClient(int PORT)
+        int startClient(char *IPADDRESS, int PORT)
         {
             struct sockaddr_in serv_addr;
+            struct timeval tv;
+            tv.tv_sec = TIMEOUT;
+            tv.tv_usec = 0;
+
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
                 printf("\n Socket creation error \n");
+                clientLog.append("Error   : Socket creation error \n");
                 return -1;
             }
+
+            setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
+            setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
 
             serv_addr.sin_family = AF_INET;
             serv_addr.sin_port = htons(PORT);
 
             // Convert IPv4 and IPv6 addresses from text to binary
             // form
-            if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0)
+            if (inet_pton(AF_INET, IPADDRESS, &serv_addr.sin_addr) <= 0)
             {
                 printf(
                     "\nInvalid address/ Address not supported \n");
+                clientLog.append("Error   : Invalid address/ Address not supported \n");
                 return -1;
             }
 
@@ -58,6 +68,7 @@ namespace xlpmg
                                       sizeof(serv_addr))) < 0)
             {
                 printf("\nConnection Failed \n");
+                clientLog.append("Error   : Connection Failed \n");
                 return -1;
             }
             return sockStatus;
@@ -74,21 +85,42 @@ namespace xlpmg
         /// @return Message as string.
         std::string receiveFromServer()
         {
+            if (sockClient_fd < 0)
+            {
+                printf("\nReading failed: Socket not initialized \n");
+                clientLog.append("Error   : Reading failed: Socket not initialized. \n");
+                return "FAIL";
+            }
             memset(buffer, 0, BUFF_SIZE);
             sockValread = read(sockClient_fd, buffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
-            clientLog.append("Received: ");
-            clientLog.append(buffer);
-            clientLog.append("\n");
-            return std::string(buffer);
+            if (sockValread < 0)
+            {
+                printf("\nError reading from socket \n");
+                clientLog.append("Error   : Read failed or timed out. \n");
+                return "FAIL";
+            }
+            else
+            {
+                clientLog.append("Received: ");
+                clientLog.append(buffer);
+                clientLog.append("\n");
+                return std::string(buffer);
+            }
         }
 
         /// @brief Sends a message to the server.
         /// @param message String to send.
         int sendToServer(std::string message)
         {
-            send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
+            if (sockClient_fd < 0)
+            {
+                printf("\nSending failed: Socket not initialized \n");
+                clientLog.append("Error   : Sending failed: Socket not initialized \n");
+                return 1;
+            }
+            send(sockClient_fd, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
             clientLog.append("Sent    : ");
             clientLog.append(message);
             clientLog.append("\n");
@@ -172,7 +204,7 @@ namespace xlpmg
             sockValread = read(new_socket, buffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
-            send(new_socket, "OK", strlen("OK"), 0);
+            send(new_socket, "OK", strlen("OK"), MSG_NOSIGNAL);
             return std::string(buffer);
         }
 
@@ -180,7 +212,7 @@ namespace xlpmg
         /// @param message Message to send.
         void sendToClient(std::string message)
         {
-            send(new_socket, message.c_str(), strlen(message.c_str()), 0);
+            send(new_socket, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
         }
     };
 }

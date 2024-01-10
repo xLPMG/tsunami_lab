@@ -13,4 +13,5 @@ int main(int i_argc, char *i_argv[])
 
     tsunami_lab::ui::GUI gui;
     return gui.launch(PORT);
+    
 }

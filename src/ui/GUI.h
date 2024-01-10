@@ -24,6 +24,8 @@ class tsunami_lab::ui::GUI
 private:
   xlpmg::Communicator m_communicator;
   std::string m_clientLog;
+  int PORT = 0;
+  char IPADDRESS[128] = "127.0.0.1";
 public:
   int launch(int PORT);
 };
