@@ -248,7 +248,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     {
                         btnConnectDisabled = false;
                         btnDisonnectDisabled = true;
-                        connected = true;
+                        connected = false;
                     }
                 }
             }
