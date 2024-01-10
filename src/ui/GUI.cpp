@@ -135,7 +135,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     bool btnConnectDisabled = false;
     bool btnDisonnectDisabled = true;
 
-    // Outflow conditions
+    //outflow conditions
     bool outflowL = false;
     bool outflowR = false;
     bool outflowT = false;
@@ -143,6 +143,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
     bool benchmarkMode = false;
     bool reportMode = false;
+    bool openMp = false;
+    bool Checkpointing = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -299,18 +301,26 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         // Runtime customization
         if (showRTCustWindow)
         {
-            // tsunami_lab::ui::RTCustWindow::show();
-            ImGui::Checkbox("Activate Benchmark mode", &benchmarkMode);
-            ImGui::Checkbox("Activate Report", &reportMode);
+            tsunami_lab::ui::RTCustWindow::show();
+
+            ImGui::Begin("Runtime parameters");
+
+            
+            ImGui::Checkbox("Benchmark mode", &benchmarkMode);ImGui::SameLine(); HelpMarker("In and output gets deactivated for measurment.");
+            ImGui::Checkbox("Report", &reportMode);ImGui::SameLine(); HelpMarker("Creates reports for.....");
+            ImGui::Checkbox("Checkpointing", &Checkpointing);ImGui::SameLine(); HelpMarker("Activates Checkpointing.");
+
 
             if (ImGui::BeginMenu("Outflow"))
             {
-                ImGui::Checkbox("Outlfow Left", &outflowL);
-                ImGui::Checkbox("Outlfow Right", &outflowR);
-                ImGui::Checkbox("Outlfow Top", &outflowT);
-                ImGui::Checkbox("Outlfow Bottom", &outflowB);
+                ImGui::Checkbox("Outlflow Left", &outflowL);
+                ImGui::Checkbox("Outlflow Right", &outflowR);
+                ImGui::Checkbox("Outlflow Top", &outflowT);
+                ImGui::Checkbox("Outlflow Bottom", &outflowB);
                 ImGui::EndMenu();
-            }
+            } 
+            ImGui::SameLine(); HelpMarker("Determines whether the waves leaves the corresponding domain.");
+
 
             // ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
 
@@ -323,14 +333,27 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             //     // static float angle = 0.0f;
             //     // ImGui::SliderAngle("slider angle", &angle);
             // }
+
+            if (ImGui::Button("Close"))
+                showSimulationParameterWindow = false;
+
+            ImGui::End();
         }
 
         if (showCompilerOptionsWindow)
         {
-
+            ImGui::Begin("Simulation parameters");
             const char *items[] = {"O0", "O1", "O2"};
             static int item_current = 0;
             ImGui::Combo("Compiler Optimization Flag", &item_current, items, IM_ARRAYSIZE(items));
+            ImGui::Checkbox("Use OpenMp", &openMp);
+
+            if (ImGui::Button("Recompile")){}
+
+            if (ImGui::Button("Close"))
+                showSimulationParameterWindow = false;
+
+            ImGui::End();
         }
 
         // Simulation parameters
@@ -340,6 +363,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             static int l_ny = 1;
             static tsunami_lab::t_real l_simulationSizeX = 0;
             static tsunami_lab::t_real l_simulationSizeY = 0;
+            static tsunami_lab::t_real endTime = 1000;
+            static int writingFrequency = 100; //todo: change int to t_idx
 
             ImGui::Begin("Simulation parameters");
 
@@ -352,6 +377,17 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::InputFloat("Simulation size Y", &l_simulationSizeY);
             l_simulationSizeX = abs(l_simulationSizeX);
             l_simulationSizeY = abs(l_simulationSizeY);
+
+            ImGui::InputFloat("Endtime", &endTime);
+            //ImGui::InputFloat("Writingfrequency", &writingFrequency);
+             ImGui::SeparatorText("Sliders");
+            {
+                static float f1 = 0.123f, f2 = 0.0f;
+                ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
+                ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
+            }
+            endTime = abs(endTime);
+            writingFrequency = abs(writingFrequency);
 
             if (ImGui::Button("Close"))
                 showSimulationParameterWindow = false;
