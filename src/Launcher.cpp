@@ -347,7 +347,13 @@ void tsunami_lab::Launcher::constructSolver()
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
         if (SHOULD_EXIT)
+        {
+        #ifdef USEOMP
+        #pragma omp cancel for
+        #endif
           return;
+        }
+
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
 
         m_waveProp->setHeight(l_cx,
@@ -383,7 +389,12 @@ void tsunami_lab::Launcher::constructSolver()
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
         if (SHOULD_EXIT)
+        {
+        #ifdef USEOMP
+        #pragma omp cancel for
+        #endif
           return;
+        }
         tsunami_lab::t_real l_x = l_cx * m_dx + m_offsetX;
         // get initial values of the setup
         tsunami_lab::t_real l_h = m_setup->getHeight(l_x,
