@@ -244,7 +244,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
                 if (ImGui::Button("Check"))
                 {
-                    if (m_communicator.sendToServer("CHECK") != 0)
+                    if (m_communicator.sendToServer(tsunami_lab::KEY_CHECK) != 0)
                     {
                         btnConnectDisabled = false;
                         btnDisonnectDisabled = true;

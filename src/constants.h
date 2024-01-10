@@ -22,6 +22,9 @@ namespace tsunami_lab
   //-------------Communicator API-------------//
   //------------------------------------------//
 
+  //! should not not induce any functionality and is only used to check if the other side responds
+  inline const char* KEY_CHECK = "XCHECKX";
+
   //! tells the server to shutdown
   inline const char* KEY_SHUTDOWN_SERVER = "Sshutdown";
 
