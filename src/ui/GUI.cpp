@@ -51,6 +51,18 @@ int exec(std::string i_cmd, std::string i_outputFile)
     return system(commandChars);
 }
 
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::BeginItemTooltip())
+    {
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+
 // Main code
 int tsunami_lab::ui::GUI::launch(int PORT)
 {
@@ -115,8 +127,19 @@ int tsunami_lab::ui::GUI::launch(int PORT)
     // Our state
     bool show_demo_window = false;
     bool showRTCustWindow = false;
+    bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
+
+    //Outflow conditions
+    bool outflowL = false;
+    bool outflowR = false;
+    bool outflowT = false;
+    bool outflowB = false;
+
+    bool benchmarkMode = false;
+    bool reportMode = false;
+
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -179,6 +202,7 @@ int tsunami_lab::ui::GUI::launch(int PORT)
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
+            ImGui::Checkbox("Edit compile options", &showCompilerOptionsWindow);
             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
             ImGui::Checkbox("Show client log", &showClientLog);
 
@@ -202,7 +226,42 @@ int tsunami_lab::ui::GUI::launch(int PORT)
         // Runtime customization
         if (showRTCustWindow)
         {
-            tsunami_lab::ui::RTCustWindow::show();
+            //tsunami_lab::ui::RTCustWindow::show();
+            ImGui::Checkbox("Activate Benchmark mode", &benchmarkMode);
+            ImGui::Checkbox("Activate Report", &reportMode);
+
+
+            if (ImGui::BeginMenu("Outflow"))
+            {
+                ImGui::Checkbox("Outlfow Left", &outflowL);
+                ImGui::Checkbox("Outlfow Right", &outflowR);
+                ImGui::Checkbox("Outlfow Top", &outflowT);
+                ImGui::Checkbox("Outlfow Bottom", &outflowB);
+                ImGui::EndMenu();
+            }
+
+            
+
+            //ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
+
+
+            // ImGui::SeparatorText("Sliders");
+            // {
+            //     static float f1 = 0.123f, f2 = 0.0f;
+            //     ImGui::SliderFloat("fes", &f1, 0.0f, 1.0f, "ratio = %.3f");
+            //     ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
+
+            //     // static float angle = 0.0f;
+            //     // ImGui::SliderAngle("slider angle", &angle);
+            // }
+            
+        }
+
+        if(showCompilerOptionsWindow){
+
+            const char* items[] = { "O0","O1","O2" };
+            static int item_current = 0;
+            ImGui::Combo("Compiler Optimization Flag", &item_current, items, IM_ARRAYSIZE(items));
         }
 
         // Simulation parameters
