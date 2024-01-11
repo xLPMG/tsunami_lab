@@ -24,7 +24,7 @@ int main(int i_argc, char *i_argv[])
     while (!EXIT)
     {
         std::string data = communicator.receiveFromClient();
-        // SYSTEM CALLS
+        // SERVER FUNCTION CALLS
         if (data[0] == 'S')
         {
             if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
