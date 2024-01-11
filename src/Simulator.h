@@ -40,7 +40,6 @@
 #include <netcdf.h>
 
 #include <string>
-#include <atomic>
 using json = nlohmann::json;
 using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
 
@@ -129,13 +128,13 @@ private:
     //-------------END OF VARIABLES-------------//
     //------------------------------------------//
 
-    /**
-     *  Determines if a string ends with another string.
-     *
-     * @param i_str input string to check
-     * @param i_suffix possible suffix of i_str
-     * @return true if i_str ends with i_suffix, otherwise false.
-     */#include <atomic>
+/**                                                           \
+ *  Determines if a string ends with another string.          \
+ *                                                            \
+ * @param i_str input string to check                         \
+ * @param i_suffix possible suffix of i_str                   \
+ * @return true if i_str ends with i_suffix, otherwise false. \
+ */                                                           \
     bool endsWith(std::string const &i_str, std::string const &i_suffix);
 
     /**
@@ -216,8 +215,6 @@ private:
     void freeMemory();
 
 public:
-
-    std::atomic<bool> END = false;
     //------------------------------------------//
     //-----------------GETTERS------------------//
     //------------------------------------------//
@@ -230,6 +227,11 @@ public:
     void getSetupChoice(std::string &o_setupChoice)
     {
         o_setupChoice = m_setupChoice;
+    }
+
+    tsunami_lab::t_idx getTimeStep()
+    {
+        return m_timeStep;
     }
 
     //------------------------------------------//
@@ -301,8 +303,10 @@ public:
      *  @param i_useFileIO true if file I/O should be enabled.
      *  @return void
      */
-    void toggleFileIO(bool i_useFileIO){
+    void toggleFileIO(bool i_useFileIO)
+    {
         m_useFileIO = i_useFileIO;
+        std::cout << "toggled file I/O" << std::endl;
     }
 
     int start(std::string i_config);

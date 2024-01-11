@@ -30,7 +30,7 @@ int main(int i_argc, char *i_argv[])
             {
                 EXIT = true;
             }
-            else if (strcmp(data.c_str(), "Screate_simulator") == 0)
+            else if (strcmp(data.c_str(), tsunami_lab::KEY_CREATE_SIMULATOR) == 0)
             {
                 if (simulator != nullptr)
                 {
@@ -38,19 +38,8 @@ int main(int i_argc, char *i_argv[])
                 }
                 simulator = new tsunami_lab::Simulator;
             }
-            else if (strcmp(data.c_str(), "") == 0)
-            {
-                if (simulator != nullptr)
-                {
-                    delete simulator;
-                }
-                simulator = new tsunami_lab::Simulator;
-            }
-
             else if (strcmp(data.c_str(), tsunami_lab::KEY_KILL_SIMULATION) == 0)
             {
-                std::string config = communicator.receiveFromClient();
-                // simulationThread = std::thread(&tsunami_lab::Simulator::start, &simulator);
             }
         }
         // FUNCTION CALLS
@@ -67,7 +56,7 @@ int main(int i_argc, char *i_argv[])
                 {
                     std::string config = communicator.receiveFromClient();
                     std::cout << "start" << std::endl;
-                    simulator->start(config);
+                    simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
                 }
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_JSON) == 0)
                 {
@@ -90,6 +79,11 @@ int main(int i_argc, char *i_argv[])
                     {
                         simulator->toggleFileIO(false);
                     }
+                }
+                else if (strcmp(data.c_str(), tsunami_lab::KEY_GET_TIMESTEP) == 0)
+                {
+                    std::cout << simulator->getTimeStep() << std::endl;
+                    communicator.sendToClient(std::to_string(simulator->getTimeStep()));
                 }
             }
             // CLIENT WILL WAIT FOR RETURN MESSAGE

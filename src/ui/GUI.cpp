@@ -256,7 +256,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             if (ImGui::Button("Create"))
             {
-                m_communicator.sendToServer("Screate_simulator");
+                m_communicator.sendToServer(tsunami_lab::KEY_CREATE_SIMULATOR);
             }
             if (ImGui::Button("Run"))
             {
@@ -270,13 +270,28 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             {
                 m_communicator.sendToServer(tsunami_lab::KEY_SHUTDOWN_SERVER);
             }
-            if (ImGui::Button("Exit simulation"))
+            if (ImGui::Button("Get time step"))
             {
-                m_communicator.sendToServer(tsunami_lab::KEY_EXIT_LAUNCHER);
+                m_communicator.sendToServer(tsunami_lab::KEY_GET_TIMESTEP);
+                std::cout << m_communicator.receiveFromServer() << std::endl;
             }
-            if (ImGui::Button("Revive simulation"))
+
+            if (ImGui::Button("file io true"))
             {
-                m_communicator.sendToServer(tsunami_lab::KEY_REVIVE_LAUNCHER);
+                if (m_communicator.sendToServer(tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
+                {
+                    usleep(1000);
+                    m_communicator.sendToServer("true");
+                }
+            }
+
+            if (ImGui::Button("file io false"))
+            {
+                if (m_communicator.sendToServer(tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
+                {
+                    usleep(1000);
+                    m_communicator.sendToServer("false");
+                }
             }
 
             ImGui::Checkbox("Demo Window", &show_demo_window);

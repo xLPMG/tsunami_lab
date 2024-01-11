@@ -31,11 +31,7 @@ namespace tsunami_lab
   //! tells the server to restart
   inline const char* KEY_RESTART_SERVER = "Srestart";
 
-  //! tells the server to exit the launcher as soon as possible
-  inline const char* KEY_EXIT_LAUNCHER = "Sexit_launcher";
-
-  //! tells the server to revive the launcher
-  inline const char* KEY_REVIVE_LAUNCHER = "Srevive_launcher";
+  inline const char* KEY_CREATE_SIMULATOR = "Screate_simulator";
 
   //! launcher will start its main loop
   inline const char* KEY_START_SIMULATION = "FV_START";
@@ -54,6 +50,10 @@ namespace tsunami_lab
 
   //! launcher will toggle file i/o usage to the boolean which is sent immediately after
   inline const char* KEY_TOGGLE_FILEIO = "FV_TOGGLE_FILEIO";
+
+  inline const char* KEY_GET_TIMESTEP = "FV_GET_TIMESTEP";
+
+  inline const char* KEY_GET_MAXTIMESTEPS = "FV_GET_MAXTIMESTEPS";
 }
 
 #endif
