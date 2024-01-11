@@ -4,7 +4,6 @@
 #include <nlohmann/json.hpp>
 
 #include <thread>
-#define USEGUI 1
 
 using json = nlohmann::json;
 
