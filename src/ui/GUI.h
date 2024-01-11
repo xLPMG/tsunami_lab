@@ -11,6 +11,10 @@
 
 #include "Communicator.hpp"
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+
 namespace tsunami_lab
 {
   namespace ui
@@ -30,6 +34,17 @@ private:
 public:
   int launch(int PORT);
 
+  json createJson();
+
+
+    int event_current = 0;
+    int l_nx = 1;
+    int l_ny = 1;
+    float l_simulationSizeX = 0;
+    float l_simulationSizeY = 0;
+    float endTime = 1000;
+    int writingFrequency = 100; // todo: change int to t_idx
+    int flag_current = 0;
   
 };
 

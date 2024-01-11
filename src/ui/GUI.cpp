@@ -63,6 +63,38 @@ static void HelpMarker(const char *desc)
     }
 }
 
+// json tsunami_lab::ui::GUI::createJson(){
+//         if(event_current == 1){
+//             return json config = {
+//                         "solver": fwave,
+//                         "setup":TOHOKU,
+//                         "outputFileName":tohoku_solution,
+//                         "nx":l_simulationSizeX,
+//                         "ny":l_simulationSizeY,
+//                         "endTime":endTime,
+//                         "writingFrequency":writingFrequency,
+//                         "hasBoundaryL":outflowL,
+//                         "hasBoundaryR":outflowR,
+//                         "hasBoundaryT":outflowT,
+//                         "hasBoundaryB":outflowB
+//                        };
+//         } else{
+//             return json config = {
+//                         "solver": fwave,
+//                         "setup":CHILE,
+//                         "outputFileName":chile_solution,
+//                         "nx":l_simulationSizeX,
+//                         "ny":l_simulationSizeY,
+//                         "endTime":endTime,
+//                         "writingFrequency":writingFrequency,
+//                         "hasBoundaryL":outflowL,
+//                         "hasBoundaryR":outflowR,
+//                         "hasBoundaryT":outflowT,
+//                         "hasBoundaryB":outflowB
+//                        };
+//         }
+//     }
+
 // Main code
 int tsunami_lab::ui::GUI::launch(int i_PORT)
 {
@@ -146,7 +178,15 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     bool openMp = false;
     bool Checkpointing = false;
 
+    bool disableConfigs = false;
+
+
+
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
+    
+
 
     unsigned char *pixels = new unsigned char[100 * 100 * 3];
     for (int y = 0; y < 100; ++y)
@@ -158,6 +198,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             pixels[y * 100 * 3 + x * 3 + 2] = 0x00; // B
         }
     }
+
+    
+
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -262,8 +306,12 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             {
                 if (m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0)
                 {
+                    //json config = createJson();
                     usleep(1000);
+                    //m_communicator.sendToServer(config);
                     m_communicator.sendToServer("configs/chile5000.json");
+                    
+                    disableConfigs = true;
                 }
             }
             if (ImGui::Button("Shutdown server"))
@@ -328,19 +376,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::EndMenu();
             }
             ImGui::SameLine();
-            HelpMarker("Determines whether the waves leaves the corresponding domain.");
-
-            // ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
-
-            // ImGui::SeparatorText("Sliders");
-            // {
-            //     static float f1 = 0.123f, f2 = 0.0f;
-            //     ImGui::SliderFloat("fes", &f1, 0.0f, 1.0f, "ratio = %.3f");
-            //     ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
-
-            //     // static float angle = 0.0f;
-            //     // ImGui::SliderAngle("slider angle", &angle);
-            // }
+            HelpMarker("Determines whether the wave leaves the corresponding domain.");
 
             if (ImGui::Button("Close"))
                 showSimulationParameterWindow = false;
@@ -351,13 +387,16 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         if (showCompilerOptionsWindow)
         {
             ImGui::Begin("Simulation parameters");
-            const char *items[] = {"O0", "O1", "O2"};
-            static int item_current = 0;
-            ImGui::Combo("Compiler Optimization Flag", &item_current, items, IM_ARRAYSIZE(items));
+            const char *flags[] = {"O0", "O1", "O2"};
+            ImGui::Combo("Compiler Optimization Flag", &flag_current, flags, IM_ARRAYSIZE(flags));
             ImGui::Checkbox("Use OpenMp", &openMp);
 
             if (ImGui::Button("Recompile"))
             {
+                if (m_communicator.sendToServer(tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
+                {
+                    usleep(1000);
+                }
             }
 
             if (ImGui::Button("Close"))
@@ -369,13 +408,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         // Simulation parameters
         if (showSimulationParameterWindow)
         {
-            static int l_nx = 1;
-            static int l_ny = 1;
-            static tsunami_lab::t_real l_simulationSizeX = 0;
-            static tsunami_lab::t_real l_simulationSizeY = 0;
-            static tsunami_lab::t_real endTime = 1000;
-            static int writingFrequency = 100; // todo: change int to t_idx
-
+            if(disableConfigs == false){
             ImGui::Begin("Simulation parameters");
 
             ImGui::InputInt("Cells X", &l_nx, 1, 100);
@@ -383,16 +416,17 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             l_nx = abs(l_nx);
             l_ny = abs(l_ny);
 
+            const char *events[] = {"Tohoku", "Chile", "Custom"};
+            ImGui::Combo("Tsunami Event", &event_current, events, IM_ARRAYSIZE(events));
+
             ImGui::InputFloat("Simulation size X", &l_simulationSizeX);
             ImGui::InputFloat("Simulation size Y", &l_simulationSizeY);
             l_simulationSizeX = abs(l_simulationSizeX);
             l_simulationSizeY = abs(l_simulationSizeY);
 
             ImGui::InputFloat("Endtime", &endTime);
-            // ImGui::InputFloat("Writingfrequency", &writingFrequency);
             ImGui::SeparatorText("Sliders");
             {
-                // static float f1 = 0.123f, f2 = 0.0f;
                 ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
                 ImGui::SameLine();
                 HelpMarker("CTRL+click to input value.");
@@ -403,6 +437,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             if (ImGui::Button("Close"))
                 showSimulationParameterWindow = false;
             ImGui::End();
+            }
         }
         // Rendering
         ImGui::Render();
