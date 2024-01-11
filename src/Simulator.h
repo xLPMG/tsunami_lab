@@ -40,6 +40,7 @@
 #include <netcdf.h>
 
 #include <string>
+#include <atomic>
 using json = nlohmann::json;
 using Boundary = tsunami_lab::patches::WavePropagation::Boundary;
 
@@ -58,7 +59,7 @@ private:
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
-    std::atomic_bool m_useFileIO = true;
+    std::atomic<bool> m_useFileIO = true;
 
     // input parameters
     std::string m_bathymetryFilePath = "";
