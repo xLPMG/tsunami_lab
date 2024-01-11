@@ -2,7 +2,6 @@
 #include "Communicator.hpp"
 #include "constants.h"
 #include <thread>
-#define USEGUI 1
 
 int PORT = 8080;
 bool EXIT = false;
@@ -13,9 +12,9 @@ int main(int i_argc, char *i_argv[])
 {
     int exitCode = 0;
 
-#ifdef USEGUI
     tsunami_lab::Simulator *simulator = new tsunami_lab::Simulator;
-    ;
+
+#ifdef USEGUI
     if (i_argc > 2)
     {
         PORT = atoi(i_argv[1]);
@@ -95,6 +94,10 @@ int main(int i_argc, char *i_argv[])
         }
     }
 
+    if (simulationThread.joinable())
+    {
+        simulationThread.join();
+    }
 #else
     if (i_argc > 2)
     {
@@ -105,10 +108,6 @@ int main(int i_argc, char *i_argv[])
         simulator->start("");
     }
 #endif
-    if (simulationThread.joinable())
-    {
-        simulationThread.join();
-    }
     delete simulator;
     return exitCode;
 }
