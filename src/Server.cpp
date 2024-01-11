@@ -7,13 +7,15 @@
 int PORT = 8080;
 bool EXIT = false;
 std::thread simulationThread;
+bool isSimulationRunning = false;
 
 int main(int i_argc, char *i_argv[])
 {
     int exitCode = 0;
 
 #ifdef USEGUI
-    tsunami_lab::Simulator *simulator = nullptr;
+    tsunami_lab::Simulator *simulator = new tsunami_lab::Simulator;
+    ;
     if (i_argc > 2)
     {
         PORT = atoi(i_argv[1]);
@@ -30,16 +32,13 @@ int main(int i_argc, char *i_argv[])
             {
                 EXIT = true;
             }
-            else if (strcmp(data.c_str(), tsunami_lab::KEY_CREATE_SIMULATOR) == 0)
-            {
-                if (simulator != nullptr)
-                {
-                    delete simulator;
-                }
-                simulator = new tsunami_lab::Simulator;
-            }
             else if (strcmp(data.c_str(), tsunami_lab::KEY_KILL_SIMULATION) == 0)
             {
+                if (simulationThread.joinable())
+                {
+                    simulationThread.std::thread::~thread();
+                    isSimulationRunning = false;
+                }
             }
         }
         // FUNCTION CALLS
@@ -55,8 +54,11 @@ int main(int i_argc, char *i_argv[])
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_START_SIMULATION) == 0)
                 {
                     std::string config = communicator.receiveFromClient();
-                    std::cout << "start" << std::endl;
-                    simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
+                    if (!isSimulationRunning)
+                    {
+                        simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
+                        isSimulationRunning = true;
+                    }
                 }
                 else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_JSON) == 0)
                 {
@@ -94,17 +96,19 @@ int main(int i_argc, char *i_argv[])
     }
 
 #else
-    tsunami_lab::Simulator *launcher = new tsunami_lab::Simulator;
     if (i_argc > 2)
     {
-        launcher->start(i_argv[1]);
+        simulator->start(i_argv[1]);
     }
     else
     {
-        launcher->start("");
+        simulator->start("");
     }
-    delete launcher;
 #endif
-    simulationThread.join();
+    if (simulationThread.joinable())
+    {
+        simulationThread.join();
+    }
+    delete simulator;
     return exitCode;
 }

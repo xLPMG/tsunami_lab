@@ -31,13 +31,11 @@ namespace tsunami_lab
   //! tells the server to restart
   inline const char* KEY_RESTART_SERVER = "Srestart";
 
-  inline const char* KEY_CREATE_SIMULATOR = "Screate_simulator";
-
   //! launcher will start its main loop
   inline const char* KEY_START_SIMULATION = "FV_START";
 
     //! launcher will start its main loop
-  inline const char* KEY_KILL_SIMULATION = "Skill";
+  inline const char* KEY_KILL_SIMULATION = "Skill_simulation";
 
   //! launcher will write a checkpoint
   inline const char* KEY_WRITE_CHECKPOINT = "FV_WRITE_CHECKPOINT";

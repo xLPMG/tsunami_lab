@@ -58,7 +58,7 @@ private:
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
-    bool m_useFileIO = true;
+    std::atomic_bool m_useFileIO = true;
 
     // input parameters
     std::string m_bathymetryFilePath = "";

@@ -298,10 +298,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             }
             // END OF CONNECTION THINGS
 
-            if (ImGui::Button("Create"))
-            {
-                m_communicator.sendToServer(tsunami_lab::KEY_CREATE_SIMULATOR);
-            }
             if (ImGui::Button("Run"))
             {
                 if (m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0)
@@ -314,6 +310,13 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     disableConfigs = true;
                 }
             }
+            ImGui::SameLine();
+            if (ImGui::Button("Kill"))
+            {
+                m_communicator.sendToServer(tsunami_lab::KEY_KILL_SIMULATION);
+            }
+
+
             if (ImGui::Button("Shutdown server"))
             {
                 m_communicator.sendToServer(tsunami_lab::KEY_SHUTDOWN_SERVER);
