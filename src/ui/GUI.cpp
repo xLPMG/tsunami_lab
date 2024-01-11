@@ -27,28 +27,34 @@
 // c headers
 #include <string>
 #include <filesystem>
-#include "../constants.h"
+#include "communicator_api.h"
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include "Communicator.hpp"
 
 // ui components
 #include "RTCustWindow.h"
-
-const unsigned int WINDOW_WIDTH = 1500;
-const unsigned int WINDOW_HEIGHT = 1000;
-const char *LOG_FILE = "log.txt";
 
 static void glfw_error_callback(int error, const char *description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-int exec(std::string i_cmd, std::string i_outputFile)
+int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
 {
     std::string commandString = (i_cmd + " > " + i_outputFile + " 2>&1 &").data();
     const char *commandChars = commandString.data();
     return system(commandChars);
+}
+
+void tsunami_lab::ui::GUI::updateData()
+{
+    if (std::chrono::system_clock::now() - lastDataUpdate >= std::chrono::duration<float>(dataUpdateFrequency))
+        {
+            //update 
+            lastDataUpdate = std::chrono::system_clock::now();
+        }
 }
 
 static void HelpMarker(const char *desc)
@@ -180,13 +186,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
     bool disableConfigs = false;
 
-
-
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-
-    
-
 
     unsigned char *pixels = new unsigned char[100 * 100 * 3];
     for (int y = 0; y < 100; ++y)
@@ -198,10 +198,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             pixels[y * 100 * 3 + x * 3 + 2] = 0x00; // B
         }
     }
-
-    
-
-
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -221,6 +217,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         ImGui_ImplGlfw_NewFrame();
 
         ImGui::NewFrame();
+
+        updateData();
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
@@ -288,7 +286,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
                 if (ImGui::Button("Check"))
                 {
-                    if (m_communicator.sendToServer(tsunami_lab::KEY_CHECK) != 0)
+                    json checkMsg;
+                    checkMsg[xlpmg::MESSAGE_TYPE] = xlpmg::CHECK_CALL;
+                    checkMsg[xlpmg::KEY] = xlpmg::KEY_CHECK;
+                    if (m_communicator.sendToServer(checkMsg.dump()) != 0)
                     {
                         btnConnectDisabled = false;
                         btnDisonnectDisabled = true;
@@ -300,36 +301,49 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             if (ImGui::Button("Run"))
             {
-                if (m_communicator.sendToServer(tsunami_lab::KEY_START_SIMULATION) == 0)
+                json runMsg;
+                runMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
+                runMsg[xlpmg::KEY] = xlpmg::KEY_START_SIMULATION;
+                runMsg[xlpmg::ARGS] = "configs/chile5000.json";
+                if (m_communicator.sendToServer(runMsg.dump()) == 0)
                 {
-                    //json config = createJson();
-                    usleep(1000);
-                    //m_communicator.sendToServer(config);
-                    m_communicator.sendToServer("configs/chile5000.json");
-                    
                     disableConfigs = true;
                 }
             }
             ImGui::SameLine();
             if (ImGui::Button("Kill"))
             {
-                m_communicator.sendToServer(tsunami_lab::KEY_KILL_SIMULATION);
+                json killMsg;
+                killMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
+                killMsg[xlpmg::KEY] = xlpmg::KEY_KILL_SIMULATION;
+                m_communicator.sendToServer(killMsg.dump());
             }
-
 
             if (ImGui::Button("Shutdown server"))
             {
-                m_communicator.sendToServer(tsunami_lab::KEY_SHUTDOWN_SERVER);
+                json shutdownMsg;
+                shutdownMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
+                shutdownMsg[xlpmg::KEY] = xlpmg::KEY_SHUTDOWN_SERVER;
+                m_communicator.sendToServer(shutdownMsg.dump());
+            }
+            if (ImGui::Button("Recompile"))
+            {
+                json recompileMsg;
+                recompileMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
+                recompileMsg[xlpmg::KEY] = xlpmg::KEY_RECOMPILE;
+                recompileMsg[xlpmg::ARGS]["ENV"] = ""; // eg. CXX=g++-13
+                recompileMsg[xlpmg::ARGS]["OPT"] = ""; // eg. omp=gnu opt=-O2
+                m_communicator.sendToServer(recompileMsg.dump());
             }
             if (ImGui::Button("Get time step"))
             {
-                m_communicator.sendToServer(tsunami_lab::KEY_GET_TIMESTEP);
+                m_communicator.sendToServer(xlpmg::KEY_GET_TIMESTEP);
                 std::cout << m_communicator.receiveFromServer() << std::endl;
             }
 
             if (ImGui::Button("file io true"))
             {
-                if (m_communicator.sendToServer(tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
+                if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
                 {
                     usleep(1000);
                     m_communicator.sendToServer("true");
@@ -338,7 +352,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             if (ImGui::Button("file io false"))
             {
-                if (m_communicator.sendToServer(tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
+                if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
                 {
                     usleep(1000);
                     m_communicator.sendToServer("false");
@@ -411,7 +425,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             if (ImGui::Button("Recompile"))
             {
-                if (m_communicator.sendToServer(tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
+                if (m_communicator.sendToServer(xlpmg::KEY_WRITE_CHECKPOINT) == 0)
                 {
                     usleep(1000);
                 }
@@ -426,35 +440,36 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         // Simulation parameters
         if (showSimulationParameterWindow)
         {
-            if(disableConfigs == false){
-            ImGui::Begin("Simulation parameters");
-
-            ImGui::InputInt("Cells X", &l_nx, 1, 100);
-            ImGui::InputInt("Cells Y", &l_ny, 1, 100);
-            l_nx = abs(l_nx);
-            l_ny = abs(l_ny);
-
-            const char *events[] = {"Tohoku", "Chile", "Custom"};
-            ImGui::Combo("Tsunami Event", &event_current, events, IM_ARRAYSIZE(events));
-
-            ImGui::InputFloat("Simulation size X", &l_simulationSizeX);
-            ImGui::InputFloat("Simulation size Y", &l_simulationSizeY);
-            l_simulationSizeX = abs(l_simulationSizeX);
-            l_simulationSizeY = abs(l_simulationSizeY);
-
-            ImGui::InputFloat("Endtime", &endTime);
-            ImGui::SeparatorText("Sliders");
+            if (disableConfigs == false)
             {
-                ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
-                ImGui::SameLine();
-                HelpMarker("CTRL+click to input value.");
-            }
-            endTime = abs(endTime);
-            writingFrequency = abs(writingFrequency);
+                ImGui::Begin("Simulation parameters");
 
-            if (ImGui::Button("Close"))
-                showSimulationParameterWindow = false;
-            ImGui::End();
+                ImGui::InputInt("Cells X", &l_nx, 1, 100);
+                ImGui::InputInt("Cells Y", &l_ny, 1, 100);
+                l_nx = abs(l_nx);
+                l_ny = abs(l_ny);
+
+                const char *events[] = {"Tohoku", "Chile", "Custom"};
+                ImGui::Combo("Tsunami Event", &event_current, events, IM_ARRAYSIZE(events));
+
+                ImGui::InputFloat("Simulation size X", &l_simulationSizeX);
+                ImGui::InputFloat("Simulation size Y", &l_simulationSizeY);
+                l_simulationSizeX = abs(l_simulationSizeX);
+                l_simulationSizeY = abs(l_simulationSizeY);
+
+                ImGui::InputFloat("Endtime", &endTime);
+                ImGui::SeparatorText("Sliders");
+                {
+                    ImGui::SliderInt("Writingfrequency", &writingFrequency, 10, 1000);
+                    ImGui::SameLine();
+                    HelpMarker("CTRL+click to input value.");
+                }
+                endTime = abs(endTime);
+                writingFrequency = abs(writingFrequency);
+
+                if (ImGui::Button("Close"))
+                    showSimulationParameterWindow = false;
+                ImGui::End();
             }
         }
         // Rendering

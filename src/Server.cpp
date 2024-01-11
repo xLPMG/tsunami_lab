@@ -1,12 +1,29 @@
 #include "Simulator.h"
 #include "Communicator.hpp"
-#include "constants.h"
+#include "communicator_api.h"
+#include <nlohmann/json.hpp>
+
 #include <thread>
+#define USEGUI 1
+
+using json = nlohmann::json;
 
 int PORT = 8080;
 bool EXIT = false;
 std::thread simulationThread;
 bool isSimulationRunning = false;
+
+int execWithOutput(std::string i_cmd, std::string i_outputFile)
+{
+    std::string commandString = (i_cmd + " > " + i_outputFile + " 2>&1 &").data();
+    const char *commandChars = commandString.data();
+    return system(commandChars);
+}
+
+int exec(std::string i_cmd)
+{
+    return system(i_cmd.data());
+}
 
 int main(int i_argc, char *i_argv[])
 {
@@ -23,15 +40,41 @@ int main(int i_argc, char *i_argv[])
     communicator.startServer(PORT);
     while (!EXIT)
     {
-        std::string data = communicator.receiveFromClient();
-        // SERVER FUNCTION CALLS
-        if (data[0] == 'S')
+        std::string rawData = communicator.receiveFromClient();
+        // check if client sent valid json, go back to reading if not
+        if (!json::accept(rawData))
         {
-            if (strcmp(data.c_str(), tsunami_lab::KEY_SHUTDOWN_SERVER) == 0)
+            communicator.sendToClient("FAIL");
+            continue;
+        }
+
+        json parsedData = json::parse(rawData);
+        json type = parsedData.at(xlpmg::MESSAGE_TYPE);
+        json key = parsedData.at(xlpmg::KEY);
+        // json data = parsedData.value(xlpmg::DATA, "");
+
+        if (type.get<xlpmg::MessageType>() == xlpmg::SERVER__CALL)
+        {
+            if (key == xlpmg::KEY_SHUTDOWN_SERVER)
             {
                 EXIT = true;
+                communicator.stopServer();
+                if (simulationThread.joinable())
+                {
+                    simulationThread.std::thread::~thread();
+                    isSimulationRunning = false;
+                }
             }
-            else if (strcmp(data.c_str(), tsunami_lab::KEY_KILL_SIMULATION) == 0)
+            else if (key == xlpmg::KEY_START_SIMULATION)
+            {
+                std::string config = parsedData.at(xlpmg::ARGS);
+                if (!isSimulationRunning)
+                {
+                    simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
+                    isSimulationRunning = true;
+                }
+            }
+            else if (key == xlpmg::KEY_KILL_SIMULATION)
             {
                 if (simulationThread.joinable())
                 {
@@ -39,58 +82,26 @@ int main(int i_argc, char *i_argv[])
                     isSimulationRunning = false;
                 }
             }
+            else if (key == xlpmg::KEY_RECOMPILE)
+            {
+                //Shutdown server
+                EXIT = true;
+                communicator.stopServer();
+                if (simulationThread.joinable())
+                {
+                    simulationThread.std::thread::~thread();
+                    isSimulationRunning = false;
+                }
+                //execute recompilation
+                std::string env = parsedData.at(xlpmg::ARGS).value("ENV", ""); // environment var
+                std::string opt = parsedData.at(xlpmg::ARGS).value("OPT", ""); //compiler opt
+                exec("chmod +x runServer.sh");
+                exec("./runServer.sh \""+env+"\" \""+opt+"\" &");
+            }
         }
-        // FUNCTION CALLS
-        else if (data[0] == 'F' && simulator != nullptr)
+        else if (type.get<xlpmg::MessageType>() == xlpmg::FUNCTION_CALL)
         {
-            // VOIDS
-            if (data[1] == 'V')
-            {
-                if (strcmp(data.c_str(), tsunami_lab::KEY_WRITE_CHECKPOINT) == 0)
-                {
-                    simulator->writeCheckpoint();
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_START_SIMULATION) == 0)
-                {
-                    std::string config = communicator.receiveFromClient();
-                    if (!isSimulationRunning)
-                    {
-                        simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
-                        isSimulationRunning = true;
-                    }
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_JSON) == 0)
-                {
-                    std::string config = communicator.receiveFromClient();
-                    simulator->loadConfigDataJsonString(config);
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_LOAD_CONFIG_FILE) == 0)
-                {
-                    std::string configFile = communicator.receiveFromClient();
-                    simulator->loadConfigDataFromFile(configFile);
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_TOGGLE_FILEIO) == 0)
-                {
-                    std::string toggle = communicator.receiveFromClient();
-                    if (strcmp(toggle.c_str(), "true") == 0)
-                    {
-                        simulator->toggleFileIO(true);
-                    }
-                    else
-                    {
-                        simulator->toggleFileIO(false);
-                    }
-                }
-                else if (strcmp(data.c_str(), tsunami_lab::KEY_GET_TIMESTEP) == 0)
-                {
-                    std::cout << simulator->getTimeStep() << std::endl;
-                    communicator.sendToClient(std::to_string(simulator->getTimeStep()));
-                }
-            }
-            // CLIENT WILL WAIT FOR RETURN MESSAGE
-            else if (data[1] == 'R' && simulator != nullptr)
-            {
-            }
+            std::cout << "function call" << std::endl;
         }
     }
 
