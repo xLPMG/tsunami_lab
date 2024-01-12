@@ -16,7 +16,7 @@
 
 namespace xlpmg
 {
-    const int BUFF_SIZE = 4096;
+    const int BUFF_SIZE = 8096;
     class Communicator
     {
     private:

@@ -16,116 +16,115 @@ namespace xlpmg
 {
   enum MessagePart
   {
-    MESSAGE_TYPE,
+    TYPE,
     KEY,
     ARGS
   };
 
-  NLOHMANN_JSON_SERIALIZE_ENUM(MessagePart, {{MESSAGE_TYPE, "type"},
-                                              {KEY, "key"},
-                                              {ARGS, "arguments"}});
+  NLOHMANN_JSON_SERIALIZE_ENUM(MessagePart, {{TYPE, "type"},
+                                             {KEY, "key"},
+                                             {ARGS, "arguments"}});
 
   enum MessageType
   {
     SERVER__CALL,
     FUNCTION_CALL,
-    CHECK_CALL
+    OTHER,
+    SERVER_RESPONSE
   };
 
   NLOHMANN_JSON_SERIALIZE_ENUM(MessageType, {{SERVER__CALL, "server_call"},
                                              {FUNCTION_CALL, "function_call"},
-                                             {CHECK_CALL, "check_call"}});
+                                             {OTHER, "other"},
+                                             {SERVER_RESPONSE, "server_response"}});
+
+  struct Message
+  {
+    MessageType type = MessageType::OTHER;
+    std::string key = "NONE";
+    json args = "";
+  };
+
+  /**
+   * Converts a Message to json object.
+   *
+   * @param i_message message
+   * @return message as json object
+   */
+  json messageToJson(Message i_message)
+  {
+    json msg;
+    msg[MessagePart::TYPE] = i_message.type;
+    msg[MessagePart::KEY] = i_message.key;
+    msg[MessagePart::ARGS] = i_message.args;
+    return msg;
+  }
+
+  /**
+   * Converts a Message to a json string.
+   *
+   * @param i_message message
+   * @return message as json string
+   */
+  std::string messageToJsonString(Message message)
+  {
+    return messageToJson(message).dump();
+  }
+
+  /**
+   * Converts a json object to a Message.
+   *
+   * @param i_json json object
+   * @return message
+   */
+  Message jsonToMessage(json i_json)
+  {
+    Message l_message;
+    l_message.type = i_json.at(MessagePart::TYPE);
+    l_message.key = i_json.at(MessagePart::KEY);
+    l_message.args = i_json.at(MessagePart::ARGS);
+    return l_message;
+  }
 
   //! should not not induce any functionality and is only used to check if the other side responds
-  inline const char *KEY_CHECK = "XCHECKX";
+  inline const Message CHECK_MESSAGE = {MessageType::SERVER__CALL, "XCHECKX"};
 
-  // SERVER CALLS
+  //! Tells the server to shutdown.
+  inline const Message SHUTDOWN_SERVER_MESSAGE = {MessageType::SERVER__CALL, "shutdown_server"};
 
-  /*
-  * Tells the server to shutdown.
-  *
-  * @MESSAGE_TYPE SERVER__CALL
-  * @ARGS none
-  */
-  inline const char *KEY_SHUTDOWN_SERVER = "shutdown_server";
+  //! Tells the server to restart.
+  inline const Message START_SIMULATION_MESSAGE = {MessageType::SERVER__CALL, "start_simulation"};
 
-  /*
-  * Tells the server to restart.
-  *
-  * @MESSAGE_TYPE SERVER__CALL
-  * @ARGS path to config file or "".
-  */
-  inline const char *KEY_START_SIMULATION = "start_simulation";
+  //! Server will stop the running simulation.
+  inline const Message KILL_SIMULATION_MESSAGE = {MessageType::SERVER__CALL, "kill_simulation"};
 
-  /*
-  * Server will stop the running simulation.
-  *
-  * @MESSAGE_TYPE SERVER__CALL
-  * @ARGS none.
-  */
-  inline const char *KEY_KILL_SIMULATION = "kill_simulation";
+  //! Server will recompile with provided arguments.
+  inline const Message RECOMPILE_MESSAGE = {MessageType::SERVER__CALL, "recompile", ""};
 
-  /*
-  * Server will recompile.
-  *
-  * @MESSAGE_TYPE SERVER__CALL
-  * @ARGS as array: 
-  *   args[ENV]: environment option for compiler (eg. "CXX=g++-13" or "").
-  *   args[OPT]: compiler options (eg. "omp=gnu opt=-O2" or "")
-  */
-  inline const char *KEY_RECOMPILE = "recompile";
+  //! Simulator will write a checkpoint.
+  inline const Message WRITE_CHECKPOINT_MESSAGE = {MessageType::FUNCTION_CALL, "write_checkpoint"};
 
-  // FUNCTION CALLS: VOID
+  //! Simulator will load config from json data.
+  inline const Message LOAD_CONFIG_JSON_MESSAGE = {MessageType::FUNCTION_CALL, "load_config_json"};
 
-  /*
-  * Simulator will write a checkpoint.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS none.
-  */
-  inline const char *KEY_WRITE_CHECKPOINT = "write_checkpoint";
+  //! Simulator will load config from .json config file.
+  inline const Message LOAD_CONFIG_FILE_MESSAGE = {MessageType::FUNCTION_CALL, "load_config_file"};
 
-  /*
-  * Simulator will load config from json data.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS config data in json format.
-  */
-  inline const char *KEY_LOAD_CONFIG_JSON = "load_config_json";
+  //! Simulator will toggle file i/o usage to given arg.
+  inline const Message TOGGLE_FILEIO_MESSAGE = {MessageType::FUNCTION_CALL, "toggle_fileio"};
 
-  /*
-  * Simulator will load config from .json config file.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS path to config file.
-  */
-  inline const char *KEY_LOAD_CONFIG_FILE = "load_config_file";
+  //! Returns the current timestep from the simulator.
+  inline const Message GET_TIMESTEP_MESSAGE = {MessageType::FUNCTION_CALL, "get_current_timestep"};
 
-  /*
-  * Simulator will toggle file i/o usage.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS boolean to set file i/o to.
-  */
-  inline const char *KEY_TOGGLE_FILEIO = "FV_TOGGLE_FILEIO";
+  //! Returns the max timesteps from the simulator.
+  inline const Message GET_MAX_TIMESTEPS_MESSAGE = {MessageType::FUNCTION_CALL, "get_max_timesteps"};
 
-  // FUNCTION CALLS: RETURNING
+  //! Tells the server to start sending height data. (buffered)
+  inline const Message GET_HEIGHT_DATA_MESSAGE = {MessageType::SERVER__CALL, "get_height_data"};
 
-  /*
-  * Returns the current timestep from the simulator.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS none.
-  */
-  inline const char *KEY_GET_TIMESTEP = "FR_GET_TIMESTEP";
+  //! Tells the client that a buffered sending operation has finished.
+  inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
 
-  /*
-  * Returns the max timesteps from the simulator.
-  *
-  * @MESSAGE_TYPE FUNCTION_CALL
-  * @ARGS none.
-  */
-  inline const char *KEY_GET_MAXTIMESTEPS = "FR_GET_MAXTIMESTEPS";
 }
 
 #endif

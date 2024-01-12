@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 #include <thread>
-
+#define USEGUI 1
 using json = nlohmann::json;
 
 int m_PORT = 8080;
@@ -62,18 +62,19 @@ int main(int i_argc, char *i_argv[])
         }
 
         json parsedData = json::parse(rawData);
-        json type = parsedData.at(xlpmg::MESSAGE_TYPE);
-        json key = parsedData.at(xlpmg::KEY);
-
-        if (type.get<xlpmg::MessageType>() == xlpmg::SERVER__CALL)
+        xlpmg::Message message = xlpmg::jsonToMessage(parsedData);
+        xlpmg::MessageType type = message.type;
+        std::string key = message.key;
+        json args = message.args;
+        if (type == xlpmg::SERVER__CALL)
         {
-            if (key == xlpmg::KEY_SHUTDOWN_SERVER)
+            if (key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
             {
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
             }
-            else if (key == xlpmg::KEY_START_SIMULATION)
+            else if (key == xlpmg::START_SIMULATION_MESSAGE.key)
             {
                 std::string config = parsedData.at(xlpmg::ARGS);
                 if (!m_isSimulationRunning)
@@ -82,11 +83,11 @@ int main(int i_argc, char *i_argv[])
                     m_isSimulationRunning = true;
                 }
             }
-            else if (key == xlpmg::KEY_KILL_SIMULATION)
+            else if (key == xlpmg::KILL_SIMULATION_MESSAGE.key)
             {
                 exitSimulationThread();
             }
-            else if (key == xlpmg::KEY_RECOMPILE)
+            else if (key == xlpmg::RECOMPILE_MESSAGE.key)
             {
                 // Shutdown server
                 m_EXIT = true;
@@ -99,9 +100,11 @@ int main(int i_argc, char *i_argv[])
                 exec("./runServer.sh \"" + env + "\" \"" + opt + "\" &");
             }
         }
-        else if (type.get<xlpmg::MessageType>() == xlpmg::FUNCTION_CALL)
+        else if (type == xlpmg::FUNCTION_CALL)
         {
-            std::cout << "function call" << std::endl;
+            if(key == xlpmg::GET_TIMESTEP_MESSAGE.key){
+                l_communicator.sendToClient(std::to_string(simulator->getTimeStep()));
+            }
         }
     }
 

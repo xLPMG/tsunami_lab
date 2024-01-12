@@ -10,7 +10,6 @@ int main(int i_argc, char *i_argv[])
     {
         PORT = atoi(i_argv[1]);
     }
-
     tsunami_lab::ui::GUI gui;
     return gui.launch(PORT);
     

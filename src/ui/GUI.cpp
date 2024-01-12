@@ -51,10 +51,10 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
 void tsunami_lab::ui::GUI::updateData()
 {
     if (std::chrono::system_clock::now() - lastDataUpdate >= std::chrono::duration<float>(dataUpdateFrequency))
-        {
-            //update 
-            lastDataUpdate = std::chrono::system_clock::now();
-        }
+    {
+        // update
+        lastDataUpdate = std::chrono::system_clock::now();
+    }
 }
 
 static void HelpMarker(const char *desc)
@@ -283,13 +283,9 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::EndDisabled();
 
                 ImGui::SameLine();
-
                 if (ImGui::Button("Check"))
                 {
-                    json checkMsg;
-                    checkMsg[xlpmg::MESSAGE_TYPE] = xlpmg::CHECK_CALL;
-                    checkMsg[xlpmg::KEY] = xlpmg::KEY_CHECK;
-                    if (m_communicator.sendToServer(checkMsg.dump()) != 0)
+                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) != 0)
                     {
                         btnConnectDisabled = false;
                         btnDisonnectDisabled = true;
@@ -298,14 +294,11 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 }
             }
             // END OF CONNECTION THINGS
-
             if (ImGui::Button("Run"))
             {
-                json runMsg;
-                runMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
-                runMsg[xlpmg::KEY] = xlpmg::KEY_START_SIMULATION;
-                runMsg[xlpmg::ARGS] = "configs/chile5000.json";
-                if (m_communicator.sendToServer(runMsg.dump()) == 0)
+                xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
+                startSimMsg.args = "configs/chile5000.json";
+                if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
                 {
                     disableConfigs = true;
                 }
@@ -313,51 +306,47 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::SameLine();
             if (ImGui::Button("Kill"))
             {
-                json killMsg;
-                killMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
-                killMsg[xlpmg::KEY] = xlpmg::KEY_KILL_SIMULATION;
-                m_communicator.sendToServer(killMsg.dump());
+                m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
             }
 
             if (ImGui::Button("Shutdown server"))
             {
-                json shutdownMsg;
-                shutdownMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
-                shutdownMsg[xlpmg::KEY] = xlpmg::KEY_SHUTDOWN_SERVER;
-                m_communicator.sendToServer(shutdownMsg.dump());
+                m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
             }
             if (ImGui::Button("Recompile"))
             {
-                json recompileMsg;
-                recompileMsg[xlpmg::MESSAGE_TYPE] = xlpmg::SERVER__CALL;
-                recompileMsg[xlpmg::KEY] = xlpmg::KEY_RECOMPILE;
-                recompileMsg[xlpmg::ARGS]["ENV"] = ""; // eg. CXX=g++-13
-                recompileMsg[xlpmg::ARGS]["OPT"] = ""; // eg. omp=gnu opt=-O2
-                m_communicator.sendToServer(recompileMsg.dump());
+                xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
+
+                json compileArgs;
+                compileArgs["ENV"] = ""; // eg. CXX=g++-13
+                compileArgs["OPT"] = ""; // eg. omp=gnu opt=-O2
+
+                recompileMsg.args = compileArgs;
+                m_communicator.sendToServer(messageToJsonString(recompileMsg));
             }
             if (ImGui::Button("Get time step"))
             {
-                m_communicator.sendToServer(xlpmg::KEY_GET_TIMESTEP);
+                m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
                 std::cout << m_communicator.receiveFromServer() << std::endl;
             }
 
-            if (ImGui::Button("file io true"))
-            {
-                if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
-                {
-                    usleep(1000);
-                    m_communicator.sendToServer("true");
-                }
-            }
+            // if (ImGui::Button("file io true"))
+            // {
+            //     if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
+            //     {
+            //         usleep(1000);
+            //         m_communicator.sendToServer("true");
+            //     }
+            // }
 
-            if (ImGui::Button("file io false"))
-            {
-                if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
-                {
-                    usleep(1000);
-                    m_communicator.sendToServer("false");
-                }
-            }
+            // if (ImGui::Button("file io false"))
+            // {
+            //     if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
+            //     {
+            //         usleep(1000);
+            //         m_communicator.sendToServer("false");
+            //     }
+            // }
 
             ImGui::Checkbox("Demo Window", &show_demo_window);
             ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
@@ -370,6 +359,32 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
             ImGui::End();
+        }
+
+        if (ImGui::Button("Get height data"))
+        {
+            // //first get an estimate from the server of how much the data will be
+            // json getHeightsArraySizeMsg;
+            // getHeightsArraySizeMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
+            // getHeightsArraySizeMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
+
+
+            // json getHeightsMsg;
+            // getHeightsMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
+            // getHeightsMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
+            // if (m_communicator.sendToServer(getHeightsMsg.dump()) == 0)
+            // {
+            //     bool l_finishedReading = false;
+            //     while(!l_finishedReading){
+            //         std::string data = m_communicator.receiveFromServer();
+            //         json parsedData = json::parse(data);
+            //         if(parsedData.at(xlpmg::KEY) ==xlpmg::KEY_END_OF_HEIGHTS){
+            //             l_finishedReading = true;
+            //         }else{
+                        
+            //         }
+            //     }
+            // }
         }
 
         // Client log
@@ -425,7 +440,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             if (ImGui::Button("Recompile"))
             {
-                if (m_communicator.sendToServer(xlpmg::KEY_WRITE_CHECKPOINT) == 0)
+                if (m_communicator.sendToServer(messageToJsonString(xlpmg::RECOMPILE_MESSAGE)) == 0)
                 {
                     usleep(1000);
                 }
