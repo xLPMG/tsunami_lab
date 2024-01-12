@@ -60,6 +60,7 @@ private:
     json m_configData;
 
     std::atomic<bool> m_useFileIO = true;
+    std::atomic<bool> m_shouldExit = false;
 
     // input parameters
     std::string m_bathymetryFilePath = "";
@@ -129,13 +130,13 @@ private:
     //-------------END OF VARIABLES-------------//
     //------------------------------------------//
 
-/**                                                           \
- *  Determines if a string ends with another string.          \
- *                                                            \
- * @param i_str input string to check                         \
- * @param i_suffix possible suffix of i_str                   \
- * @return true if i_str ends with i_suffix, otherwise false. \
- */                                                           \
+    /**                                                           \
+     *  Determines if a string ends with another string.          \
+     *                                                            \
+     * @param i_str input string to check                         \
+     * @param i_suffix possible suffix of i_str                   \
+     * @return true if i_str ends with i_suffix, otherwise false. \
+     */
     bool endsWith(std::string const &i_str, std::string const &i_suffix);
 
     /**
@@ -249,6 +250,11 @@ public:
     //------------------------------------------//
 
     /**
+     * Destructor which frees all allocated memory.
+     **/
+    ~Simulator();
+
+    /**
      *  Creates a WavePropagation object.
      *
      *  @return void
@@ -310,7 +316,24 @@ public:
         std::cout << "toggled file I/O" << std::endl;
     }
 
+    /**
+     *  Starts the main loop.
+     *
+     *  @param i_config path to a config .json file or "".
+     *  @return exit code
+     */
     int start(std::string i_config);
+
+    /**
+     *  Sets the exit flag to provided a safe-exit mechanism.
+     *
+     *  @param i_shouldExit whether to exit or not.
+     *  @return void
+     */
+    void shouldExit(bool i_shouldExit)
+    {
+        m_shouldExit = i_shouldExit;
+    };
 };
 
 #endif

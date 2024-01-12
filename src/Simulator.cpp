@@ -338,6 +338,10 @@ void tsunami_lab::Simulator::constructSolver()
     m_netCdf->read(m_checkPointFilePath, "momentumY", &l_hvCheck);
     m_netCdf->read(m_checkPointFilePath, "bathymetry", &l_bCheck);
 
+    // BREAKPOINT
+    if (m_shouldExit)
+      return;
+      // END BREAKPOINT
 #ifdef USEOMP
 #pragma omp parallel for
 #endif
@@ -345,6 +349,10 @@ void tsunami_lab::Simulator::constructSolver()
     {
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
+        // BREAKPOINT
+        if (m_shouldExit)
+          continue;
+        // END BREAKPOINT
 
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
 
@@ -363,7 +371,15 @@ void tsunami_lab::Simulator::constructSolver()
         m_waveProp->setBathymetry(l_cx,
                                   l_cy,
                                   l_bCheck[l_cx + l_cy * m_nx]);
+        // BREAKPOINT
+        if (m_shouldExit)
+          break;
+        // END BREAKPOINT
       }
+      // BREAKPOINT
+      if (m_shouldExit)
+        break;
+      // END BREAKPOINT
     }
     delete[] l_hCheck;
     delete[] l_huCheck;
@@ -380,6 +396,11 @@ void tsunami_lab::Simulator::constructSolver()
       tsunami_lab::t_real l_y = l_cy * m_dy + m_offsetY;
       for (tsunami_lab::t_idx l_cx = 0; l_cx < m_nx; l_cx++)
       {
+        // BREAKPOINT
+        if (m_shouldExit)
+          continue;
+        // END BREAKPOINT
+
         tsunami_lab::t_real l_x = l_cx * m_dx + m_offsetX;
         // get initial values of the setup
         tsunami_lab::t_real l_h = m_setup->getHeight(l_x,
@@ -477,6 +498,10 @@ void tsunami_lab::Simulator::writeStations()
   for (tsunami_lab::io::Station *l_s : m_stations)
   {
     l_s->write();
+    // BREAKPOINT
+    if (m_shouldExit)
+      return;
+    // END BREAKPOINT
   }
 }
 
@@ -550,7 +575,7 @@ void tsunami_lab::Simulator::writeCheckpoint()
 void tsunami_lab::Simulator::runCalculation()
 {
   auto l_lastWrite = std::chrono::system_clock::now();
-  while (m_simTime < m_endTime)
+  while (m_simTime < m_endTime && !m_shouldExit)
   {
     //------------------------------------------//
     //---------------Write output---------------//
@@ -615,6 +640,11 @@ void tsunami_lab::Simulator::runCalculation()
         l_lastWrite = std::chrono::system_clock::now();
       }
     }
+    // BREAKPOINT
+    if (m_shouldExit)
+      return;
+    // END BREAKPOINT
+
     //------------------------------------------//
     //------------Update loop params------------//
     //------------------------------------------//
@@ -661,6 +691,11 @@ int tsunami_lab::Simulator::start(std::string i_config)
     std::cout << "runtime configuration file: " << m_configFilePath << std::endl;
   }
 
+  // BREAKPOINT
+  if (m_shouldExit)
+    return 0;
+  // END BREAKPOINT
+
   //-------------------------------------------//
   //--------------File I/O Config--------------//
   //-------------------------------------------//
@@ -670,6 +705,12 @@ int tsunami_lab::Simulator::start(std::string i_config)
   {
     setupFolders();
   }
+
+  // BREAKPOINT
+  if (m_shouldExit)
+    return 0;
+  // END BREAKPOINT
+
   loadConfigDataFromFile(m_configFilePath);
   if (m_useFileIO)
   {
@@ -682,9 +723,19 @@ int tsunami_lab::Simulator::start(std::string i_config)
       std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
   }
 
+  // BREAKPOINT
+  if (m_shouldExit)
+    return 0;
+  // END BREAKPOINT
+
   loadConfiguration();
 
   constructSetup();
+
+  // BREAKPOINT
+  if (m_shouldExit)
+    return 0;
+  // END BREAKPOINT
 
   if (m_useFileIO)
   {
@@ -702,6 +753,11 @@ int tsunami_lab::Simulator::start(std::string i_config)
 
   deriveTimeStep();
 
+  // BREAKPOINT
+  if (m_shouldExit)
+    return 0;
+  // END BREAKPOINT
+
   //------------------------------------------//
   //---------------CALCULATION----------------//
   //------------------------------------------//
@@ -715,8 +771,11 @@ int tsunami_lab::Simulator::start(std::string i_config)
     writeStations();
   }
 
-  // free memory
-  freeMemory();
   std::cout << "finished, exiting" << std::endl;
   return EXIT_SUCCESS;
+}
+
+tsunami_lab::Simulator::~Simulator()
+{
+  freeMemory();
 }
