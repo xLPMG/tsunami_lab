@@ -236,6 +236,13 @@ public:
         return m_timeStep;
     }
 
+    void getCellAmount(tsunami_lab::t_idx &o_ncellsX,
+                       tsunami_lab::t_idx &o_ncellsY)
+    {
+        o_ncellsX = m_nx;
+        o_ncellsY = m_ny;
+    }
+
     //------------------------------------------//
     //-----------------SETTERS------------------//
     //------------------------------------------//

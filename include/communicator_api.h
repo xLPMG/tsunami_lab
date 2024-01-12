@@ -120,7 +120,7 @@ namespace xlpmg
   inline const Message GET_MAX_TIMESTEPS_MESSAGE = {MessageType::FUNCTION_CALL, "get_max_timesteps"};
 
   //! Tells the server to start sending height data. (buffered)
-  inline const Message GET_HEIGHT_DATA_MESSAGE = {MessageType::SERVER__CALL, "get_height_data"};
+  inline const Message GET_HEIGHT_DATA_MESSAGE = {MessageType::FUNCTION_CALL, "get_height_data"};
 
   //! Tells the client that a buffered sending operation has finished.
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};

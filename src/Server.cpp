@@ -33,7 +33,7 @@ void exitSimulationThread()
         // wait until thread has finished
         m_simulationThread.join();
         std::cout << "Thread terminated." << std::endl;
-        //prepare for next run
+        // prepare for next run
         m_isSimulationRunning = false;
         simulator->shouldExit(false);
     }
@@ -53,56 +53,89 @@ int main(int i_argc, char *i_argv[])
     l_communicator.startServer(m_PORT);
     while (!m_EXIT)
     {
-        std::string rawData = l_communicator.receiveFromClient();
+        std::string l_rawData = l_communicator.receiveFromClient();
         // check if client sent valid json, go back to reading if not
-        if (!json::accept(rawData))
+        if (!json::accept(l_rawData))
         {
             continue;
         }
 
-        json parsedData = json::parse(rawData);
-        xlpmg::Message message = xlpmg::jsonToMessage(parsedData);
-        xlpmg::MessageType type = message.type;
-        std::string key = message.key;
-        json args = message.args;
-        if (type == xlpmg::SERVER__CALL)
+        json l_parsedData = json::parse(l_rawData);
+        xlpmg::Message l_message = xlpmg::jsonToMessage(l_parsedData);
+        xlpmg::MessageType l_type = l_message.type;
+        std::string l_key = l_message.key;
+        json l_args = l_message.args;
+        if (l_type == xlpmg::SERVER__CALL)
         {
-            if (key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
+            if (l_key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
             {
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
             }
-            else if (key == xlpmg::START_SIMULATION_MESSAGE.key)
+            else if (l_key == xlpmg::START_SIMULATION_MESSAGE.key)
             {
-                std::string config = parsedData.at(xlpmg::ARGS);
+                std::string l_config = l_parsedData.at(xlpmg::ARGS);
                 if (!m_isSimulationRunning)
                 {
-                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
+                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
                     m_isSimulationRunning = true;
                 }
             }
-            else if (key == xlpmg::KILL_SIMULATION_MESSAGE.key)
+            else if (l_key == xlpmg::KILL_SIMULATION_MESSAGE.key)
             {
                 exitSimulationThread();
             }
-            else if (key == xlpmg::RECOMPILE_MESSAGE.key)
+            else if (l_key == xlpmg::RECOMPILE_MESSAGE.key)
             {
                 // Shutdown server
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
                 // execute recompilation
-                std::string env = parsedData.at(xlpmg::ARGS).value("ENV", ""); // environment var
-                std::string opt = parsedData.at(xlpmg::ARGS).value("OPT", ""); // compiler opt
+                std::string env = l_args.value("ENV", ""); // environment var
+                std::string opt = l_args.value("OPT", ""); // compiler opt
                 exec("chmod +x runServer.sh");
                 exec("./runServer.sh \"" + env + "\" \"" + opt + "\" &");
             }
         }
-        else if (type == xlpmg::FUNCTION_CALL)
+        else if (l_type == xlpmg::FUNCTION_CALL)
         {
-            if(key == xlpmg::GET_TIMESTEP_MESSAGE.key){
-                l_communicator.sendToClient(std::to_string(simulator->getTimeStep()));
+            if (l_key == xlpmg::GET_TIMESTEP_MESSAGE.key)
+            {
+                xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
+                l_communicator.sendToClient(xlpmg::messageToJsonString(response));
+            }
+            else if (l_key == xlpmg::GET_HEIGHT_DATA_MESSAGE.key)
+            {
+                xlpmg::Message heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
+                unsigned long l_headerSize = sizeof(heightDataMsg);
+                // calculate the remaining space left for one message
+                unsigned long l_sendDataSpace = xlpmg::BUFF_SIZE - l_headerSize;
+                l_sendDataSpace = 100;
+                // get data from simulation
+                if (simulator->getWaveProp() != nullptr)
+                {
+                    tsunami_lab::patches::WavePropagation *waveprop = simulator->getWaveProp();
+                    const tsunami_lab::t_real *heightData = waveprop->getHeight();
+                    // calculate array size
+                    tsunami_lab::t_idx l_ncellsX, l_ncellsY;
+                    simulator->getCellAmount(l_ncellsX, l_ncellsY);
+                    unsigned long totalCells = l_ncellsX * l_ncellsY;
+
+                    unsigned long cellCounter = 0;
+                    while (totalCells > 0)
+                    {
+                        while (sizeof(heightDataMsg.args) < l_sendDataSpace && totalCells > 0)
+                        {
+                            heightDataMsg.args.push_back(heightData[cellCounter]);
+                            totalCells--;
+                        }
+                        l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
+                        heightDataMsg.args = "";
+                    }
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
+                }
             }
         }
     }

@@ -649,12 +649,21 @@ void tsunami_lab::Simulator::runCalculation()
 
 void tsunami_lab::Simulator::freeMemory()
 {
-  delete m_setup;
-  delete m_waveProp;
+  if (m_setup != nullptr)
+  {
+    delete m_setup;
+  }
+  if (m_waveProp != nullptr)
+  {
+    delete m_waveProp;
+  }
   if (m_useFileIO)
   {
     std::filesystem::remove(m_checkPointFilePathString);
-    delete m_netCdf;
+    if (m_netCdf != nullptr)
+    {
+      delete m_netCdf;
+    }
     for (tsunami_lab::io::Station *l_s : m_stations)
     {
       delete l_s;

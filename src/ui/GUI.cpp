@@ -10,9 +10,9 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
-#include <stdio.h>
-#include <iostream>
-#include <unistd.h>
+#include "Communicator.hpp"
+#include "communicator_api.h"
+#include "../constants.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -25,13 +25,14 @@
 #endif
 
 // c headers
+#include <stdio.h>
+#include <iostream>
+#include <unistd.h>
 #include <string>
 #include <filesystem>
-#include "communicator_api.h"
 #include <fstream>
 #include <sstream>
 #include <chrono>
-#include "Communicator.hpp"
 
 // ui components
 #include "RTCustWindow.h"
@@ -313,6 +314,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             {
                 m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
             }
+
             if (ImGui::Button("Recompile"))
             {
                 xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
@@ -324,10 +326,38 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 recompileMsg.args = compileArgs;
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
             }
+
+            if (ImGui::Button("get height data"))
+            {
+                m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE));
+                bool l_finished = false;
+                std::string heightArrayString = "";
+                while (!l_finished)
+                {
+                    std::string data = m_communicator.receiveFromServer();
+                    if (json::accept(data))
+                    {
+                        xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
+                        if (msg.key == xlpmg::BUFFERED_SEND_FINISHED.key)
+                        {
+                            l_finished = true;
+                        }
+                        else
+                        {
+                            heightArrayString += msg.args;
+                        }
+                    }
+                }
+            }
             if (ImGui::Button("Get time step"))
             {
                 m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
-                std::cout << m_communicator.receiveFromServer() << std::endl;
+                std::string response = m_communicator.receiveFromServer();
+                if (json::accept(response))
+                {
+                    xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                    std::cout << responseMessage.args << std::endl;
+                }
             }
 
             // if (ImGui::Button("file io true"))
@@ -368,7 +398,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             // getHeightsArraySizeMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
             // getHeightsArraySizeMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
 
-
             // json getHeightsMsg;
             // getHeightsMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
             // getHeightsMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
@@ -381,7 +410,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             //         if(parsedData.at(xlpmg::KEY) ==xlpmg::KEY_END_OF_HEIGHTS){
             //             l_finishedReading = true;
             //         }else{
-                        
+
             //         }
             //     }
             // }
