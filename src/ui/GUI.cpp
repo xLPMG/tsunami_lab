@@ -189,16 +189,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    unsigned char *pixels = new unsigned char[100 * 100 * 3];
-    for (int y = 0; y < 100; ++y)
-    {
-        for (int x = 0; x < 100; ++x)
-        {
-            pixels[y * 100 * 3 + x * 3 + 0] = 0xff; // R
-            pixels[y * 100 * 3 + x * 3 + 1] = 0x00; // G
-            pixels[y * 100 * 3 + x * 3 + 2] = 0x00; // B
-        }
-    }
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -208,10 +198,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // OPENGL DRAWING TEST
-        glDrawPixels(100, 100, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-        // END OPENGL DRAWING TEST
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -331,7 +317,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             {
                 m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE));
                 bool l_finished = false;
-                std::string heightArrayString = "";
+                unsigned long l_index = 0;
+                tsunami_lab::t_real l_heights[700 * 590]{0};
                 while (!l_finished)
                 {
                     std::string data = m_communicator.receiveFromServer();
@@ -344,9 +331,23 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                         }
                         else
                         {
-                            heightArrayString += msg.args;
+                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                            std::string l_num;
+                            while (getline(l_stream, l_num, ','))
+                            {
+                                l_heights[l_index] = std::stof(l_num);
+                                l_index++;
+                            }
                         }
                     }
+                }
+                for (int y = 0; y < 590; y++)
+                {
+                    for (int x = 0; x < 700; x++)
+                    {
+                        std::cout << l_heights[x + y * 700] << " ";
+                    }
+                    std::cout << std::endl;
                 }
             }
             if (ImGui::Button("Get time step"))
@@ -389,31 +390,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
             ImGui::End();
-        }
-
-        if (ImGui::Button("Get height data"))
-        {
-            // //first get an estimate from the server of how much the data will be
-            // json getHeightsArraySizeMsg;
-            // getHeightsArraySizeMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
-            // getHeightsArraySizeMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
-
-            // json getHeightsMsg;
-            // getHeightsMsg[xlpmg::MESSAGE_TYPE] = xlpmg::FUNCTION_CALL;
-            // getHeightsMsg[xlpmg::KEY] = xlpmg::KEY_GET_HEIGHTS;
-            // if (m_communicator.sendToServer(getHeightsMsg.dump()) == 0)
-            // {
-            //     bool l_finishedReading = false;
-            //     while(!l_finishedReading){
-            //         std::string data = m_communicator.receiveFromServer();
-            //         json parsedData = json::parse(data);
-            //         if(parsedData.at(xlpmg::KEY) ==xlpmg::KEY_END_OF_HEIGHTS){
-            //             l_finishedReading = true;
-            //         }else{
-
-            //         }
-            //     }
-            // }
         }
 
         // Client log
@@ -516,6 +492,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::End();
             }
         }
+
         // Rendering
         ImGui::Render();
         int display_w, display_h;

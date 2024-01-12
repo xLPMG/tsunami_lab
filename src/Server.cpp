@@ -112,7 +112,6 @@ int main(int i_argc, char *i_argv[])
                 unsigned long l_headerSize = sizeof(heightDataMsg);
                 // calculate the remaining space left for one message
                 unsigned long l_sendDataSpace = xlpmg::BUFF_SIZE - l_headerSize;
-                l_sendDataSpace = 100;
                 // get data from simulation
                 if (simulator->getWaveProp() != nullptr)
                 {
@@ -124,18 +123,18 @@ int main(int i_argc, char *i_argv[])
                     unsigned long totalCells = l_ncellsX * l_ncellsY;
 
                     unsigned long cellCounter = 0;
-                    while (totalCells > 0)
+                    while (cellCounter < totalCells-1)
                     {
-                        while (sizeof(heightDataMsg.args) < l_sendDataSpace && totalCells > 0)
+                        // 18 chars = 144 bytes
+                        while (heightDataMsg.args.dump().length() < (l_sendDataSpace - 144) && cellCounter < totalCells-1)
                         {
-                            heightDataMsg.args.push_back(heightData[cellCounter]);
-                            totalCells--;
+                            heightDataMsg.args.push_back(heightData[cellCounter++]);  
                         }
                         l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
-                        heightDataMsg.args = "";
+                        heightDataMsg.args.clear();
                     }
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                 }
+                l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
             }
         }
     }
