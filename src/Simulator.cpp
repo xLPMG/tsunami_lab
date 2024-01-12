@@ -371,15 +371,7 @@ void tsunami_lab::Simulator::constructSolver()
         m_waveProp->setBathymetry(l_cx,
                                   l_cy,
                                   l_bCheck[l_cx + l_cy * m_nx]);
-        // BREAKPOINT
-        if (m_shouldExit)
-          break;
-        // END BREAKPOINT
       }
-      // BREAKPOINT
-      if (m_shouldExit)
-        break;
-      // END BREAKPOINT
     }
     delete[] l_hCheck;
     delete[] l_huCheck;

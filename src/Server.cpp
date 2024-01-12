@@ -5,8 +5,6 @@
 
 #include <thread>
 
-#define USEGUI 1
-
 using json = nlohmann::json;
 
 int m_PORT = 8080;
