@@ -236,8 +236,8 @@ if 'yes' in env['gui']:
   # add other OS specific flags
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
-  # tell code that gui is enabled
-  env.Append( CXXFLAGS = [ '-DUSEGUI' ] )
+else:
+  env.Append( CXXFLAGS = [ '-DNOGUI' ] )
 #####################
 # GET SOURCE FILES  #
 #####################

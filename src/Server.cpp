@@ -4,7 +4,6 @@
 #include <nlohmann/json.hpp>
 
 #include <thread>
-#define USEGUI 1
 using json = nlohmann::json;
 
 int m_PORT = 8080;
@@ -45,7 +44,7 @@ int main(int i_argc, char *i_argv[])
     int exitCode = 0;
     simulator = new tsunami_lab::Simulator;
 
-#ifdef USEGUI
+#ifndef NOGUI
     if (i_argc > 2)
     {
         m_PORT = atoi(i_argv[1]);
