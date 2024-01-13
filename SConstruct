@@ -46,7 +46,7 @@ vars.AddVariables(
                 'flag for enabling reports',
                 'none',
                 allowed_values=('none', 
-                                '-qopt-report', 
+                                '-qopt-report=0', 
                                 '-qopt-report=1', 
                                 '-qopt-report=2',
                                 '-qopt-report=3',

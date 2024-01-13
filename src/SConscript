@@ -67,8 +67,7 @@ for l_sa in l_sanitychecks:
 # gather gui sources
 if 'yes' in env['gui']:
   l_gui = [ 'Client.cpp',
-            'ui/GUI.cpp',
-            'ui/RTCustWindow.cpp' ]
+            'ui/GUI.cpp' ]
 
   for l_g in l_gui:
     env.gui.append( env.Object( l_g ) )

@@ -70,8 +70,8 @@ int main(int i_argc, char *i_argv[])
             if (l_key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
             {
                 m_EXIT = true;
-                l_communicator.stopServer();
                 exitSimulationThread();
+                l_communicator.stopServer();
             }
             else if (l_key == xlpmg::START_SIMULATION_MESSAGE.key)
             {

@@ -35,7 +35,6 @@
 #include <chrono>
 
 // ui components
-#include "RTCustWindow.h"
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -53,7 +52,7 @@ void tsunami_lab::ui::GUI::updateData()
 {
     if (std::chrono::system_clock::now() - lastDataUpdate >= std::chrono::duration<float>(dataUpdateFrequency))
     {
-        // update
+        // TODO: update
         lastDataUpdate = std::chrono::system_clock::now();
     }
 }
@@ -157,20 +156,12 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     // Load Fonts here
 
     // Our state
-    bool connected = false;
+    bool m_connected = false;
 
     bool show_demo_window = false;
-    bool showRTCustWindow = false;
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
-
-    bool btnConnectDisabled = false;
-    bool btnDisonnectDisabled = true;
-
-    bool benchmarkMode = false;
-    bool reportMode = false;
-    bool Checkpointing = false;
 
     bool disableConfigs = false;
 
@@ -199,15 +190,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
         // Main window
         {
-            if (connected)
-            {
-                ImGui::Begin("Welcome to the Tsunami Simulator GUI! (CONNECTED)");
-            }
-            else
-            {
-                ImGui::Begin("Welcome to the Tsunami Simulator GUI! (NOT CONNECTED)");
-            }
-
+            ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
+            //-------------------------------------------//
+            //-----------------MAIN TABS-----------------//
+            //-------------------------------------------//
             if (ImGui::BeginTabBar("MainTabs"))
             {
                 if (ImGui::BeginTabItem("Help"))
@@ -227,61 +213,70 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     ImGui::EndTabItem();
                 }
 
-                // CONNECTION THINGS
+                //--------------------------------------------//
+                //----------------CONNECTIVITY----------------//
+                //--------------------------------------------//
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
                     ImGui::InputInt("Port", &PORT, 0, 20000);
                     PORT = abs(PORT);
 
-                    ImGui::BeginDisabled(btnConnectDisabled);
+                    ImGui::BeginDisabled(m_connected);
                     if (ImGui::Button("Connect"))
                     {
                         // SET UP CONNECTION
                         if (m_communicator.startClient(IPADDRESS, PORT) == 0)
                         {
-                            btnConnectDisabled = true;
-                            btnDisonnectDisabled = false;
-                            connected = true;
+                            m_connected = true;
                         }
                     }
                     ImGui::EndDisabled();
 
                     ImGui::SameLine();
 
-                    ImGui::BeginDisabled(btnDisonnectDisabled);
+                    ImGui::BeginDisabled(!m_connected);
                     if (ImGui::Button("Disconnect"))
                     {
                         m_communicator.stopClient();
-                        btnConnectDisabled = false;
-                        btnDisonnectDisabled = true;
-                        connected = false;
+                        m_connected = false;
                     }
                     ImGui::EndDisabled();
 
                     ImGui::SameLine();
-                    if (ImGui::Button("Check"))
+                    if (ImGui::Button("Check connection"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) != 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) == 0)
                         {
-                            btnConnectDisabled = false;
-                            btnDisonnectDisabled = true;
-                            connected = false;
+                            m_connected = true;
+                        }
+                        else
+                        {
+                            m_connected = false;
                         }
                     }
+                    ImGui::BeginDisabled(!m_connected);
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 1.0f, 1.0f));
+                    if (ImGui::Button("Shutdown server"))
+                    {
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE)) == 0)
+                        {
+                            m_connected = false;
+                        }
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::EndDisabled();
+
                     ImGui::EndTabItem();
                 }
-                // END OF CONNECTION THINGS
 
+                //------------------------------------------//
+                //--------------UNSROTED ITEMS--------------//
+                //------------------------------------------//
                 if (ImGui::BeginTabItem("TODO"))
                 {
-
-                    if (ImGui::Button("Save Config"))
-                    {
-                        xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
-                        saveConfigMsg.args = createJson();
-                        m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
-                    }
                     if (ImGui::Button("Run"))
                     {
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
@@ -294,11 +289,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     if (ImGui::Button("Kill"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
-                    }
-
-                    if (ImGui::Button("Shutdown server"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
                     }
 
                     if (ImGui::Button("get height data"))
@@ -366,11 +356,13 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     ImGui::EndTabItem();
                 }
 
+                //-------------------------------------------//
+                //------------------WINDOWS------------------//
+                //-------------------------------------------//
                 if (ImGui::BeginTabItem("Windows"))
                 {
-                    ImGui::Checkbox("Demo Window", &show_demo_window);
-                    ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
-                    ImGui::Checkbox("Edit compile options", &showCompilerOptionsWindow);
+                    ImGui::Checkbox("Show Demo Window", &show_demo_window);
+                    ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
                     ImGui::Checkbox("Show client log", &showClientLog);
                     ImGui::EndTabItem();
@@ -387,88 +379,125 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::End();
         }
 
-        // Client log
+        //-------------------------------------------//
+        //-------------CLIENT LOG WINDOW-------------//
+        //-------------------------------------------//
         if (showClientLog)
         {
-            ImGui::Begin("Client log");
+            ImGui::Begin("Client log", &showClientLog);
             m_communicator.getClientLog(m_clientLog);
             ImGui::TextUnformatted(m_clientLog.c_str());
             ImGui::SetScrollHereY(1.0f);
             ImGui::End();
         }
 
-        // Runtime customization
-        if (showRTCustWindow)
-        {
-            tsunami_lab::ui::RTCustWindow::show();
-
-            ImGui::Begin("Runtime parameters");
-
-            ImGui::Checkbox("Benchmark mode", &benchmarkMode);
-            ImGui::SameLine();
-            HelpMarker("In and output gets deactivated for measurment.");
-            ImGui::Checkbox("Report", &reportMode);
-            ImGui::SameLine();
-            HelpMarker("Creates reports for.....");
-            ImGui::Checkbox("Checkpointing", &Checkpointing);
-            ImGui::SameLine();
-            HelpMarker("Activates Checkpointing.");
-
-            if (ImGui::BeginMenu("Outflow"))
-            {
-                ImGui::Checkbox("Outlflow Left", &outflowL);
-                ImGui::Checkbox("Outlflow Right", &outflowR);
-                ImGui::Checkbox("Outlflow Top", &outflowT);
-                ImGui::Checkbox("Outlflow Bottom", &outflowB);
-                ImGui::EndMenu();
-            }
-            ImGui::SameLine();
-            HelpMarker("Determines whether the wave leaves the corresponding domain.");
-
-            if (ImGui::Button("Close"))
-                showSimulationParameterWindow = false;
-
-            ImGui::End();
-        }
-
+        //--------------------------------------------//
+        //----------COMPILER/RUNTIME OPTIONS----------//
+        //--------------------------------------------//
         if (showCompilerOptionsWindow)
         {
-            ImGui::Begin("Simulation parameters");
-            const char *flags[] = {"O0", "O1", "O2"};
-            ImGui::Combo("Compiler Optimization Flag", &flag_current, flags, IM_ARRAYSIZE(flags));
-            const char *omp[] = {"none", "gnu", "intel"};
-            ImGui::Combo("OMP", &omp_current, omp, IM_ARRAYSIZE(omp));
+            ImGui::Begin("Compiler/runtime options", &showCompilerOptionsWindow);
+            short width = 24;
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Compile mode", &m_compileMode, m_compileModes, IM_ARRAYSIZE(m_compileModes));
+            ImGui::SameLine();
+            HelpMarker("Option \'san\' enables address and undefined behavior sanitizers. \'benchmark\' disables file I/O");
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputTextWithHint("Compiler choice", "For example: \'g++-13\' or \'icpc\'", m_compilerChoice, IM_ARRAYSIZE(m_compilerChoice));
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Optimization level", &m_optFlag, m_optFlags, IM_ARRAYSIZE(m_optFlags));
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("OpenMP flag", &m_ompFlag, m_ompFlags, IM_ARRAYSIZE(m_ompFlags));
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::BeginDisabled(m_ompFlag == 0);
+            ImGui::InputInt("Number of threads", &m_ompNumThreads, 1);
+            if (m_ompNumThreads < -1)
+            {
+                m_ompNumThreads = -1;
+            }
+            ImGui::SameLine();
+            HelpMarker("Number of OMP threads. -1 means that the variable won't be set.");
+            ImGui::EndDisabled();
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Report level", &m_reportFlag, m_reportFlags, IM_ARRAYSIZE(m_reportFlags));
+            ImGui::SameLine();
+            HelpMarker("Creates compiler reports with different levels of detail.");
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Checkbox("Use filesystem", &m_useFilesystem);
+            ImGui::SameLine();
+            HelpMarker("Disables the include of the <filesystem> header.");
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Checkbox("Use GUI", &m_useGui);
+            ImGui::SameLine();
+            HelpMarker("You may disable the building and compilation of the GUI with this.");
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputText("Custom environmental variables", m_customEnv, IM_ARRAYSIZE(m_customEnv));
+            ImGui::SameLine();
+            HelpMarker("The input will be set before compiling using \'export <input>;\'");
 
             if (ImGui::Button("Recompile"))
             {
                 xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
 
-                json compileArgs;
-                std::string opt;
-                opt = "opt=-" + std::string(flags[flag_current]);
-                if (omp_current != 0)
+                // SET ARGUMENTS
+                std::string envVars;
+                if (strcmp(m_customEnv, "") != 0)
                 {
-                    opt.append(" omp=" + std::string(omp[omp_current]));
+                    envVars = std::string(m_customEnv);
                 }
-                compileArgs["ENV"] = "";  // eg. CXX=g++-13
-                compileArgs["OPT"] = opt; // eg. omp=gnu opt=-O2
+                if (strcmp(m_compilerChoice, "") != 0)
+                {
+                    envVars.append(" CXX=" + std::string(m_compilerChoice));
+                }
+                if (m_ompNumThreads >= 0)
+                {
+                    envVars.append(" OMP_NUM_THREADS=" + std::to_string(m_ompNumThreads));
+                }
+                std::string options;
+                options.append("mode=" + std::string(m_compileModes[m_compileMode]));
+                options.append(" opt=-O" + std::string(m_optFlags[m_optFlag]));
+                options.append(" omp=" + std::string(m_ompFlags[m_ompFlag]));
+                if (m_reportFlag != 0)
+                {
+                    options.append(" -qopt-report=" + std::string(m_reportFlags[m_reportFlag]));
+                }
+                if (!m_useFilesystem)
+                {
+                    options.append("use_filesystem=no");
+                }
+
+                if (!m_useGui)
+                {
+                    options.append("gui=no");
+                }
+
+                json compileArgs;
+                compileArgs["ENV"] = "";
+                compileArgs["OPT"] = options;
 
                 recompileMsg.args = compileArgs;
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
+                m_connected = false;
             }
-
-            if (ImGui::Button("Close"))
-                showSimulationParameterWindow = false;
-
             ImGui::End();
         }
 
-        // Simulation parameters
+        //-------------------------------------------//
+        //-----------SIMULATION PARAMETERS-----------//
+        //-------------------------------------------//
         if (showSimulationParameterWindow)
         {
             if (disableConfigs == false)
             {
-                ImGui::Begin("Simulation parameters");
+                ImGui::Begin("Simulation parameters", &showSimulationParameterWindow);
 
                 ImGui::InputInt("Cells X", &l_nx, 1, 100);
                 ImGui::InputInt("Cells Y", &l_ny, 1, 100);
@@ -493,11 +522,49 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 endTime = abs(endTime);
                 writingFrequency = abs(writingFrequency);
 
-                if (ImGui::Button("Close"))
-                    showSimulationParameterWindow = false;
+                if (ImGui::BeginMenu("Outflow"))
+                {
+                    ImGui::Checkbox("Outflow Left", &outflowL);
+                    ImGui::Checkbox("Outflow Right", &outflowR);
+                    ImGui::Checkbox("Outflow Top", &outflowT);
+                    ImGui::Checkbox("Outflow Bottom", &outflowB);
+                    ImGui::EndMenu();
+                }
+                ImGui::SameLine();
+                HelpMarker("Determines whether the wave leaves the corresponding domain.");
+
+                if (ImGui::Button("Set config"))
+                {
+                    xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                    saveConfigMsg.args = createJson();
+                    m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
+                }
+
                 ImGui::End();
             }
         }
+
+        // Connectivity status
+        ImGuiWindowFlags l_cSFLags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoMove;
+        const ImGuiViewport *viewport = ImGui::GetMainViewport();
+        ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+        ImVec2 window_pos, window_pos_pivot;
+        window_pos.x = work_pos.x;
+        window_pos.y = work_pos.y;
+        window_pos_pivot.x = 0.0f;
+        window_pos_pivot.y = 0.0f;
+        ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+        ImGui::SetNextWindowBgAlpha(0.35f);
+        ImGui::Begin("Connection status", nullptr, l_cSFLags);
+        if (m_connected)
+        {
+            ImGui::Text("%s", ("CONNECTED TO " + std::string(IPADDRESS) + ":" + std::to_string(PORT)).c_str());
+        }
+        else
+        {
+            ImGui::Text("NOT CONNECTED");
+        }
+        ImGui::End();
 
         // Rendering
         ImGui::Render();
