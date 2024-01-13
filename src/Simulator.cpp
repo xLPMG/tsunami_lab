@@ -53,9 +53,9 @@ void tsunami_lab::Simulator::loadConfigDataFromFile(std::string i_configFilePath
   m_configData = json::parse(l_configFile);
 }
 
-void tsunami_lab::Simulator::loadConfigDataJsonString(std::string i_config)
+void tsunami_lab::Simulator::loadConfigDataJson(json i_config)
 {
-  m_configData = json::parse(i_config);
+  m_configData = i_config;
 }
 
 void tsunami_lab::Simulator::configureFiles()

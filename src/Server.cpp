@@ -11,6 +11,7 @@ bool m_EXIT = false;
 tsunami_lab::Simulator *simulator = nullptr;
 std::thread m_simulationThread;
 bool m_isSimulationRunning = false;
+json config = "";
 
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
@@ -72,13 +73,13 @@ int main(int i_argc, char *i_argv[])
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
-            }
+            }            
             else if (l_key == xlpmg::START_SIMULATION_MESSAGE.key)
             {
                 std::string l_config = l_parsedData.at(xlpmg::ARGS);
                 if (!m_isSimulationRunning)
                 {
-                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
+                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
                     m_isSimulationRunning = true;
                 }
             }
@@ -136,6 +137,11 @@ int main(int i_argc, char *i_argv[])
                 }
                 l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
             }
+            else if (l_key == xlpmg::LOAD_CONFIG_JSON_MESSAGE.key)
+            {
+                simulator->loadConfigDataJson(l_args);
+            }
+
         }
     }
 

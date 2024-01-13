@@ -289,7 +289,7 @@ public:
      *  @param i_config config data in json format
      *  @return void
      */
-    void loadConfigDataJsonString(std::string i_config);
+    void loadConfigDataJson(json i_config);
 
     /**
      *  Sets up a station.

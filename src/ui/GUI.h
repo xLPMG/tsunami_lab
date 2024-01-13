@@ -53,6 +53,13 @@ public:
   float endTime = 1000;
   int writingFrequency = 100; // todo: change int to t_idx
   int flag_current = 0;
+  int omp_current = 0;
+
+  // outflow conditions
+  bool outflowL = false;
+  bool outflowR = false;
+  bool outflowT = false;
+  bool outflowB = false;
 };
 
 #endif

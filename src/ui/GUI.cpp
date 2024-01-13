@@ -37,6 +37,7 @@
 // ui components
 #include "RTCustWindow.h"
 
+
 static void glfw_error_callback(int error, const char *description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -70,37 +71,32 @@ static void HelpMarker(const char *desc)
     }
 }
 
-// json tsunami_lab::ui::GUI::createJson(){
-//         if(event_current == 1){
-//             return json config = {
-//                         "solver": fwave,
-//                         "setup":TOHOKU,
-//                         "outputFileName":tohoku_solution,
-//                         "nx":l_simulationSizeX,
-//                         "ny":l_simulationSizeY,
-//                         "endTime":endTime,
-//                         "writingFrequency":writingFrequency,
-//                         "hasBoundaryL":outflowL,
-//                         "hasBoundaryR":outflowR,
-//                         "hasBoundaryT":outflowT,
-//                         "hasBoundaryB":outflowB
-//                        };
-//         } else{
-//             return json config = {
-//                         "solver": fwave,
-//                         "setup":CHILE,
-//                         "outputFileName":chile_solution,
-//                         "nx":l_simulationSizeX,
-//                         "ny":l_simulationSizeY,
-//                         "endTime":endTime,
-//                         "writingFrequency":writingFrequency,
-//                         "hasBoundaryL":outflowL,
-//                         "hasBoundaryR":outflowR,
-//                         "hasBoundaryT":outflowT,
-//                         "hasBoundaryB":outflowB
-//                        };
-//         }
-//     }
+json tsunami_lab::ui::GUI::createJson()
+{
+        json config = { {"solver", "fwave"},
+                        {"nx",l_simulationSizeX},
+                        {"ny",l_simulationSizeY},
+                        {"endTime",endTime},
+                        {"writingFrequency",writingFrequency},
+                        {"hasBoundaryL",outflowL},
+                        {"hasBoundaryR",outflowR},
+                        {"hasBoundaryT",outflowT},
+                        {"hasBoundaryB",outflowB}
+                       };
+
+        if(event_current == 1)
+        {
+            config.push_back({"setup", "tohoku"});
+            config.push_back({"outputFileName","tohoku_solution"});
+        } 
+        else
+        {
+            config.push_back({"setup", "chile"});
+            config.push_back({"outputFileName","chile_solution"});
+        }
+        
+        return config;
+}
 
 // Main code
 int tsunami_lab::ui::GUI::launch(int i_PORT)
@@ -173,12 +169,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
     bool btnConnectDisabled = false;
     bool btnDisonnectDisabled = true;
-
-    // outflow conditions
-    bool outflowL = false;
-    bool outflowR = false;
-    bool outflowT = false;
-    bool outflowB = false;
 
     bool benchmarkMode = false;
     bool reportMode = false;
@@ -281,10 +271,16 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 }
             }
             // END OF CONNECTION THINGS
+            if(ImGui::Button("Save Config"))
+            {   
+                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                saveConfigMsg.args = createJson();
+                m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
+
+            }
             if (ImGui::Button("Run"))
             {
                 xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
-                startSimMsg.args = "configs/chile5000.json";
                 if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
                 {
                     disableConfigs = true;
@@ -299,18 +295,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             if (ImGui::Button("Shutdown server"))
             {
                 m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
-            }
-
-            if (ImGui::Button("Recompile"))
-            {
-                xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
-
-                json compileArgs;
-                compileArgs["ENV"] = ""; // eg. CXX=g++-13
-                compileArgs["OPT"] = ""; // eg. omp=gnu opt=-O2
-
-                recompileMsg.args = compileArgs;
-                m_communicator.sendToServer(messageToJsonString(recompileMsg));
             }
 
             if (ImGui::Button("get height data"))
@@ -441,14 +425,24 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::Begin("Simulation parameters");
             const char *flags[] = {"O0", "O1", "O2"};
             ImGui::Combo("Compiler Optimization Flag", &flag_current, flags, IM_ARRAYSIZE(flags));
-            ImGui::Checkbox("Use OpenMp", &openMp);
+            const char *omp[] = {"none", "gnu", "intel"};
+            ImGui::Combo("OMP", &omp_current, omp, IM_ARRAYSIZE(omp));
 
             if (ImGui::Button("Recompile"))
             {
-                if (m_communicator.sendToServer(messageToJsonString(xlpmg::RECOMPILE_MESSAGE)) == 0)
-                {
-                    usleep(1000);
+                xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
+
+                json compileArgs;
+                std::string opt;
+                opt = "opt=-"+std::string(flags[flag_current]);
+                if(omp_current != 0){
+                    opt.append(" omp=" + std::string(omp[omp_current]));
                 }
+                compileArgs["ENV"] = ""; // eg. CXX=g++-13
+                compileArgs["OPT"] = opt; // eg. omp=gnu opt=-O2
+
+                recompileMsg.args = compileArgs;
+                m_communicator.sendToServer(messageToJsonString(recompileMsg));
             }
 
             if (ImGui::Button("Close"))
