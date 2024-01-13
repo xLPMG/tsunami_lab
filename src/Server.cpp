@@ -79,7 +79,7 @@ int main(int i_argc, char *i_argv[])
                 std::string l_config = l_parsedData.at(xlpmg::ARGS);
                 if (!m_isSimulationRunning)
                 {
-                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, config);
+                    m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
                     m_isSimulationRunning = true;
                 }
             }
