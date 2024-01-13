@@ -65,6 +65,9 @@ private:
   bool outflowT = false;
   bool outflowB = false;
 
+  //client log
+  bool m_clientLogAutoScroll = true;
+
   int exec(std::string i_cmd, std::string i_outputFile);
   json createJson();
   void updateData();

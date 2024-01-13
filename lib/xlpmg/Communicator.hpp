@@ -7,12 +7,19 @@
 #ifndef COMMUNICATOR
 #define COMMUNICATOR
 
-#include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
+
+// socketing
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <string>
+
+// time stamp
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 namespace xlpmg
 {
@@ -25,6 +32,45 @@ namespace xlpmg
         std::string clientLog = "";
         int sockStatus, sockValread, sockClient_fd = -1;
         int server_fd, new_socket;
+
+        enum LogType
+        {
+            SENT,
+            RECEIVED,
+            ERROR,
+            INFO
+        };
+
+        /// @brief Adds a string to the client log with correct formatting.
+        /// @param message string to add to the log.
+        /// @param logtype type of message.
+        void logToClient(std::string message, LogType logtype)
+        {
+            auto now = std::chrono::system_clock::now();
+            auto timer = std::chrono::system_clock::to_time_t(now);
+            std::tm bt = *std::localtime(&timer);
+            std::ostringstream oss;
+            oss << "[" << std::put_time(&bt, "%H:%M:%S") << "]";
+            std::string timeStamp = oss.str();
+            clientLog.append(timeStamp);
+            switch (logtype)
+            {
+            case SENT:
+                clientLog.append(" Sent    : ");
+                break;
+            case RECEIVED:
+                clientLog.append(" Received: ");
+                break;
+            case ERROR:
+                clientLog.append(" Error   : ");
+                break;
+            case INFO:
+                clientLog.append(" Info    : ");
+                break;
+            }
+            clientLog.append(message);
+            clientLog.append("\n");
+        }
 
     public:
         ////////////////////
@@ -43,10 +89,10 @@ namespace xlpmg
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
-                clientLog.append("Error   : Socket creation error \n");
+                logToClient("Socket creation error", ERROR);
                 return -1;
             }
-            clientLog.append("Socket created.\n");
+            logToClient("Socket created.", INFO);
 
             setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
             setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
@@ -58,19 +104,18 @@ namespace xlpmg
             // form
             if (inet_pton(AF_INET, IPADDRESS, &serv_addr.sin_addr) <= 0)
             {
-                clientLog.append("Error   : Invalid address/ Address not supported \n");
+                logToClient("Invalid address/ Address not supported.", ERROR);
                 return -1;
             }
 
             if ((sockStatus = connect(sockClient_fd, (struct sockaddr *)&serv_addr,
                                       sizeof(serv_addr))) < 0)
             {
-                clientLog.append("Error   : Connection Failed \n");
+                logToClient("Connection failed.", ERROR);
                 return -1;
             }
-            clientLog.append("Socket connected to ");
-            clientLog.append(IPADDRESS);
-            clientLog.append(":"+std::to_string(PORT)+".\n");
+            std::string ipString = std::string(IPADDRESS) + ":" + std::to_string(PORT);
+            logToClient("Socket connected to " + ipString, INFO);
             return sockStatus;
         }
 
@@ -87,7 +132,7 @@ namespace xlpmg
         {
             if (sockClient_fd < 0)
             {
-                clientLog.append("Error   : Reading failed: Socket not initialized. \n");
+                logToClient("Reading failed: Socket not initialized.", ERROR);
                 return "FAIL";
             }
             memset(buffer, 0, BUFF_SIZE);
@@ -96,14 +141,12 @@ namespace xlpmg
                                                // terminator at the end
             if (sockValread < 0)
             {
-                clientLog.append("Error   : Read failed or timed out. \n");
+                logToClient("Reading failed or timed out.", ERROR);
                 return "FAIL";
             }
             else
             {
-                clientLog.append("Received: ");
-                clientLog.append(buffer);
-                clientLog.append("\n");
+                logToClient(std::string(buffer), RECEIVED);
                 return std::string(buffer);
             }
         }
@@ -118,9 +161,7 @@ namespace xlpmg
                 return 1;
             }
             send(sockClient_fd, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
-            clientLog.append("Sent    : ");
-            clientLog.append(message);
-            clientLog.append("\n");
+            logToClient(message, SENT);
 
             return strcmp(receiveFromServer().c_str(), "OK");
         }
@@ -130,6 +171,12 @@ namespace xlpmg
         void getClientLog(std::string &o_clientLog)
         {
             o_clientLog = clientLog;
+        }
+
+        /// @brief Clears the log data of the client.
+        void clearClientLog()
+        {
+            clientLog.clear();
         }
 
         ////////////////////

@@ -384,10 +384,28 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         //-------------------------------------------//
         if (showClientLog)
         {
+            ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
             ImGui::Begin("Client log", &showClientLog);
-            m_communicator.getClientLog(m_clientLog);
-            ImGui::TextUnformatted(m_clientLog.c_str());
-            ImGui::SetScrollHereY(1.0f);
+
+            if (ImGui::Button("Clear"))
+            {
+                m_communicator.clearClientLog();
+            }
+            ImGui::SameLine();
+            ImGui::Checkbox("Auto-Scroll", &m_clientLogAutoScroll);
+            if (ImGui::BeginChild("scrolling", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
+            {
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+                m_communicator.getClientLog(m_clientLog);
+                ImGui::TextUnformatted(m_clientLog.c_str());
+                ImGui::PopStyleVar();
+
+                if (m_clientLogAutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+                {
+                    ImGui::SetScrollHereY(1.0f);
+                }
+            }
+            ImGui::EndChild();
             ImGui::End();
         }
 
