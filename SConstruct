@@ -216,7 +216,7 @@ if 'san' in  env['mode']:
 if 'no' in env['use_filesystem']:
   env.Append( CXXFLAGS =  [ '-DNOFILESYSTEM' ] )
 
-env.Append( CXXFLAGS = [ '-isystem', 'include' ] )
+env.Append( CXXFLAGS = [ '-isystem', 'lib' ] )
 #####################
 # CATCH 2 SUBMODULE #
 #####################
