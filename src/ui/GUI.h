@@ -28,7 +28,6 @@ class tsunami_lab::ui::GUI
 private:
   const unsigned int WINDOW_WIDTH = 1500;
   const unsigned int WINDOW_HEIGHT = 1000;
-  const char *LOG_FILE = "log.txt";
 
   xlpmg::Communicator m_communicator;
   std::string m_clientLog;

@@ -320,7 +320,7 @@ public:
     void toggleFileIO(bool i_useFileIO)
     {
         m_useFileIO = i_useFileIO;
-        std::cout << "toggled file I/O" << std::endl;
+        std::cout << "Set file I/O to " << i_useFileIO << std::endl;
     }
 
     /**

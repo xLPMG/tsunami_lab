@@ -37,7 +37,6 @@
 // ui components
 #include "RTCustWindow.h"
 
-
 static void glfw_error_callback(int error, const char *description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -73,29 +72,28 @@ static void HelpMarker(const char *desc)
 
 json tsunami_lab::ui::GUI::createJson()
 {
-        json config = { {"solver", "fwave"},
-                        {"nx",l_simulationSizeX},
-                        {"ny",l_simulationSizeY},
-                        {"endTime",endTime},
-                        {"writingFrequency",writingFrequency},
-                        {"hasBoundaryL",outflowL},
-                        {"hasBoundaryR",outflowR},
-                        {"hasBoundaryT",outflowT},
-                        {"hasBoundaryB",outflowB}
-                       };
+    json config = {{"solver", "fwave"},
+                   {"nx", l_simulationSizeX},
+                   {"ny", l_simulationSizeY},
+                   {"endTime", endTime},
+                   {"writingFrequency", writingFrequency},
+                   {"hasBoundaryL", outflowL},
+                   {"hasBoundaryR", outflowR},
+                   {"hasBoundaryT", outflowT},
+                   {"hasBoundaryB", outflowB}};
 
-        if(event_current == 1)
-        {
-            config.push_back({"setup", "tohoku"});
-            config.push_back({"outputFileName","tohoku_solution"});
-        } 
-        else
-        {
-            config.push_back({"setup", "chile"});
-            config.push_back({"outputFileName","chile_solution"});
-        }
-        
-        return config;
+    if (event_current == 1)
+    {
+        config.push_back({"setup", "tohoku"});
+        config.push_back({"outputFileName", "tohoku_solution"});
+    }
+    else
+    {
+        config.push_back({"setup", "chile"});
+        config.push_back({"outputFileName", "chile_solution"});
+    }
+
+    return config;
 }
 
 // Main code
@@ -172,7 +170,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
     bool benchmarkMode = false;
     bool reportMode = false;
-    bool openMp = false;
     bool Checkpointing = false;
 
     bool disableConfigs = false;
@@ -211,163 +208,177 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::Begin("Welcome to the Tsunami Simulator GUI! (NOT CONNECTED)");
             }
 
-            if (ImGui::CollapsingHeader("Help"))
+            if (ImGui::BeginTabBar("MainTabs"))
             {
-                ImGui::SeparatorText("ABOUT:");
-                ImGui::Text("This GUI was created in the final phase of the tsunami lab during the winter semester 2023/24 at FSU Jena. ");
-                ImGui::Text("For information on the project, visit our documentation at");
-                ImGui::Indent();
-                ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://xlpmg.github.io/tsunami_lab/");
-                ImGui::Unindent();
-                ImGui::Text("The source code can be found at");
-                ImGui::Indent();
-                ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://github.com/xLPMG/tsunami_lab");
-                ImGui::Unindent();
-
-                ImGui::SeparatorText("GUI USAGE:");
-            }
-
-            // CONNECTION THINGS
-            if (ImGui::CollapsingHeader("Connectivity"))
-            {
-                ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
-                ImGui::InputInt("Port", &PORT, 0, 20000);
-                PORT = abs(PORT);
-
-                ImGui::BeginDisabled(btnConnectDisabled);
-                if (ImGui::Button("Connect"))
+                if (ImGui::BeginTabItem("Help"))
                 {
-                    // SET UP CONNECTION
-                    if (m_communicator.startClient(IPADDRESS, PORT) == 0)
+                    ImGui::SeparatorText("ABOUT:");
+                    ImGui::Text("This GUI was created in the final phase of the tsunami lab during the winter semester 2023/24 at FSU Jena. ");
+                    ImGui::Text("For information on the project, visit our documentation at");
+                    ImGui::Indent();
+                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://xlpmg.github.io/tsunami_lab/");
+                    ImGui::Unindent();
+                    ImGui::Text("The source code can be found at");
+                    ImGui::Indent();
+                    ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://github.com/xLPMG/tsunami_lab");
+                    ImGui::Unindent();
+
+                    ImGui::SeparatorText("GUI USAGE:");
+                    ImGui::EndTabItem();
+                }
+
+                // CONNECTION THINGS
+                if (ImGui::BeginTabItem("Connectivity"))
+                {
+                    ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
+                    ImGui::InputInt("Port", &PORT, 0, 20000);
+                    PORT = abs(PORT);
+
+                    ImGui::BeginDisabled(btnConnectDisabled);
+                    if (ImGui::Button("Connect"))
                     {
-                        btnConnectDisabled = true;
-                        btnDisonnectDisabled = false;
-                        connected = true;
+                        // SET UP CONNECTION
+                        if (m_communicator.startClient(IPADDRESS, PORT) == 0)
+                        {
+                            btnConnectDisabled = true;
+                            btnDisonnectDisabled = false;
+                            connected = true;
+                        }
                     }
-                }
-                ImGui::EndDisabled();
+                    ImGui::EndDisabled();
 
-                ImGui::SameLine();
+                    ImGui::SameLine();
 
-                ImGui::BeginDisabled(btnDisonnectDisabled);
-                if (ImGui::Button("Disconnect"))
-                {
-                    m_communicator.stopClient();
-                    btnConnectDisabled = false;
-                    btnDisonnectDisabled = true;
-                    connected = false;
-                }
-                ImGui::EndDisabled();
-
-                ImGui::SameLine();
-                if (ImGui::Button("Check"))
-                {
-                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) != 0)
+                    ImGui::BeginDisabled(btnDisonnectDisabled);
+                    if (ImGui::Button("Disconnect"))
                     {
+                        m_communicator.stopClient();
                         btnConnectDisabled = false;
                         btnDisonnectDisabled = true;
                         connected = false;
                     }
-                }
-            }
-            // END OF CONNECTION THINGS
-            if(ImGui::Button("Save Config"))
-            {   
-                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
-                saveConfigMsg.args = createJson();
-                m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
+                    ImGui::EndDisabled();
 
-            }
-            if (ImGui::Button("Run"))
-            {
-                xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
-                if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
-                {
-                    disableConfigs = true;
-                }
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Kill"))
-            {
-                m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
-            }
-
-            if (ImGui::Button("Shutdown server"))
-            {
-                m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
-            }
-
-            if (ImGui::Button("get height data"))
-            {
-                m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE));
-                bool l_finished = false;
-                unsigned long l_index = 0;
-                tsunami_lab::t_real l_heights[700 * 590]{0};
-                while (!l_finished)
-                {
-                    std::string data = m_communicator.receiveFromServer();
-                    if (json::accept(data))
+                    ImGui::SameLine();
+                    if (ImGui::Button("Check"))
                     {
-                        xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
-                        if (msg.key == xlpmg::BUFFERED_SEND_FINISHED.key)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) != 0)
                         {
-                            l_finished = true;
+                            btnConnectDisabled = false;
+                            btnDisonnectDisabled = true;
+                            connected = false;
                         }
-                        else
+                    }
+                    ImGui::EndTabItem();
+                }
+                // END OF CONNECTION THINGS
+
+                if (ImGui::BeginTabItem("TODO"))
+                {
+
+                    if (ImGui::Button("Save Config"))
+                    {
+                        xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                        saveConfigMsg.args = createJson();
+                        m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
+                    }
+                    if (ImGui::Button("Run"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
+                        if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
                         {
-                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
-                            std::string l_num;
-                            while (getline(l_stream, l_num, ','))
+                            disableConfigs = true;
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Kill"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
+                    }
+
+                    if (ImGui::Button("Shutdown server"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE));
+                    }
+
+                    if (ImGui::Button("get height data"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE));
+                        bool l_finished = false;
+                        unsigned long l_index = 0;
+                        tsunami_lab::t_real l_heights[700 * 590]{0};
+                        while (!l_finished)
+                        {
+                            std::string data = m_communicator.receiveFromServer();
+                            if (json::accept(data))
                             {
-                                l_heights[l_index] = std::stof(l_num);
-                                l_index++;
+                                xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
+                                if (msg.key == xlpmg::BUFFERED_SEND_FINISHED.key)
+                                {
+                                    l_finished = true;
+                                }
+                                else
+                                {
+                                    std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                                    std::string l_num;
+                                    while (getline(l_stream, l_num, ','))
+                                    {
+                                        l_heights[l_index] = std::stof(l_num);
+                                        l_index++;
+                                    }
+                                }
                             }
                         }
+                        for (int y = 0; y < 590; y++)
+                        {
+                            for (int x = 0; x < 700; x++)
+                            {
+                                std::cout << l_heights[x + y * 700] << " ";
+                            }
+                            std::cout << std::endl;
+                        }
                     }
-                }
-                for (int y = 0; y < 590; y++)
-                {
-                    for (int x = 0; x < 700; x++)
+                    if (ImGui::Button("Get time step"))
                     {
-                        std::cout << l_heights[x + y * 700] << " ";
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
+                        std::string response = m_communicator.receiveFromServer();
+                        if (json::accept(response))
+                        {
+                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            std::cout << responseMessage.args << std::endl;
+                        }
                     }
-                    std::cout << std::endl;
+
+                    if (ImGui::Button("file io true"))
+                    {
+                        xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                        toggleFileIOMsg.args = "true";
+                        m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    }
+
+                    if (ImGui::Button("file io false"))
+                    {
+                        xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                        toggleFileIOMsg.args = "false";
+                        m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    }
+
+                    ImGui::EndTabItem();
                 }
-            }
-            if (ImGui::Button("Get time step"))
-            {
-                m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
-                std::string response = m_communicator.receiveFromServer();
-                if (json::accept(response))
+
+                if (ImGui::BeginTabItem("Windows"))
                 {
-                    xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                    std::cout << responseMessage.args << std::endl;
+                    ImGui::Checkbox("Demo Window", &show_demo_window);
+                    ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
+                    ImGui::Checkbox("Edit compile options", &showCompilerOptionsWindow);
+                    ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                    ImGui::Checkbox("Show client log", &showClientLog);
+                    ImGui::EndTabItem();
                 }
+                ImGui::EndTabBar();
             }
 
-            // if (ImGui::Button("file io true"))
-            // {
-            //     if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
-            //     {
-            //         usleep(1000);
-            //         m_communicator.sendToServer("true");
-            //     }
-            // }
-
-            // if (ImGui::Button("file io false"))
-            // {
-            //     if (m_communicator.sendToServer(xlpmg::KEY_TOGGLE_FILEIO) == 0)
-            //     {
-            //         usleep(1000);
-            //         m_communicator.sendToServer("false");
-            //     }
-            // }
-
-            ImGui::Checkbox("Demo Window", &show_demo_window);
-            ImGui::Checkbox("Edit runtime parameters", &showRTCustWindow);
-            ImGui::Checkbox("Edit compile options", &showCompilerOptionsWindow);
-            ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-            ImGui::Checkbox("Show client log", &showClientLog);
+            ImGui::Separator();
 
             ImGui::ColorEdit3("clear color", (float *)&clear_color);
 
@@ -434,11 +445,12 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
                 json compileArgs;
                 std::string opt;
-                opt = "opt=-"+std::string(flags[flag_current]);
-                if(omp_current != 0){
+                opt = "opt=-" + std::string(flags[flag_current]);
+                if (omp_current != 0)
+                {
                     opt.append(" omp=" + std::string(omp[omp_current]));
                 }
-                compileArgs["ENV"] = ""; // eg. CXX=g++-13
+                compileArgs["ENV"] = "";  // eg. CXX=g++-13
                 compileArgs["OPT"] = opt; // eg. omp=gnu opt=-O2
 
                 recompileMsg.args = compileArgs;

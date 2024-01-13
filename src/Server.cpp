@@ -11,7 +11,6 @@ bool m_EXIT = false;
 tsunami_lab::Simulator *simulator = nullptr;
 std::thread m_simulationThread;
 bool m_isSimulationRunning = false;
-json config = "";
 
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
@@ -73,7 +72,7 @@ int main(int i_argc, char *i_argv[])
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
-            }            
+            }
             else if (l_key == xlpmg::START_SIMULATION_MESSAGE.key)
             {
                 std::string l_config = l_parsedData.at(xlpmg::ARGS);
@@ -107,6 +106,17 @@ int main(int i_argc, char *i_argv[])
                 xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
                 l_communicator.sendToClient(xlpmg::messageToJsonString(response));
             }
+            else if (l_key == xlpmg::TOGGLE_FILEIO_MESSAGE.key)
+            {
+                if (l_args == "true")
+                {
+                    simulator->toggleFileIO(true);
+                }
+                else if (l_args == "false")
+                {
+                    simulator->toggleFileIO(false);
+                }
+            }
             else if (l_key == xlpmg::GET_HEIGHT_DATA_MESSAGE.key)
             {
                 xlpmg::Message heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
@@ -124,12 +134,12 @@ int main(int i_argc, char *i_argv[])
                     unsigned long totalCells = l_ncellsX * l_ncellsY;
 
                     unsigned long cellCounter = 0;
-                    while (cellCounter < totalCells-1)
+                    while (cellCounter < totalCells - 1)
                     {
                         // 18 chars = 144 bytes
-                        while (heightDataMsg.args.dump().length() < (l_sendDataSpace - 144) && cellCounter < totalCells-1)
+                        while (heightDataMsg.args.dump().length() < (l_sendDataSpace - 144) && cellCounter < totalCells - 1)
                         {
-                            heightDataMsg.args.push_back(heightData[cellCounter++]);  
+                            heightDataMsg.args.push_back(heightData[cellCounter++]);
                         }
                         l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
                         heightDataMsg.args.clear();
@@ -141,7 +151,6 @@ int main(int i_argc, char *i_argv[])
             {
                 simulator->loadConfigDataJson(l_args);
             }
-
         }
     }
 

@@ -125,7 +125,7 @@ namespace xlpmg
   //! Tells the client that a buffered sending operation has finished.
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
 
-
+  
 
 
   //inline const Message LOAD_JSON= {MessageType::SERVER__CALL, "load_json"};
