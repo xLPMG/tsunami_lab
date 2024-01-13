@@ -1,6 +1,6 @@
 #include "Simulator.h"
-#include "Communicator.hpp"
-#include "communicator_api.h"
+#include "xlpmg/Communicator.hpp"
+#include "xlpmg/communicator_api.h"
 #include <nlohmann/json.hpp>
 
 #include <thread>

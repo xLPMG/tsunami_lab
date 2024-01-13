@@ -9,7 +9,7 @@
 #ifndef TSUNAMI_LAB_UI_GUI
 #define TSUNAMI_LAB_UI_GUI
 
-#include "Communicator.hpp"
+#include "xlpmg/Communicator.hpp"
 #include <chrono>
 
 #include <nlohmann/json.hpp>
