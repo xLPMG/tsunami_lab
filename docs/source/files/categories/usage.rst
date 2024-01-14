@@ -7,11 +7,46 @@ Navigate to the local git repository. If the name wasnt explicitly changed, this
 If you have yet to set up and build the git repository locally, check out the :ref:`setup` page first.
 
 
-Running the code
-------------------
+Running with GUI
+----------------------
+
+.. note:: 
+  By default, the compiled program includes a GUI. If you wish to turn this off, compile using the ``gui=no`` flag.
+
+The program consists of two applications: the GUI (client) an the Simulator (Server). To start the GUI, run
+
+.. code::
+    
+    ./build/gui
+
+inside the ``tsunami_lab`` folder. To start the server, run
+
+.. code::
+    
+    ./build/tsunami_lab <PORT>
+
+also from inside the ``tsunami_lab`` folder. The ``<PORT>`` parameter specifies which port will be used for the remote connection.
+
+The two applications may run on different machines, but you have to make sure that the server can be reached over TCP using
+the machines ip address and the specified port.
+
+Basic GUI Usage
+-----------------
+
+After starting a server, you can connect to it using the ``Connectivity`` tab of the main window:
+
+.. image:: ../../_static/assets/gui_connect.png
+
+Simply enter the server data and click ``Connect``.
+
+.. warning::
+  Since as of now the GUI is constantly being worked on, the usage guide will end here. We will complete it once the GUI has reached a stable phase.
+
+Running without GUI
+----------------------
 
 Make sure you are inside the ``tsunami_lab`` folder.
-To run the project, execute
+To run the simulator, execute
 
 .. code::
     

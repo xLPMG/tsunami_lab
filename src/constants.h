@@ -1,5 +1,6 @@
 /**
- * @author Alexander Breuer (alex.breuer AT uni-jena.de)
+ * @author Luca-Philipp Grumbach
+ * @author Richard Hofmann
  *
  * # Description
  * Constants / typedefs used throughout the code.
@@ -8,6 +9,7 @@
 #define TSUNAMI_LAB_CONSTANTS_H
 
 #include <cstddef>
+#include <string>
 
 namespace tsunami_lab
 {
