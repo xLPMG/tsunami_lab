@@ -51,6 +51,12 @@ private:
   bool m_useFilesystem = true;
   char m_customEnv[256] = "";
   bool m_useGui = true;
+  const char *m_runnerOptions[3] = {"none", "bash", "sbatch"};
+  int m_runner = 0;
+  char m_sbJob[256] = "tsunami_lab_auto";
+  char m_sbOut[256] = "output.txt";
+  char m_sbErr[256] = "error.txt";
+  char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
   const char *m_events[3] = {"Tohoku", "Chile", "Custom"};

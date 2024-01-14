@@ -21,10 +21,6 @@ namespace xlpmg
     ARGS
   };
 
-  NLOHMANN_JSON_SERIALIZE_ENUM(MessagePart, {{TYPE, "type"},
-                                             {KEY, "key"},
-                                             {ARGS, "arguments"}});
-
   enum MessageType
   {
     SERVER__CALL,
@@ -98,8 +94,14 @@ namespace xlpmg
   //! Server will stop the running simulation.
   inline const Message KILL_SIMULATION_MESSAGE = {MessageType::SERVER__CALL, "kill_simulation"};
 
-  //! Server will recompile with provided arguments.
-  inline const Message RECOMPILE_MESSAGE = {MessageType::SERVER__CALL, "recompile", ""};
+    //! Server will recompile with provided arguments.
+  inline const Message COMPILE_MESSAGE = {MessageType::SERVER__CALL, "compile", ""};
+
+  //! Server will recompile with provided arguments and run using a bash script.
+  inline const Message COMPILE_RUN_BASH_MESSAGE = {MessageType::SERVER__CALL, "compile_run_bash", ""};
+
+  //! Server will recompile with provided arguments and run using an sbatch script.
+  inline const Message COMPILE_RUN_SBATCH_MESSAGE = {MessageType::SERVER__CALL, "compile_run_sbatch", ""};
 
   //! Simulator will write a checkpoint.
   inline const Message WRITE_CHECKPOINT_MESSAGE = {MessageType::FUNCTION_CALL, "write_checkpoint"};
@@ -124,12 +126,6 @@ namespace xlpmg
 
   //! Tells the client that a buffered sending operation has finished.
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
-
-  
-
-
-  //inline const Message LOAD_JSON= {MessageType::SERVER__CALL, "load_json"};
-
 }
 
 #endif

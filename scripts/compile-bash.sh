@@ -15,7 +15,3 @@ else
 echo scons $2
 scons $2
 fi
-
-# restart the server
-echo STARTING SERVER
-./build/tsunami_lab

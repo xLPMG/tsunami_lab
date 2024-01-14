@@ -214,7 +214,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://github.com/xLPMG/tsunami_lab");
                     ImGui::Unindent();
 
-                    //ImGui::SeparatorText("GUI USAGE:");
+                    // ImGui::SeparatorText("GUI USAGE:");
                     ImGui::EndTabItem();
                 }
 
@@ -437,7 +437,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputTextWithHint("Compiler choice", "For example: \'g++-13\' or \'icpc\'", m_compilerChoice, IM_ARRAYSIZE(m_compilerChoice));
             ImGui::SameLine();
-                    HelpMarker("Leave this empty to use the default compiler.");
+            HelpMarker("Leave this empty to use the default compiler.");
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Optimization level", &m_optFlag, m_optFlags, IM_ARRAYSIZE(m_optFlags));
@@ -476,9 +476,48 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
             ImGui::SameLine();
             HelpMarker("The input will be set before compiling using \'export <input>;\'");
 
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Runner", &m_runner, m_runnerOptions, IM_ARRAYSIZE(m_runnerOptions));
+            ImGui::SameLine();
+            HelpMarker("If you choose a runner, the server will be restarted after compilation.");
+
+            if (m_runner == 2)
+            {
+
+                ImGui::SeparatorText("SLURM job options");
+
+                ImGui::Indent();
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputText("Job name", m_sbJob, IM_ARRAYSIZE(m_sbJob));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputText("Output file", m_sbOut, IM_ARRAYSIZE(m_sbOut));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputText("Error output file", m_sbErr, IM_ARRAYSIZE(m_sbErr));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputTextWithHint("Time limit", "HH:MM:SS", m_sbTim, IM_ARRAYSIZE(m_sbTim));
+
+                ImGui::Unindent();
+            }
+
             if (ImGui::Button("Recompile"))
             {
-                xlpmg::Message recompileMsg = xlpmg::RECOMPILE_MESSAGE;
+                xlpmg::Message recompileMsg;
+                switch (m_runner)
+                {
+                case 0:
+                    recompileMsg = xlpmg::COMPILE_MESSAGE;
+                    break;
+                case 1:
+                    recompileMsg = xlpmg::COMPILE_RUN_BASH_MESSAGE;
+                    break;
+                case 2:
+                    recompileMsg = xlpmg::COMPILE_RUN_SBATCH_MESSAGE;
+                    break;
+                }
 
                 // SET ARGUMENTS
                 std::string envVars;
@@ -515,6 +554,13 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 json compileArgs;
                 compileArgs["ENV"] = "";
                 compileArgs["OPT"] = options;
+
+                if(m_runner == 2){
+                   compileArgs["JOB"] = m_sbJob; 
+                   compileArgs["OUT"] = m_sbOut; 
+                   compileArgs["ERR"] = m_sbErr; 
+                   compileArgs["TIM"] = m_sbTim; 
+                }
 
                 recompileMsg.args = compileArgs;
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));

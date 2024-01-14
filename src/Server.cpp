@@ -65,6 +65,7 @@ int main(int i_argc, char *i_argv[])
         xlpmg::MessageType l_type = l_message.type;
         std::string l_key = l_message.key;
         json l_args = l_message.args;
+
         if (l_type == xlpmg::SERVER__CALL)
         {
             if (l_key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
@@ -86,17 +87,64 @@ int main(int i_argc, char *i_argv[])
             {
                 exitSimulationThread();
             }
-            else if (l_key == xlpmg::RECOMPILE_MESSAGE.key)
+            else if (l_key == xlpmg::COMPILE_MESSAGE.key)
             {
                 // Shutdown server
                 m_EXIT = true;
                 l_communicator.stopServer();
                 exitSimulationThread();
-                // execute recompilation
+
                 std::string env = l_args.value("ENV", ""); // environment var
                 std::string opt = l_args.value("OPT", ""); // compiler opt
-                exec("chmod +x runServer.sh");
-                exec("./runServer.sh \"" + env + "\" \"" + opt + "\" &");
+
+                //compile
+                exec("chmod +x scripts/compile-bash.sh");
+                exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\" &");
+            }
+            else if (l_key == xlpmg::COMPILE_RUN_BASH_MESSAGE.key)
+            {
+                // Shutdown server
+                m_EXIT = true;
+                l_communicator.stopServer();
+                exitSimulationThread();
+
+                std::string env = l_args.value("ENV", ""); // environment var
+                std::string opt = l_args.value("OPT", ""); // compiler opt
+
+                //compile
+                exec("chmod +x scripts/compile-bash.sh");
+                exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\"");
+
+                //run
+                exec("chmod +x run-bash.sh");
+                exec("./run-bash.sh &");
+            }
+            else if (l_key == xlpmg::COMPILE_RUN_SBATCH_MESSAGE.key)
+            {
+                // Shutdown server
+                m_EXIT = true;
+                l_communicator.stopServer();
+                exitSimulationThread();
+
+                std::string env = l_args.value("ENV", ""); // environment var
+                std::string opt = l_args.value("OPT", ""); // compiler opt
+
+                std::string l_job = l_args.value("JOB", "");
+                std::string l_out = l_args.value("OUT", "");
+                std::string l_err = l_args.value("ERR", "");
+                std::string l_tim = l_args.value("TIM", "");
+
+                //compile
+                exec("chmod +x scripts/compile-bash.sh");
+                exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\"");
+
+                //generate sbatch
+                exec("chmod +x scripts/generateSbatch.sh");
+                exec("./scripts/generateSbatch.sh " + l_job + " " + l_out + " " + l_err + " " + l_tim +" > run-sbatch.sh");
+
+                //run
+                exec("chmod +x run-sbatch.sh");
+                exec("sbatch run-sbatch.sh");
             }
         }
         else if (l_type == xlpmg::FUNCTION_CALL)
