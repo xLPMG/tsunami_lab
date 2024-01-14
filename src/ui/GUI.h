@@ -35,6 +35,7 @@ private:
   char IPADDRESS[16] = "127.0.0.1";
   std::chrono::time_point<std::chrono::system_clock> lastDataUpdate;
   float dataUpdateFrequency = 1;
+  int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
 
   // compiler options
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};

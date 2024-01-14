@@ -214,7 +214,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     ImGui::TextColored(ImVec4(0, 1, 0, 1), "https://github.com/xLPMG/tsunami_lab");
                     ImGui::Unindent();
 
-                    ImGui::SeparatorText("GUI USAGE:");
+                    //ImGui::SeparatorText("GUI USAGE:");
                     ImGui::EndTabItem();
                 }
 
@@ -224,7 +224,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
-                    ImGui::InputInt("Port", &PORT, 0, 20000);
+                    ImGui::InputInt("Port", &PORT, 0);
                     PORT = abs(PORT);
 
                     ImGui::BeginDisabled(m_connected);
@@ -274,6 +274,22 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     ImGui::PopStyleColor(3);
                     ImGui::EndDisabled();
 
+                    ImGui::InputInt("", &m_clientReadBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        m_communicator.setReadBufferSize(m_clientReadBufferSize);
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size (client)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
+                    if (m_clientReadBufferSize < 256)
+                    {
+                        m_clientReadBufferSize = 256;
+                    }
                     ImGui::EndTabItem();
                 }
 
@@ -309,39 +325,46 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
                     if (ImGui::Button("get height data"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE));
-                        bool l_finished = false;
-                        unsigned long l_index = 0;
-                        tsunami_lab::t_real l_heights[700 * 590]{0};
-                        while (!l_finished)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE)) == 0)
                         {
-                            std::string data = m_communicator.receiveFromServer();
-                            if (json::accept(data))
+                            unsigned long l_index = 0;
+                            bool l_finished = false;
+                            tsunami_lab::t_real l_heights[500 * 500]{0};
+
+                            std::string data = "";
+                            while (!l_finished)
                             {
-                                xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
-                                if (msg.key == xlpmg::BUFFERED_SEND_FINISHED.key)
+                                std::string l_response = m_communicator.receiveFromServer();
+                                if (json::accept(l_response) && xlpmg::jsonToMessage(json::parse(l_response)).key == xlpmg::BUFFERED_SEND_FINISHED.key)
                                 {
                                     l_finished = true;
                                 }
                                 else
                                 {
-                                    std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
-                                    std::string l_num;
-                                    while (getline(l_stream, l_num, ','))
-                                    {
-                                        l_heights[l_index] = std::stof(l_num);
-                                        l_index++;
-                                    }
+                                    data += l_response;
                                 }
                             }
-                        }
-                        for (int y = 0; y < 590; y++)
-                        {
-                            for (int x = 0; x < 700; x++)
+                            if (json::accept(data))
                             {
-                                std::cout << l_heights[x + y * 700] << " ";
+                                xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
+
+                                std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                                std::string l_num;
+                                while (getline(l_stream, l_num, ','))
+                                {
+                                    l_heights[l_index] = std::stof(l_num);
+                                    l_index++;
+                                }
                             }
-                            std::cout << std::endl;
+
+                            for (int y = 0; y < 500; y++)
+                            {
+                                for (int x = 0; x < 500; x++)
+                                {
+                                    std::cout << l_heights[x + y * 500] << " ";
+                                }
+                                std::cout << std::endl;
+                            }
                         }
                     }
                     if (ImGui::Button("Get time step"))
@@ -413,6 +436,8 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputTextWithHint("Compiler choice", "For example: \'g++-13\' or \'icpc\'", m_compilerChoice, IM_ARRAYSIZE(m_compilerChoice));
+            ImGui::SameLine();
+                    HelpMarker("Leave this empty to use the default compiler.");
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Optimization level", &m_optFlag, m_optFlags, IM_ARRAYSIZE(m_optFlags));
@@ -561,13 +586,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 HelpMarker("Sets the frequency of writing into a solution file.");
                 m_writingFrequency = abs(m_writingFrequency);
                 ImGui::EndDisabled();
-
-                if (ImGui::Button("file io false"))
-                {
-                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                    toggleFileIOMsg.args = "false";
-                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                }
 
                 ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                 ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);

@@ -23,11 +23,9 @@
 
 namespace xlpmg
 {
-    const int BUFF_SIZE = 8096;
     class Communicator
     {
     private:
-        char buffer[BUFF_SIZE] = {0};
         int TIMEOUT = 2;
         std::string clientLog = "";
         int sockStatus, sockValread, sockClient_fd = -1;
@@ -73,6 +71,15 @@ namespace xlpmg
         }
 
     public:
+        //! size of the reading buffer
+        const unsigned int BUFF_SIZE_DEFAULT = 8096;
+        unsigned int BUFF_SIZE = BUFF_SIZE_DEFAULT;
+
+        void setReadBufferSize(unsigned int newSize)
+        {
+            BUFF_SIZE = newSize;
+        }
+
         ////////////////////
         //     CLIENT     //
         ////////////////////
@@ -135,8 +142,9 @@ namespace xlpmg
                 logToClient("Reading failed: Socket not initialized.", ERROR);
                 return "FAIL";
             }
-            memset(buffer, 0, BUFF_SIZE);
-            sockValread = read(sockClient_fd, buffer,
+            char readBuffer[BUFF_SIZE];
+            memset(readBuffer, 0, BUFF_SIZE);
+            sockValread = read(sockClient_fd, readBuffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
             if (sockValread < 0)
@@ -146,8 +154,8 @@ namespace xlpmg
             }
             else
             {
-                logToClient(std::string(buffer), RECEIVED);
-                return std::string(buffer);
+                logToClient(std::string(readBuffer), RECEIVED);
+                return std::string(readBuffer);
             }
         }
 
@@ -244,12 +252,13 @@ namespace xlpmg
         /// @return Message as string.
         std::string receiveFromClient()
         {
-            memset(buffer, 0, BUFF_SIZE);
-            sockValread = read(new_socket, buffer,
+            char readBuffer[BUFF_SIZE];
+            memset(readBuffer, 0, BUFF_SIZE);
+            sockValread = read(new_socket, readBuffer,
                                BUFF_SIZE - 1); // subtract 1 for the null
                                                // terminator at the end
             send(new_socket, "OK", strlen("OK"), MSG_NOSIGNAL);
-            return std::string(buffer);
+            return std::string(readBuffer);
         }
 
         /// @brief Sends a message to a client.

@@ -120,9 +120,6 @@ int main(int i_argc, char *i_argv[])
             else if (l_key == xlpmg::GET_HEIGHT_DATA_MESSAGE.key)
             {
                 xlpmg::Message heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
-                unsigned long l_headerSize = sizeof(heightDataMsg);
-                // calculate the remaining space left for one message
-                unsigned long l_sendDataSpace = xlpmg::BUFF_SIZE - l_headerSize;
                 // get data from simulation
                 if (simulator->getWaveProp() != nullptr)
                 {
@@ -132,20 +129,13 @@ int main(int i_argc, char *i_argv[])
                     tsunami_lab::t_idx l_ncellsX, l_ncellsY;
                     simulator->getCellAmount(l_ncellsX, l_ncellsY);
                     unsigned long totalCells = l_ncellsX * l_ncellsY;
-
-                    unsigned long cellCounter = 0;
-                    while (cellCounter < totalCells - 1)
+                    for (tsunami_lab::t_idx i = 0; i < totalCells; i++)
                     {
-                        // 18 chars = 144 bytes
-                        while (heightDataMsg.args.dump().length() < (l_sendDataSpace - 144) && cellCounter < totalCells - 1)
-                        {
-                            heightDataMsg.args.push_back(heightData[cellCounter++]);
-                        }
-                        l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
-                        heightDataMsg.args.clear();
+                        heightDataMsg.args.push_back(heightData[i]);
                     }
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                 }
-                l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
             }
             else if (l_key == xlpmg::LOAD_CONFIG_JSON_MESSAGE.key)
             {
