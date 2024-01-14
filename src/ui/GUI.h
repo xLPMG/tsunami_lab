@@ -31,10 +31,12 @@ private:
 
   xlpmg::Communicator m_communicator;
   std::string m_clientLog;
-  int PORT = 0;
+
+  int PORT = 8080;
   char IPADDRESS[16] = "127.0.0.1";
-  std::chrono::time_point<std::chrono::system_clock> lastDataUpdate;
-  float dataUpdateFrequency = 1;
+
+  std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
+  float m_dataUpdateFrequency = 1;
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
 
   // compiler options
@@ -62,30 +64,54 @@ private:
   // simulation parameters
   const char *m_events[3] = {"Tohoku", "Chile", "Custom"};
   int event_current = 0;
-  int l_nx = 1;
-  int l_ny = 1;
-  float l_simulationSizeX = 0;
-  float l_simulationSizeY = 0;
+  int m_nx = 1;
+  int m_ny = 1;
+  float m_simulationSizeX = 0;
+  float m_simulationSizeY = 0;
   int m_endTime = 1000;
   bool m_useFileIO = true;
   int m_writingFrequency = 100;
   int m_checkpointFrequency = 10;
 
   // outflow conditions
-  bool outflowL = false;
-  bool outflowR = false;
-  bool outflowT = false;
-  bool outflowB = false;
+  bool m_outflowL = false;
+  bool m_outflowR = false;
+  bool m_outflowT = false;
+  bool m_outflowB = false;
 
   // client log
   bool m_clientLogAutoScroll = true;
 
+  /**
+  * Executes a shell command.
+  * 
+  * @param i_cmd command
+  * @param i_outputFile file to pipe the shell output to
+  * @return exit code
+  */
   int exec(std::string i_cmd, std::string i_outputFile);
-  json createJson();
+
+  /**
+  * Creates a config json from local config parameters.
+  * 
+  * @return config as json object
+  */
+  json createConfigJson();
+
+  /**
+  * Updates local config parameters with current server data.
+  * 
+  * TODO: implementation
+  */
   void updateData();
 
 public:
-  int launch(int PORT);
+  /**
+  * Entry-point for the GUI.
+  * 
+  * @return exit code
+  */
+  int launch();
 };
 
 #endif

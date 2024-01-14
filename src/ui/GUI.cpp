@@ -50,10 +50,10 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
 
 void tsunami_lab::ui::GUI::updateData()
 {
-    if (std::chrono::system_clock::now() - lastDataUpdate >= std::chrono::duration<float>(dataUpdateFrequency))
+    if (std::chrono::system_clock::now() - m_lastDataUpdate >= std::chrono::duration<float>(m_dataUpdateFrequency))
     {
         // TODO: update
-        lastDataUpdate = std::chrono::system_clock::now();
+        m_lastDataUpdate = std::chrono::system_clock::now();
     }
 }
 
@@ -69,19 +69,19 @@ static void HelpMarker(const char *desc)
     }
 }
 
-json tsunami_lab::ui::GUI::createJson()
+json tsunami_lab::ui::GUI::createConfigJson()
 {
     json config = {{"solver", "fwave"},
-                   {"nx", l_simulationSizeX},
-                   {"ny", l_simulationSizeY},
+                   {"nx", m_simulationSizeX},
+                   {"ny", m_simulationSizeY},
                    {"endTime", m_endTime},
                    {"useFileIO", m_useFileIO},
                    {"writingFrequency", m_writingFrequency},
                    {"checkpointFrequency", m_checkpointFrequency},
-                   {"hasBoundaryL", outflowL},
-                   {"hasBoundaryR", outflowR},
-                   {"hasBoundaryT", outflowT},
-                   {"hasBoundaryB", outflowB}};
+                   {"hasBoundaryL", m_outflowL},
+                   {"hasBoundaryR", m_outflowR},
+                   {"hasBoundaryT", m_outflowT},
+                   {"hasBoundaryB", m_outflowB}};
 
     if (event_current == 1)
     {
@@ -98,10 +98,8 @@ json tsunami_lab::ui::GUI::createJson()
 }
 
 // Main code
-int tsunami_lab::ui::GUI::launch(int i_PORT)
+int tsunami_lab::ui::GUI::launch()
 {
-    PORT = i_PORT;
-
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -164,8 +162,6 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
-
-    bool disableConfigs = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -312,10 +308,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                     if (ImGui::Button("Run simulation"))
                     {
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
-                        if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
-                        {
-                            disableConfigs = true;
-                        }
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
                     }
                     ImGui::SameLine();
                     if (ImGui::Button("Kill simulation"))
@@ -559,16 +552,18 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 compileArgs["ENV"] = "";
                 compileArgs["OPT"] = options;
 
-                if(m_runner == 2){
-                   compileArgs["JOB"] = m_sbJob; 
-                   compileArgs["OUT"] = m_sbOut; 
-                   compileArgs["ERR"] = m_sbErr; 
-                   compileArgs["TIM"] = m_sbTim; 
+                if (m_runner == 2)
+                {
+                    compileArgs["JOB"] = m_sbJob;
+                    compileArgs["OUT"] = m_sbOut;
+                    compileArgs["ERR"] = m_sbErr;
+                    compileArgs["TIM"] = m_sbTim;
                 }
 
                 recompileMsg.args = compileArgs;
 
-                if(m_checkpointBeforeRecomp) {
+                if (m_checkpointBeforeRecomp)
+                {
                     m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT_MESSAGE));
                 }
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
@@ -582,100 +577,98 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
         //-------------------------------------------//
         if (showSimulationParameterWindow)
         {
-            if (disableConfigs == false)
+
+            ImGui::SetNextWindowSize(ImVec2(550, 324), ImGuiCond_FirstUseEver);
+            ImGui::Begin("Simulation parameters", &showSimulationParameterWindow);
+
+            short width = 24;
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Cells X", &m_nx, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Cells Y", &m_ny, 0);
+            m_nx = abs(m_nx);
+            m_ny = abs(m_ny);
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Tsunami Event", &event_current, m_events, IM_ARRAYSIZE(m_events));
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Simulation size Y", &m_simulationSizeY, 0);
+            m_simulationSizeX = abs(m_simulationSizeX);
+            m_simulationSizeY = abs(m_simulationSizeY);
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("End time", &m_endTime, 0);
+            ImGui::SetItemTooltip("in simulated seconds");
+            m_endTime = abs(m_endTime);
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Checkbox("Use file I/O", &m_useFileIO);
+            ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
+
+            if (ImGui::Button("Enable file I/O"))
             {
-                ImGui::SetNextWindowSize(ImVec2(550, 324), ImGuiCond_FirstUseEver);
-                ImGui::Begin("Simulation parameters", &showSimulationParameterWindow);
-
-                short width = 24;
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputInt("Cells X", &l_nx, 0);
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputInt("Cells Y", &l_ny, 0);
-                l_nx = abs(l_nx);
-                l_ny = abs(l_ny);
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::Combo("Tsunami Event", &event_current, m_events, IM_ARRAYSIZE(m_events));
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputFloat("Simulation size X", &l_simulationSizeX, 0);
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputFloat("Simulation size Y", &l_simulationSizeY, 0);
-                l_simulationSizeX = abs(l_simulationSizeX);
-                l_simulationSizeY = abs(l_simulationSizeY);
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputInt("End time", &m_endTime, 0);
-                ImGui::SetItemTooltip("in simulated seconds");
-                m_endTime = abs(m_endTime);
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::Checkbox("Use file I/O", &m_useFileIO);
-                ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
-
-                if (ImGui::Button("Enable file I/O"))
-                {
-                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                    toggleFileIOMsg.args = "true";
-                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                    m_useFileIO = true;
-                }
-                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-                ImGui::SameLine();
-                if (ImGui::Button("Disable file I/O"))
-                {
-                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                    toggleFileIOMsg.args = "false";
-                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                    m_useFileIO = false;
-                }
-                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-
-                ImGui::BeginDisabled(!m_useFileIO);
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
-                ImGui::SetItemTooltip("in time steps");
-                ImGui::SameLine();
-                HelpMarker("Sets the frequency of writing into a solution file.");
-                m_writingFrequency = abs(m_writingFrequency);
-                ImGui::EndDisabled();
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
-                ImGui::SetItemTooltip("in real-time seconds");
-                ImGui::SameLine();
-                HelpMarker("A negative frequency will disable file output.");
-
-                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                bool outFlowNode = ImGui::TreeNode("Boundary conditions");
-                ImGui::SameLine();
-                HelpMarker("Determines whether the wave leaves the corresponding domain or hits an invisible boundary.");
-                if (outFlowNode)
-                {
-                    ImGui::TextWrapped("Check if that side has a boundary, preventing the waves to leave the domain.");
-                    ImGui::Checkbox("Left", &outflowL);
-                    ImGui::Checkbox("Right", &outflowR);
-                    ImGui::Checkbox("Top", &outflowT);
-                    ImGui::Checkbox("Bottom", &outflowB);
-                    ImGui::TreePop();
-                }
-
-                if (ImGui::Button("Send config to server"))
-                {
-                    xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
-                    saveConfigMsg.args = createJson();
-                    m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
-                }
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
-                ImGui::SeparatorText("WARNING");
-                ImGui::PopStyleColor();
-                ImGui::TextWrapped("Nobody will stop you from changing these parameters at any time, even during simulations.");
-                ImGui::TextWrapped("This could lead to unwanted results: for example changing the cell amount and then writing into a previous netcdf solution file could result in its corruption.");
-                ImGui::Spacing();
-                ImGui::TextWrapped("Our advice: only set config data before running a simulation and if you are not writing into an existing solution file.");
-                ImGui::End();
+                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                toggleFileIOMsg.args = "true";
+                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                m_useFileIO = true;
             }
+            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+            ImGui::SameLine();
+            if (ImGui::Button("Disable file I/O"))
+            {
+                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                toggleFileIOMsg.args = "false";
+                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                m_useFileIO = false;
+            }
+            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+
+            ImGui::BeginDisabled(!m_useFileIO);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
+            ImGui::SetItemTooltip("in time steps");
+            ImGui::SameLine();
+            HelpMarker("Sets the frequency of writing into a solution file.");
+            m_writingFrequency = abs(m_writingFrequency);
+            ImGui::EndDisabled();
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
+            ImGui::SetItemTooltip("in real-time seconds");
+            ImGui::SameLine();
+            HelpMarker("A negative frequency will disable file output.");
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            bool outFlowNode = ImGui::TreeNode("Boundary conditions");
+            ImGui::SameLine();
+            HelpMarker("Determines whether the wave leaves the corresponding domain or hits an invisible boundary.");
+            if (outFlowNode)
+            {
+                ImGui::TextWrapped("Check if that side has a boundary, preventing the waves to leave the domain.");
+                ImGui::Checkbox("Left", &m_outflowL);
+                ImGui::Checkbox("Right", &m_outflowR);
+                ImGui::Checkbox("Top", &m_outflowT);
+                ImGui::Checkbox("Bottom", &m_outflowB);
+                ImGui::TreePop();
+            }
+
+            if (ImGui::Button("Send config to server"))
+            {
+                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                saveConfigMsg.args = createConfigJson();
+                m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
+            }
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
+            ImGui::SeparatorText("WARNING");
+            ImGui::PopStyleColor();
+            ImGui::TextWrapped("Nobody will stop you from changing these parameters at any time, even during simulations.");
+            ImGui::TextWrapped("This could lead to unwanted results: for example changing the cell amount and then writing into a previous netcdf solution file could result in its corruption.");
+            ImGui::Spacing();
+            ImGui::TextWrapped("Our advice: only set config data before running a simulation and if you are not writing into an existing solution file.");
+            ImGui::End();
         }
 
         //-------------------------------------------//
