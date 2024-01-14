@@ -309,7 +309,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if (ImGui::Button("Run"))
+                    if (ImGui::Button("Run simulation"))
                     {
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
                         if (m_communicator.sendToServer(messageToJsonString(startSimMsg)) == 0)
@@ -318,12 +318,12 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                         }
                     }
                     ImGui::SameLine();
-                    if (ImGui::Button("Kill"))
+                    if (ImGui::Button("Kill simulation"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
                     }
 
-                    if (ImGui::Button("get height data"))
+                    if (ImGui::Button("Get height data"))
                     {
                         if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE)) == 0)
                         {
@@ -385,7 +385,7 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
 
             ImGui::Separator();
 
-            ImGui::ColorEdit3("clear color", (float *)&clear_color);
+            ImGui::ColorEdit3("Background color", (float *)&clear_color);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
@@ -503,6 +503,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 ImGui::Unindent();
             }
 
+            ImGui::BeginDisabled(!m_useFileIO);
+            ImGui::Checkbox("Write checkpoint before restart", &m_checkpointBeforeRecomp);
+            ImGui::EndDisabled();
+
             if (ImGui::Button("Recompile"))
             {
                 xlpmg::Message recompileMsg;
@@ -563,6 +567,10 @@ int tsunami_lab::ui::GUI::launch(int i_PORT)
                 }
 
                 recompileMsg.args = compileArgs;
+
+                if(m_checkpointBeforeRecomp) {
+                    m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT_MESSAGE));
+                }
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
                 m_connected = false;
             }

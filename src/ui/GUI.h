@@ -53,6 +53,7 @@ private:
   bool m_useGui = true;
   const char *m_runnerOptions[3] = {"none", "bash", "sbatch"};
   int m_runner = 0;
+  bool m_checkpointBeforeRecomp = false;
   char m_sbJob[256] = "tsunami_lab_auto";
   char m_sbOut[256] = "output.txt";
   char m_sbErr[256] = "error.txt";
