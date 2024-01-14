@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Setups" href="setups.html" />
-    <link rel="prev" title="Main" href="main.html" /> 
+    <link rel="prev" title="I/O" href="io.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,10 +58,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Patches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">UI</a></li>
 </ul>
 </li>
 </ul>
@@ -279,7 +279,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCells</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">i_solver</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation1d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCells</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">i_solver</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 1d wave propagation solver.</p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
@@ -497,13 +497,13 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the left side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the right side </p>
 </dd></dl>
 
@@ -519,7 +519,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
-<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryT</span></span>, <a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryB</span></span><span class="sig-paren">)</span><br /></dt>
+<span class="sig-name descname"><span class="n"><span class="pre">WavePropagation2d</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsX</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_nCellsY</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryL</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryR</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryT</span></span>, <span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_boundaryB</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Constructs the 2d wave propagation solver.</p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
@@ -763,25 +763,25 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryL</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the left side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the right side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the top side </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp">
-<a class="reference internal" href="main.html#_CPPv48Boundary" title="Boundary"><span class="n"><span class="pre">Boundary</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
+<span class="n"><span class="pre">Boundary</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_boundaryB</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">OUTFLOW</span></span><br /></dt>
 <dd><p>boundary condition on the bottom side </p>
 </dd></dl>
 
@@ -794,7 +794,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="main.html" class="btn btn-neutral float-left" title="Main" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="io.html" class="btn btn-neutral float-left" title="I/O" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="setups.html" class="btn btn-neutral float-right" title="Setups" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

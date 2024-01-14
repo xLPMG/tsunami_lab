@@ -51,7 +51,9 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#running-the-code">Running the code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-with-gui">Running with GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-gui-usage">Basic GUI Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-without-gui">Running without GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#configuration-files">Configuration files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 </ul>
@@ -91,10 +93,38 @@
 <span id="id1"></span><h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
 <p>Navigate to the local git repository. If the name wasnt explicitly changed, this should be the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder.
 If you have yet to set up and build the git repository locally, check out the <a class="reference internal" href="setup.html#setup"><span class="std std-ref">Setup</span></a> page first.</p>
-<section id="running-the-code">
-<h2>Running the code<a class="headerlink" href="#running-the-code" title="Link to this heading"></a></h2>
+<section id="running-with-gui">
+<h2>Running with GUI<a class="headerlink" href="#running-with-gui" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, the compiled program includes a GUI. If you wish to turn this off, compile using the <code class="docutils literal notranslate"><span class="pre">gui=no</span></code> flag.</p>
+</div>
+<p>The program consists of two applications: the GUI (client) an the Simulator (Server). To start the GUI, run</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">gui</span>
+</pre></div>
+</div>
+<p>inside the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder. To start the server, run</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">tsunami_lab</span><span class="w"> </span><span class="o">&lt;</span><span class="n">PORT</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>also from inside the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder. The <code class="docutils literal notranslate"><span class="pre">&lt;PORT&gt;</span></code> parameter specifies which port will be used for the remote connection.</p>
+<p>The two applications may run on different machines, but you have to make sure that the server can be reached over TCP using
+the machines ip address and the specified port.</p>
+</section>
+<section id="basic-gui-usage">
+<h2>Basic GUI Usage<a class="headerlink" href="#basic-gui-usage" title="Link to this heading"></a></h2>
+<p>After starting a server, you can connect to it using the <code class="docutils literal notranslate"><span class="pre">Connectivity</span></code> tab of the main window:</p>
+<img alt="../../_images/gui_connect.png" src="../../_images/gui_connect.png" />
+<p>Simply enter the server data and click <code class="docutils literal notranslate"><span class="pre">Connect</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Since as of now the GUI is constantly being worked on, the usage guide will end here. We will complete it once the GUI has reached a stable phase.</p>
+</div>
+</section>
+<section id="running-without-gui">
+<h2>Running without GUI<a class="headerlink" href="#running-without-gui" title="Link to this heading"></a></h2>
 <p>Make sure you are inside the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> folder.
-To run the project, execute</p>
+To run the simulator, execute</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">tsunami_lab</span>
 </pre></div>
 </div>

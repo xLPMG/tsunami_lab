@@ -23,7 +23,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Main" href="main.html" />
+    <link rel="next" title="Patches" href="patches.html" />
     <link rel="prev" title="Calculations" href="calculations.html" /> 
 </head>
 
@@ -58,10 +58,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">UI</a></li>
 </ul>
 </li>
 </ul>
@@ -223,6 +223,64 @@
 </dd>
 </dl>
 </dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;Logger.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_line</span></span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logError</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_line</span></span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logWarning</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_line</span></span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clear</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getLog</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getLastLine</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_data</span></span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastLine</span></span></span><br /></dt>
+<dd></dd></dl>
 
 </div>
 </dd></dl>
@@ -395,8 +453,8 @@
 </dd>
 </dl>
 </p>
-<section id="classtsunami__lab_1_1io_1_1_net_cdf_1autotoc_md10">
-<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1io_1_1_net_cdf_1autotoc_md10" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1io_1_1_net_cdf_1autotoc_md11">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1io_1_1_net_cdf_1autotoc_md11" title="Link to this heading"></a></h2>
 <p>Interface for NetCdf</p>
 </section>
 <dl class="field-list simple">
@@ -688,8 +746,8 @@
 </dd>
 </dl>
 </p>
-<section id="classtsunami__lab_1_1io_1_1_station_1autotoc_md13">
-<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1io_1_1_station_1autotoc_md13" title="Link to this heading"></a></h2>
+<section id="classtsunami__lab_1_1io_1_1_station_1autotoc_md14">
+<h2>Description<a class="headerlink" href="#classtsunami__lab_1_1io_1_1_station_1autotoc_md14" title="Link to this heading"></a></h2>
 <p>A station which can capture data in a specified location on demand and also save it to a csv file </p>
 </section>
 <dl class="field-list simple">
@@ -793,7 +851,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="calculations.html" class="btn btn-neutral float-left" title="Calculations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="main.html" class="btn btn-neutral float-right" title="Main" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="patches.html" class="btn btn-neutral float-right" title="Patches" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
