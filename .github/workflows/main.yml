@@ -10,13 +10,11 @@ on:
     branches:    
       - 'develop'
       - 'main'
-      - 'gui_develop'
 
   pull_request:
     branches:    
       - 'develop'
       - 'main'
-      - 'gui_develop'
 
   schedule:
     - cron: 0 0 * * *
