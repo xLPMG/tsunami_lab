@@ -68,49 +68,68 @@ private:
   int m_ny = 1;
   float m_simulationSizeX = 0;
   float m_simulationSizeY = 0;
+  float m_offsetX = 0;
+  float m_offsetY = 0;
   int m_endTime = 1000;
   bool m_useFileIO = true;
+  const char *m_outputMethods[2] = {"netcdf", "csv"};
+  int m_outputMethod = 0;
   int m_writingFrequency = 100;
+  int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
 
   // outflow conditions
-  bool m_outflowL = false;
-  bool m_outflowR = false;
-  bool m_outflowT = false;
-  bool m_outflowB = false;
+  bool m_boundaryL = false;
+  bool m_boundaryR = false;
+  bool m_boundaryT = false;
+  bool m_boundaryB = false;
+
+  // stations
+  struct Station
+  {
+    std::string name;
+    float positionX = 0;
+    float positionY = 0;
+    bool isSelected = false;
+  };
+
+  std::vector<Station> m_stations;
+  float m_currStationX = 0;
+  float m_currStationY = 0;
+  char m_currStationName[256] = "";
 
   // client log
   bool m_clientLogAutoScroll = true;
 
   /**
-  * Executes a shell command.
-  * 
-  * @param i_cmd command
-  * @param i_outputFile file to pipe the shell output to
-  * @return exit code
-  */
+   * Executes a shell command.
+   *
+   * @param i_cmd command
+   * @param i_outputFile file to pipe the shell output to
+   * @return exit code
+   */
   int exec(std::string i_cmd, std::string i_outputFile);
 
   /**
-  * Creates a config json from local config parameters.
-  * 
-  * @return config as json object
-  */
+   * Creates a config json from local config parameters.
+   *
+   * @return config as json object
+   */
   json createConfigJson();
 
   /**
-  * Updates local config parameters with current server data.
-  * 
-  * TODO: implementation
-  */
+   * Updates local config parameters with current server data.
+   *
+   * TODO: implementation
+   */
   void updateData();
 
 public:
   /**
-  * Entry-point for the GUI.
-  * 
-  * @return exit code
-  */
+   * Entry-point for the GUI.
+   *
+   * @return exit code
+   */
   int launch();
 };
 

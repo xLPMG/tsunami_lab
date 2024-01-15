@@ -74,14 +74,16 @@ json tsunami_lab::ui::GUI::createConfigJson()
     json config = {{"solver", "fwave"},
                    {"nx", m_simulationSizeX},
                    {"ny", m_simulationSizeY},
+                   {"offsetX", m_offsetX},
+                   {"offsetY", m_offsetY},
                    {"endTime", m_endTime},
                    {"useFileIO", m_useFileIO},
                    {"writingFrequency", m_writingFrequency},
                    {"checkpointFrequency", m_checkpointFrequency},
-                   {"hasBoundaryL", m_outflowL},
-                   {"hasBoundaryR", m_outflowR},
-                   {"hasBoundaryT", m_outflowT},
-                   {"hasBoundaryB", m_outflowB}};
+                   {"hasBoundaryL", m_boundaryL},
+                   {"hasBoundaryR", m_boundaryR},
+                   {"hasBoundaryT", m_boundaryT},
+                   {"hasBoundaryB", m_boundaryB}};
 
     if (event_current == 1)
     {
@@ -92,6 +94,15 @@ json tsunami_lab::ui::GUI::createConfigJson()
     {
         config.push_back({"setup", "chile"});
         config.push_back({"outputFileName", "chile_solution"});
+    }
+
+    // stations
+    for(Station l_s : m_stations){
+        json l_stationData;
+        l_stationData["name"] = l_s.name;
+        l_stationData["locX"] = l_s.positionX;
+        l_stationData["locY"] = l_s.positionY;
+        config["stations"].push_back(l_stationData);
     }
 
     return config;
@@ -600,47 +611,72 @@ int tsunami_lab::ui::GUI::launch()
             m_simulationSizeY = abs(m_simulationSizeY);
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Offset X", &m_offsetX, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Offset Y", &m_offsetY, 0);
+            m_offsetX = abs(m_offsetX);
+            m_offsetY = abs(m_offsetY);
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);
             ImGui::SetItemTooltip("in simulated seconds");
             m_endTime = abs(m_endTime);
 
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::Checkbox("Use file I/O", &m_useFileIO);
-            ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
-
-            if (ImGui::Button("Enable file I/O"))
+            // FILE I/O
+            if (ImGui::TreeNode("File I/O"))
             {
-                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                toggleFileIOMsg.args = "true";
-                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                m_useFileIO = true;
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::Checkbox("Use file I/O", &m_useFileIO);
+                ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
+
+                if (ImGui::Button("Enable file I/O"))
+                {
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                    toggleFileIOMsg.args = "true";
+                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    m_useFileIO = true;
+                }
+                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+                ImGui::SameLine();
+                if (ImGui::Button("Disable file I/O"))
+                {
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                    toggleFileIOMsg.args = "false";
+                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    m_useFileIO = false;
+                }
+                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+
+                ImGui::BeginDisabled(!m_useFileIO);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::Combo("Output Method", &m_outputMethod, m_outputMethods, IM_ARRAYSIZE(m_outputMethods));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
+                ImGui::SetItemTooltip("in time steps");
+                ImGui::SameLine();
+                HelpMarker("Sets the frequency of writing into a solution file.");
+                m_writingFrequency = abs(m_writingFrequency);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Station capture frequency", &m_stationFrequency, 0);
+                ImGui::SetItemTooltip("in simulated seconds");
+                ImGui::SameLine();
+                HelpMarker("Sets the frequency with which stations capture data.");
+                m_writingFrequency = abs(m_writingFrequency);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
+                ImGui::SetItemTooltip("in real-time seconds");
+                ImGui::SameLine();
+                HelpMarker("A negative frequency will disable file output.");
+
+                ImGui::EndDisabled();
+
+                ImGui::TreePop();
             }
-            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-            ImGui::SameLine();
-            if (ImGui::Button("Disable file I/O"))
-            {
-                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                toggleFileIOMsg.args = "false";
-                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                m_useFileIO = false;
-            }
-            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-
-            ImGui::BeginDisabled(!m_useFileIO);
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
-            ImGui::SetItemTooltip("in time steps");
-            ImGui::SameLine();
-            HelpMarker("Sets the frequency of writing into a solution file.");
-            m_writingFrequency = abs(m_writingFrequency);
-            ImGui::EndDisabled();
-
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
-            ImGui::SetItemTooltip("in real-time seconds");
-            ImGui::SameLine();
-            HelpMarker("A negative frequency will disable file output.");
-
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             bool outFlowNode = ImGui::TreeNode("Boundary conditions");
             ImGui::SameLine();
@@ -648,10 +684,58 @@ int tsunami_lab::ui::GUI::launch()
             if (outFlowNode)
             {
                 ImGui::TextWrapped("Check if that side has a boundary, preventing the waves to leave the domain.");
-                ImGui::Checkbox("Left", &m_outflowL);
-                ImGui::Checkbox("Right", &m_outflowR);
-                ImGui::Checkbox("Top", &m_outflowT);
-                ImGui::Checkbox("Bottom", &m_outflowB);
+                ImGui::Checkbox("Left", &m_boundaryL);
+                ImGui::Checkbox("Right", &m_boundaryR);
+                ImGui::Checkbox("Top", &m_boundaryT);
+                ImGui::Checkbox("Bottom", &m_boundaryB);
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Stations"))
+            {
+                ImGui::InputText("Station name", m_currStationName, IM_ARRAYSIZE(m_currStationName));
+                ImGui::InputFloat("Location X", &m_currStationX, 0);
+                ImGui::InputFloat("Location Y", &m_currStationY, 0);
+
+                if (ImGui::Button("Add"))
+                {
+                    if (strlen(m_currStationName) > 0)
+                    {
+                        bool l_nameExists = false;
+                        for (Station l_s : m_stations)
+                        {
+                            if (l_s.name == m_currStationName)
+                            {
+                                l_nameExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!l_nameExists)
+                        {
+                            Station l_station = {m_currStationName, m_currStationX, m_currStationY};
+                            m_stations.push_back(l_station);
+                        }
+                    }
+                }
+
+                ImGui::BeginListBox("Stations");
+                auto it = m_stations.begin();
+                while (it != m_stations.end())
+                {
+                    std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
+                    if (ImGui::Selectable(name.c_str(), it->isSelected))
+                    {
+                        it = m_stations.erase(it);
+                    }
+                    else
+                    {
+                        it++;
+                    }
+                }
+                ImGui::EndListBox();
+                ImGui::SetItemTooltip("Click to remove");
+
                 ImGui::TreePop();
             }
 
@@ -709,6 +793,6 @@ int tsunami_lab::ui::GUI::launch()
 
     glfwDestroyWindow(window);
     glfwTerminate();
-
+    
     return 0;
 }
