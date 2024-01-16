@@ -65,7 +65,7 @@ vars.AddVariables(
                 'yes',
                 allowed_values=('yes', 'no')
               ),
-  EnumVariable( 'server-mode',
+  EnumVariable( 'servermode',
                 'starts the simulator in server mode',
                 'yes',
                 allowed_values=('yes', 'no')
@@ -242,7 +242,7 @@ if 'yes' in env['gui']:
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
 
-if 'no' in env['server-mode']:
+if 'no' in env['servermode']:
   env.Append( CXXFLAGS = [ '-DNOSERVER' ] )
 
 #####################
