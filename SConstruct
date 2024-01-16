@@ -245,7 +245,9 @@ if 'yes' in env['gui']:
 if 'no' in env['servermode']:
   env.Append( CXXFLAGS = [ '-DNOSERVER' ] )
 else:
-  env.Append( CXXFLAGS = [ '-pthread' ] )
+  env.Append( LINKFLAGS = [ '-lpthread' ] )
+  if OS != "Darwin": 
+    env.Append( CXXFLAGS = [ '-pthread' ] )
 
 #####################
 # GET SOURCE FILES  #
