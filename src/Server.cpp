@@ -44,7 +44,7 @@ int main(int i_argc, char *i_argv[])
     int exitCode = 0;
     simulator = new tsunami_lab::Simulator;
 
-#ifndef NOGUI
+#ifndef DNOSERVER
     if (i_argc > 2)
     {
         m_PORT = atoi(i_argv[1]);

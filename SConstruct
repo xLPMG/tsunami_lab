@@ -65,6 +65,11 @@ vars.AddVariables(
                 'yes',
                 allowed_values=('yes', 'no')
               ),
+  EnumVariable( 'server-mode',
+                'starts the simulator in server mode',
+                'yes',
+                allowed_values=('yes', 'no')
+              ),
   EnumVariable( 'use_filesystem',
                 'enables or disabled the filesystem usage',
                 'yes',
@@ -236,8 +241,10 @@ if 'yes' in env['gui']:
   # add other OS specific flags
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
-else:
-  env.Append( CXXFLAGS = [ '-DNOGUI' ] )
+
+if 'no' in env['server-mode']:
+  env.Append( CXXFLAGS = [ '-DNOSERVER' ] )
+
 #####################
 # GET SOURCE FILES  #
 #####################
