@@ -67,7 +67,7 @@ vars.AddVariables(
               ),
   EnumVariable( 'servermode',
                 'starts the simulator in server mode',
-                'yes',
+                'no',
                 allowed_values=('yes', 'no')
               ),
   EnumVariable( 'use_filesystem',
@@ -116,7 +116,7 @@ if not conf.CheckLibWithHeader('netcdf', 'netcdf.h','CXX'):
     exit(1)
 
 # GUI libraries
-if 'yes' in env['gui']:
+if 'no' in env['servermode'] and 'yes' in env['gui']:
   if OS == "Linux":
     if not conf.CheckLib('glfw'):
       print ('Did not find the glfw library!')
