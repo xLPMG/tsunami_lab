@@ -6,7 +6,8 @@
  * Entry point of the GUI.
  **/
 
-#include "imgui.h"
+#include <imgui.h>
+#include <imfilebrowser.h>
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
@@ -108,6 +109,8 @@ json tsunami_lab::ui::GUI::createConfigJson()
     return config;
 }
 
+
+
 // Main code
 int tsunami_lab::ui::GUI::launch()
 {
@@ -175,6 +178,15 @@ int tsunami_lab::ui::GUI::launch()
     bool showSimulationParameterWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
+    ImGui::FileBrowser fileDialog;
+    
+    // (optional) set browser properties
+    fileDialog.SetTitle("title");
+    fileDialog.SetTypeFilters({ ".h", ".cpp", ".nc" });
+    
+
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -380,6 +392,30 @@ int tsunami_lab::ui::GUI::launch()
                             xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
                             std::cout << responseMessage.args << std::endl;
                         }
+                    }
+
+                    if (ImGui::BeginPopupModal("Filesystem", NULL, ImGuiWindowFlags_AlwaysAutoResize)){
+                      if(ImGui::Begin("dummy window"))
+                        {
+                            // open file dialog when user clicks this button
+                            if(ImGui::Button("open file dialog"))
+                                fileDialog.Open();
+                        }
+                        ImGui::End();
+                        
+                        fileDialog.Display();
+                        
+                        if(fileDialog.HasSelected())
+                        {
+                            std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
+                            fileDialog.ClearSelected();
+                        }
+                                        
+                        if (ImGui::Button("Close"))
+                            ImGui::CloseCurrentPopup();
+
+
+                        ImGui::EndPopup();
                     }
 
                     ImGui::EndTabItem();
