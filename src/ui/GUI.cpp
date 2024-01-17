@@ -183,8 +183,8 @@ int tsunami_lab::ui::GUI::launch()
     ImGui::FileBrowser fileDialog;
     
     // (optional) set browser properties
-    fileDialog.SetTitle("title");
-    fileDialog.SetTypeFilters({ ".h", ".cpp", ".nc" });
+    fileDialog.SetTitle("Filesystem");
+    fileDialog.SetTypeFilters({ ".nc" });
     
 
 
@@ -394,29 +394,36 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
 
-                    if (ImGui::BeginPopupModal("Filesystem", NULL, ImGuiWindowFlags_AlwaysAutoResize)){
-                      if(ImGui::Begin("dummy window"))
-                        {
-                            // open file dialog when user clicks this button
-                            if(ImGui::Button("open file dialog"))
-                                fileDialog.Open();
-                        }
-                        ImGui::End();
-                        
-                        fileDialog.Display();
-                        
-                        if(fileDialog.HasSelected())
-                        {
-                            std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
-                            fileDialog.ClearSelected();
-                        }
-                                        
-                        if (ImGui::Button("Close"))
-                            ImGui::CloseCurrentPopup();
-
-
-                        ImGui::EndPopup();
+                    
+                      
+                        // open file dialog when user clicks this button
+                    if(ImGui::Button("Select Bathymetry data file"))
+                            fileDialog.Open();
+                    
+                    fileDialog.Display();
+                    
+                    if(fileDialog.HasSelected())
+                    {
+                        m_bathymetryFilePath = fileDialog.GetSelected().string();
+                        std::cout << "Selected filename" << m_bathymetryFilePath << std::endl;
+                        fileDialog.ClearSelected();
                     }
+
+                    if(ImGui::Button("Select Displacement data file"))
+                            fileDialog.Open();
+                    
+                    fileDialog.Display();
+                    
+                    if(fileDialog.HasSelected())
+                    {
+                        m_bathymetryFilePath = fileDialog.GetSelected().string();
+                        std::cout << "Selected filename" << m_displacementFilePath << std::endl;
+                        fileDialog.ClearSelected();
+                    }
+                        
+
+
+                
 
                     ImGui::EndTabItem();
                 }

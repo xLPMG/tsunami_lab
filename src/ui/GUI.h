@@ -78,6 +78,10 @@ private:
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
 
+  std::string m_bathymetryFilePath ="";
+  std::string m_displacementFilePath ="";
+
+
   // outflow conditions
   bool m_boundaryL = false;
   bool m_boundaryR = false;
