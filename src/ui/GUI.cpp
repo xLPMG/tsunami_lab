@@ -80,6 +80,7 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"endTime", m_endTime},
                    {"useFileIO", m_useFileIO},
                    {"writingFrequency", m_writingFrequency},
+                   {"outputFileName", m_outputFileName},
                    {"checkpointFrequency", m_checkpointFrequency},
                    {"hasBoundaryL", m_boundaryL},
                    {"hasBoundaryR", m_boundaryR},
@@ -98,7 +99,8 @@ json tsunami_lab::ui::GUI::createConfigJson()
     }
 
     // stations
-    for(Station l_s : m_stations){
+    for (Station l_s : m_stations)
+    {
         json l_stationData;
         l_stationData["name"] = l_s.name;
         l_stationData["locX"] = l_s.positionX;
@@ -108,8 +110,6 @@ json tsunami_lab::ui::GUI::createConfigJson()
 
     return config;
 }
-
-
 
 // Main code
 int tsunami_lab::ui::GUI::launch()
@@ -179,14 +179,11 @@ int tsunami_lab::ui::GUI::launch()
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-
     ImGui::FileBrowser fileDialog;
-    
+
     // (optional) set browser properties
     fileDialog.SetTitle("Filesystem");
-    fileDialog.SetTypeFilters({ ".nc" });
-    
-
+    fileDialog.SetTypeFilters({".nc"});
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -293,6 +290,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopStyleColor(3);
                     ImGui::EndDisabled();
 
+                    ImGui::PushID(301);
                     ImGui::InputInt("", &m_clientReadBufferSize, 0);
                     ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
                     ImGui::SameLine();
@@ -309,6 +307,28 @@ int tsunami_lab::ui::GUI::launch()
                     {
                         m_clientReadBufferSize = 256;
                     }
+                    ImGui::PopID();
+
+                    ImGui::PushID(302);
+                    ImGui::InputInt("", &m_serverReadBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        xlpmg::Message msg = xlpmg::SET_BUFFER_SIZE;
+                        msg.args = m_serverReadBufferSize;
+                        m_communicator.sendToServer(messageToJsonString(msg));
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size (server)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
+                    if (m_serverReadBufferSize < 256)
+                    {
+                        m_serverReadBufferSize = 256;
+                    }
+                    ImGui::PopID();
                     ImGui::EndTabItem();
                 }
 
@@ -394,36 +414,30 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
 
-                    
-                      
-                        // open file dialog when user clicks this button
-                    if(ImGui::Button("Select Bathymetry data file"))
-                            fileDialog.Open();
-                    
+                    // open file dialog when user clicks this button
+                    if (ImGui::Button("Select Bathymetry data file"))
+                        fileDialog.Open();
+
                     fileDialog.Display();
-                    
-                    if(fileDialog.HasSelected())
+
+                    if (fileDialog.HasSelected())
                     {
                         m_bathymetryFilePath = fileDialog.GetSelected().string();
                         std::cout << "Selected filename" << m_bathymetryFilePath << std::endl;
                         fileDialog.ClearSelected();
                     }
 
-                    if(ImGui::Button("Select Displacement data file"))
-                            fileDialog.Open();
-                    
+                    if (ImGui::Button("Select Displacement data file"))
+                        fileDialog.Open();
+
                     fileDialog.Display();
-                    
-                    if(fileDialog.HasSelected())
+
+                    if (fileDialog.HasSelected())
                     {
                         m_bathymetryFilePath = fileDialog.GetSelected().string();
                         std::cout << "Selected filename" << m_displacementFilePath << std::endl;
                         fileDialog.ClearSelected();
                     }
-                        
-
-
-                
 
                     ImGui::EndTabItem();
                 }
@@ -704,6 +718,9 @@ int tsunami_lab::ui::GUI::launch()
                 m_writingFrequency = abs(m_writingFrequency);
 
                 ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputText("Output file name", m_outputFileName, IM_ARRAYSIZE(m_outputFileName));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                 ImGui::InputInt("Station capture frequency", &m_stationFrequency, 0);
                 ImGui::SetItemTooltip("in simulated seconds");
                 ImGui::SameLine();
@@ -836,6 +853,6 @@ int tsunami_lab::ui::GUI::launch()
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    
+
     return 0;
 }

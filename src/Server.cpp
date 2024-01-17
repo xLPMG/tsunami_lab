@@ -47,9 +47,12 @@ int main(int i_argc, char *i_argv[])
     //------------------------------------------//
     //---------------SERVER MODE----------------//
     //------------------------------------------//
-    if (i_argc >= 3 && (strcmp(i_argv[1],"server")==0))
+    if (i_argc >= 2 && (strcmp(i_argv[1], "server") == 0))
     {
-        m_PORT = atoi(i_argv[2]);
+        if (i_argc >= 3)
+        {
+            m_PORT = atoi(i_argv[2]);
+        }
 
         xlpmg::Communicator l_communicator;
         l_communicator.startServer(m_PORT);
@@ -68,7 +71,7 @@ int main(int i_argc, char *i_argv[])
             std::string l_key = l_message.key;
             json l_args = l_message.args;
 
-            if (l_type == xlpmg::SERVER__CALL)
+            if (l_type == xlpmg::SERVER_CALL)
             {
                 if (l_key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
                 {
@@ -147,6 +150,10 @@ int main(int i_argc, char *i_argv[])
                     // run
                     exec("chmod +x run-sbatch.sh");
                     exec("sbatch run-sbatch.sh");
+                }
+                else if (l_key == xlpmg::SET_BUFFER_SIZE.key)
+                {
+                    l_communicator.setReadBufferSize(l_args);
                 }
             }
             else if (l_type == xlpmg::FUNCTION_CALL)

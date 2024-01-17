@@ -20,6 +20,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 
 namespace xlpmg
 {

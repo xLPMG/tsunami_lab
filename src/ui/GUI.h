@@ -38,6 +38,7 @@ private:
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
   float m_dataUpdateFrequency = 1;
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
+  int m_serverReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
 
   // compiler options
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};
@@ -75,12 +76,12 @@ private:
   const char *m_outputMethods[2] = {"netcdf", "csv"};
   int m_outputMethod = 0;
   int m_writingFrequency = 100;
+  char m_outputFileName[256] = "solution.nc";
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
 
-  std::string m_bathymetryFilePath ="";
-  std::string m_displacementFilePath ="";
-
+  std::string m_bathymetryFilePath = "";
+  std::string m_displacementFilePath = "";
 
   // outflow conditions
   bool m_boundaryL = false;

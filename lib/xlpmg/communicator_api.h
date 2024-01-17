@@ -2,7 +2,10 @@
  * @author Luca-Philipp Grumbach
  *
  * # Description
- * Communicator api.
+ * Communicator API.
+ * This file provides an interface with pre-defined
+ * messages to enable a correct transmission of
+ * information between client and server.
  **/
 #ifndef XLPMG_COMMUNICATOR_API_H
 #define XLPMG_COMMUNICATOR_API_H
@@ -23,13 +26,13 @@ namespace xlpmg
 
   enum MessageType
   {
-    SERVER__CALL,
+    SERVER_CALL,
     FUNCTION_CALL,
     OTHER,
     SERVER_RESPONSE
   };
 
-  NLOHMANN_JSON_SERIALIZE_ENUM(MessageType, {{SERVER__CALL, "server_call"},
+  NLOHMANN_JSON_SERIALIZE_ENUM(MessageType, {{SERVER_CALL, "server_call"},
                                              {FUNCTION_CALL, "function_call"},
                                              {OTHER, "other"},
                                              {SERVER_RESPONSE, "server_response"}});
@@ -83,25 +86,25 @@ namespace xlpmg
   }
 
   //! should not not induce any functionality and is only used to check if the other side responds
-  inline const Message CHECK_MESSAGE = {MessageType::SERVER__CALL, "XCHECKX"};
+  inline const Message CHECK_MESSAGE = {MessageType::SERVER_CALL, "XCHECKX"};
 
   //! Tells the server to shutdown.
-  inline const Message SHUTDOWN_SERVER_MESSAGE = {MessageType::SERVER__CALL, "shutdown_server"};
+  inline const Message SHUTDOWN_SERVER_MESSAGE = {MessageType::SERVER_CALL, "shutdown_server"};
 
   //! Tells the server to restart.
-  inline const Message START_SIMULATION_MESSAGE = {MessageType::SERVER__CALL, "start_simulation"};
+  inline const Message START_SIMULATION_MESSAGE = {MessageType::SERVER_CALL, "start_simulation"};
 
   //! Server will stop the running simulation.
-  inline const Message KILL_SIMULATION_MESSAGE = {MessageType::SERVER__CALL, "kill_simulation"};
+  inline const Message KILL_SIMULATION_MESSAGE = {MessageType::SERVER_CALL, "kill_simulation"};
 
-    //! Server will recompile with provided arguments.
-  inline const Message COMPILE_MESSAGE = {MessageType::SERVER__CALL, "compile", ""};
+  //! Server will recompile with provided arguments.
+  inline const Message COMPILE_MESSAGE = {MessageType::SERVER_CALL, "compile", ""};
 
   //! Server will recompile with provided arguments and run using a bash script.
-  inline const Message COMPILE_RUN_BASH_MESSAGE = {MessageType::SERVER__CALL, "compile_run_bash", ""};
+  inline const Message COMPILE_RUN_BASH_MESSAGE = {MessageType::SERVER_CALL, "compile_run_bash", ""};
 
   //! Server will recompile with provided arguments and run using an sbatch script.
-  inline const Message COMPILE_RUN_SBATCH_MESSAGE = {MessageType::SERVER__CALL, "compile_run_sbatch", ""};
+  inline const Message COMPILE_RUN_SBATCH_MESSAGE = {MessageType::SERVER_CALL, "compile_run_sbatch", ""};
 
   //! Simulator will write a checkpoint.
   inline const Message WRITE_CHECKPOINT_MESSAGE = {MessageType::FUNCTION_CALL, "write_checkpoint"};
@@ -126,6 +129,9 @@ namespace xlpmg
 
   //! Tells the client that a buffered sending operation has finished.
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
+
+  //! Tells the server to change the buffer size.
+  inline const Message SET_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_buffer_size"};
 }
 
 #endif
