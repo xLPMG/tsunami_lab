@@ -690,6 +690,7 @@ int tsunami_lab::Simulator::start(std::string i_config)
   {
     m_configFilePath = i_config;
     std::cout << "runtime configuration file: " << m_configFilePath << std::endl;
+    loadConfigDataFromFile(m_configFilePath);
   }
 
   // BREAKPOINT
@@ -712,7 +713,6 @@ int tsunami_lab::Simulator::start(std::string i_config)
     return 0;
   // END BREAKPOINT
 
-  loadConfigDataFromFile(m_configFilePath);
   if (m_useFileIO)
   {
     configureFiles();

@@ -65,11 +65,6 @@ vars.AddVariables(
                 'yes',
                 allowed_values=('yes', 'no')
               ),
-  EnumVariable( 'servermode',
-                'starts the simulator in server mode',
-                'no',
-                allowed_values=('yes', 'no')
-              ),
   EnumVariable( 'use_filesystem',
                 'enables or disabled the filesystem usage',
                 'yes',
@@ -148,6 +143,13 @@ env = conf.Finish()
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
+
+####################
+#  ENABLE THREADS  #
+####################
+env.Append( LINKFLAGS = [ '-lpthread' ] )
+if OS != "Darwin": 
+  env.Append( CXXFLAGS = [ '-pthread' ] )
 
 #####################
 #   DEFAULT FLAGS   #
@@ -241,13 +243,6 @@ if 'yes' in env['gui']:
   # add other OS specific flags
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
-
-if 'no' in env['servermode']:
-  env.Append( CXXFLAGS = [ '-DNOSERVER' ] )
-else:
-  env.Append( LINKFLAGS = [ '-lpthread' ] )
-  if OS != "Darwin": 
-    env.Append( CXXFLAGS = [ '-pthread' ] )
 
 #####################
 # GET SOURCE FILES  #

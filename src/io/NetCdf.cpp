@@ -12,7 +12,7 @@
 #include <filesystem>
 #endif
 
-void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
+void checkNcErr(tsunami_lab::t_idx i_err)
 {
     if (i_err)
     {

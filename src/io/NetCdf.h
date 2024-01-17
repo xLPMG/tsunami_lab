@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  *
  **/
 #ifndef TSUNAMI_LAB_IO_NETCDF
@@ -37,7 +37,7 @@ private:
     t_real m_offsetY = 0;
     // error
     int m_err = 0;
-    // amount of cells in x- and y-direction whose output will be grouped together 
+    // amount of cells in x- and y-direction whose output will be grouped together
     t_idx m_k = 0;
     // amount of output values in x-direction
     t_idx m_nkx = 0;
@@ -99,12 +99,6 @@ private:
     bool m_outputFileOpened = false;
 
     /**
-     * checks for error in Cdf file
-     * @param i_err error
-     */
-    void checkNcErr(t_idx i_err);
-
-    /**
      * Sets up a netcdf file for writing.
      *
      * @param i_file path of the netcdf output file
@@ -130,7 +124,7 @@ public:
      *
      * @param i_nx amount of cells in x-direction
      * @param i_ny amount of cells in y-direction
-     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together 
+     * @param i_nk amount of cells in x- and y-direction whose output will be grouped together
      * @param i_simulationSizeX simulation size in x-direction
      * @param i_simulationSizeY simulation size in y-direction
      * @param i_offsetX offset in x-direction
@@ -192,7 +186,7 @@ public:
                           t_idx &o_n);
 
     /**
-     * Reads from the cdf file
+     * Reads from the cdf file.
      *
      * @param i_file path of the file to read from
      * @param i_var variable to be read
@@ -200,21 +194,21 @@ public:
      * @param o_yData data of y dimension
      * @param o_data output data
      */
-    void read(const char *i_file,
-              const char *i_var,
-              t_real **o_xData,
-              t_real **o_yData,
-              t_real **o_data);
+    static void read(const char *i_file,
+                     const char *i_var,
+                     t_real **o_xData,
+                     t_real **o_yData,
+                     t_real **o_data);
 
-    /** Reads from the cdf file
+    /** Reads from the cdf file.
      *
      * @param i_file path of the file to read from
      * @param i_var variable to be read
      * @param o_data output data
      */
-    void read(const char *i_file,
-              const char *i_var,
-              t_real **o_data);
+    static void read(const char *i_file,
+                     const char *i_var,
+                     t_real **o_data);
 
     /** Writes checkpoint data to a file.
      *
@@ -241,7 +235,7 @@ public:
      * @param i_checkpointFile path of the checkpoint file
      * @param o_nx amount of cells in x-direction
      * @param o_ny amount of cells in y-direction
-     * @param o_nk amount of cells in x- and y-direction whose output will be grouped together 
+     * @param o_nk amount of cells in x- and y-direction whose output will be grouped together
      * @param o_simulationSizeX simulation size in x-direction
      * @param o_simulationSizeY simulation size in y-direction
      * @param o_offsetX offset in x-direction
