@@ -35,6 +35,7 @@ bool tsunami_lab::Simulator::endsWith(std::string const &i_str, std::string cons
 
 void tsunami_lab::Simulator::setupFolders()
 {
+  std::cout << ">> Setting up folders" << std::endl;
   // create solutions folder
   if (!std::filesystem::exists("solutions"))
     std::filesystem::create_directory("solutions");
@@ -88,6 +89,7 @@ void tsunami_lab::Simulator::configureFiles()
 
 void tsunami_lab::Simulator::loadConfiguration()
 {
+  std::cout << ">> Loading configuration from local json data" << std::endl;
   m_solver = m_configData.value("solver", "fwave");
   // read size config
   m_nx = m_configData.value("nx", 1);
@@ -152,6 +154,10 @@ void tsunami_lab::Simulator::loadConfiguration()
 
 void tsunami_lab::Simulator::constructSetup()
 {
+  if (m_setup != nullptr)
+    return;
+
+  std::cout << ">> Constructing setup" << std::endl;
   if (m_setupChoice == "GENERALDISCONTINUITY1D")
   {
     m_setup = new tsunami_lab::setups::GeneralDiscontinuity1d(10, 10, 10, -10, m_simulationSizeX / 2);
@@ -252,6 +258,10 @@ void tsunami_lab::Simulator::constructSetup()
                                                       l_netCdfTohoku,
                                                       m_nx);
   }
+  else if (m_setupChoice == "CUSTOM")
+  {
+    // DO NOTHING FOR NOW
+  }
   else
   {
     m_setup = nullptr;
@@ -260,6 +270,10 @@ void tsunami_lab::Simulator::constructSetup()
 
 void tsunami_lab::Simulator::setUpNetCdf()
 {
+  if (m_netCdf != nullptr)
+    return;
+
+  std::cout << ">> Setting up netcdf I/O" << std::endl;
   if (m_setupChoice == "CHECKPOINT")
   {
     m_netCdf = new tsunami_lab::io::NetCdf(m_netcdfOutputPath,
@@ -302,6 +316,7 @@ void tsunami_lab::Simulator::setUpNetCdf()
 
 void tsunami_lab::Simulator::createWaveProp()
 {
+  std::cout << ">> Creating WavePropagation patch" << std::endl;
   if (m_ny == 1)
   {
     m_waveProp = new tsunami_lab::patches::WavePropagation1d(m_nx,
@@ -324,11 +339,12 @@ void tsunami_lab::Simulator::constructSolver()
 {
   m_dx = m_simulationSizeX / m_nx;
   m_dy = m_simulationSizeY / m_ny;
-  createWaveProp();
-  std::cout << "Setting up solver..." << std::endl;
+  std::cout << ">> Setting up solver" << std::endl;
   // set up solver
   if (m_setupChoice == "CHECKPOINT" && m_useFileIO)
   {
+    if (m_netCdf == nullptr)
+      return;
     tsunami_lab::t_real *l_hCheck = new tsunami_lab::t_real[m_nx * m_ny];
     tsunami_lab::t_real *l_huCheck = new tsunami_lab::t_real[m_nx * m_ny];
     tsunami_lab::t_real *l_hvCheck = new tsunami_lab::t_real[m_nx * m_ny];
@@ -647,28 +663,120 @@ void tsunami_lab::Simulator::runCalculation()
   }
 }
 
-void tsunami_lab::Simulator::freeMemory()
+//-------------------------------------------//
+//-----------------DELETERS------------------//
+//-------------------------------------------//
+
+void tsunami_lab::Simulator::deleteSetup()
 {
   if (m_setup != nullptr)
   {
     delete m_setup;
   }
+}
+
+void tsunami_lab::Simulator::deleteWaveProp()
+{
   if (m_waveProp != nullptr)
   {
     delete m_waveProp;
   }
+}
+
+void tsunami_lab::Simulator::deleteCheckpoints()
+{
+  std::filesystem::remove(m_checkPointFilePathString);
+}
+
+void tsunami_lab::Simulator::deleteNetCdf()
+{
+  if (m_netCdf != nullptr)
+  {
+    delete m_netCdf;
+  }
+}
+
+void tsunami_lab::Simulator::deleteStations()
+{
+  for (tsunami_lab::io::Station *l_s : m_stations)
+  {
+    delete l_s;
+  }
+}
+
+void tsunami_lab::Simulator::freeMemory()
+{
+  deleteSetup();
+  deleteWaveProp();
   if (m_useFileIO)
   {
-    std::filesystem::remove(m_checkPointFilePathString);
-    if (m_netCdf != nullptr)
-    {
-      delete m_netCdf;
-    }
-    for (tsunami_lab::io::Station *l_s : m_stations)
-    {
-      delete l_s;
-    }
+    deleteCheckpoints();
   }
+  deleteNetCdf();
+  deleteStations();
+}
+
+void tsunami_lab::Simulator::prepareForCalculation()
+{
+  std::cout << "Preparing Tsunami Solver for calculation..." << std::endl;
+  //-------------------------------------------//
+  //--------------File I/O Config--------------//
+  //-------------------------------------------//
+
+  // set up folders
+  if (m_useFileIO)
+  {
+    setupFolders();
+  }
+
+  // BREAKPOINT
+  if (m_shouldExit)
+    return;
+  // END BREAKPOINT
+
+  if (m_useFileIO)
+  {
+    std::cout << ">> Configuring file data" << std::endl;
+    configureFiles();
+  }
+  else
+  {
+    m_setupChoice = m_configData.value("setup", "CIRCULARDAMBREAK2D");
+    if (m_setupChoice == "CHECKPOINT")
+      std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
+  }
+
+  loadConfiguration();
+
+  constructSetup();
+
+  // BREAKPOINT
+  if (m_shouldExit)
+    return;
+  // END BREAKPOINT
+
+  if (m_useFileIO)
+  {
+    setUpNetCdf();
+  }
+
+  createWaveProp();
+
+  constructSolver();
+
+  loadBathymetry(&m_bathymetryFilePath);
+
+  if (m_useFileIO)
+  {
+    loadStations();
+  }
+
+  deriveTimeStep();
+
+  // BREAKPOINT
+  if (m_shouldExit)
+    return;
+  // END BREAKPOINT
 }
 
 //-------------------------------------------//
@@ -693,66 +801,7 @@ int tsunami_lab::Simulator::start(std::string i_config)
     loadConfigDataFromFile(m_configFilePath);
   }
 
-  // BREAKPOINT
-  if (m_shouldExit)
-    return 0;
-  // END BREAKPOINT
-
-  //-------------------------------------------//
-  //--------------File I/O Config--------------//
-  //-------------------------------------------//
-
-  // set up folders
-  if (m_useFileIO)
-  {
-    setupFolders();
-  }
-
-  // BREAKPOINT
-  if (m_shouldExit)
-    return 0;
-  // END BREAKPOINT
-
-  if (m_useFileIO)
-  {
-    configureFiles();
-  }
-  else
-  {
-    m_setupChoice = m_configData.value("setup", "CIRCULARDAMBREAK2D");
-    if (m_setupChoice == "CHECKPOINT")
-      std::cerr << "Error: Cannot use checkpoints in benchmarking mode" << std::endl;
-  }
-
-  // BREAKPOINT
-  if (m_shouldExit)
-    return 0;
-  // END BREAKPOINT
-
-  loadConfiguration();
-
-  constructSetup();
-
-  // BREAKPOINT
-  if (m_shouldExit)
-    return 0;
-  // END BREAKPOINT
-
-  if (m_useFileIO)
-  {
-    setUpNetCdf();
-  }
-
-  constructSolver();
-
-  loadBathymetry(&m_bathymetryFilePath);
-
-  if (m_useFileIO)
-  {
-    loadStations();
-  }
-
-  deriveTimeStep();
+  prepareForCalculation();
 
   // BREAKPOINT
   if (m_shouldExit)

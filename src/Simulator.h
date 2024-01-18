@@ -78,7 +78,7 @@ private:
         CSV = 1
     };
     DataWriter m_dataWriter = NETCDF;
-    tsunami_lab::io::NetCdf *m_netCdf;
+    tsunami_lab::io::NetCdf *m_netCdf = nullptr;
 
     // checkpointing
     bool m_checkpointExists = false;
@@ -88,11 +88,11 @@ private:
 
     // setup parameters
     std::string m_setupChoice = "";
-    tsunami_lab::setups::Setup *m_setup;
+    tsunami_lab::setups::Setup *m_setup = nullptr;
 
     // simulation parameters
     std::string m_solver = "";
-    tsunami_lab::patches::WavePropagation *m_waveProp;
+    tsunami_lab::patches::WavePropagation *m_waveProp = nullptr;
     tsunami_lab::t_idx m_nx = 0;
     tsunami_lab::t_idx m_ny = 0;
     tsunami_lab::t_idx m_nk = 1;
@@ -252,14 +252,60 @@ public:
         m_setupChoice = i_setupChoice;
     }
 
-    //------------------------------------------//
-    //----------------FUNCTIONS-----------------//
-    //------------------------------------------//
+    void setCellAmount(tsunami_lab::t_idx &i_ncellsX,
+                       tsunami_lab::t_idx &i_ncellsY)
+    {
+        m_nx = i_ncellsX;
+        m_ny = i_ncellsY;
+    }
+
+    //-------------------------------------------//
+    //-----------------DELETERS------------------//
+    //-------------------------------------------//
 
     /**
      * Destructor which frees all allocated memory.
      **/
     ~Simulator();
+
+    /**
+     *  Deletes the setup.
+     *
+     *  @return void
+     */
+    void deleteSetup();
+
+    /**
+     *  Deletes the WavePropagation object.
+     *
+     *  @return void
+     */
+    void deleteWaveProp();
+
+    /**
+     *  Deletes the Checkpoint files.
+     *
+     *  @return void
+     */
+    void deleteCheckpoints();
+
+    /**
+     *  Deletes the NetCdf object.
+     *
+     *  @return void
+     */
+    void deleteNetCdf();
+
+    /**
+     *  Deletes all stations.
+     *
+     *  @return void
+     */
+    void deleteStations();
+
+    //------------------------------------------//
+    //----------------FUNCTIONS-----------------//
+    //------------------------------------------//
 
     /**
      *  Creates a WavePropagation object.
@@ -302,6 +348,13 @@ public:
     void addStation(tsunami_lab::t_real i_locationX,
                     tsunami_lab::t_real i_locationY,
                     std::string i_stationName);
+
+    /**
+     *  Prepares the solver for calculation.
+     *
+     *  @return void
+     */
+    void prepareForCalculation();
 
     /**
      *  Starts the calculation with the set parameters.

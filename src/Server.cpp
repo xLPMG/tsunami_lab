@@ -155,6 +155,43 @@ int main(int i_argc, char *i_argv[])
                 {
                     l_communicator.setReadBufferSize(l_args);
                 }
+                else if (l_key == xlpmg::PREPARE_BATHYMETRY_DATA.key)
+                {
+                    //prepare simulator
+                    tsunami_lab::t_idx l_nCellsX = l_args['CELLSX'];
+                    tsunami_lab::t_idx l_nCellsY = l_args['CELLSY'];
+                    simulator->setCellAmount(l_nCellsX, l_nCellsY);
+                    tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
+
+                    // receive data
+                    std::string data = "";
+                    bool l_finished = false;
+                    tsunami_lab::t_idx l_index = 0;
+                    while (!l_finished)
+                    {
+                        std::string l_response = l_communicator.receiveFromServer();
+                        if (json::accept(l_response) && xlpmg::jsonToMessage(json::parse(l_response)).key == xlpmg::BUFFERED_SEND_FINISHED.key)
+                        {
+                            l_finished = true;
+                        }
+                        else
+                        {
+                            data += l_response;
+                        }
+                    }
+                    if (json::accept(data))
+                    {
+                        xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
+
+                        std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                        std::string l_num;
+                        while (getline(l_stream, l_num, ','))
+                        {
+                            l_waveprop->setBathymetry(l_index % l_nCellsX, l_index / l_nCellsX, std::stof(l_num));
+                            l_index++;
+                        }
+                    }
+                }
             }
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
