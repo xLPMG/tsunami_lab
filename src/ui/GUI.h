@@ -40,8 +40,6 @@ private:
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
 
-  bool m_isSimulationRunning = false;
-
   // compiler options
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};
   int m_compileMode = 0;
