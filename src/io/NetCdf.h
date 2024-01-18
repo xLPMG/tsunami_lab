@@ -181,9 +181,9 @@ public:
      * @param i_dimName name of the dimension
      * @param o_n number of entries along that axis
      */
-    void getDimensionSize(const char *i_file,
-                          const char *i_dimName,
-                          t_idx &o_n);
+    static void getDimensionSize(const char *i_file,
+                                 const char *i_dimName,
+                                 t_idx &o_n);
 
     /**
      * Reads from the cdf file.

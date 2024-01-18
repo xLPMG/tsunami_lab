@@ -467,8 +467,7 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     t_real *l_data = new t_real[m_nkx * m_nky];
     int l_i = 0;
 
-    t_real l_averagingFactor = 1/ m_k * m_k;
-
+    t_real l_averagingFactor = 1 / m_k * m_k;
 
     // set up file and write bathymetry on first call
     if (!m_outputFileOpened)
