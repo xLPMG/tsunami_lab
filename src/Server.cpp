@@ -244,6 +244,7 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
                     simulator->loadConfigDataJson(l_args);
+                    simulator->resetSimulator();
                 }
                 else if (l_key == xlpmg::DELETE_CHECKPOINTS.key)
                 {

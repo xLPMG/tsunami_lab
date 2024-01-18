@@ -91,6 +91,8 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_nk = m_configData.value("nk", 1);
   m_simulationSizeX = m_configData.value("simulationSizeX", 10);
   m_simulationSizeY = m_configData.value("simulationSizeY", 1);
+  m_dx = m_simulationSizeX / m_nx;
+  m_dy = m_simulationSizeY / m_ny;
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
@@ -331,13 +333,7 @@ void tsunami_lab::Simulator::createWaveProp()
 
 void tsunami_lab::Simulator::constructSolver()
 {
-  m_dx = m_simulationSizeX / m_nx;
-  m_dy = m_simulationSizeY / m_ny;
   std::cout << ">> Setting up solver" << std::endl;
-  if (m_waveProp == nullptr)
-  {
-    std::cout << "test" << std::endl;
-  }
   // set up solver
   if (m_setupChoice == "CHECKPOINT" && m_useFileIO)
   {
@@ -392,7 +388,7 @@ void tsunami_lab::Simulator::constructSolver()
     delete[] l_hvCheck;
     delete[] l_bCheck;
   }
-  else
+  else if (m_setup != nullptr)
   {
 #ifdef USEOMP
 #pragma omp parallel for
@@ -419,6 +415,7 @@ void tsunami_lab::Simulator::constructSolver()
                                                          l_y);
         tsunami_lab::t_real l_b = m_setup->getBathymetry(l_x,
                                                          l_y);
+
         // set initial values in wave propagation solver
         m_waveProp->setHeight(l_cx,
                               l_cy,
@@ -644,13 +641,11 @@ void tsunami_lab::Simulator::loadConfigDataFromFile(std::string i_configFilePath
 {
   std::ifstream l_configFile(i_configFilePath);
   m_configData = json::parse(l_configFile);
-  loadConfiguration();
 }
 
 void tsunami_lab::Simulator::loadConfigDataJson(json i_config)
 {
   m_configData = i_config;
-  loadConfiguration();
 }
 
 void tsunami_lab::Simulator::addStation(tsunami_lab::t_real i_locationX,
