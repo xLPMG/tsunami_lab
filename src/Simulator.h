@@ -55,12 +55,16 @@ private:
     //------------------------------------------//
     //----------------VARIABLES-----------------//
     //------------------------------------------//
+
     // config parameters
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
+    std::atomic<bool> m_isPrepared = false;
     std::atomic<bool> m_useFileIO = true;
     std::atomic<bool> m_shouldExit = false;
+    std::atomic<bool> m_isPreparing = false;
+    std::atomic<bool> m_isCalculating = false;
 
     // input parameters
     std::string m_bathymetryFilePath = "";
@@ -130,12 +134,12 @@ private:
     //-------------END OF VARIABLES-------------//
     //------------------------------------------//
 
-    /**                                                           \
-     *  Determines if a string ends with another string.          \
-     *                                                            \
-     * @param i_str input string to check                         \
-     * @param i_suffix possible suffix of i_str                   \
-     * @return true if i_str ends with i_suffix, otherwise false. \
+    /**
+     *  Determines if a string ends with another string.
+     *
+     * @param i_str input string to check
+     * @param i_suffix possible suffix of i_str
+     * @return true if i_str ends with i_suffix, otherwise false.
      */
     bool endsWith(std::string const &i_str, std::string const &i_suffix);
 
@@ -174,6 +178,13 @@ private:
     void setUpNetCdf();
 
     /**
+     *  Creates a WavePropagation object.
+     *
+     *  @return void
+     */
+    void createWaveProp();
+
+    /**
      *  Helper method that constructs the solver.
      *
      *  @return void
@@ -209,6 +220,31 @@ private:
      */
     void deriveTimeStep();
 
+    //-------------------------------------------//
+    //-------------PRIVATE DELETERS--------------//
+    //-------------------------------------------//
+
+    /**
+     *  Deletes the setup.
+     *
+     *  @return void
+     */
+    void deleteSetup();
+
+    /**
+     *  Deletes the WavePropagation object.
+     *
+     *  @return void
+     */
+    void deleteWaveProp();
+
+    /**
+     *  Deletes the NetCdf object.
+     *
+     *  @return void
+     */
+    void deleteNetCdf();
+
     /**
      *  Helper method that frees the allocated memory.
      *
@@ -220,6 +256,16 @@ public:
     //------------------------------------------//
     //-----------------GETTERS------------------//
     //------------------------------------------//
+
+    bool isPreparing()
+    {
+        return m_isPreparing;
+    }
+
+    bool isCalculating()
+    {
+        return m_isCalculating;
+    }
 
     tsunami_lab::patches::WavePropagation *getWaveProp()
     {
@@ -243,6 +289,20 @@ public:
         o_ncellsY = m_ny;
     }
 
+    void getSimulationSize(tsunami_lab::t_real &o_sizeX,
+                           tsunami_lab::t_real &o_sizeY)
+    {
+        o_sizeX = m_simulationSizeX;
+        o_sizeY = m_simulationSizeY;
+    }
+
+    void getSimulationOffset(tsunami_lab::t_real &o_offsetX,
+                             tsunami_lab::t_real &o_offsetY)
+    {
+        o_offsetX = m_offsetX;
+        o_offsetY = m_offsetY;
+    }
+
     //------------------------------------------//
     //-----------------SETTERS------------------//
     //------------------------------------------//
@@ -259,28 +319,14 @@ public:
         m_ny = i_ncellsY;
     }
 
-    //-------------------------------------------//
-    //-----------------DELETERS------------------//
-    //-------------------------------------------//
+    //--------------------------------------------//
+    //--------------PUBLIC DELETERS---------------//
+    //--------------------------------------------//
 
     /**
      * Destructor which frees all allocated memory.
      **/
     ~Simulator();
-
-    /**
-     *  Deletes the setup.
-     *
-     *  @return void
-     */
-    void deleteSetup();
-
-    /**
-     *  Deletes the WavePropagation object.
-     *
-     *  @return void
-     */
-    void deleteWaveProp();
 
     /**
      *  Deletes the Checkpoint files.
@@ -290,29 +336,22 @@ public:
     void deleteCheckpoints();
 
     /**
-     *  Deletes the NetCdf object.
-     *
-     *  @return void
-     */
-    void deleteNetCdf();
-
-    /**
      *  Deletes all stations.
      *
      *  @return void
      */
     void deleteStations();
 
-    //------------------------------------------//
-    //----------------FUNCTIONS-----------------//
-    //------------------------------------------//
-
     /**
-     *  Creates a WavePropagation object.
+     *  Resets the simulator.
      *
      *  @return void
      */
-    void createWaveProp();
+    void resetSimulator();
+
+    //------------------------------------------//
+    //----------------FUNCTIONS-----------------//
+    //------------------------------------------//
 
     /**
      *  Calls the netcdf writeCheckpoint function with necessary parameters.

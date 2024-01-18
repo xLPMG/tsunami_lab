@@ -56,6 +56,7 @@ int main(int i_argc, char *i_argv[])
 
         xlpmg::Communicator l_communicator;
         l_communicator.startServer(m_PORT);
+        m_simulationThread = std::thread(&tsunami_lab::Simulator::prepareForCalculation, simulator);
         while (!m_EXIT)
         {
             std::string l_rawData = l_communicator.receiveFromClient();
@@ -73,26 +74,31 @@ int main(int i_argc, char *i_argv[])
 
             if (l_type == xlpmg::SERVER_CALL)
             {
-                if (l_key == xlpmg::SHUTDOWN_SERVER_MESSAGE.key)
+                if (l_key == xlpmg::SHUTDOWN_SERVER.key)
                 {
                     m_EXIT = true;
                     exitSimulationThread();
                     l_communicator.stopServer();
                 }
-                else if (l_key == xlpmg::START_SIMULATION_MESSAGE.key)
+                else if (l_key == xlpmg::START_SIMULATION.key)
                 {
                     std::string l_config = l_parsedData.at(xlpmg::ARGS);
-                    if (!m_isSimulationRunning)
+                    std::cout << m_simulationThread.joinable() << std::endl;
+                    if (!m_isSimulationRunning && !simulator->isPreparing())
                     {
+                        if (m_simulationThread.joinable())
+                        {
+                            m_simulationThread.join();
+                        }
                         m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
                         m_isSimulationRunning = true;
                     }
                 }
-                else if (l_key == xlpmg::KILL_SIMULATION_MESSAGE.key)
+                else if (l_key == xlpmg::KILL_SIMULATION.key)
                 {
                     exitSimulationThread();
                 }
-                else if (l_key == xlpmg::COMPILE_MESSAGE.key)
+                else if (l_key == xlpmg::COMPILE.key)
                 {
                     // Shutdown server
                     m_EXIT = true;
@@ -106,7 +112,7 @@ int main(int i_argc, char *i_argv[])
                     exec("chmod +x scripts/compile-bash.sh");
                     exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\" &");
                 }
-                else if (l_key == xlpmg::COMPILE_RUN_BASH_MESSAGE.key)
+                else if (l_key == xlpmg::COMPILE_RUN_BASH.key)
                 {
                     // Shutdown server
                     m_EXIT = true;
@@ -124,7 +130,7 @@ int main(int i_argc, char *i_argv[])
                     exec("chmod +x run-bash.sh");
                     exec("./run-bash.sh &");
                 }
-                else if (l_key == xlpmg::COMPILE_RUN_SBATCH_MESSAGE.key)
+                else if (l_key == xlpmg::COMPILE_RUN_SBATCH.key)
                 {
                     // Shutdown server
                     m_EXIT = true;
@@ -157,9 +163,9 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::PREPARE_BATHYMETRY_DATA.key)
                 {
-                    //prepare simulator
-                    tsunami_lab::t_idx l_nCellsX = l_args['CELLSX'];
-                    tsunami_lab::t_idx l_nCellsY = l_args['CELLSY'];
+                    // prepare simulator
+                    tsunami_lab::t_idx l_nCellsX = l_args["cellsX"];
+                    tsunami_lab::t_idx l_nCellsY = l_args["cellsY"];
                     simulator->setCellAmount(l_nCellsX, l_nCellsY);
                     tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
 
@@ -195,12 +201,16 @@ int main(int i_argc, char *i_argv[])
             }
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
-                if (l_key == xlpmg::GET_TIMESTEP_MESSAGE.key)
+                if (l_key == xlpmg::RESET_SIMULATOR.key && m_simulationThread.joinable())
+                {
+                    simulator->resetSimulator();
+                }
+                else if (l_key == xlpmg::GET_TIMESTEP.key)
                 {
                     xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
-                else if (l_key == xlpmg::TOGGLE_FILEIO_MESSAGE.key)
+                else if (l_key == xlpmg::TOGGLE_FILEIO.key)
                 {
                     if (l_args == "true")
                     {
@@ -211,29 +221,53 @@ int main(int i_argc, char *i_argv[])
                         simulator->toggleFileIO(false);
                     }
                 }
-                else if (l_key == xlpmg::GET_HEIGHT_DATA_MESSAGE.key)
+                else if (l_key == xlpmg::GET_HEIGHT_DATA.key)
                 {
-                    xlpmg::Message heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
+                    xlpmg::Message l_heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
                     // get data from simulation
                     if (simulator->getWaveProp() != nullptr)
                     {
-                        tsunami_lab::patches::WavePropagation *waveprop = simulator->getWaveProp();
-                        const tsunami_lab::t_real *heightData = waveprop->getHeight();
+                        tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
+                        const tsunami_lab::t_real *l_heightData = l_waveprop->getHeight();
                         // calculate array size
                         tsunami_lab::t_idx l_ncellsX, l_ncellsY;
                         simulator->getCellAmount(l_ncellsX, l_ncellsY);
                         unsigned long totalCells = l_ncellsX * l_ncellsY;
                         for (tsunami_lab::t_idx i = 0; i < totalCells; i++)
                         {
-                            heightDataMsg.args.push_back(heightData[i]);
+                            l_heightDataMsg.args.push_back(l_heightData[i]);
                         }
-                        l_communicator.sendToClient(xlpmg::messageToJsonString(heightDataMsg));
+                        l_communicator.sendToClient(xlpmg::messageToJsonString(l_heightDataMsg));
                         l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                     }
                 }
-                else if (l_key == xlpmg::LOAD_CONFIG_JSON_MESSAGE.key)
+                else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
                     simulator->loadConfigDataJson(l_args);
+                }
+                else if (l_key == xlpmg::DELETE_CHECKPOINTS.key)
+                {
+                    simulator->deleteCheckpoints();
+                }
+                else if (l_key == xlpmg::DELETE_STATIONS.key)
+                {
+                    simulator->deleteStations();
+                }
+                else if (l_key == xlpmg::GET_SIMULATION_SIZES.key)
+                {
+                    xlpmg::Message l_msg = {xlpmg::SERVER_RESPONSE, "simulation_sizes", nullptr};
+                    tsunami_lab::t_idx l_ncellsX, l_ncellsY;
+                    tsunami_lab::t_real l_simulationSizeX, l_simulationSizeY, l_offsetX, l_offsetY;
+                    simulator->getCellAmount(l_ncellsX, l_ncellsY);
+                    simulator->getSimulationSize(l_simulationSizeX, l_simulationSizeY);
+                    simulator->getSimulationOffset(l_offsetX, l_offsetY);
+                    l_msg.args["cellsX"] = l_ncellsX;
+                    l_msg.args["cellsY"] = l_ncellsY;
+                    l_msg.args["sizeX"] = l_simulationSizeX;
+                    l_msg.args["sizeY"] = l_simulationSizeY;
+                    l_msg.args["offsetX"] = l_offsetX;
+                    l_msg.args["offsetY"] = l_offsetY;
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_msg));
                 }
             }
         }

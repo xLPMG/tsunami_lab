@@ -40,6 +40,8 @@ private:
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
 
+  bool m_isSimulationRunning = false;
+
   // compiler options
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};
   int m_compileMode = 0;
@@ -63,12 +65,12 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
-  const char *m_events[3] = {"Tohoku", "Chile", "Custom"};
-  int event_current = 0;
+  const char *m_tsunamiEvents[3] = {"Custom", "Tohoku", "Chile"};
+  int m_tsunamiEvent = 0;
   int m_nx = 1;
   int m_ny = 1;
-  float m_simulationSizeX = 0;
-  float m_simulationSizeY = 0;
+  float m_simulationSizeX = 10;
+  float m_simulationSizeY = 1;
   float m_offsetX = 0;
   float m_offsetY = 0;
   int m_endTime = 1000;

@@ -85,18 +85,8 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"hasBoundaryL", m_boundaryL},
                    {"hasBoundaryR", m_boundaryR},
                    {"hasBoundaryT", m_boundaryT},
-                   {"hasBoundaryB", m_boundaryB}};
-
-    if (event_current == 1)
-    {
-        config.push_back({"setup", "tohoku"});
-        config.push_back({"outputFileName", "tohoku_solution"});
-    }
-    else
-    {
-        config.push_back({"setup", "chile"});
-        config.push_back({"outputFileName", "chile_solution"});
-    }
+                   {"hasBoundaryB", m_boundaryB},
+                   {"setup", m_tsunamiEvents[m_tsunamiEvent]}};
 
     // stations
     for (Station l_s : m_stations)
@@ -267,7 +257,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) == 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK)) == 0)
                         {
                             m_connected = true;
                         }
@@ -282,7 +272,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 1.0f, 1.0f));
                     if (ImGui::Button("Shutdown server"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE)) == 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER)) == 0)
                         {
                             m_connected = false;
                         }
@@ -350,18 +340,29 @@ int tsunami_lab::ui::GUI::launch()
                 {
                     if (ImGui::Button("Run simulation"))
                     {
-                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
+                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
                         m_communicator.sendToServer(messageToJsonString(startSimMsg));
                     }
                     ImGui::SameLine();
+                    HelpMarker("Will start the computational loop. If you have already run a simulation, make sure to reset it first to clear the old data.");
+
+                    if (ImGui::Button("Reset simulation"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::RESET_SIMULATOR;
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
+                    }
+                    ImGui::SameLine();
+                    HelpMarker("Deletes previous cached computated data but keeps the loaded config, stations and checkpoint files.");
+
+                    ImGui::SameLine();
                     if (ImGui::Button("Kill simulation"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
                     }
 
                     if (ImGui::Button("Get height data"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE)) == 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
                         {
                             unsigned long l_index = 0;
                             bool l_finished = false;
@@ -405,7 +406,7 @@ int tsunami_lab::ui::GUI::launch()
                     }
                     if (ImGui::Button("Get time step"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP));
                         std::string response = m_communicator.receiveFromServer();
                         if (json::accept(response))
                         {
@@ -574,13 +575,13 @@ int tsunami_lab::ui::GUI::launch()
                 switch (m_runner)
                 {
                 case 0:
-                    recompileMsg = xlpmg::COMPILE_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE;
                     break;
                 case 1:
-                    recompileMsg = xlpmg::COMPILE_RUN_BASH_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE_RUN_BASH;
                     break;
                 case 2:
-                    recompileMsg = xlpmg::COMPILE_RUN_SBATCH_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE_RUN_SBATCH;
                     break;
                 }
 
@@ -632,7 +633,7 @@ int tsunami_lab::ui::GUI::launch()
 
                 if (m_checkpointBeforeRecomp)
                 {
-                    m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT_MESSAGE));
+                    m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT));
                 }
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
                 m_connected = false;
@@ -650,15 +651,18 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::Begin("Simulation parameters", &showSimulationParameterWindow);
 
             short width = 24;
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
+
+            ImGui::BeginDisabled(m_tsunamiEvent == 1 || m_tsunamiEvent == 2);
+
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells X", &m_nx, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells Y", &m_ny, 0);
             m_nx = abs(m_nx);
             m_ny = abs(m_ny);
-
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::Combo("Tsunami Event", &event_current, m_events, IM_ARRAYSIZE(m_events));
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
@@ -673,6 +677,8 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
             m_offsetX = abs(m_offsetX);
             m_offsetY = abs(m_offsetY);
+
+            ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);
@@ -689,7 +695,7 @@ int tsunami_lab::ui::GUI::launch()
 
                 if (ImGui::Button("Enable file I/O"))
                 {
-                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO;
                     toggleFileIOMsg.args = "true";
                     m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
                     m_useFileIO = true;
@@ -698,7 +704,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::SameLine();
                 if (ImGui::Button("Disable file I/O"))
                 {
-                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO;
                     toggleFileIOMsg.args = "false";
                     m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
                     m_useFileIO = false;
@@ -801,7 +807,7 @@ int tsunami_lab::ui::GUI::launch()
 
             if (ImGui::Button("Send config to server"))
             {
-                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON;
                 saveConfigMsg.args = createConfigJson();
                 m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
             }

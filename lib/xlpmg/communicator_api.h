@@ -86,49 +86,25 @@ namespace xlpmg
   }
 
   //! should not not induce any functionality and is only used to check if the other side responds
-  inline const Message CHECK_MESSAGE = {MessageType::SERVER_CALL, "XCHECKX"};
+  inline const Message CHECK = {MessageType::SERVER_CALL, "XCHECKX"};
 
   //! Tells the server to shutdown.
-  inline const Message SHUTDOWN_SERVER_MESSAGE = {MessageType::SERVER_CALL, "shutdown_server"};
+  inline const Message SHUTDOWN_SERVER = {MessageType::SERVER_CALL, "shutdown_server"};
 
   //! Tells the server to restart.
-  inline const Message START_SIMULATION_MESSAGE = {MessageType::SERVER_CALL, "start_simulation"};
+  inline const Message START_SIMULATION = {MessageType::SERVER_CALL, "start_simulation"};
 
   //! Server will stop the running simulation.
-  inline const Message KILL_SIMULATION_MESSAGE = {MessageType::SERVER_CALL, "kill_simulation"};
+  inline const Message KILL_SIMULATION = {MessageType::SERVER_CALL, "kill_simulation"};
 
   //! Server will recompile with provided arguments.
-  inline const Message COMPILE_MESSAGE = {MessageType::SERVER_CALL, "compile", ""};
+  inline const Message COMPILE = {MessageType::SERVER_CALL, "compile", ""};
 
   //! Server will recompile with provided arguments and run using a bash script.
-  inline const Message COMPILE_RUN_BASH_MESSAGE = {MessageType::SERVER_CALL, "compile_run_bash", ""};
+  inline const Message COMPILE_RUN_BASH = {MessageType::SERVER_CALL, "compile_run_bash", ""};
 
   //! Server will recompile with provided arguments and run using an sbatch script.
-  inline const Message COMPILE_RUN_SBATCH_MESSAGE = {MessageType::SERVER_CALL, "compile_run_sbatch", ""};
-
-  //! Simulator will write a checkpoint.
-  inline const Message WRITE_CHECKPOINT_MESSAGE = {MessageType::FUNCTION_CALL, "write_checkpoint"};
-
-  //! Simulator will load config from json data.
-  inline const Message LOAD_CONFIG_JSON_MESSAGE = {MessageType::FUNCTION_CALL, "load_config_json"};
-
-  //! Simulator will load config from .json config file.
-  inline const Message LOAD_CONFIG_FILE_MESSAGE = {MessageType::FUNCTION_CALL, "load_config_file"};
-
-  //! Simulator will toggle file i/o usage to given arg.
-  inline const Message TOGGLE_FILEIO_MESSAGE = {MessageType::FUNCTION_CALL, "toggle_fileio"};
-
-  //! Returns the current timestep from the simulator.
-  inline const Message GET_TIMESTEP_MESSAGE = {MessageType::FUNCTION_CALL, "get_current_timestep"};
-
-  //! Returns the max timesteps from the simulator.
-  inline const Message GET_MAX_TIMESTEPS_MESSAGE = {MessageType::FUNCTION_CALL, "get_max_timesteps"};
-
-  //! Tells the server to start sending height data. (buffered)
-  inline const Message GET_HEIGHT_DATA_MESSAGE = {MessageType::FUNCTION_CALL, "get_height_data"};
-
-  //! Tells the client that a buffered sending operation has finished.
-  inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
+  inline const Message COMPILE_RUN_SBATCH = {MessageType::SERVER_CALL, "compile_run_sbatch", ""};
 
   //! Tells the server to change the buffer size.
   inline const Message SET_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_buffer_size"};
@@ -144,6 +120,42 @@ namespace xlpmg
 
   //! Sends displacement data to the server.
   inline const Message SET_DISPLACEMENT_DATA = {MessageType::SERVER_CALL, "set_displacement_data"};
+
+  //! Simulator will reset.
+  inline const Message RESET_SIMULATOR = {MessageType::FUNCTION_CALL, "reset_simulator"};
+
+  //! Simulator will write a checkpoint.
+  inline const Message WRITE_CHECKPOINT = {MessageType::FUNCTION_CALL, "write_checkpoint"};
+
+  //! Simulator will load config from json data.
+  inline const Message LOAD_CONFIG_JSON = {MessageType::FUNCTION_CALL, "load_config_json"};
+
+  //! Simulator will load config from .json config file.
+  inline const Message LOAD_CONFIG_FILE = {MessageType::FUNCTION_CALL, "load_config_file"};
+
+  //! Simulator will toggle file i/o usage to given arg.
+  inline const Message TOGGLE_FILEIO = {MessageType::FUNCTION_CALL, "toggle_fileio"};
+
+  //! Returns the current timestep from the simulator.
+  inline const Message GET_TIMESTEP = {MessageType::FUNCTION_CALL, "get_current_timestep"};
+
+  //! Returns the current simulation sizes from the simulator.
+  inline const Message GET_SIMULATION_SIZES = {MessageType::FUNCTION_CALL, "get_simulation_sizes"};
+
+  //! Returns the max timesteps from the simulator.
+  inline const Message GET_MAX_TIMESTEPS = {MessageType::FUNCTION_CALL, "get_max_timesteps"};
+
+  //! Tells the server to start sending height data. (buffered)
+  inline const Message GET_HEIGHT_DATA = {MessageType::FUNCTION_CALL, "get_height_data"};
+
+  //! Tells the client that a buffered sending operation has finished.
+  inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
+
+  //! Deletes checkpoints.
+  inline const Message DELETE_CHECKPOINTS = {MessageType::SERVER_RESPONSE, "delete_checkpoints"};
+
+  //! Deletes stations.
+  inline const Message DELETE_STATIONS = {MessageType::SERVER_RESPONSE, "delete_stations"};
 }
 
 #endif
