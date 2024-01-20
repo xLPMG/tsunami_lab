@@ -250,6 +250,7 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::SameLine();
 
+
                     ImGui::BeginDisabled(!m_connected);
                     if (ImGui::Button("Disconnect"))
                     {
@@ -257,7 +258,6 @@ int tsunami_lab::ui::GUI::launch()
                         m_connected = false;
                     }
                     ImGui::EndDisabled();
-
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
@@ -286,12 +286,13 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::PushID(301);
                     ImGui::InputInt("", &m_clientReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
                         m_communicator.setReadBufferSize(m_clientReadBufferSize);
                     }
+
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
                     ImGui::Text("Buffer size for receiving (client)");
@@ -305,7 +306,7 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::PushID(302);
                     ImGui::InputInt("", &m_clientSendBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
@@ -324,11 +325,11 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::PushID(303);
                     ImGui::InputInt("", &m_serverReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
-                        
+
                         xlpmg::Message msg = xlpmg::SET_READ_BUFFER_SIZE;
                         msg.args = m_serverReadBufferSize;
                         m_communicator.sendToServer(messageToJsonString(msg));
@@ -346,7 +347,7 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::PushID(304);
                     ImGui::InputInt("", &m_serverSendBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
@@ -486,7 +487,6 @@ int tsunami_lab::ui::GUI::launch()
                     if (fileDialogBath.HasSelected())
                     {
                         m_bathymetryFilePath = fileDialogBath.GetSelected().string();
-                        std::cout << "Selected filename" << m_bathymetryFilePath << std::endl;
                         fileDialogBath.ClearSelected();
                     }
 
@@ -495,35 +495,23 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Send to server"))
                     {
-                        tsunami_lab::t_idx l_cellsX = 0, l_cellsY = 0;
-                        tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "x", l_cellsX);
-                        tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "y", l_cellsY);
-
-                        tsunami_lab::t_real *l_dataX = new tsunami_lab::t_real[l_cellsX];
-                        tsunami_lab::t_real *l_dataY = new tsunami_lab::t_real[l_cellsY];
-                        tsunami_lab::t_real *l_data = new tsunami_lab::t_real[l_cellsX * l_cellsY];
-                        tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(), "z", &l_dataX, &l_dataY, &l_data);
-
-                        xlpmg::Message l_prepareMsg = xlpmg::PREPARE_BATHYMETRY_DATA;
-                        json l_prepareMsgArgs;
-                        l_prepareMsgArgs["cellsX"] = l_cellsX;
-                        l_prepareMsgArgs["cellsY"] = l_cellsY;
-                        l_prepareMsgArgs["offsetX"] = l_dataX[0];
-                        l_prepareMsgArgs["offsetY"] = l_dataY[0];
-                        l_prepareMsg.args = l_prepareMsgArgs;
-
-                        xlpmg::Message l_bathymetryDataMsg = {xlpmg::OTHER, "bath_data", nullptr};
-                        if (m_communicator.sendToServer(xlpmg::messageToJsonString(l_prepareMsg)) == 0)
-                        {
-                            for (tsunami_lab::t_idx i = 0; i < l_cellsX * l_cellsY; i++)
-                            {
-                                l_bathymetryDataMsg.args.push_back(l_data[i]);
-                            }
-                            m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
-                            m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
-                        }
+                        xlpmg::Message l_bathymetryDataMsg = xlpmg::SET_BATHYMETRY_DATA;
+                        std::ifstream l_bathFile(m_bathymetryFilePath, std::ios::binary);
+                        l_bathFile.unsetf(std::ios::skipws);
+                        std::streampos l_fileSize;
+                        l_bathFile.seekg(0, std::ios::end);
+                        l_fileSize = l_bathFile.tellg();
+                        l_bathFile.seekg(0, std::ios::beg);
+                        std::vector<std::uint8_t> vec;
+                        vec.reserve(l_fileSize);
+                        vec.insert(vec.begin(),
+                                   std::istream_iterator<std::uint8_t>(l_bathFile),
+                                   std::istream_iterator<std::uint8_t>());
+                        l_bathymetryDataMsg.args = json::binary(vec);
+                        m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
                     }
                     ImGui::PopID();
+
 
                     if (ImGui::Button("Select Displacement data file"))
                         fileDialogDis.Open();
@@ -533,9 +521,30 @@ int tsunami_lab::ui::GUI::launch()
                     if (fileDialogDis.HasSelected())
                     {
                         m_displacementFilePath = fileDialogDis.GetSelected().string();
-                        std::cout << "Selected filename" << m_displacementFilePath << std::endl;
                         fileDialogDis.ClearSelected();
                     }
+
+                    // send displacement
+                    ImGui::PushID(439);
+                    ImGui::SameLine();
+                    if (ImGui::Button("Send to server"))
+                    {
+                        xlpmg::Message l_displacementMsg = xlpmg::SET_DISPLACEMENT_DATA;
+                        std::ifstream l_displFile(m_displacementFilePath, std::ios::binary);
+                        l_displFile.unsetf(std::ios::skipws);
+                        std::streampos l_fileSize;
+                        l_displFile.seekg(0, std::ios::end);
+                        l_fileSize = l_displFile.tellg();
+                        l_displFile.seekg(0, std::ios::beg);
+                        std::vector<std::uint8_t> vec;
+                        vec.reserve(l_fileSize);
+                        vec.insert(vec.begin(),
+                                   std::istream_iterator<std::uint8_t>(l_displFile),
+                                   std::istream_iterator<std::uint8_t>());
+                        l_displacementMsg.args = json::binary(vec);
+                        m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
+                    }
+                    ImGui::PopID();
 
                     ImGui::EndTabItem();
                 }
