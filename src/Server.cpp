@@ -195,8 +195,9 @@ int main(int i_argc, char *i_argv[])
             }
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
-                if (l_key == xlpmg::RESET_SIMULATOR.key && m_simulationThread.joinable())
+                if (l_key == xlpmg::RESET_SIMULATOR.key)
                 {
+                    exitSimulationThread();
                     simulator->resetSimulator();
                 }
                 else if (l_key == xlpmg::GET_TIMESTEP.key)
