@@ -86,8 +86,9 @@ namespace xlpmg
                 std::cout << line << "\t\r" << std::flush;
 
                 size_t position = logData.length() - 2;
-                while ((logData[position] != '\n') and position > 0)
+                while ((logData[position] != '\n') && position > 0){
                     position--;
+                }
                 logData = logData.substr(0, position);
 
                 logData.append(line);
@@ -238,7 +239,7 @@ namespace xlpmg
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string(strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)", INFO);
                 logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))
@@ -391,7 +392,7 @@ namespace xlpmg
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string(strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)", INFO);
                 logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))

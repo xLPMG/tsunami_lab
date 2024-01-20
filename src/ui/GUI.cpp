@@ -499,6 +499,7 @@ int tsunami_lab::ui::GUI::launch()
                     }
                     ImGui::PopID();
 
+
                     if (ImGui::Button("Select Displacement data file"))
                         fileDialogDis.Open();
 

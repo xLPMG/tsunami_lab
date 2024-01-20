@@ -170,19 +170,18 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::SET_BATHYMETRY_DATA.key)
                 {
-                    json l_binaryData = json::binary(l_args);
-                    std::vector<std::uint8_t> l_byteVector = l_binaryData.get_binary();
+                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
                     auto l_writeFile = std::fstream(m_bathTempFile, std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
                 }else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
                 {
-                    json l_binaryData = json::binary(l_args);
-                    std::vector<std::uint8_t> l_byteVector = l_binaryData.get_binary();
+                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
                     auto l_writeFile = std::fstream(m_displTempFile, std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
                 }
+                
             }
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
