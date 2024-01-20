@@ -163,7 +163,7 @@ namespace xlpmg
   //! pause simulation
   inline const Message PAUSE_SIMULATION = {MessageType::SERVER_CALL, "pause_simulation"};
 
-  //!continue simulation
+  //! continue simulation
   inline const Message CONTINUE_SIMULATION = {MessageType::SERVER_CALL, "continue_simulation"};
 
 }

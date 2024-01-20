@@ -815,7 +815,7 @@ void tsunami_lab::Simulator::runCalculation()
     }
 
     //pausing the simulation 
-    // while(m_pausStatus){
+    // while(m_pauseStatus){
     //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     // }
 

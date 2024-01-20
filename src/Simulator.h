@@ -65,7 +65,7 @@ private:
     std::atomic<bool> m_shouldExit = false;
     std::atomic<bool> m_isPreparing = false;
     std::atomic<bool> m_isCalculating = false;
-    std::atomic<bool> m_pausStatus = false;
+    std::atomic<bool> m_pauseStatus = false;
 
 
     // input parameters
@@ -441,7 +441,7 @@ public:
     int start(std::string i_config);
 
     /**
-     *  Sets the exit flag to provided a safe-exit mechanism.
+     *  Sets the exit flag to provide a safe-exit mechanism.
      *
      *  @param i_shouldExit whether to exit or not.
      *  @return void
@@ -452,14 +452,14 @@ public:
     };
 
     /**
-     *  Sets the exit flag to provided a safe-exit mechanism.
+     *  Sets the pause flag.
      *
-     *  @param i_shouldExit whether to exit or not.
+     *  @param i_pauseStatus whether to pause or not.
      *  @return void
      */
-    void setPausingStatus(bool i_PausStatus)
+    void setPausingStatus(bool i_pauseStatus)
     {
-        m_pausStatus = i_PausStatus;
+        m_pauseStatus = i_pauseStatus;
     };
 };
 
