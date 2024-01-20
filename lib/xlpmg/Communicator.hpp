@@ -84,13 +84,12 @@ namespace xlpmg
             else
             {
                 std::cout << line << "\t\r" << std::flush;
-
                 size_t position = logData.length() - 2;
-                while ((logData[position] != '\n') && position > 0){
+                while (position > 0 && (logData[position] != '\n'))
+                {
                     position--;
                 }
-                logData = logData.substr(0, position);
-
+                logData = logData.substr(0, position+1);
                 logData.append(line);
                 logData.append("\n");
             }
@@ -226,7 +225,7 @@ namespace xlpmg
         {
             if (sockClient_fd < 0)
             {
-                logData.append("Error   : Sending failed: Socket not initialized \n");
+                logEvent("Sending failed: Socket not initialized.", ERROR);
                 return 1;
             }
 
@@ -246,7 +245,7 @@ namespace xlpmg
                 {
                     unsigned long bytes_sent = send(sockClient_fd, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
                     bytes_total += bytes_sent;
-                    int percentage = std::max((double) 0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double) 100));
+                    int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
                     std::string bytesSentStr = std::to_string(percentage) + "%";
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
@@ -399,7 +398,7 @@ namespace xlpmg
                 {
                     unsigned long bytes_sent = send(new_socket, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
                     bytes_total += bytes_sent;
-                    int percentage = std::max((double) 0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double) 100));
+                    int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
                     std::string bytesSentStr = std::to_string(percentage) + "%";
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }

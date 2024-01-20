@@ -35,6 +35,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <algorithm>
 
 // ui components
 
@@ -233,7 +234,10 @@ int tsunami_lab::ui::GUI::launch()
                 //--------------------------------------------//
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
+                    int width = 32;
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("Port", &PORT, 0);
                     PORT = abs(PORT);
 
@@ -249,7 +253,6 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::EndDisabled();
 
                     ImGui::SameLine();
-
 
                     ImGui::BeginDisabled(!m_connected);
                     if (ImGui::Button("Disconnect"))
@@ -285,6 +288,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::EndDisabled();
 
                     ImGui::PushID(301);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("", &m_clientReadBufferSize, 0);
                     ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
@@ -305,6 +309,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopID();
 
                     ImGui::PushID(302);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("", &m_clientSendBufferSize, 0);
                     ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
@@ -324,6 +329,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopID();
 
                     ImGui::PushID(303);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("", &m_serverReadBufferSize, 0);
                     ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
@@ -346,6 +352,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopID();
 
                     ImGui::PushID(304);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("", &m_serverSendBufferSize, 0);
                     ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
@@ -368,7 +375,56 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::EndTabItem();
                 }
+                //--------------------------------------------//
+                //----------------CONNECTIVITY----------------//
+                //--------------------------------------------//
+                if (ImGui::BeginTabItem("Simulator"))
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 1.0f, 0.8f));
+                    if (ImGui::Button("Run simulation"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::SetItemTooltip("Will start the computational loop. If you have already run a simulation, make sure to reset it first to clear the old data.");
 
+                    ImGui::SameLine();
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 1.0f, 0.8f));
+                    if (ImGui::Button("Reset simulation"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::RESET_SIMULATOR;
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::SetItemTooltip("Deletes previous cached computated data but keeps the loaded config, stations and checkpoint files.");
+
+                    ImGui::SameLine();
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 1.0f, 8.0f));
+                    if (ImGui::Button("Kill simulation"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::EndTabItem();
+
+                    if (ImGui::Button("Delete checkpoint"))
+                    {
+                        xlpmg::Message deleteCPMsg = xlpmg::DELETE_CHECKPOINTS;
+                        m_communicator.sendToServer(messageToJsonString(deleteCPMsg));
+                    }
+                    if (ImGui::Button("Delete stations"))
+                    {
+                        xlpmg::Message deleteStationsMsg = xlpmg::DELETE_STATIONS;
+                        m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
+                    }
+                }
                 //-------------------------------------------//
                 //------------------WINDOWS------------------//
                 //-------------------------------------------//
@@ -385,28 +441,6 @@ int tsunami_lab::ui::GUI::launch()
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if (ImGui::Button("Run simulation"))
-                    {
-                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
-                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
-                    }
-                    ImGui::SameLine();
-                    HelpMarker("Will start the computational loop. If you have already run a simulation, make sure to reset it first to clear the old data.");
-
-                    if (ImGui::Button("Reset simulation"))
-                    {
-                        xlpmg::Message startSimMsg = xlpmg::RESET_SIMULATOR;
-                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
-                    }
-                    ImGui::SameLine();
-                    HelpMarker("Deletes previous cached computated data but keeps the loaded config, stations and checkpoint files.");
-
-                    ImGui::SameLine();
-                    if (ImGui::Button("Kill simulation"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
-                    }
-
                     if(ImGui::Button("Pause Simulation"))
                     {
                         if(!m_isPausing)
@@ -477,74 +511,6 @@ int tsunami_lab::ui::GUI::launch()
                             std::cout << responseMessage.args << std::endl;
                         }
                     }
-
-                    // open file dialog when user clicks this button
-                    if (ImGui::Button("Select Bathymetry data file"))
-                        fileDialogBath.Open();
-
-                    fileDialogBath.Display();
-
-                    if (fileDialogBath.HasSelected())
-                    {
-                        m_bathymetryFilePath = fileDialogBath.GetSelected().string();
-                        fileDialogBath.ClearSelected();
-                    }
-
-                    // send bathymetry
-                    ImGui::PushID(438);
-                    ImGui::SameLine();
-                    if (ImGui::Button("Send to server"))
-                    {
-                        xlpmg::Message l_bathymetryDataMsg = xlpmg::SET_BATHYMETRY_DATA;
-                        std::ifstream l_bathFile(m_bathymetryFilePath, std::ios::binary);
-                        l_bathFile.unsetf(std::ios::skipws);
-                        std::streampos l_fileSize;
-                        l_bathFile.seekg(0, std::ios::end);
-                        l_fileSize = l_bathFile.tellg();
-                        l_bathFile.seekg(0, std::ios::beg);
-                        std::vector<std::uint8_t> vec;
-                        vec.reserve(l_fileSize);
-                        vec.insert(vec.begin(),
-                                   std::istream_iterator<std::uint8_t>(l_bathFile),
-                                   std::istream_iterator<std::uint8_t>());
-                        l_bathymetryDataMsg.args = json::binary(vec);
-                        m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
-                    }
-                    ImGui::PopID();
-
-
-                    if (ImGui::Button("Select Displacement data file"))
-                        fileDialogDis.Open();
-
-                    fileDialogDis.Display();
-
-                    if (fileDialogDis.HasSelected())
-                    {
-                        m_displacementFilePath = fileDialogDis.GetSelected().string();
-                        fileDialogDis.ClearSelected();
-                    }
-
-                    // send displacement
-                    ImGui::PushID(439);
-                    ImGui::SameLine();
-                    if (ImGui::Button("Send to server"))
-                    {
-                        xlpmg::Message l_displacementMsg = xlpmg::SET_DISPLACEMENT_DATA;
-                        std::ifstream l_displFile(m_displacementFilePath, std::ios::binary);
-                        l_displFile.unsetf(std::ios::skipws);
-                        std::streampos l_fileSize;
-                        l_displFile.seekg(0, std::ios::end);
-                        l_fileSize = l_displFile.tellg();
-                        l_displFile.seekg(0, std::ios::beg);
-                        std::vector<std::uint8_t> vec;
-                        vec.reserve(l_fileSize);
-                        vec.insert(vec.begin(),
-                                   std::istream_iterator<std::uint8_t>(l_displFile),
-                                   std::istream_iterator<std::uint8_t>());
-                        l_displacementMsg.args = json::binary(vec);
-                        m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
-                    }
-                    ImGui::PopID();
 
                     ImGui::EndTabItem();
                 }
@@ -762,6 +728,153 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
 
             ImGui::BeginDisabled(m_tsunamiEvent == 1 || m_tsunamiEvent == 2);
+            if (ImGui::TreeNode("Bathymetry"))
+            {
+                // open file dialog when user clicks this button
+                if (ImGui::Button("Select bathymetry file"))
+                    fileDialogBath.Open();
+
+                fileDialogBath.Display();
+
+                if (fileDialogBath.HasSelected())
+                {
+                    m_bathymetryFilePath = fileDialogBath.GetSelected().string();
+                    fileDialogBath.ClearSelected();
+                }
+
+                // send bathymetry
+                ImGui::PushID(438);
+                if (ImGui::Button("Send to server"))
+                {
+                    xlpmg::Message l_bathymetryDataMsg = xlpmg::SET_BATHYMETRY_DATA;
+                    std::ifstream l_bathFile(m_bathymetryFilePath, std::ios::binary);
+                    l_bathFile.unsetf(std::ios::skipws);
+                    std::streampos l_fileSize;
+                    l_bathFile.seekg(0, std::ios::end);
+                    l_fileSize = l_bathFile.tellg();
+                    l_bathFile.seekg(0, std::ios::beg);
+                    std::vector<std::uint8_t> vec;
+                    vec.reserve(l_fileSize);
+                    vec.insert(vec.begin(),
+                               std::istream_iterator<std::uint8_t>(l_bathFile),
+                               std::istream_iterator<std::uint8_t>());
+                    l_bathymetryDataMsg.args = json::binary(vec);
+                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
+                }
+                if (ImGui::Button("Load dimensions from file"))
+                {
+                    // set local variables
+                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "x", l_nCellsX);
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "y", l_nCellsY);
+
+                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
+                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
+                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
+                    tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(),
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
+                    m_nx = l_nCellsX;
+                    m_ny = l_nCellsY;
+                    if (m_xData[0] < m_xData[l_nCellsX - 1])
+                    {
+                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
+                    }
+                    if (m_yData[0] < m_yData[l_nCellsY - 1])
+                    {
+                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
+                    }
+                    m_offsetX = m_xData[0];
+                    m_offsetY = m_yData[0];
+                }
+                ImGui::SameLine();
+                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
+                ImGui::PopID();
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Displacement"))
+            {
+                if (ImGui::Button("Select displacement file"))
+                    fileDialogDis.Open();
+
+                fileDialogDis.Display();
+
+                if (fileDialogDis.HasSelected())
+                {
+                    m_displacementFilePath = fileDialogDis.GetSelected().string();
+                    fileDialogDis.ClearSelected();
+                }
+
+                // send displacement
+                ImGui::PushID(439);
+                if (ImGui::Button("Send to server"))
+                {
+                    xlpmg::Message l_displacementMsg = xlpmg::SET_DISPLACEMENT_DATA;
+                    std::ifstream l_displFile(m_displacementFilePath, std::ios::binary);
+                    l_displFile.unsetf(std::ios::skipws);
+                    std::streampos l_fileSize;
+                    l_displFile.seekg(0, std::ios::end);
+                    l_fileSize = l_displFile.tellg();
+                    l_displFile.seekg(0, std::ios::beg);
+                    std::vector<std::uint8_t> vec;
+                    vec.reserve(l_fileSize);
+                    vec.insert(vec.begin(),
+                               std::istream_iterator<std::uint8_t>(l_displFile),
+                               std::istream_iterator<std::uint8_t>());
+                    l_displacementMsg.args = json::binary(vec);
+                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
+                }
+                if (ImGui::Button("Load dimensions from file"))
+                {
+                    // set local variables
+                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "x", l_nCellsX);
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "y", l_nCellsY);
+
+                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
+                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
+                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
+                    tsunami_lab::io::NetCdf::read(m_displacementFilePath.c_str(),
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
+                    m_nx = l_nCellsX;
+                    m_ny = l_nCellsY;
+                    if (m_xData[0] < m_xData[l_nCellsX - 1])
+                    {
+                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
+                    }
+                    if (m_yData[0] < m_yData[l_nCellsY - 1])
+                    {
+                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
+                    }
+                    m_offsetX = m_xData[0];
+                    m_offsetY = m_yData[0];
+                }
+                ImGui::SameLine();
+                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
+                ImGui::PopID();
+                ImGui::TreePop();
+            }
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells X", &m_nx, 0);
@@ -781,8 +894,6 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset X", &m_offsetX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
-            m_offsetX = abs(m_offsetX);
-            m_offsetY = abs(m_offsetY);
 
             ImGui::EndDisabled();
 
@@ -911,7 +1022,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::TreePop();
             }
 
-            if (ImGui::Button("Send config to server"))
+            if (ImGui::Button("Update server with changes"))
             {
                 xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON;
                 saveConfigMsg.args = createConfigJson();

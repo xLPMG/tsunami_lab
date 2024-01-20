@@ -12,8 +12,8 @@ tsunami_lab::Simulator *simulator = nullptr;
 std::thread m_simulationThread;
 bool m_isSimulationRunning = false;
 
-std::string m_bathTempFile = "bathtemp.nc";
-std::string m_displTempFile = "displtemp.nc";
+std::string m_bathTempFile = "temp/bathymetry_temp.nc";
+std::string m_displTempFile = "temp/displacement_temp.nc";
 
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
@@ -68,7 +68,6 @@ int main(int i_argc, char *i_argv[])
             {
                 continue;
             }
-
             json l_parsedData = json::parse(l_rawData);
             xlpmg::Message l_message = xlpmg::jsonToMessage(l_parsedData);
             xlpmg::MessageType l_type = l_message.type;
@@ -174,12 +173,14 @@ int main(int i_argc, char *i_argv[])
                     auto l_writeFile = std::fstream(m_bathTempFile, std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
+                    simulator->setBathymetryFilePath(m_bathTempFile);
                 }else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
                 {
                     std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
                     auto l_writeFile = std::fstream(m_displTempFile, std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
+                    simulator->setDisplacementFilePath(m_displTempFile);
                 }
                 else if(l_key == xlpmg::PAUSE_SIMULATION.key)
                 {

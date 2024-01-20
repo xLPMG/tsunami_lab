@@ -32,6 +32,12 @@ private:
   // stride size
   t_idx m_stride = 0;
 
+  //bathymetry file path
+  const char *m_bathymetryPath;
+
+  //displacement file path
+  const char *m_displacementPath;
+
   // amount of cells
   t_idx m_nxB = 0, m_nyB = 0;
   // bathymetry data x

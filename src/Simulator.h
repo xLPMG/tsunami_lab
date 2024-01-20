@@ -328,6 +328,14 @@ public:
         m_offsetY = i_offsetY;
     }
 
+    void setBathymetryFilePath(std::string i_filePath){
+        m_bathymetryFilePath = i_filePath;
+    }
+
+    void setDisplacementFilePath(std::string i_filePath){
+        m_displacementFilePath = i_filePath;
+    }
+
     //--------------------------------------------//
     //--------------PUBLIC DELETERS---------------//
     //--------------------------------------------//

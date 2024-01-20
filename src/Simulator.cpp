@@ -257,7 +257,23 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CUSTOM")
   {
-    // DO NOTHING FOR NOW
+    if(m_ny > 1){
+      tsunami_lab::io::NetCdf *l_netCdfCustom = new tsunami_lab::io::NetCdf(m_nx,
+                                                                         m_ny,
+                                                                         m_nk,
+                                                                         m_simulationSizeX,
+                                                                         m_simulationSizeY,
+                                                                         m_offsetX,
+                                                                         m_offsetY,
+                                                                         m_netcdfOutputPath,
+                                                                         m_checkPointFilePath);
+    m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
+                                                      m_displacementFilePath.c_str(),
+                                                      l_netCdfCustom,
+                                                      m_nx);
+    }else{
+      m_setup = new tsunami_lab::setups::TsunamiEvent1d(m_bathymetryFilePath);
+    }
   }
   else
   {

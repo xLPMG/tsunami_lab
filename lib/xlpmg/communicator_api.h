@@ -112,12 +112,6 @@ namespace xlpmg
     //! Tells the server to change the send buffer size.
   inline const Message SET_SEND_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_send_buffer_size"};
 
-  //! Prepares the server for incoming bathymetry data.
-  inline const Message PREPARE_BATHYMETRY_DATA = {MessageType::SERVER_CALL, "prepare_bathymetry_data"};
-
-  //! Prepares the server for incoming displacement data.
-  inline const Message PREPARE_DISPLACEMENT_DATA = {MessageType::SERVER_CALL, "prepare_displacement_data"};
-
   //! Sends bathymetry data to the server.
   inline const Message SET_BATHYMETRY_DATA = {MessageType::SERVER_CALL, "set_bathymetry_data"};
 
