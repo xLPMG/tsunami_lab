@@ -165,6 +165,13 @@ namespace xlpmg
 
   //! Deletes stations.
   inline const Message DELETE_STATIONS = {MessageType::SERVER_RESPONSE, "delete_stations"};
+
+  //! pause simulation
+  inline const Message PAUSE_SIMULATION = {MessageType::SERVER_CALL, "pause_simulation"};
+
+  //!continue simulation
+  inline const Message CONTINUE_SIMULATION = {MessageType::SERVER_CALL, "continue_simulation"};
+
 }
 
 #endif

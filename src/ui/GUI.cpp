@@ -386,9 +386,6 @@ int tsunami_lab::ui::GUI::launch()
                 {
                     if (ImGui::Button("Run simulation"))
                     {
-                        // if(m_bathymetryFilePath != ""){
-                        //     m_communicator.sendToServer(messageToJsonString(xlpmg::PREPARE_BATHYMETRY_DATA));
-                        // }
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
                         m_communicator.sendToServer(messageToJsonString(startSimMsg));
                     }
@@ -407,6 +404,22 @@ int tsunami_lab::ui::GUI::launch()
                     if (ImGui::Button("Kill simulation"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
+                    }
+
+                    if(ImGui::Button("Pause Simulation"))
+                    {
+                        if(!m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Button("Continue Simulation"))
+                    {
+                        if(m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
+                        }
                     }
 
                     if (ImGui::Button("Get height data"))

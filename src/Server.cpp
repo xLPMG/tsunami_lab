@@ -193,6 +193,16 @@ int main(int i_argc, char *i_argv[])
                         }
                     }
                 }
+                else if(l_key == xlpmg::PAUSE_SIMULATION.key)
+                {
+                    std::cout << "Pause simulation" << std::endl;
+                    simulator->setPausingStatus(true);
+                }
+                else if(l_key == xlpmg::CONTINUE_SIMULATION.key)
+                {
+                    std::cout << "Continue simulation" << std::endl;
+                    simulator->setPausingStatus(false);
+                }
             }
 
             else if (l_type == xlpmg::FUNCTION_CALL)

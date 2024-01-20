@@ -65,6 +65,8 @@ private:
     std::atomic<bool> m_shouldExit = false;
     std::atomic<bool> m_isPreparing = false;
     std::atomic<bool> m_isCalculating = false;
+    std::atomic<bool> m_pausStatus = false;
+
 
     // input parameters
     std::string m_bathymetryFilePath = "";
@@ -439,6 +441,17 @@ public:
     void shouldExit(bool i_shouldExit)
     {
         m_shouldExit = i_shouldExit;
+    };
+
+    /**
+     *  Sets the exit flag to provided a safe-exit mechanism.
+     *
+     *  @param i_shouldExit whether to exit or not.
+     *  @return void
+     */
+    void setPausingStatus(bool i_PausStatus)
+    {
+        m_pausStatus = i_PausStatus;
     };
 };
 

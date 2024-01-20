@@ -16,6 +16,7 @@
 #include <limits>
 #include <chrono>
 #include <future>
+#include <thread>
 
 #ifndef NOFILESYSTEM
 #include <filesystem>
@@ -796,6 +797,12 @@ void tsunami_lab::Simulator::runCalculation()
         l_lastWrite = std::chrono::system_clock::now();
       }
     }
+
+    //pausing the simulation 
+    // while(m_pausStatus){
+    //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    // }
+
     // BREAKPOINT
     if (m_shouldExit)
       return;
@@ -808,6 +815,8 @@ void tsunami_lab::Simulator::runCalculation()
     m_waveProp->timeStep(m_scalingX, m_scalingY);
     m_timeStep++;
     m_simTime += m_dt;
+
+
   }
 }
 

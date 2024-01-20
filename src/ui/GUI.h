@@ -108,6 +108,10 @@ private:
   // client log
   bool m_clientLogAutoScroll = true;
 
+  //simulation status
+  bool m_isPausing = false;
+
+
   /**
    * Executes a shell command.
    *
