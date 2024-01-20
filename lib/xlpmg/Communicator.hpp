@@ -183,7 +183,7 @@ namespace xlpmg
             bool finished = false;
             unsigned long totalBytes = 0;
 
-            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG);
 
             while (!finished)
             {
@@ -196,7 +196,7 @@ namespace xlpmg
                     logEvent("Reading failed or timed out.", ERROR);
                     return "FAIL";
                 }
-                totalBytes += sockValread;
+                totalBytes += strlen(readBuffer);
                 logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
 
                 if (strncmp("DONE", readBuffer, 4) == 0)
@@ -216,7 +216,6 @@ namespace xlpmg
                     message += std::string(readBuffer);
                 }
             }
-
             return message;
         }
 
@@ -235,17 +234,19 @@ namespace xlpmg
                 send(sockClient_fd, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
                 logEvent(message, SENT);
                 std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
-                logEvent(bytesSentStr.c_str(), DEBUG, true);
+                logEvent(bytesSentStr.c_str(), DEBUG);
             }
             else
             {
-                logEvent("Sending buffered message", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string(strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))
                 {
                     unsigned long bytes_sent = send(sockClient_fd, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
                     bytes_total += bytes_sent;
-                    std::string bytesSentStr = std::to_string((double)bytes_total / strlen(message.c_str()) * 100) + "%";
+                    int percentage = std::max((double) 0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double) 100));
+                    std::string bytesSentStr = std::to_string(percentage) + "%";
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
             }
@@ -342,7 +343,7 @@ namespace xlpmg
             bool finished = false;
             unsigned long totalBytes = 0;
 
-            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG);
             while (!finished)
             {
                 memset(readBuffer, 0, BUFF_SIZE_READ);
@@ -354,7 +355,7 @@ namespace xlpmg
                     logEvent("Reading failed or timed out.", ERROR);
                     return "FAIL";
                 }
-                totalBytes += sockValread;
+                totalBytes += strlen(readBuffer);
                 logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
 
                 if (strncmp("DONE", readBuffer, 4) == 0)
@@ -374,7 +375,6 @@ namespace xlpmg
                     message += std::string(readBuffer);
                 }
             }
-
             return message;
         }
 
@@ -387,17 +387,19 @@ namespace xlpmg
                 send(new_socket, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
                 logEvent(message, SENT);
                 std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
-                logEvent(bytesSentStr.c_str(), DEBUG, true);
+                logEvent(bytesSentStr.c_str(), DEBUG);
             }
             else
             {
-                logEvent("Sending buffered message", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string(strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))
                 {
                     unsigned long bytes_sent = send(new_socket, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
                     bytes_total += bytes_sent;
-                    std::string bytesSentStr = std::to_string((double)bytes_total / strlen(message.c_str()) * 100) + "%";
+                    int percentage = std::max((double) 0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double) 100));
+                    std::string bytesSentStr = std::to_string(percentage) + "%";
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
             }
