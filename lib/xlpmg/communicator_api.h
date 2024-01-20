@@ -106,8 +106,11 @@ namespace xlpmg
   //! Server will recompile with provided arguments and run using an sbatch script.
   inline const Message COMPILE_RUN_SBATCH = {MessageType::SERVER_CALL, "compile_run_sbatch", ""};
 
-  //! Tells the server to change the buffer size.
-  inline const Message SET_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_buffer_size"};
+  //! Tells the server to change the read buffer size.
+  inline const Message SET_READ_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_read_buffer_size"};
+
+    //! Tells the server to change the send buffer size.
+  inline const Message SET_SEND_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_send_buffer_size"};
 
   //! Prepares the server for incoming bathymetry data.
   inline const Message PREPARE_BATHYMETRY_DATA = {MessageType::SERVER_CALL, "prepare_bathymetry_data"};
@@ -147,6 +150,12 @@ namespace xlpmg
 
   //! Tells the server to start sending height data. (buffered)
   inline const Message GET_HEIGHT_DATA = {MessageType::FUNCTION_CALL, "get_height_data"};
+
+  //! Sets the cell amount of the simulation.
+  inline const Message SET_OFFSET = {MessageType::FUNCTION_CALL, "set_offset"};
+
+  //! Sets the offset of the simulation.
+  inline const Message SET_CELL_AMOUNT = {MessageType::FUNCTION_CALL, "set_cell_amount"};
 
   //! Tells the client that a buffered sending operation has finished.
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};

@@ -312,11 +312,18 @@ public:
         m_setupChoice = i_setupChoice;
     }
 
-    void setCellAmount(tsunami_lab::t_idx &i_ncellsX,
-                       tsunami_lab::t_idx &i_ncellsY)
+    void setCellAmount(tsunami_lab::t_idx i_ncellsX,
+                       tsunami_lab::t_idx i_ncellsY)
     {
         m_nx = i_ncellsX;
         m_ny = i_ncellsY;
+    }
+
+    void setOffset(tsunami_lab::t_idx i_offsetX,
+                   tsunami_lab::t_idx i_offsetY)
+    {
+        m_offsetX = i_offsetX;
+        m_offsetY = i_offsetY;
     }
 
     //--------------------------------------------//

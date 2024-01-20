@@ -157,37 +157,32 @@ int main(int i_argc, char *i_argv[])
                     exec("chmod +x run-sbatch.sh");
                     exec("sbatch run-sbatch.sh");
                 }
-                else if (l_key == xlpmg::SET_BUFFER_SIZE.key)
+                else if (l_key == xlpmg::SET_READ_BUFFER_SIZE.key)
                 {
                     l_communicator.setReadBufferSize(l_args);
                 }
+                else if (l_key == xlpmg::SET_SEND_BUFFER_SIZE.key)
+                {
+                    l_communicator.setSendBufferSize(l_args);
+                }
                 else if (l_key == xlpmg::PREPARE_BATHYMETRY_DATA.key)
                 {
+                    std::cout << "Receiving bathymetry data" << std::endl;
                     // prepare simulator
                     tsunami_lab::t_idx l_nCellsX = l_args["cellsX"];
                     tsunami_lab::t_idx l_nCellsY = l_args["cellsY"];
                     simulator->setCellAmount(l_nCellsX, l_nCellsY);
+                    tsunami_lab::t_real l_offsetX = l_args.value("offsetX", 0);
+                    tsunami_lab::t_real l_offsetY = l_args.value("offsetY", 0);
+                    simulator->setOffset(l_offsetX, l_offsetY);
                     tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
 
                     // receive data
-                    std::string data = "";
-                    bool l_finished = false;
                     tsunami_lab::t_idx l_index = 0;
-                    while (!l_finished)
+                    std::string l_response = l_communicator.receiveFromClient();
+                    if (json::accept(l_response))
                     {
-                        std::string l_response = l_communicator.receiveFromServer();
-                        if (json::accept(l_response) && xlpmg::jsonToMessage(json::parse(l_response)).key == xlpmg::BUFFERED_SEND_FINISHED.key)
-                        {
-                            l_finished = true;
-                        }
-                        else
-                        {
-                            data += l_response;
-                        }
-                    }
-                    if (json::accept(data))
-                    {
-                        xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
+                        xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
 
                         std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
                         std::string l_num;
@@ -199,6 +194,7 @@ int main(int i_argc, char *i_argv[])
                     }
                 }
             }
+
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
                 if (l_key == xlpmg::RESET_SIMULATOR.key && m_simulationThread.joinable())
@@ -269,6 +265,18 @@ int main(int i_argc, char *i_argv[])
                     l_msg.args["offsetX"] = l_offsetX;
                     l_msg.args["offsetY"] = l_offsetY;
                     l_communicator.sendToClient(xlpmg::messageToJsonString(l_msg));
+                }
+                else if (l_key == xlpmg::SET_OFFSET.key)
+                {
+                    tsunami_lab::t_real l_offsetX = l_args.value("offsetX", 0);
+                    tsunami_lab::t_real l_offsetY = l_args.value("offsetY", 0);
+                    simulator->setOffset(l_offsetX, l_offsetY);
+                }
+                else if (l_key == xlpmg::SET_CELL_AMOUNT.key)
+                {
+                    tsunami_lab::t_idx l_nCellsX = l_args["cellsX"];
+                    tsunami_lab::t_idx l_nCellsY = l_args["cellsY"];
+                    simulator->setCellAmount(l_nCellsX, l_nCellsY);
                 }
             }
         }

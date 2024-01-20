@@ -37,8 +37,10 @@ private:
 
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
   float m_dataUpdateFrequency = 1;
-  int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
-  int m_serverReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
+  int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_serverSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
 
   // compiler options
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};

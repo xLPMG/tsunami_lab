@@ -14,6 +14,7 @@
 #include "xlpmg/Communicator.hpp"
 #include "xlpmg/communicator_api.h"
 #include "../constants.h"
+#include "../io/NetCdf.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -172,7 +173,6 @@ int tsunami_lab::ui::GUI::launch()
     ImGui::FileBrowser fileDialogBath;
     ImGui::FileBrowser fileDialogDis;
 
-
     // (optional) set browser properties
     fileDialogBath.SetTitle("Filesystem");
     fileDialogBath.SetTypeFilters({".nc"});
@@ -286,7 +286,7 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::PushID(301);
                     ImGui::InputInt("", &m_clientReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT)).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
@@ -294,7 +294,7 @@ int tsunami_lab::ui::GUI::launch()
                     }
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
-                    ImGui::Text("Buffer size (client)");
+                    ImGui::Text("Buffer size for receiving (client)");
                     ImGui::SameLine();
                     HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
                     if (m_clientReadBufferSize < 256)
@@ -304,18 +304,38 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopID();
 
                     ImGui::PushID(302);
-                    ImGui::InputInt("", &m_serverReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
+                    ImGui::InputInt("", &m_clientSendBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT)).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
-                        xlpmg::Message msg = xlpmg::SET_BUFFER_SIZE;
+                        m_communicator.setSendBufferSize(m_clientSendBufferSize);
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size for sending (client)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Send Window.");
+                    if (m_clientSendBufferSize < 256)
+                    {
+                        m_clientSendBufferSize = 256;
+                    }
+                    ImGui::PopID();
+
+                    ImGui::PushID(303);
+                    ImGui::InputInt("", &m_serverReadBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT)).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        
+                        xlpmg::Message msg = xlpmg::SET_READ_BUFFER_SIZE;
                         msg.args = m_serverReadBufferSize;
                         m_communicator.sendToServer(messageToJsonString(msg));
                     }
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
-                    ImGui::Text("Buffer size (server)");
+                    ImGui::Text("Buffer size for receiving (server)");
                     ImGui::SameLine();
                     HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
                     if (m_serverReadBufferSize < 256)
@@ -323,6 +343,28 @@ int tsunami_lab::ui::GUI::launch()
                         m_serverReadBufferSize = 256;
                     }
                     ImGui::PopID();
+
+                    ImGui::PushID(304);
+                    ImGui::InputInt("", &m_serverSendBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT)).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        xlpmg::Message msg = xlpmg::SET_SEND_BUFFER_SIZE;
+                        msg.args = m_serverSendBufferSize;
+                        m_communicator.sendToServer(messageToJsonString(msg));
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size for sending (server)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Send Window.");
+                    if (m_serverSendBufferSize < 256)
+                    {
+                        m_serverSendBufferSize = 256;
+                    }
+                    ImGui::PopID();
+
                     ImGui::EndTabItem();
                 }
 
@@ -435,6 +477,41 @@ int tsunami_lab::ui::GUI::launch()
                         fileDialogBath.ClearSelected();
                     }
 
+                    // send bathymetry
+                    ImGui::PushID(438);
+                    ImGui::SameLine();
+                    if (ImGui::Button("Send to server"))
+                    {
+                        tsunami_lab::t_idx l_cellsX = 0, l_cellsY = 0;
+                        tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "x", l_cellsX);
+                        tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "y", l_cellsY);
+
+                        tsunami_lab::t_real *l_dataX = new tsunami_lab::t_real[l_cellsX];
+                        tsunami_lab::t_real *l_dataY = new tsunami_lab::t_real[l_cellsY];
+                        tsunami_lab::t_real *l_data = new tsunami_lab::t_real[l_cellsX * l_cellsY];
+                        tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(), "z", &l_dataX, &l_dataY, &l_data);
+
+                        xlpmg::Message l_prepareMsg = xlpmg::PREPARE_BATHYMETRY_DATA;
+                        json l_prepareMsgArgs;
+                        l_prepareMsgArgs["cellsX"] = l_cellsX;
+                        l_prepareMsgArgs["cellsY"] = l_cellsY;
+                        l_prepareMsgArgs["offsetX"] = l_dataX[0];
+                        l_prepareMsgArgs["offsetY"] = l_dataY[0];
+                        l_prepareMsg.args = l_prepareMsgArgs;
+
+                        xlpmg::Message l_bathymetryDataMsg = {xlpmg::OTHER, "bath_data", nullptr};
+                        if (m_communicator.sendToServer(xlpmg::messageToJsonString(l_prepareMsg)) == 0)
+                        {
+                            for (tsunami_lab::t_idx i = 0; i < l_cellsX * l_cellsY; i++)
+                            {
+                                l_bathymetryDataMsg.args.push_back(l_data[i]);
+                            }
+                            m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
+                            m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
+                        }
+                    }
+                    ImGui::PopID();
+
                     if (ImGui::Button("Select Displacement data file"))
                         fileDialogDis.Open();
 
@@ -471,14 +548,14 @@ int tsunami_lab::ui::GUI::launch()
 
             if (ImGui::Button("Clear"))
             {
-                m_communicator.clearClientLog();
+                m_communicator.clearLog();
             }
             ImGui::SameLine();
             ImGui::Checkbox("Auto-Scroll", &m_clientLogAutoScroll);
             if (ImGui::BeginChild("scrolling", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-                m_communicator.getClientLog(m_clientLog);
+                m_communicator.getLog(m_clientLog);
                 ImGui::TextUnformatted(m_clientLog.c_str());
                 ImGui::PopStyleVar();
 
