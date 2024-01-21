@@ -68,7 +68,7 @@ int main(int i_argc, char *i_argv[])
             {
                 continue;
             }
-            
+
             json l_parsedData = json::parse(l_rawData);
             xlpmg::Message l_message = xlpmg::jsonToMessage(l_parsedData);
             xlpmg::MessageType l_type = l_message.type;
@@ -90,18 +90,21 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::START_SIMULATION.key)
                 {
                     std::string l_config = l_parsedData.at(xlpmg::ARGS);
-                    if(simulator->isPreparing()){
-                        std::cout << "Warning: Did not start simulator because setup is still in progress." << std::endl;
-                        return;
-                    }
-                    if (!m_isSimulationRunning)
+                    if (simulator->isPreparing())
                     {
-                        if (m_simulationThread.joinable())
+                        std::cout << "Warning: Did not start simulator because setup is still in progress." << std::endl;
+                    }
+                    else
+                    {
+                        if (!m_isSimulationRunning)
                         {
-                            m_simulationThread.join();
+                            if (m_simulationThread.joinable())
+                            {
+                                m_simulationThread.join();
+                            }
+                            m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
+                            m_isSimulationRunning = true;
                         }
-                        m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
-                        m_isSimulationRunning = true;
                     }
                 }
                 else if (l_key == xlpmg::KILL_SIMULATION.key)
@@ -183,7 +186,8 @@ int main(int i_argc, char *i_argv[])
                     l_writeFile.close();
                     simulator->setBathymetryFilePath(m_bathTempFile);
                     simulator->setPrepared(false);
-                }else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
+                }
+                else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
                 {
                     std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
                     auto l_writeFile = std::fstream(m_displTempFile, std::ios::out | std::ios::binary);
@@ -192,12 +196,12 @@ int main(int i_argc, char *i_argv[])
                     simulator->setDisplacementFilePath(m_displTempFile);
                     simulator->setPrepared(false);
                 }
-                else if(l_key == xlpmg::PAUSE_SIMULATION.key)
+                else if (l_key == xlpmg::PAUSE_SIMULATION.key)
                 {
                     std::cout << "Pause simulation" << std::endl;
                     simulator->setPausingStatus(true);
                 }
-                else if(l_key == xlpmg::CONTINUE_SIMULATION.key)
+                else if (l_key == xlpmg::CONTINUE_SIMULATION.key)
                 {
                     std::cout << "Continue simulation" << std::endl;
                     simulator->setPausingStatus(false);
