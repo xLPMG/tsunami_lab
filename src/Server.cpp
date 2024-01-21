@@ -165,7 +165,6 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::SET_READ_BUFFER_SIZE.key)
                 {
-
                     l_communicator.setReadBufferSize(l_args);
                 }
                 else if (l_key == xlpmg::SET_SEND_BUFFER_SIZE.key)

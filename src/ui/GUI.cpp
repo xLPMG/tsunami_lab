@@ -254,9 +254,7 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
                     ImGui::EndDisabled();
-
                     ImGui::SameLine();
-
                     ImGui::BeginDisabled(!m_connected);
                     if (ImGui::Button("Disconnect"))
                     {
@@ -301,6 +299,7 @@ int tsunami_lab::ui::GUI::launch()
                     {
                         m_communicator.setReadBufferSize(m_clientReadBufferSize);
                     }
+
 
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
