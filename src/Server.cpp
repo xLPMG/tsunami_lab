@@ -90,7 +90,11 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::START_SIMULATION.key)
                 {
                     std::string l_config = l_parsedData.at(xlpmg::ARGS);
-                    if (!m_isSimulationRunning && !simulator->isPreparing())
+                    if(simulator->isPreparing()){
+                        std::cout << "Warning: Did not start simulator because setup is still in progress." << std::endl;
+                        return;
+                    }
+                    if (!m_isSimulationRunning)
                     {
                         if (m_simulationThread.joinable())
                         {
@@ -201,6 +205,7 @@ int main(int i_argc, char *i_argv[])
             }
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
+
                 if (l_key == xlpmg::RESET_SIMULATOR.key)
                 {
                     exitSimulationThread();
@@ -242,7 +247,6 @@ int main(int i_argc, char *i_argv[])
                         l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                     }
                 }
-                
                 else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
                     simulator->loadConfigDataJson(l_args);

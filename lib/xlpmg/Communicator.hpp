@@ -196,7 +196,7 @@ namespace xlpmg
                     logEvent("Reading failed or timed out.", ERROR);
                     return "FAIL";
                 }
-                totalBytes += strlen(readBuffer);
+
                 if (strlen(readBuffer) > 0)
                 {
                     logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
@@ -204,7 +204,7 @@ namespace xlpmg
 
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
                 {
-                    if (message.length() < BUFF_SIZE_READ)
+                    if (message.length() < 250)
                     {
                         logEvent(message, RECEIVED);
                     }
@@ -217,6 +217,7 @@ namespace xlpmg
                 else
                 {
                     message += std::string(readBuffer);
+                    totalBytes += std::string(readBuffer).length();
                 }
             }
             return message;
@@ -380,14 +381,14 @@ namespace xlpmg
                     logEvent("Reading failed or timed out.", ERROR);
                     return "FAIL";
                 }
-                totalBytes += strlen(readBuffer);
+
                 if (strlen(readBuffer) > 0)
                 {
                     logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
                 }
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
                 {
-                    if (message.length() < BUFF_SIZE_READ)
+                    if (message.length() < 250)
                     {
                         logEvent(message, RECEIVED);
                     }
@@ -400,8 +401,10 @@ namespace xlpmg
                 else
                 {
                     message += std::string(readBuffer);
+                    totalBytes = message.length();
                 }
             }
+            logEvent(std::to_string(message.length()) + " Bytes (" + std::to_string(message.length() / 1000000) + " MB) received", DEBUG, true);
             return message;
         }
 

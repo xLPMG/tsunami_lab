@@ -261,6 +261,7 @@ int tsunami_lab::ui::GUI::launch()
                         m_communicator.stopClient();
                         m_connected = false;
                     }
+
                     ImGui::EndDisabled();
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
@@ -275,7 +276,6 @@ int tsunami_lab::ui::GUI::launch()
                             m_connected = false;
                         }
                     }
-                    
                     ImGui::BeginDisabled(!m_connected);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));

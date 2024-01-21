@@ -15,3 +15,5 @@ else
 echo scons $2
 scons $2
 fi
+
+exit 0
