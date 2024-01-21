@@ -259,31 +259,61 @@ public:
     //-----------------GETTERS------------------//
     //------------------------------------------//
 
+    /**
+     *  Gets the preparing status.
+     *
+     *  @return Preparing status.
+     */
     bool isPreparing()
     {
         return m_isPreparing;
     }
 
+    /**
+     *  Gets the calculating status.
+     *
+     *  @return Calculating status.
+     */
     bool isCalculating()
     {
         return m_isCalculating;
     }
 
+    /**
+     *  Gets a pointer to the current Wavepropagation patch.
+     *
+     *  @return pointer to wavepropagation patch.
+     */
     tsunami_lab::patches::WavePropagation *getWaveProp()
     {
         return m_waveProp;
     }
 
+    /**
+     *  Gets the setup choice.
+     *
+     *  @return void
+     */
     void getSetupChoice(std::string &o_setupChoice)
     {
         o_setupChoice = m_setupChoice;
     }
 
+    /**
+     *  Gets the current timestep.
+     *
+     *  @return time step
+     */
     tsunami_lab::t_idx getTimeStep()
     {
         return m_timeStep;
     }
 
+    /**
+     *  Gets the cell amounts.
+     *
+     *  @return void
+     */
     void getCellAmount(tsunami_lab::t_idx &o_ncellsX,
                        tsunami_lab::t_idx &o_ncellsY)
     {
@@ -291,6 +321,11 @@ public:
         o_ncellsY = m_ny;
     }
 
+    /**
+     *  Gets the simulation size.
+     *
+     *  @return void
+     */
     void getSimulationSize(tsunami_lab::t_real &o_sizeX,
                            tsunami_lab::t_real &o_sizeY)
     {
@@ -298,6 +333,11 @@ public:
         o_sizeY = m_simulationSizeY;
     }
 
+    /**
+     *  Gets the simulation offset.
+     *
+     *  @return void
+     */
     void getSimulationOffset(tsunami_lab::t_real &o_offsetX,
                              tsunami_lab::t_real &o_offsetY)
     {
@@ -309,11 +349,24 @@ public:
     //-----------------SETTERS------------------//
     //------------------------------------------//
 
+    /**
+     *  Sets the setup choice.
+     *
+     *  @param i_setupChoice Setup choice.
+     *  @return void
+     */
     void setSetupChoice(std::string i_setupChoice)
     {
         m_setupChoice = i_setupChoice;
     }
 
+    /**
+     *  Sets the cell amount.
+     *
+     *  @param i_ncellsX cells in x-direction.
+     *  @param i_ncellsY cells in y-direction.
+     *  @return void
+     */
     void setCellAmount(tsunami_lab::t_idx i_ncellsX,
                        tsunami_lab::t_idx i_ncellsY)
     {
@@ -321,6 +374,13 @@ public:
         m_ny = i_ncellsY;
     }
 
+    /**
+     *  Sets the offset.
+     *
+     *  @param i_offsetX offset in x-direction.
+     *  @param i_offsetY offset in y-direction.
+     *  @return void
+     */
     void setOffset(tsunami_lab::t_idx i_offsetX,
                    tsunami_lab::t_idx i_offsetY)
     {
@@ -328,14 +388,32 @@ public:
         m_offsetY = i_offsetY;
     }
 
+    /**
+     *  Sets the bathymetry file path.
+     *
+     *  @param i_filePath file path.
+     *  @return void
+     */
     void setBathymetryFilePath(std::string i_filePath){
         m_bathymetryFilePath = i_filePath;
     }
 
+    /**
+     *  Sets displacement file path.
+     *
+     *  @param i_filePath file path.
+     *  @return void
+     */
     void setDisplacementFilePath(std::string i_filePath){
         m_displacementFilePath = i_filePath;
     }
 
+    /**
+     *  Sets the prepared flag.
+     *
+     *  @param i_prepared prepared flag
+     *  @return void
+     */
     void setPrepared(bool i_prepared){
         m_isPrepared = i_prepared;
     }
