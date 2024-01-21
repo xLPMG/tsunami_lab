@@ -68,6 +68,7 @@ int main(int i_argc, char *i_argv[])
             {
                 continue;
             }
+            
             json l_parsedData = json::parse(l_rawData);
             xlpmg::Message l_message = xlpmg::jsonToMessage(l_parsedData);
             xlpmg::MessageType l_type = l_message.type;
@@ -89,7 +90,6 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::START_SIMULATION.key)
                 {
                     std::string l_config = l_parsedData.at(xlpmg::ARGS);
-                    std::cout << m_simulationThread.joinable() << std::endl;
                     if (!m_isSimulationRunning && !simulator->isPreparing())
                     {
                         if (m_simulationThread.joinable())
@@ -179,6 +179,7 @@ int main(int i_argc, char *i_argv[])
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
                     simulator->setBathymetryFilePath(m_bathTempFile);
+                    simulator->setPrepared(false);
                 }else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
                 {
                     std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
@@ -186,6 +187,7 @@ int main(int i_argc, char *i_argv[])
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
                     simulator->setDisplacementFilePath(m_displTempFile);
+                    simulator->setPrepared(false);
                 }
                 else if(l_key == xlpmg::PAUSE_SIMULATION.key)
                 {

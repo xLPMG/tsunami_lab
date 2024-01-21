@@ -271,7 +271,6 @@ void tsunami_lab::Simulator::constructSetup()
                                                       m_displacementFilePath.c_str(),
                                                       l_netCdfCustom,
                                                       m_nx);
-                                                      std::cout << "setup : " <<m_bathymetryFilePath<< std::endl;
     }else{
       m_setup = new tsunami_lab::setups::TsunamiEvent1d(m_bathymetryFilePath);
     }
@@ -743,6 +742,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
     loadStations();
   }
   m_isPreparing = false;
+  m_isPrepared = true;
 }
 
 void tsunami_lab::Simulator::runCalculation()
@@ -861,7 +861,6 @@ int tsunami_lab::Simulator::start(std::string i_config)
   if (!m_isPrepared)
   {
     prepareForCalculation();
-    m_isPrepared = true;
   }
 
   // BREAKPOINT

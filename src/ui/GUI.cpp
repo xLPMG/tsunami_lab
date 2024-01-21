@@ -268,8 +268,7 @@ int tsunami_lab::ui::GUI::launch()
                     if (ImGui::Button("Check connection"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK));
-                        std::string l_response = m_communicator.receiveFromServer();
-                        if (l_response == "OK")
+                        if (m_communicator.checkServerResponse())
                         {
                             m_connected = true;
                         }
@@ -278,6 +277,7 @@ int tsunami_lab::ui::GUI::launch()
                             m_connected = false;
                         }
                     }
+                    
                     ImGui::BeginDisabled(!m_connected);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));

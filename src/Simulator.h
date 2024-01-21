@@ -336,6 +336,10 @@ public:
         m_displacementFilePath = i_filePath;
     }
 
+    void setPrepared(bool i_prepared){
+        m_isPrepared = i_prepared;
+    }
+
     //--------------------------------------------//
     //--------------PUBLIC DELETERS---------------//
     //--------------------------------------------//

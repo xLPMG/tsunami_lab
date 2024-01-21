@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <poll.h>
 
 // time stamp
 #include <chrono>
@@ -222,6 +223,27 @@ namespace xlpmg
             return message;
         }
 
+        /// @brief Checks if the server responded with OK.
+        /// @return true if server responded
+        bool checkServerResponse()
+        {
+            char readBuffer[BUFF_SIZE_READ];
+            memset(readBuffer, 0, BUFF_SIZE_READ);
+            sockValread = read(sockClient_fd, readBuffer,
+                               BUFF_SIZE_READ - 1); // subtract 1 for the null
+            bool returnValue = true;
+            if(std::string(readBuffer).compare("OK") != 0)
+                returnValue = false;
+
+            //DONE
+            sockValread = read(sockClient_fd, readBuffer,
+                               BUFF_SIZE_READ - 1); // subtract 1 for the null
+            if(std::string(readBuffer).compare("DONE") != 0)
+                returnValue = false;
+
+            return returnValue;
+        }
+
         /// @brief Sends a message to the server.
         /// @param message String to send.
         int sendToServer(std::string message)
@@ -253,7 +275,7 @@ namespace xlpmg
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
             }
-            sleep(1);
+
             send(sockClient_fd, "DONE", strlen("DONE"), MSG_NOSIGNAL);
 
             return 0;
@@ -409,6 +431,7 @@ namespace xlpmg
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
             }
+
             send(new_socket, "DONE", 4, MSG_NOSIGNAL);
         }
     };
