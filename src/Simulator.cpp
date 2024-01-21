@@ -637,6 +637,8 @@ void tsunami_lab::Simulator::resetSimulator()
 {
   freeMemory();
   prepareForCalculation();
+  m_simTime=0;
+  m_timeStep=0;
 }
 
 //------------------------------------------//
@@ -747,6 +749,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
 
 void tsunami_lab::Simulator::runCalculation()
 {
+  std::cout<<m_simTime<<std::endl;
   deriveTimeStep();
   auto l_lastWrite = std::chrono::system_clock::now();
   while (m_simTime < m_endTime && !m_shouldExit)
