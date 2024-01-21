@@ -89,7 +89,7 @@ namespace xlpmg
                 {
                     position--;
                 }
-                logData = logData.substr(0, position+1);
+                logData = logData.substr(0, position + 1);
                 logData.append(line);
                 logData.append("\n");
             }
@@ -197,7 +197,10 @@ namespace xlpmg
                     return "FAIL";
                 }
                 totalBytes += strlen(readBuffer);
-                logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+                if (strlen(readBuffer) > 0)
+                {
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+                }
 
                 if (strncmp("DONE", readBuffer, 4) == 0)
                 {
@@ -250,7 +253,8 @@ namespace xlpmg
                     logEvent(bytesSentStr.c_str(), DEBUG, true);
                 }
             }
-            send(sockClient_fd, "DONE", 4, MSG_NOSIGNAL);
+            sleep(1);
+            send(sockClient_fd, "DONE", strlen("DONE"), MSG_NOSIGNAL);
 
             return 0;
         }
@@ -356,8 +360,10 @@ namespace xlpmg
                     return "FAIL";
                 }
                 totalBytes += strlen(readBuffer);
-                logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
-
+                if (strlen(readBuffer) > 0)
+                {
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+                }
                 if (strncmp("DONE", readBuffer, 4) == 0)
                 {
                     if (message.length() < BUFF_SIZE_READ)

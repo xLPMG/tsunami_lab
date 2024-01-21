@@ -65,20 +65,21 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
-  const char *m_tsunamiEvents[3] = {"Custom", "Tohoku", "Chile"};
+  const char *m_tsunamiEvents[4] = {"CUSTOM", "TOHOKU", "CHILE", "ARTIFICIAL2D"};
   int m_tsunamiEvent = 0;
   int m_nx = 1;
   int m_ny = 1;
+  int m_nk = 1;
   float m_simulationSizeX = 10;
   float m_simulationSizeY = 1;
   float m_offsetX = 0;
   float m_offsetY = 0;
-  int m_endTime = 1000;
+  int m_endTime = 30;
   bool m_useFileIO = true;
   const char *m_outputMethods[2] = {"netcdf", "csv"};
   int m_outputMethod = 0;
   int m_writingFrequency = 100;
-  char m_outputFileName[256] = "solution.nc";
+  char m_outputFileName[256] = "solution";
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
 

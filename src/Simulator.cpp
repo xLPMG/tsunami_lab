@@ -127,8 +127,8 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_useFileIO = false;
 #endif
 
-  m_bathymetryFilePath = m_configData.value("bathymetry", "");
-  m_displacementFilePath = m_configData.value("displacement", "");
+  m_bathymetryFilePath = m_configData.value("bathymetry", m_bathymetryFilePath);
+  m_displacementFilePath = m_configData.value("displacement", m_displacementFilePath);
 
   m_writingFrequency = m_configData.value("writingFrequency", 80);
   m_checkpointFrequency = m_configData.value("checkpointFrequency", -1);
@@ -200,8 +200,8 @@ void tsunami_lab::Simulator::constructSetup()
                                                                         m_offsetY,
                                                                         m_netcdfOutputPath,
                                                                         m_checkPointFilePath);
-    m_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/artificialtsunami_bathymetry_1000.nc",
-                                                      "resources/artificialtsunami_dispm_1000.nc",
+    m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
+                                                      m_displacementFilePath.c_str(),
                                                       l_netCdfTE2D,
                                                       m_nx);
   }
@@ -271,6 +271,7 @@ void tsunami_lab::Simulator::constructSetup()
                                                       m_displacementFilePath.c_str(),
                                                       l_netCdfCustom,
                                                       m_nx);
+                                                      std::cout << "setup : " <<m_bathymetryFilePath<< std::endl;
     }else{
       m_setup = new tsunami_lab::setups::TsunamiEvent1d(m_bathymetryFilePath);
     }
@@ -707,7 +708,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
     std::cout << ">> Configuring file data" << std::endl;
     configureFiles();
   }
-  else if (m_setupChoice != "Custom")
+  else if (m_setupChoice != "CUSTOM")
   {
     m_setupChoice = m_configData.value("setup", "CIRCULARDAMBREAK2D");
     if (m_setupChoice == "CHECKPOINT")
@@ -735,7 +736,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
 
   constructSolver();
 
-  loadBathymetry(&m_bathymetryFilePath);
+  //loadBathymetry(&m_bathymetryFilePath);
 
   if (m_useFileIO)
   {
@@ -831,8 +832,6 @@ void tsunami_lab::Simulator::runCalculation()
     m_waveProp->timeStep(m_scalingX, m_scalingY);
     m_timeStep++;
     m_simTime += m_dt;
-
-
   }
 }
 

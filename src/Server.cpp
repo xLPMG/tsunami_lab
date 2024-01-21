@@ -12,8 +12,8 @@ tsunami_lab::Simulator *simulator = nullptr;
 std::thread m_simulationThread;
 bool m_isSimulationRunning = false;
 
-std::string m_bathTempFile = "temp/bathymetry_temp.nc";
-std::string m_displTempFile = "temp/displacement_temp.nc";
+std::string m_bathTempFile = "bathymetry_temp.nc";
+std::string m_displTempFile = "displacement_temp.nc";
 
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
@@ -76,7 +76,11 @@ int main(int i_argc, char *i_argv[])
 
             if (l_type == xlpmg::SERVER_CALL)
             {
-                if (l_key == xlpmg::SHUTDOWN_SERVER.key)
+                if (l_key == xlpmg::CHECK.key)
+                {
+                    l_communicator.sendToClient("OK");
+                }
+                else if (l_key == xlpmg::SHUTDOWN_SERVER.key)
                 {
                     m_EXIT = true;
                     exitSimulationThread();
@@ -161,6 +165,7 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::SET_READ_BUFFER_SIZE.key)
                 {
+
                     l_communicator.setReadBufferSize(l_args);
                 }
                 else if (l_key == xlpmg::SET_SEND_BUFFER_SIZE.key)
@@ -236,6 +241,7 @@ int main(int i_argc, char *i_argv[])
                         l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                     }
                 }
+                
                 else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
                     simulator->loadConfigDataJson(l_args);
@@ -284,6 +290,9 @@ int main(int i_argc, char *i_argv[])
         {
             m_simulationThread.join();
         }
+
+        std::remove(m_bathTempFile.c_str());
+        std::remove(m_displTempFile.c_str());
     }
     //------------------------------------------//
     //--------------STANDARD MODE---------------//

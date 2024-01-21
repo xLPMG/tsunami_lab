@@ -75,8 +75,11 @@ static void HelpMarker(const char *desc)
 json tsunami_lab::ui::GUI::createConfigJson()
 {
     json config = {{"solver", "fwave"},
-                   {"nx", m_simulationSizeX},
-                   {"ny", m_simulationSizeY},
+                   {"nx", m_nx},
+                   {"ny", m_ny},
+                   {"nk", m_nk},
+                   {"simulationSizeX", m_simulationSizeX},
+                   {"simulationSizeY", m_simulationSizeY},
                    {"offsetX", m_offsetX},
                    {"offsetY", m_offsetY},
                    {"endTime", m_endTime},
@@ -264,7 +267,9 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK)) == 0)
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK));
+                        std::string l_response = m_communicator.receiveFromServer();
+                        if (l_response == "OK")
                         {
                             m_connected = true;
                         }
@@ -441,17 +446,17 @@ int tsunami_lab::ui::GUI::launch()
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if(ImGui::Button("Pause Simulation"))
+                    if (ImGui::Button("Pause Simulation"))
                     {
-                        if(!m_isPausing)
+                        if (!m_isPausing)
                         {
                             m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
                         }
                     }
                     ImGui::SameLine();
-                    if(ImGui::Button("Continue Simulation"))
+                    if (ImGui::Button("Continue Simulation"))
                     {
-                        if(m_isPausing)
+                        if (m_isPausing)
                         {
                             m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
                         }
@@ -510,6 +515,11 @@ int tsunami_lab::ui::GUI::launch()
                             xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
                             std::cout << responseMessage.args << std::endl;
                         }
+                    }
+
+                    if (ImGui::Button("Get simulation sizes"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
                     }
 
                     ImGui::EndTabItem();
@@ -727,7 +737,7 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
 
-            ImGui::BeginDisabled(m_tsunamiEvent == 1 || m_tsunamiEvent == 2);
+            ImGui::BeginDisabled(m_tsunamiEvent != 0);
             if (ImGui::TreeNode("Bathymetry"))
             {
                 // open file dialog when user clicks this button
@@ -741,6 +751,9 @@ int tsunami_lab::ui::GUI::launch()
                     m_bathymetryFilePath = fileDialogBath.GetSelected().string();
                     fileDialogBath.ClearSelected();
                 }
+
+                ImGui::SameLine();
+                ImGui::TextWrapped("%s", ("File: " + m_bathymetryFilePath).c_str());
 
                 // send bathymetry
                 ImGui::PushID(438);
@@ -814,6 +827,8 @@ int tsunami_lab::ui::GUI::launch()
                     m_displacementFilePath = fileDialogDis.GetSelected().string();
                     fileDialogDis.ClearSelected();
                 }
+                ImGui::SameLine();
+                ImGui::TextWrapped("%s", ("File: " + m_displacementFilePath).c_str());
 
                 // send displacement
                 ImGui::PushID(439);
@@ -880,8 +895,11 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputInt("Cells X", &m_nx, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells Y", &m_ny, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Coarse output resolution", &m_nk, 0);
             m_nx = abs(m_nx);
             m_ny = abs(m_ny);
+            m_nk = abs(m_nk);
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);

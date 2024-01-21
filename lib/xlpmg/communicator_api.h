@@ -155,10 +155,10 @@ namespace xlpmg
   inline const Message BUFFERED_SEND_FINISHED = {MessageType::SERVER_RESPONSE, "buff_send_finished"};
 
   //! Deletes checkpoints.
-  inline const Message DELETE_CHECKPOINTS = {MessageType::SERVER_RESPONSE, "delete_checkpoints"};
+  inline const Message DELETE_CHECKPOINTS = {MessageType::SERVER_CALL, "delete_checkpoints"};
 
   //! Deletes stations.
-  inline const Message DELETE_STATIONS = {MessageType::SERVER_RESPONSE, "delete_stations"};
+  inline const Message DELETE_STATIONS = {MessageType::SERVER_CALL, "delete_stations"};
 
   //! pause simulation
   inline const Message PAUSE_SIMULATION = {MessageType::SERVER_CALL, "pause_simulation"};
