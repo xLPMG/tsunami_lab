@@ -635,10 +635,11 @@ void tsunami_lab::Simulator::deleteStations()
 
 void tsunami_lab::Simulator::resetSimulator()
 {
-  freeMemory();
-  prepareForCalculation();
   m_simTime=0;
   m_timeStep=0;
+  m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
+  freeMemory();
+  prepareForCalculation();
 }
 
 //------------------------------------------//

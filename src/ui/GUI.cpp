@@ -896,6 +896,8 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::PopID();
                 ImGui::TreePop();
             }
+            
+            ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells X", &m_nx, 0);
@@ -918,8 +920,6 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset X", &m_offsetX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
-
-            ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);

@@ -89,6 +89,7 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::START_SIMULATION.key)
                 {
+                    std::cout << "Start simulator" << std::endl;
                     std::string l_config = l_parsedData.at(xlpmg::ARGS);
                     if (simulator->isPreparing())
                     {
