@@ -5,4 +5,4 @@
 #SBATCH --time=10:00:23
 
 echo STARTING SERVER
-./build/tsunami_lab server
+./build/tsunami_lab server $1

@@ -7,5 +7,5 @@ cat <<EoF
 #SBATCH --time=$4
 
 echo STARTING SERVER
-./build/tsunami_lab
+./build/tsunami_lab \$1
 EoF

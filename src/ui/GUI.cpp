@@ -300,7 +300,6 @@ int tsunami_lab::ui::GUI::launch()
                         m_communicator.setReadBufferSize(m_clientReadBufferSize);
                     }
 
-
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
                     ImGui::Text("Buffer size for receiving (client)");
@@ -624,6 +623,13 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::SameLine();
             HelpMarker("If you choose a runner, the server will be restarted after compilation.");
 
+            if (m_runner != 0)
+            {
+                ImGui::InputInt("Server port", &m_serverRestartPort);
+                ImGui::SameLine();
+                HelpMarker("Port which the server will use when starting.");
+            }
+
             if (m_runner == 2)
             {
 
@@ -701,6 +707,7 @@ int tsunami_lab::ui::GUI::launch()
                 json compileArgs;
                 compileArgs["ENV"] = "";
                 compileArgs["OPT"] = options;
+                compileArgs["POR"] = m_serverRestartPort;
 
                 if (m_runner == 2)
                 {

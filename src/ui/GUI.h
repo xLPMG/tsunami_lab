@@ -43,6 +43,7 @@ private:
   int m_serverSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
 
   // compiler options
+  int m_serverRestartPort = 8080;
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};
   int m_compileMode = 0;
   char m_compilerChoice[256] = "";
