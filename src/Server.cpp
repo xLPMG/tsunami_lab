@@ -132,16 +132,17 @@ int main(int i_argc, char *i_argv[])
                     l_communicator.stopServer();
                     exitSimulationThread();
 
-                    std::string env = l_args.value("ENV", ""); // environment var
-                    std::string opt = l_args.value("OPT", ""); // compiler opt
+                    std::string l_env = l_args.value("ENV", ""); // environment var
+                    std::string l_opt = l_args.value("OPT", ""); // compiler opt
+                    int l_port = l_args.value("POR", 8080);
 
                     // compile
                     exec("chmod +x scripts/compile-bash.sh");
-                    exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\"");
+                    exec("./scripts/compile-bash.sh \"" + l_env + "\" \"" + l_opt + "\"");
 
                     // run
                     exec("chmod +x run-bash.sh");
-                    exec("./run-bash.sh &");
+                    exec("./run-bash.sh " + std::to_string(l_port) + " &");
                 }
                 else if (l_key == xlpmg::COMPILE_RUN_SBATCH.key)
                 {
@@ -150,8 +151,9 @@ int main(int i_argc, char *i_argv[])
                     l_communicator.stopServer();
                     exitSimulationThread();
 
-                    std::string env = l_args.value("ENV", ""); // environment var
-                    std::string opt = l_args.value("OPT", ""); // compiler opt
+                    std::string l_env = l_args.value("ENV", ""); // environment var
+                    std::string l_opt = l_args.value("OPT", ""); // compiler opt
+                    int l_port = l_args.value("POR", 8080);
 
                     std::string l_job = l_args.value("JOB", "");
                     std::string l_out = l_args.value("OUT", "");
@@ -160,7 +162,7 @@ int main(int i_argc, char *i_argv[])
 
                     // compile
                     exec("chmod +x scripts/compile-bash.sh");
-                    exec("./scripts/compile-bash.sh \"" + env + "\" \"" + opt + "\"");
+                    exec("./scripts/compile-bash.sh \"" + l_env + "\" \"" + l_opt + "\"");
 
                     // generate sbatch
                     exec("chmod +x scripts/generateSbatch.sh");
@@ -168,7 +170,7 @@ int main(int i_argc, char *i_argv[])
 
                     // run
                     exec("chmod +x run-sbatch.sh");
-                    exec("sbatch run-sbatch.sh");
+                    exec("sbatch run-sbatch.sh " + std::to_string(l_port));
                 }
                 else if (l_key == xlpmg::SET_READ_BUFFER_SIZE.key)
                 {

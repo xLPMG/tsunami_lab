@@ -183,7 +183,7 @@ namespace xlpmg
             bool finished = false;
             unsigned long totalBytes = 0;
 
-            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG);
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG);
 
             while (!finished)
             {
@@ -199,7 +199,7 @@ namespace xlpmg
 
                 if (strlen(readBuffer) > 0)
                 {
-                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, true);
                 }
 
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
@@ -263,7 +263,7 @@ namespace xlpmg
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO);
                 logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))
@@ -369,7 +369,7 @@ namespace xlpmg
             bool finished = false;
             unsigned long totalBytes = 0;
 
-            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG);
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG);
             while (!finished)
             {
                 memset(readBuffer, 0, BUFF_SIZE_READ);
@@ -384,7 +384,7 @@ namespace xlpmg
 
                 if (strlen(readBuffer) > 0)
                 {
-                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received", DEBUG, true);
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, true);
                 }
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
                 {
@@ -404,7 +404,7 @@ namespace xlpmg
                     totalBytes = message.length();
                 }
             }
-            logEvent(std::to_string(message.length()) + " Bytes (" + std::to_string(message.length() / 1000000) + " MB) received", DEBUG, true);
+            logEvent(std::to_string(message.length()) + " Bytes (" + std::to_string(message.length() / 1000000) + " MB) received             ", DEBUG, true);
             return message;
         }
 
@@ -421,7 +421,7 @@ namespace xlpmg
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)", INFO);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO);
                 logEvent("0%", DEBUG);
                 unsigned long bytes_total = 0;
                 while (bytes_total < strlen(message.c_str()))
