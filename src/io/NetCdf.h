@@ -253,5 +253,7 @@ public:
                                   t_real &o_offsetY,
                                   t_real &o_t,
                                   t_idx &o_timeStep);
+
+    void flush();
 };
 #endif

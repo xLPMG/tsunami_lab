@@ -920,3 +920,11 @@ void tsunami_lab::io::NetCdf::loadCheckpointDimensions(const char *i_checkpointF
 
     checkNcErr(nc_close(l_ncIdCheckRead));
 }
+
+void tsunami_lab::io::NetCdf::flush()
+{
+    if (m_outputFileOpened)
+    {
+        nc_sync(m_ncId);
+    }
+}

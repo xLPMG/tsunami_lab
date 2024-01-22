@@ -516,7 +516,7 @@ int tsunami_lab::ui::GUI::launch()
                     if (ImGui::Button("Get simulation sizes"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
-                        std::cout << m_communicator.receiveFromServer() << std::endl; 
+                        std::cout << m_communicator.receiveFromServer() << std::endl;
                     }
 
                     ImGui::EndTabItem();
@@ -896,7 +896,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::PopID();
                 ImGui::TreePop();
             }
-            
+
             ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
@@ -909,6 +909,7 @@ int tsunami_lab::ui::GUI::launch()
             m_ny = abs(m_ny);
             m_nk = abs(m_nk);
 
+            ImGui::BeginDisabled(m_tsunamiEvent != 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
@@ -920,6 +921,7 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset X", &m_offsetX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
+            ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);

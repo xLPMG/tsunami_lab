@@ -891,6 +891,9 @@ int tsunami_lab::Simulator::start(std::string i_config)
   runCalculation();
   std::cout << "finished time loop" << std::endl;
 
+  // write to netcdf if there is still unwritten data in the buffer
+  m_netCdf->flush();
+
   // write station data to files
   if (m_useFileIO)
   {
