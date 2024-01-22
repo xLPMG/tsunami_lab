@@ -624,7 +624,7 @@ int tsunami_lab::ui::GUI::launch()
 
             if (m_runner != 0)
             {
-                ImGui::InputInt("Server port", &m_serverRestartPort);
+                ImGui::InputInt("Server port", &m_serverRestartPort, 0);
                 ImGui::SameLine();
                 HelpMarker("Port which the server will use when starting.");
             }
@@ -695,12 +695,12 @@ int tsunami_lab::ui::GUI::launch()
                 }
                 if (!m_useFilesystem)
                 {
-                    options.append("use_filesystem=no");
+                    options.append(" use_filesystem=no");
                 }
 
                 if (!m_useGui)
                 {
-                    options.append("gui=no");
+                    options.append(" gui=no");
                 }
 
                 json compileArgs;
