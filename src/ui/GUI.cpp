@@ -514,10 +514,10 @@ int tsunami_lab::ui::GUI::launch()
                             std::cout << responseMessage.args << std::endl;
                         }
                     }
-
                     if (ImGui::Button("Get simulation sizes"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
+                        std::cout << m_communicator.receiveFromServer() << std::endl; 
                     }
 
                     ImGui::EndTabItem();
@@ -816,6 +816,7 @@ int tsunami_lab::ui::GUI::launch()
                     m_offsetX = m_xData[0];
                     m_offsetY = m_yData[0];
                 }
+
                 ImGui::SameLine();
                 HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
                 ImGui::PopID();

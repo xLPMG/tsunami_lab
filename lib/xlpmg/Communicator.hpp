@@ -204,13 +204,13 @@ namespace xlpmg
 
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
                 {
-                    if (message.length() < 250)
+                    if (message.length() < 400)
                     {
                         logEvent(message, RECEIVED);
                     }
                     else
                     {
-                        logEvent("Message is bigger than buffer and wont be displayed.", RECEIVED);
+                        logEvent("Message is too long to be displayed.", RECEIVED);
                     }
                     finished = true;
                 }
@@ -388,13 +388,13 @@ namespace xlpmg
                 }
                 if (std::string(readBuffer).find("DONE") != std::string::npos)
                 {
-                    if (message.length() < 250)
+                    if (message.length() < 400)
                     {
                         logEvent(message, RECEIVED);
                     }
                     else
                     {
-                        logEvent("Message is bigger than buffer and wont be displayed.", RECEIVED);
+                       logEvent("Message is too long to be displayed.", RECEIVED);
                     }
                     finished = true;
                 }

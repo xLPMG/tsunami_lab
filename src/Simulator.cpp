@@ -257,21 +257,24 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CUSTOM")
   {
-    if(m_ny > 1){
+    if (m_ny > 1)
+    {
       tsunami_lab::io::NetCdf *l_netCdfCustom = new tsunami_lab::io::NetCdf(m_nx,
-                                                                         m_ny,
-                                                                         m_nk,
-                                                                         m_simulationSizeX,
-                                                                         m_simulationSizeY,
-                                                                         m_offsetX,
-                                                                         m_offsetY,
-                                                                         m_netcdfOutputPath,
-                                                                         m_checkPointFilePath);
-    m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
-                                                      m_displacementFilePath.c_str(),
-                                                      l_netCdfCustom,
-                                                      m_nx);
-    }else{
+                                                                            m_ny,
+                                                                            m_nk,
+                                                                            m_simulationSizeX,
+                                                                            m_simulationSizeY,
+                                                                            m_offsetX,
+                                                                            m_offsetY,
+                                                                            m_netcdfOutputPath,
+                                                                            m_checkPointFilePath);
+      m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
+                                                        m_displacementFilePath.c_str(),
+                                                        l_netCdfCustom,
+                                                        m_nx);
+    }
+    else
+    {
       m_setup = new tsunami_lab::setups::TsunamiEvent1d(m_bathymetryFilePath);
     }
   }
@@ -279,6 +282,8 @@ void tsunami_lab::Simulator::constructSetup()
   {
     m_setup = nullptr;
   }
+  m_dx = m_simulationSizeX / m_nx;
+  m_dy = m_simulationSizeY / m_ny;
 }
 
 void tsunami_lab::Simulator::setUpNetCdf()
@@ -539,6 +544,7 @@ void tsunami_lab::Simulator::deriveTimeStep()
   {
     m_dt = 0.45 * std::min(m_dx, m_dy) / l_speedMax;
   }
+
   // calculate max time steps
   m_timeStepMax = std::ceil(m_endTime / m_dt) + 1;
   std::cout << "Note: max " << m_timeStepMax << " steps will be computed." << std::endl;
@@ -635,8 +641,8 @@ void tsunami_lab::Simulator::deleteStations()
 
 void tsunami_lab::Simulator::resetSimulator()
 {
-  m_simTime=0;
-  m_timeStep=0;
+  m_simTime = 0;
+  m_timeStep = 0;
   m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
   freeMemory();
   prepareForCalculation();
@@ -718,7 +724,6 @@ void tsunami_lab::Simulator::prepareForCalculation()
   }
 
   loadConfiguration();
-
   constructSetup();
 
   // BREAKPOINT
@@ -738,7 +743,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
 
   constructSolver();
 
-  //loadBathymetry(&m_bathymetryFilePath);
+  // loadBathymetry(&m_bathymetryFilePath);
 
   if (m_useFileIO)
   {
@@ -750,7 +755,6 @@ void tsunami_lab::Simulator::prepareForCalculation()
 
 void tsunami_lab::Simulator::runCalculation()
 {
-  std::cout<<m_simTime<<std::endl;
   deriveTimeStep();
   auto l_lastWrite = std::chrono::system_clock::now();
   while (m_simTime < m_endTime && !m_shouldExit)
@@ -819,10 +823,10 @@ void tsunami_lab::Simulator::runCalculation()
       }
     }
 
-    //pausing the simulation 
-    // while(m_pauseStatus){
-    //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    // }
+    // pausing the simulation
+    //  while(m_pauseStatus){
+    //      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    //  }
 
     // BREAKPOINT
     if (m_shouldExit)
@@ -865,6 +869,10 @@ int tsunami_lab::Simulator::start(std::string i_config)
   if (!m_isPrepared)
   {
     prepareForCalculation();
+  }
+  else
+  {
+    std::cout << "No preparation needed." << std::endl;
   }
 
   // BREAKPOINT
