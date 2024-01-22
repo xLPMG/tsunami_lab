@@ -641,6 +641,7 @@ void tsunami_lab::Simulator::deleteStations()
 
 void tsunami_lab::Simulator::resetSimulator()
 {
+  std::cout <<"Resetting solver"<<std::endl;
   m_simTime = 0;
   m_timeStep = 0;
   m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -773,7 +774,7 @@ void tsunami_lab::Simulator::runCalculation()
         {
         case NETCDF:
         {
-          std::cout << "  writing to netcdf " << std::endl;
+          std::cout << "  writing to netcdf to " << m_netCdfOutputPathString << std::endl;
           m_netCdf->write(m_waveProp->getStride(),
                           m_waveProp->getHeight(),
                           m_waveProp->getMomentumX(),

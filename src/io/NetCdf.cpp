@@ -463,7 +463,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
 {
     t_idx start[] = {m_writingStepsCount, 0, 0};
     t_idx count[] = {1, m_nky, m_nkx};
-
     t_real *l_data = new t_real[m_nkx * m_nky];
     int l_i = 0;
 

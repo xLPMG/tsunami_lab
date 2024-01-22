@@ -92,7 +92,6 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"hasBoundaryT", m_boundaryT},
                    {"hasBoundaryB", m_boundaryB},
                    {"setup", m_tsunamiEvents[m_tsunamiEvent]}};
-
     // stations
     for (Station l_s : m_stations)
     {
