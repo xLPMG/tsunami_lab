@@ -641,10 +641,12 @@ void tsunami_lab::Simulator::deleteStations()
 
 void tsunami_lab::Simulator::resetSimulator()
 {
-  std::cout <<"Resetting solver"<<std::endl;
+  std::cout << "Resetting solver" << std::endl;
   m_simTime = 0;
   m_timeStep = 0;
   m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
+  m_calculationTime = 0;
+  m_preparingTime = 0;
   freeMemory();
   prepareForCalculation();
 }
@@ -691,7 +693,9 @@ void tsunami_lab::Simulator::addStation(tsunami_lab::t_real i_locationX,
 
 void tsunami_lab::Simulator::prepareForCalculation()
 {
+  m_preparingTime = 0;
   m_isPreparing = true;
+  auto l_beginPrep = std::chrono::high_resolution_clock::now();
   std::cout << "Preparing Tsunami Solver..." << std::endl;
   //-------------------------------------------//
   //--------------File I/O Config--------------//
@@ -750,12 +754,20 @@ void tsunami_lab::Simulator::prepareForCalculation()
   {
     loadStations();
   }
+
+  auto l_endPrep = std::chrono::high_resolution_clock::now();
+  auto l_durationPrep = std::chrono::duration_cast<std::chrono::milliseconds>(l_endPrep - l_beginPrep);
+  m_preparingTime = l_durationPrep.count();
+
   m_isPreparing = false;
   m_isPrepared = true;
 }
 
 void tsunami_lab::Simulator::runCalculation()
 {
+  m_calculationTime = 0;
+  m_timePerTimeStep = 0;
+  auto l_beginCalc = std::chrono::high_resolution_clock::now();
   deriveTimeStep();
   auto l_lastWrite = std::chrono::system_clock::now();
   while (m_simTime < m_endTime && !m_shouldExit)
@@ -841,7 +853,15 @@ void tsunami_lab::Simulator::runCalculation()
     m_waveProp->timeStep(m_scalingX, m_scalingY);
     m_timeStep++;
     m_simTime += m_dt;
+
+    auto l_endTimeStepTimer = std::chrono::high_resolution_clock::now();
+    auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(l_endTimeStepTimer - l_beginCalc);
+    m_timePerTimeStep = l_durationTimeSteps.count() / m_timeStep;
   }
+
+  auto l_endCalc = std::chrono::high_resolution_clock::now();
+  auto l_durationCalc = std::chrono::duration_cast<std::chrono::milliseconds>(l_endCalc - l_beginCalc);
+  m_calculationTime = l_durationCalc.count();
 }
 
 //-------------------------------------------//

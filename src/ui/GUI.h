@@ -116,7 +116,8 @@ private:
 
   //simulation status
   bool m_isPausing = false;
-
+  tsunami_lab::t_idx m_timeStep = 0;
+  tsunami_lab::t_idx m_maxTimeSteps = 0;
 
   /**
    * Executes a shell command.

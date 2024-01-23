@@ -67,7 +67,6 @@ private:
     std::atomic<bool> m_isCalculating = false;
     std::atomic<bool> m_pauseStatus = false;
 
-
     // input parameters
     std::string m_bathymetryFilePath = "";
     std::string m_displacementFilePath = "";
@@ -255,6 +254,10 @@ private:
     void freeMemory();
 
 public:
+    std::atomic<double> m_calculationTime = 0;
+    std::atomic<double> m_preparingTime = 0;
+    std::atomic<double> m_timePerTimeStep = 0;
+
     //------------------------------------------//
     //-----------------GETTERS------------------//
     //------------------------------------------//
@@ -394,7 +397,8 @@ public:
      *  @param i_filePath file path.
      *  @return void
      */
-    void setBathymetryFilePath(std::string i_filePath){
+    void setBathymetryFilePath(std::string i_filePath)
+    {
         m_bathymetryFilePath = i_filePath;
     }
 
@@ -404,7 +408,8 @@ public:
      *  @param i_filePath file path.
      *  @return void
      */
-    void setDisplacementFilePath(std::string i_filePath){
+    void setDisplacementFilePath(std::string i_filePath)
+    {
         m_displacementFilePath = i_filePath;
     }
 
@@ -414,7 +419,8 @@ public:
      *  @param i_prepared prepared flag
      *  @return void
      */
-    void setPrepared(bool i_prepared){
+    void setPrepared(bool i_prepared)
+    {
         m_isPrepared = i_prepared;
     }
 
