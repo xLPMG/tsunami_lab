@@ -37,7 +37,7 @@
 #include <chrono>
 #include <algorithm>
 
-// ui components
+#include "../systeminfo/SystemInfo.h"
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -184,6 +184,12 @@ int tsunami_lab::ui::GUI::launch()
     fileDialogDis.SetTitle("Filesystem");
     fileDialogDis.SetTypeFilters({".nc"});
 
+    tsunami_lab::systeminfo::SystemInfo systemInfo;
+    auto fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
+    std::string cpu = "no info";
+    long long totalRAM = 0;
+    long long usedRAM = 0;
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -200,6 +206,14 @@ int tsunami_lab::ui::GUI::launch()
 
         ImGui::NewFrame();
 
+        if (fiveseconds <= std::chrono::system_clock::now())
+        {
+            cpu = systemInfo.getCPUUsage();
+            systemInfo.getRAMUsage(totalRAM, usedRAM);
+            fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
+            std::cout << usedRAM/1000000 << " / " << totalRAM/1000000 << "MB ("<< (double)usedRAM/totalRAM<< std::endl;
+        }
+
         updateData();
 
         if (show_demo_window)
@@ -208,6 +222,7 @@ int tsunami_lab::ui::GUI::launch()
         // Main window
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
+            ImGui::Text("%s", cpu.c_str());
             //-------------------------------------------//
             //-----------------MAIN TABS-----------------//
             //-------------------------------------------//

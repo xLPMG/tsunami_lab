@@ -88,6 +88,9 @@ namespace xlpmg
   //! should not not induce any functionality and is only used to check if the other side responds
   inline const Message CHECK = {MessageType::SERVER_CALL, "XCHECKX"};
 
+  //! Will provide information on the simulation
+  inline const Message GET_SIMULATION_STATS= {MessageType::SERVER_CALL, "get_simulation_stats"};
+
   //! Tells the server to shutdown.
   inline const Message SHUTDOWN_SERVER = {MessageType::SERVER_CALL, "shutdown_server"};
 
