@@ -87,6 +87,10 @@ private:
   std::string m_bathymetryFilePath = "";
   std::string m_displacementFilePath = "";
 
+  char m_remoteBathFilePath[256] ="";
+  char m_remoteDisFilePath[256] ="";
+
+
   // outflow conditions
   bool m_boundaryL = false;
   bool m_boundaryR = false;

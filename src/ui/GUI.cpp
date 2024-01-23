@@ -91,7 +91,9 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"hasBoundaryR", m_boundaryR},
                    {"hasBoundaryT", m_boundaryT},
                    {"hasBoundaryB", m_boundaryB},
-                   {"setup", m_tsunamiEvents[m_tsunamiEvent]}};
+                   {"setup", m_tsunamiEvents[m_tsunamiEvent]},
+                   {"bathymetry", m_remoteBathFilePath},
+                   {"displacement", m_remoteDisFilePath}};
     // stations
     for (Station l_s : m_stations)
     {
@@ -819,6 +821,9 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::SameLine();
                 HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
                 ImGui::PopID();
+
+                ImGui::InputText("Output file name", m_remoteBathFilePath, IM_ARRAYSIZE(m_remoteBathFilePath));
+
                 ImGui::TreePop();
             }
             if (ImGui::TreeNode("Displacement"))
@@ -894,6 +899,9 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::SameLine();
                 HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
                 ImGui::PopID();
+
+                ImGui::InputText("Remote displacement file path", m_remoteDisFilePath, IM_ARRAYSIZE(m_remoteDisFilePath));
+
                 ImGui::TreePop();
             }
 
