@@ -20,10 +20,12 @@ namespace tsunami_lab
 
 class tsunami_lab::systeminfo::SystemInfo
 {
+private:
+    double m_const = 0.00000000093132257;// 1/(1024*1024*1024) Converts bytes to GB
 public:
     SystemInfo();
 
-    void getRAMUsage(long long &o_totalRAM, long long &o_usedRAM);
-    std::string getCPUUsage();
+    void getRAMUsage(double &o_totalRAM, double &o_usedRAM);
+    std::vector<float> getCPUUsage();
 };
 #endif

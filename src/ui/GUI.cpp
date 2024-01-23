@@ -37,6 +37,9 @@
 #include <chrono>
 #include <algorithm>
 
+#include <thread>
+#include <future>
+
 #include "../systeminfo/SystemInfo.h"
 
 static void glfw_error_callback(int error, const char *description)
@@ -186,10 +189,10 @@ int tsunami_lab::ui::GUI::launch()
 
     tsunami_lab::systeminfo::SystemInfo systemInfo;
     auto fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
-    std::string cpu = "no info";
-    long long totalRAM = 0;
-    long long usedRAM = 0;
-
+    std::vector<float> cpu;
+    double totalRAM = 0;
+    double usedRAM = 0;
+    std::thread t1;
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -208,10 +211,12 @@ int tsunami_lab::ui::GUI::launch()
 
         if (fiveseconds <= std::chrono::system_clock::now())
         {
-            cpu = systemInfo.getCPUUsage();
-            systemInfo.getRAMUsage(totalRAM, usedRAM);
+            std::thread t1([&systemInfo, &cpu] {cpu = systemInfo.getCPUUsage();});
+            t1.detach();
+
+            std::thread t2([&systemInfo, &totalRAM, &usedRAM] {systemInfo.getRAMUsage(totalRAM, usedRAM);});
+            t2.detach();
             fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
-            std::cout << usedRAM/1000000 << " / " << totalRAM/1000000 << "MB ("<< (double)usedRAM/totalRAM<< std::endl;
         }
 
         updateData();
@@ -222,7 +227,15 @@ int tsunami_lab::ui::GUI::launch()
         // Main window
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
-            ImGui::Text("%s", cpu.c_str());
+
+            for (unsigned long i = 0; i < cpu.size(); ++i)
+            {
+                ImGui::ProgressBar(cpu[i] / 100, ImVec2(0.0f, 0.0f));
+                ImGui::SameLine();
+                ImGui::Text("%s %lu", "CPU: ", i);
+            }
+            ImGui::Text("%f / %f GB RAM usage", usedRAM, totalRAM);
+
             //-------------------------------------------//
             //-----------------MAIN TABS-----------------//
             //-------------------------------------------//
