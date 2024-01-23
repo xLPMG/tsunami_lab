@@ -145,7 +145,7 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     }
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
     {
-        result += buffer.data();
+        //result += buffer.data();
     }
 #elif __APPLE__ || __MACH__
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("top -l 2 | grep -E '^CPU' | tail -1 | LC_NUMERIC='C' awk '{s=$3+$5} END {print s}' &", "r"), pclose);
