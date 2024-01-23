@@ -8,7 +8,7 @@
 #ifndef TSUNAMI_LAB_SYSTEMINFO_SYSTEMINFO_H
 #define TSUNAMI_LAB_SYSTEMINFO_SYSTEMINFO_H
 
-#include <string>
+#include <vector>
 
 namespace tsunami_lab
 {

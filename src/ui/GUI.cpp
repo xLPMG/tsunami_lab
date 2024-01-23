@@ -36,6 +36,7 @@
 #include <sstream>
 #include <chrono>
 #include <algorithm>
+#include <vector>
 
 #include <thread>
 #include <future>

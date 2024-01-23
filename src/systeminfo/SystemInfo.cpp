@@ -26,6 +26,7 @@
 #include <stdexcept>
 #include <string>
 #include <array>
+#include <vector>
 
 #ifdef __linux__
 static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;

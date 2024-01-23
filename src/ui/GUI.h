@@ -116,8 +116,8 @@ private:
 
   //simulation status
   bool m_isPausing = false;
-  long m_timeStep = 0;
-  long m_maxTimeSteps = 0;
+  // long m_timeStep = 0;
+  // long m_maxTimeSteps = 0;
 
   /**
    * Executes a shell command.
