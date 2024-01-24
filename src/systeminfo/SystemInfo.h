@@ -21,7 +21,7 @@ namespace tsunami_lab
 class tsunami_lab::systeminfo::SystemInfo
 {
 private:
-    double m_const = 0.00000000093132257;// 1/(1024*1024*1024) Converts bytes to GB
+    double m_bytesToGB = 0.00000000093132257;// 1/(1024*1024*1024) Converts bytes to GB
 public:
     SystemInfo();
 
