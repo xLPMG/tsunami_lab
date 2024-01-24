@@ -27,6 +27,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <sstream>
 
 #ifdef __linux__
 static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
@@ -91,43 +92,48 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
     }
 
     long pages = 0;
-    // get app memory
-    // = anonymous - pages purgeable
-    std::unique_ptr<FILE, decltype(&pclose)> pipeAppMemPages(popen("vm_stat |  LC_NUMERIC='C' awk '{if (NR==8) { sum=-$3 } else if(NR==15) {sum+=$3}}  END { print sum }'", "r"), pclose);
-    if (!pipeAppMemPages)
+
+    // get page info
+    std::string pageInfo = "";
+    std::unique_ptr<FILE, decltype(&pclose)> pipePageInfo(popen("vm_stat", "r"), pclose);
+    if (!pipePageInfo)
     {
         throw std::runtime_error("popen() failed!");
     }
-    while (fgets(buffer.data(), buffer.size(), pipeAppMemPages.get()) != nullptr)
+    while (fgets(buffer.data(), buffer.size(), pipePageInfo.get()) != nullptr)
     {
-        result = buffer.data();
+        pageInfo += buffer.data();
     }
-    pages += std::stol(result);
 
-    // get wired memory
-    std::unique_ptr<FILE, decltype(&pclose)> pipeWiredMem(popen("vm_stat |  LC_NUMERIC='C' awk 'NR==7 { sum+=$4 }; END { print sum }'", "r"), pclose);
-    if (!pipeWiredMem)
+    std::istringstream lines(pageInfo);
+    std::string line;
+    while (getline(lines, line))
     {
-        throw std::runtime_error("popen() failed!");
-    }
-    while (fgets(buffer.data(), buffer.size(), pipeWiredMem.get()) != nullptr)
-    {
-        result = buffer.data();
-    }
-    pages += std::stol(result);
+        if ((line.find("Anonymous") != std::string::npos) || (line.find("wired") != std::string::npos) || (line.find("occupied") != std::string::npos))
+        {
+            line.pop_back(); // remove dot
 
-    // get compressed memory
-    std::unique_ptr<FILE, decltype(&pclose)> pipeCompMem(popen("vm_stat |  LC_NUMERIC='C' awk 'NR==17 { sum+=$5 }; END { print sum }'", "r"), pclose);
-    if (!pipeCompMem)
-    {
-        throw std::runtime_error("popen() failed!");
-    }
-    while (fgets(buffer.data(), buffer.size(), pipeCompMem.get()) != nullptr)
-    {
-        result = buffer.data();
-    }
-    pages += std::stol(result);
+            int i = line.length() - 1; // last character
+            while (i != 0 && !isspace(line[i]))
+            {
+                --i;
+            }
+            std::string valueString = line.substr(i + 1);
+            pages += std::stol(valueString);
+        }
+        else if ((line.find("purgeable") != std::string::npos))
+        {
+            line.pop_back(); // remove dot
 
+            int i = line.length() - 1; // last character
+            while (i != 0 && !isspace(line[i]))
+            {
+                --i;
+            }
+            std::string valueString = line.substr(i + 1);
+            pages -= std::stol(valueString);
+        }
+    }
     o_usedRAM = (pages * (double)pagesize) * m_const;
 #endif
 }
@@ -145,7 +151,7 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     }
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
     {
-        //result += buffer.data();
+        // result += buffer.data();
     }
 #elif __APPLE__ || __MACH__
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("top -l 2 | grep -E '^CPU' | tail -1 | LC_NUMERIC='C' awk '{s=$3+$5} END {print s}' &", "r"), pclose);
