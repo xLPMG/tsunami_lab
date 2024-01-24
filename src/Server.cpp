@@ -15,7 +15,6 @@ bool m_isSimulationRunning = false;
 std::string m_bathTempFile = "bathymetry_temp.nc";
 std::string m_displTempFile = "displacement_temp.nc";
 
-
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
     std::string commandString = (i_cmd + " > " + i_outputFile + " 2>&1 &").data();
@@ -76,6 +75,9 @@ int main(int i_argc, char *i_argv[])
             std::string l_key = l_message.key;
             json l_args = l_message.args;
 
+            //-------------------------------------------//
+            //---------------SERVER CALLS----------------//
+            //-------------------------------------------//
             if (l_type == xlpmg::SERVER_CALL)
             {
                 if (l_key == xlpmg::CHECK.key)
@@ -182,7 +184,7 @@ int main(int i_argc, char *i_argv[])
                 {
                     l_communicator.setSendBufferSize(l_args);
                 }
-                
+
                 else if (l_key == xlpmg::SET_BATHYMETRY_DATA.key)
                 {
                     std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
@@ -212,6 +214,9 @@ int main(int i_argc, char *i_argv[])
                     simulator->setPausingStatus(false);
                 }
             }
+            //-------------------------------------------//
+            //--------------FUNCTION CALLS---------------//
+            //-------------------------------------------//
             else if (l_type == xlpmg::FUNCTION_CALL)
             {
 
