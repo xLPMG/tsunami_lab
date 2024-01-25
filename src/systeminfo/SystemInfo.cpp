@@ -65,74 +65,74 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
     o_usedRAM = l_physMemUsed;
 
 #elif __APPLE__ || __MACH__
-    int mib[2];
-    long long physical_memoryLong;
-    mib[0] = CTL_HW;
-    mib[1] = HW_MEMSIZE;
-    unsigned long length = sizeof(int64_t);
-    sysctl(mib, 2, &physical_memoryLong, &length, NULL, 0);
-    double physical_memory = physical_memoryLong;
-    physical_memory *= m_bytesToGB;
-    o_totalRAM = physical_memory;
+    int l_mib[2];
+    long long l_physicalMemoryLong;
+    l_mib[0] = CTL_HW;
+    l_mib[1] = HW_MEMSIZE;
+    unsigned long l_length = sizeof(int64_t);
+    sysctl(l_mib, 2, &l_physicalMemoryLong, &l_length, NULL, 0);
+    double l_physicalMemoryDouble = l_physicalMemoryLong;
+    l_physicalMemoryDouble *= m_bytesToGB;
+    o_totalRAM = l_physicalMemoryDouble;
 
-    std::array<char, 128> buffer;
-    std::string result;
+    std::array<char, 128> l_buffer;
+    std::string l_result;
     // get page size
-    int pagesize = 0;
-    std::unique_ptr<FILE, decltype(&pclose)> pipePagesize(popen("pagesize", "r"), pclose);
-    if (!pipePagesize)
+    int l_pagesize = 0;
+    std::unique_ptr<FILE, decltype(&pclose)> l_pipePagesize(popen("pagesize", "r"), pclose);
+    if (!l_pipePagesize)
     {
         throw std::runtime_error("popen() failed!");
     }
-    while (fgets(buffer.data(), buffer.size(), pipePagesize.get()) != nullptr)
+    while (fgets(l_buffer.data(), l_buffer.size(), l_pipePagesize.get()) != nullptr)
     {
-        pagesize = std::stoi(buffer.data());
+        l_pagesize = std::stoi(l_buffer.data());
     }
 
-    long pages = 0;
+    long l_pages = 0;
 
     // get page info
-    std::string pageInfo = "";
-    std::unique_ptr<FILE, decltype(&pclose)> pipePageInfo(popen("/usr/bin/vm_stat", "r"), pclose);
-    if (!pipePageInfo)
+    std::string l_pageInfo = "";
+    std::unique_ptr<FILE, decltype(&pclose)> l_pipePageInfo(popen("/usr/bin/vm_stat", "r"), pclose);
+    if (!l_pipePageInfo)
     {
         throw std::runtime_error("popen() failed!");
     }
-    while (fgets(buffer.data(), buffer.size(), pipePageInfo.get()) != nullptr)
+    while (fgets(l_buffer.data(), l_buffer.size(), l_pipePageInfo.get()) != nullptr)
     {
-        pageInfo += buffer.data();
+       l_pageInfo += l_buffer.data();
     }
 
-    std::istringstream lines(pageInfo);
-    std::string line;
-    while (getline(lines, line))
+    std::istringstream l_lines(l_pageInfo);
+    std::string l_line;
+    while (getline(l_lines, l_line))
     {
-        if ((line.find("Anonymous") != std::string::npos) || (line.find("wired") != std::string::npos) || (line.find("occupied") != std::string::npos))
+        if ((l_line.find("Anonymous") != std::string::npos) || (l_line.find("wired") != std::string::npos) || (l_line.find("occupied") != std::string::npos))
         {
-            line.pop_back(); // remove dot
+            l_line.pop_back(); // remove dot
 
-            int i = line.length() - 1; // last character
-            while (i != 0 && !isspace(line[i]))
+            int l_i = l_line.length() - 1; // last character
+            while (l_i != 0 && !isspace(l_line[l_i]))
             {
-                --i;
+                --l_i;
             }
-            std::string valueString = line.substr(i + 1);
-            pages += std::stol(valueString);
+            std::string l_valueString = l_line.substr(l_i + 1);
+            l_pages += std::stol(l_valueString);
         }
-        else if ((line.find("purgeable") != std::string::npos))
+        else if ((l_line.find("purgeable") != std::string::npos))
         {
-            line.pop_back(); // remove dot
+            l_line.pop_back(); // remove dot
 
-            int i = line.length() - 1; // last character
-            while (i != 0 && !isspace(line[i]))
+            int l_i = l_line.length() - 1; // last character
+            while (l_i != 0 && !isspace(l_line[l_i]))
             {
-                --i;
+                --l_i;
             }
-            std::string valueString = line.substr(i + 1);
-            pages -= std::stol(valueString);
+            std::string l_valueString = l_line.substr(l_i + 1);
+            l_pages -= std::stol(l_valueString);
         }
     }
-    o_usedRAM = (pages * (double)pagesize) * m_bytesToGB;
+    o_usedRAM = (l_pages * (double)l_pagesize) * m_bytesToGB;
 #endif
 }
 

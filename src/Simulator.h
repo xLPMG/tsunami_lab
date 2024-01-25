@@ -561,8 +561,7 @@ private:
         m_pauseStatus = i_pauseStatus;
     };
 
-    double computeEstimatedTimeLeft()
-    {};
+    double computeEstimatedTimeLeft();
 };
 
 #endif
