@@ -97,7 +97,9 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"hasBoundaryB", m_boundaryB},
                    {"setup", m_tsunamiEvents[m_tsunamiEvent]},
                    {"bathymetry", m_remoteBathFilePath},
-                   {"displacement", m_remoteDisFilePath}};
+                   {"displacement", m_remoteDisFilePath},
+                   {"height", m_height},
+                   {"diameter", m_diameter}};
     // stations
     for (Station l_s : m_stations)
     {
@@ -409,7 +411,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::EndTabItem();
                 }
                 //--------------------------------------------//
-                //----------------CONNECTIVITY----------------//
+                //----------------Simulator-------------------//
                 //--------------------------------------------//
                 if (ImGui::BeginTabItem("Simulator"))
                 {
@@ -447,6 +449,24 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopStyleColor(3);
                     ImGui::EndTabItem();
 
+                    if (ImGui::Button("Pause Simulation"))
+                    {
+                        if (!m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
+                            m_isPausing = true;
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Continue Simulation"))
+                    {
+                        if (m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
+                            m_isPausing = false;
+                        }
+                    }
+
                     if (ImGui::Button("Delete checkpoint"))
                     {
                         xlpmg::Message deleteCPMsg = xlpmg::DELETE_CHECKPOINTS;
@@ -474,24 +494,6 @@ int tsunami_lab::ui::GUI::launch()
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if (ImGui::Button("Pause Simulation"))
-                    {
-                        if (!m_isPausing)
-                        {
-                            m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
-                            m_isPausing = true;
-                        }
-                    }
-                    ImGui::SameLine();
-                    if (ImGui::Button("Continue Simulation"))
-                    {
-                        if (m_isPausing)
-                        {
-                            m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
-                            m_isPausing = false;
-                        }
-                    }
-
                     if (ImGui::Button("Get height data"))
                     {
                         if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
@@ -546,6 +548,37 @@ int tsunami_lab::ui::GUI::launch()
                             std::cout << responseMessage.args << std::endl;
                         }
                     }
+                    if (ImGui::Button("Get max time step"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
+                        std::string response = m_communicator.receiveFromServer();
+                        if (json::accept(response))
+                        {
+                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            std::cout << responseMessage.args << std::endl;
+                        }
+                    }
+                    if (ImGui::Button("Get max time step"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
+                        std::string response = m_communicator.receiveFromServer();
+                        if (json::accept(response))
+                        {
+                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            std::cout << responseMessage.args << std::endl;
+                        }
+                    }
+                    if (ImGui::Button("Get time left estimation"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
+                        std::string response = m_communicator.receiveFromServer();
+                        if (json::accept(response))
+                        {
+                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            std::cout << responseMessage.args << std::endl;
+                        }
+                    }
+
                     if (ImGui::Button("Get simulation sizes"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
@@ -774,6 +807,12 @@ int tsunami_lab::ui::GUI::launch()
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
+
+            if(!strcmp(m_tsunamiEvents[m_tsunamiEvent],"CIRCULARDAMBREAK2D"))
+            {
+                ImGui::InputInt("Waterheight", &m_height, 0);
+                ImGui::InputInt("Diameter", &m_diameter, 0);
+            }
 
             ImGui::BeginDisabled(m_tsunamiEvent != 0);
             if (ImGui::TreeNode("Bathymetry"))

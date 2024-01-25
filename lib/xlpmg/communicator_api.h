@@ -169,6 +169,11 @@ namespace xlpmg
   //! continue simulation
   inline const Message CONTINUE_SIMULATION = {MessageType::SERVER_CALL, "continue_simulation"};
 
+  //! gets the current run time
+  inline const Message GET_CURRENT_RUNTIME = {MessageType::FUNCTION_CALL, "get_current_runtime"};
+
+  //! gets a time left estimation
+  inline const Message GET_ESTIMATED_LEFT_TIME = {MessageType::FUNCTION_CALL, "get_estimated_left_time"};
 }
 
 #endif

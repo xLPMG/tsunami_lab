@@ -108,7 +108,8 @@ private:
     tsunami_lab::t_real m_dx = 0;
     tsunami_lab::t_real m_dy = 0;
     tsunami_lab::t_real m_endTime = 0;
-
+    tsunami_lab::t_real m_height = 0;
+    tsunami_lab::t_real m_diameter = 0;
     // boundary conditions
     Boundary m_boundaryL = Boundary::OUTFLOW;
     Boundary m_boundaryR = Boundary::OUTFLOW;
@@ -253,7 +254,7 @@ private:
      */
     void freeMemory();
 
-public:
+ public:
     std::atomic<double> m_calculationTime = 0;
     std::atomic<double> m_preparingTime = 0;
     std::atomic<double> m_timePerTimeStep = 0;
@@ -304,6 +305,16 @@ public:
 
     /**
      *  Gets the current timestep.
+     *
+     *  @return max time step
+     */
+    tsunami_lab::t_idx getMaxTimeStep()
+    {
+        return m_timeStepMax;
+    }
+
+    /**
+     *  Gets the maximum timestep.
      *
      *  @return time step
      */
@@ -549,6 +560,9 @@ public:
     {
         m_pauseStatus = i_pauseStatus;
     };
+
+    double computeEstimatedTimeLeft()
+    {};
 };
 
 #endif

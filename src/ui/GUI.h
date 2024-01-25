@@ -66,7 +66,7 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
-  const char *m_tsunamiEvents[4] = {"CUSTOM", "TOHOKU", "CHILE", "ARTIFICIAL2D"};
+  const char *m_tsunamiEvents[5] = {"CUSTOM", "TOHOKU", "CHILE", "ARTIFICIAL2D","CIRCULARDAMBREAK2D"};
   int m_tsunamiEvent = 0;
   int m_nx = 1;
   int m_ny = 1;
@@ -83,6 +83,8 @@ private:
   char m_outputFileName[256] = "solution";
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
+  int m_height = 0;
+  int m_diameter = 0;
 
   std::string m_bathymetryFilePath = "";
   std::string m_displacementFilePath = "";

@@ -230,6 +230,18 @@ int main(int i_argc, char *i_argv[])
                     xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
+                else if(l_key == xlpmg::GET_MAX_TIMESTEPS.key){
+                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getMaxTimeStep()};
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
+                }
+                else if(l_key == xlpmg::GET_CURRENT_RUNTIME.key){
+                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "run_time_data", };
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
+                }
+                else if(l_key == xlpmg::GET_ESTIMATED_LEFT_TIME.key){
+                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_left_estimation", };
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
+                }
                 else if (l_key == xlpmg::TOGGLE_FILEIO.key)
                 {
                     if (l_args == "true")

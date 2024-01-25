@@ -24,13 +24,14 @@ namespace tsunami_lab
 class tsunami_lab::setups::CircularDamBreak2d : public Setup
 {
 private:
+t_real m_height = 0;
 
 public:
   /**
    * Constructor.
    *
    **/
-  CircularDamBreak2d();
+  CircularDamBreak2d(tsunami_lab::t_real i_height);
 
   /**
    * Gets the water height at a given point.
