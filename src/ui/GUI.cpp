@@ -57,10 +57,17 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
 
 void tsunami_lab::ui::GUI::updateData()
 {
-    if (std::chrono::system_clock::now() - m_lastDataUpdate >= std::chrono::duration<float>(m_dataUpdateFrequency))
+    m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION));
+    std::string l_responseString = m_communicator.receiveFromServer();
+    if (json::accept(l_responseString))
     {
-        // TODO: update
-        m_lastDataUpdate = std::chrono::system_clock::now();
+        xlpmg::Message l_responseMessage = xlpmg::jsonToMessage(json::parse(l_responseString));
+        m_usedRAM = l_responseMessage.args.value("USED_RAM", (double)0);
+        m_totalRAM = l_responseMessage.args.value("TOTAL_RAM", (double)0);
+        if (l_responseMessage.args.contains("CPU_USAGE"))
+        {
+            m_cpuData = l_responseMessage.args["CPU_USAGE"].get<std::vector<float>>();
+        }
     }
 }
 
@@ -191,11 +198,6 @@ int tsunami_lab::ui::GUI::launch()
     fileDialogDis.SetTypeFilters({".nc"});
 
     tsunami_lab::systeminfo::SystemInfo systemInfo;
-    auto fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
-    std::vector<float> cpu;
-    double totalRAM = 0;
-    double usedRAM = 0;
-    std::thread t1;
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -212,17 +214,11 @@ int tsunami_lab::ui::GUI::launch()
 
         ImGui::NewFrame();
 
-        if (fiveseconds <= std::chrono::system_clock::now())
+        if (m_lastDataUpdate <= std::chrono::system_clock::now())
         {
-            std::thread t1([&systemInfo, &cpu] {cpu = systemInfo.getCPUUsage();});
-            t1.detach();
-
-            std::thread t2([&systemInfo, &totalRAM, &usedRAM] {systemInfo.getRAMUsage(totalRAM, usedRAM);});
-            t2.detach();
-            fiveseconds = std::chrono::system_clock::now() + std::chrono::seconds(5);
+            updateData();
+            m_lastDataUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_dataUpdateFrequency);
         }
-
-        updateData();
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
@@ -231,13 +227,13 @@ int tsunami_lab::ui::GUI::launch()
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
 
-            for (unsigned long i = 0; i < cpu.size(); ++i)
+            for (unsigned long i = 0; i < m_cpuData.size(); ++i)
             {
-                ImGui::ProgressBar(cpu[i] / 100, ImVec2(0.0f, 0.0f));
+                ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
                 ImGui::SameLine();
                 ImGui::Text("%s %lu", "CPU: ", i);
             }
-            ImGui::Text("%f / %f GB RAM usage", usedRAM, totalRAM);
+            ImGui::Text("%f / %f GB RAM usage", m_usedRAM, m_totalRAM);
 
             //-------------------------------------------//
             //-----------------MAIN TABS-----------------//
@@ -808,7 +804,7 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
 
-            if(!strcmp(m_tsunamiEvents[m_tsunamiEvent],"CIRCULARDAMBREAK2D"))
+            if (!strcmp(m_tsunamiEvents[m_tsunamiEvent], "CIRCULARDAMBREAK2D"))
             {
                 ImGui::InputInt("Waterheight", &m_height, 0);
                 ImGui::InputInt("Diameter", &m_diameter, 0);

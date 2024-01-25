@@ -170,10 +170,13 @@ namespace xlpmg
   inline const Message CONTINUE_SIMULATION = {MessageType::SERVER_CALL, "continue_simulation"};
 
   //! gets the current run time
-  inline const Message GET_CURRENT_RUNTIME = {MessageType::FUNCTION_CALL, "get_current_runtime"};
+  inline const Message GET_CURRENT_RUNTIME = {MessageType::SERVER_CALL, "get_current_runtime"};
 
   //! gets a time left estimation
-  inline const Message GET_ESTIMATED_LEFT_TIME = {MessageType::FUNCTION_CALL, "get_estimated_left_time"};
+  inline const Message GET_ESTIMATED_LEFT_TIME = {MessageType::SERVER_CALL, "get_estimated_left_time"};
+
+  //! gets the system info such as CPU and RAM usage
+  inline const Message GET_SYSTEM_INFORMATION = {MessageType::SERVER_CALL, "get_system_information"};
 }
 
 #endif

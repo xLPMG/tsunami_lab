@@ -36,7 +36,7 @@ private:
   char IPADDRESS[16] = "127.0.0.1";
 
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
-  float m_dataUpdateFrequency = 1;
+  int m_dataUpdateFrequency = 5;
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
@@ -120,6 +120,10 @@ private:
   bool m_isPausing = false;
   // long m_timeStep = 0;
   // long m_maxTimeSteps = 0;
+
+    std::vector<float> m_cpuData;
+    double m_totalRAM = 0;
+    double m_usedRAM = 0;
 
   /**
    * Executes a shell command.

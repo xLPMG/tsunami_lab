@@ -2,6 +2,7 @@
 #include "xlpmg/Communicator.hpp"
 #include "xlpmg/communicator_api.h"
 #include <nlohmann/json.hpp>
+#include "systeminfo/SystemInfo.h"
 
 #include <thread>
 using json = nlohmann::json;
@@ -56,6 +57,11 @@ int main(int i_argc, char *i_argv[])
         {
             m_PORT = atoi(i_argv[2]);
         }
+
+        tsunami_lab::systeminfo::SystemInfo l_systemInfo;
+        double l_usedRAM = 0;
+        double l_totalRAM = 0;
+        std::vector<float> l_cpuUsage;
 
         xlpmg::Communicator l_communicator;
         l_communicator.startServer(m_PORT);
@@ -114,6 +120,25 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::KILL_SIMULATION.key)
                 {
                     exitSimulationThread();
+                }
+                else if (l_key == xlpmg::GET_SYSTEM_INFORMATION.key)
+                {
+                    std::thread t1([&l_systemInfo, &l_cpuUsage]
+                                   { l_cpuUsage = l_systemInfo.getCPUUsage(); });
+                    t1.detach();
+
+                    std::thread t2([&l_systemInfo, &l_totalRAM, &l_usedRAM]
+                                   { l_systemInfo.getRAMUsage(l_totalRAM, l_usedRAM); });
+                    t2.detach();
+
+                    xlpmg::Message l_response = {xlpmg::SERVER_RESPONSE, "system_information"};
+                    json l_data;
+                    l_data["USED_RAM"] = l_usedRAM;
+                    l_data["TOTAL_RAM"] = l_totalRAM;
+                    l_data["CPU_USAGE"] = l_cpuUsage;
+                    l_response.args = l_data;
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_response));
+
                 }
                 else if (l_key == xlpmg::COMPILE.key)
                 {
@@ -230,16 +255,25 @@ int main(int i_argc, char *i_argv[])
                     xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
-                else if(l_key == xlpmg::GET_MAX_TIMESTEPS.key){
+                else if (l_key == xlpmg::GET_MAX_TIMESTEPS.key)
+                {
                     xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getMaxTimeStep()};
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
-                else if(l_key == xlpmg::GET_CURRENT_RUNTIME.key){
-                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "run_time_data", };
+                else if (l_key == xlpmg::GET_CURRENT_RUNTIME.key)
+                {
+                    xlpmg::Message response = {
+                        xlpmg::SERVER_RESPONSE,
+                        "run_time_data",
+                    };
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
-                else if(l_key == xlpmg::GET_ESTIMATED_LEFT_TIME.key){
-                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_left_estimation", };
+                else if (l_key == xlpmg::GET_ESTIMATED_LEFT_TIME.key)
+                {
+                    xlpmg::Message response = {
+                        xlpmg::SERVER_RESPONSE,
+                        "time_left_estimation",
+                    };
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
                 }
                 else if (l_key == xlpmg::TOGGLE_FILEIO.key)
