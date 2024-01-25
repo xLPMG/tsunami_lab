@@ -203,15 +203,15 @@ int main(int i_argc, char *i_argv[])
                     simulator->setDisplacementFilePath(m_displTempFile);
                     simulator->setPrepared(false);
                 }
-                else if (l_key == xlpmg::PAUSE_SIMULATION.key)
-                {
-                    std::cout << "Pause simulation" << std::endl;
-                    simulator->setPausingStatus(true);
-                }
                 else if (l_key == xlpmg::CONTINUE_SIMULATION.key)
                 {
                     std::cout << "Continue simulation" << std::endl;
                     simulator->setPausingStatus(false);
+                }
+                else if (l_key == xlpmg::PAUSE_SIMULATION.key)
+                {
+                    std::cout << "Pause simulation" << std::endl;
+                    simulator->setPausingStatus(true);
                 }
             }
             //-------------------------------------------//

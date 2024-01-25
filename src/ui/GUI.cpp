@@ -479,6 +479,7 @@ int tsunami_lab::ui::GUI::launch()
                         if (!m_isPausing)
                         {
                             m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
+                            m_isPausing = true;
                         }
                     }
                     ImGui::SameLine();
@@ -487,6 +488,7 @@ int tsunami_lab::ui::GUI::launch()
                         if (m_isPausing)
                         {
                             m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
+                            m_isPausing = false;
                         }
                     }
 
