@@ -4,8 +4,8 @@
  * # Description
  * Library to easily create a client-server connection and handle its communication and logging.
  **/
-#ifndef COMMUNICATOR
-#define COMMUNICATOR
+#ifndef COMMUNICATOR_H
+#define COMMUNICATOR_H
 
 #include <stdio.h>
 #include <string.h>
@@ -43,9 +43,15 @@ namespace xlpmg
 
         /// @brief Adds a string to the log with correct formatting.
         /// @param message string to add to the log.
+        /// @param logtype @see xlpmg::Communicator::LogType
+        /// @param log Whether the message should be logged or not.
         /// @param logtype type of message.
-        void logEvent(std::string message, LogType logtype, bool replaceLastLine = false)
+        void logEvent(std::string message, LogType logtype, bool log, bool replaceLastLine = false)
         {
+            if(!log){
+                return;
+            }
+
             std::string line = "";
 
             auto now = std::chrono::system_clock::now();
@@ -106,6 +112,9 @@ namespace xlpmg
         //! actual size of the sending buffer
         unsigned int BUFF_SIZE_SEND = BUFF_SIZE_SEND_DEFAULT;
 
+        //! true if there is a connection
+        bool isConnected = false;
+
         void setReadBufferSize(unsigned int newSize)
         {
             BUFF_SIZE_READ = newSize;
@@ -132,10 +141,11 @@ namespace xlpmg
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
-                logEvent("Socket creation error", ERROR);
+                logEvent("Socket creation error", ERROR, true);
+                isConnected = false;
                 return -1;
             }
-            logEvent("Socket created.", INFO);
+            logEvent("Socket created.", INFO, true);
 
             setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
             setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
@@ -147,18 +157,21 @@ namespace xlpmg
             // form
             if (inet_pton(AF_INET, IPADDRESS, &serv_addr.sin_addr) <= 0)
             {
-                logEvent("Invalid address/ Address not supported.", ERROR);
+                logEvent("Invalid address/ Address not supported.", ERROR, true);
+                isConnected = false;
                 return -1;
             }
 
             if ((sockStatus = connect(sockClient_fd, (struct sockaddr *)&serv_addr,
                                       sizeof(serv_addr))) < 0)
             {
-                logEvent("Connection failed.", ERROR);
+                logEvent("Connection failed.", ERROR, true);
+                isConnected = false;
                 return -1;
             }
             std::string ipString = std::string(IPADDRESS) + ":" + std::to_string(PORT);
-            logEvent("Socket connected to " + ipString, INFO);
+            logEvent("Socket connected to " + ipString, INFO, true);
+            isConnected = true;
             return sockStatus;
         }
 
@@ -167,15 +180,18 @@ namespace xlpmg
         {
             // closing the connected socket
             close(sockClient_fd);
+            isConnected = false;
         }
 
         /// @brief Receives a message from the server.
         /// @return Message as string.
-        std::string receiveFromServer()
+        /// @param log Whether the message should be logged or not.
+        std::string receiveFromServer(bool log = true)
         {
             if (sockClient_fd < 0)
             {
-                logEvent("Reading failed: Socket not initialized.", ERROR);
+                logEvent("Reading failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
                 return "FAIL";
             }
             std::string message = "";
@@ -183,7 +199,7 @@ namespace xlpmg
             bool finished = false;
             unsigned long totalBytes = 0;
 
-            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG);
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log);
 
             while (!finished)
             {
@@ -193,13 +209,14 @@ namespace xlpmg
                                                         // terminator at the end
                 if (sockValread < 0)
                 {
-                    logEvent("Reading failed or timed out.", ERROR);
+                    logEvent("Reading failed or timed out.", ERROR, log);
+                    isConnected = false;
                     return "FAIL";
                 }
 
                 if (strlen(readBuffer) > 0)
                 {
-                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, true);
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log, true);
                 }
 
                 message += std::string(readBuffer);
@@ -211,15 +228,16 @@ namespace xlpmg
                     message.pop_back();
                     if (message.length() < 400)
                     {
-                        logEvent(message, RECEIVED);
+                        logEvent(message, RECEIVED, log);
                     }
                     else
                     {
-                        logEvent("Message is too long to be displayed.", RECEIVED);
+                        logEvent("Message is too long to be displayed.", RECEIVED, log);
                     }
                     finished = true;
                 }
             }
+            isConnected = true;
             return message;
         }
 
@@ -246,11 +264,13 @@ namespace xlpmg
 
         /// @brief Sends a message to the server.
         /// @param message String to send.
-        int sendToServer(std::string message)
+        /// @param log Whether the message should be logged or not.
+        int sendToServer(std::string message, bool log = true)
         {
             if (sockClient_fd < 0)
             {
-                logEvent("Sending failed: Socket not initialized.", ERROR);
+                logEvent("Sending failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
                 return 1;
             }
             // terminator
@@ -259,23 +279,15 @@ namespace xlpmg
             if (message.length() < BUFF_SIZE_SEND)
             {
                 send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
-                logEvent(message, SENT);
+                logEvent(message, SENT, log);
                 std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
-                logEvent(bytesSentStr.c_str(), DEBUG);
+                logEvent(bytesSentStr.c_str(), DEBUG, log);
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO);
-                logEvent("0%", DEBUG);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO, log);
+                logEvent("0%", DEBUG, log);
                 unsigned long bytes_total = 0;
-                // while (bytes_total < strlen(message.c_str()))
-                // {
-                //     unsigned long bytes_sent = send(sockClient_fd, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
-                //     bytes_total += bytes_sent;
-                //     int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
-                //     std::string bytesSentStr = std::to_string(percentage) + "%";
-                //     logEvent(bytesSentStr.c_str(), DEBUG, true);
-                // }
                 const char *data_ptr = message.data();
                 std::size_t data_size = message.size();
                 int bytes_sent;
@@ -283,16 +295,20 @@ namespace xlpmg
                 {
                     bytes_sent = send(sockClient_fd, data_ptr, data_size, 0);
                     if (bytes_sent < 0)
+                    {
+                        isConnected = false;
                         return -1;
+                    }
 
                     data_ptr += bytes_sent;
                     bytes_total += bytes_sent;
                     data_size -= bytes_sent;
                     int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
                     std::string bytesSentStr = std::to_string(percentage) + "%";
-                    logEvent(bytesSentStr.c_str(), DEBUG, true);
+                    logEvent(bytesSentStr.c_str(), DEBUG, log, true);
                 }
             }
+            isConnected = true;
             return 0;
         }
 
@@ -326,6 +342,7 @@ namespace xlpmg
             if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
                 perror("socket failed");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
 
@@ -335,6 +352,7 @@ namespace xlpmg
                            sizeof(opt)))
             {
                 perror("setsockopt");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             address.sin_family = AF_INET;
@@ -346,19 +364,23 @@ namespace xlpmg
                      sizeof(address)) < 0)
             {
                 perror("bind failed");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             if (listen(server_fd, 3) < 0)
             {
                 perror("listen");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
                                      &addrlen)) < 0)
             {
                 perror("accept");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
+            isConnected = true;
         }
 
         /// @brief Stops all connections of the server.
@@ -368,15 +390,19 @@ namespace xlpmg
             close(new_socket);
             // closing the listening socket
             close(server_fd);
+
+            isConnected = false;
         }
 
         /// @brief Receives a message froma  client.
         /// @return Message as string.
-        std::string receiveFromClient()
+        /// @param log Whether the message should be logged or not.
+        std::string receiveFromClient(bool log = true)
         {
             if (new_socket < 0)
             {
-                logEvent("Reading failed: Socket not initialized.", ERROR);
+                logEvent("Reading failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
                 return "FAIL";
             }
             std::string message = "";
@@ -391,7 +417,8 @@ namespace xlpmg
                                    BUFF_SIZE_READ - 1);
                 if (sockValread < 0)
                 {
-                    logEvent("Reading failed or timed out.", ERROR);
+                    logEvent("Reading failed or timed out.", ERROR, log);
+                    isConnected = false;
                     return "FAIL";
                 }
 
@@ -404,11 +431,11 @@ namespace xlpmg
                     message.pop_back();
                     if (message.length() < 400)
                     {
-                        logEvent(message, RECEIVED);
+                        logEvent(message, RECEIVED, log);
                     }
                     else
                     {
-                        logEvent("Message is too long to be displayed.", RECEIVED);
+                        logEvent("Message is too long to be displayed.", RECEIVED, log);
                     }
                     finished = true;
                 }
@@ -418,7 +445,8 @@ namespace xlpmg
 
         /// @brief Sends a message to a client.
         /// @param message Message to send.
-        void sendToClient(std::string message)
+        /// @param log Whether the message should be logged or not.
+        void sendToClient(std::string message, bool log = true)
         {
             // terminator
             message.append("#!");
@@ -426,23 +454,15 @@ namespace xlpmg
             if (strlen(message.c_str()) < BUFF_SIZE_SEND)
             {
                 send(new_socket, message.c_str(), strlen(message.c_str()), 0);
-                logEvent(message, SENT);
+                logEvent(message, SENT, log);
                 std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
-                logEvent(bytesSentStr.c_str(), DEBUG);
+                logEvent(bytesSentStr.c_str(), DEBUG, log);
             }
             else
             {
-                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO);
-                logEvent("0%", DEBUG);
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO, log);
+                logEvent("0%", DEBUG, log);
                 unsigned long bytes_total = 0;
-                // while (bytes_total < strlen(message.c_str()))
-                // {
-                //     unsigned long bytes_sent = send(new_socket, message.c_str() + bytes_total, BUFF_SIZE_SEND - 1, 0);
-                //     bytes_total += bytes_sent;
-                //     int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
-                //     std::string bytesSentStr = std::to_string(percentage) + "%";
-                //     logEvent(bytesSentStr.c_str(), DEBUG, true);
-                // }
                 const char *data_ptr = message.data();
                 std::size_t data_size = message.size();
                 int bytes_sent;
@@ -457,7 +477,7 @@ namespace xlpmg
                     data_size -= bytes_sent;
                     int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
                     std::string bytesSentStr = std::to_string(percentage) + "%";
-                    logEvent(bytesSentStr.c_str(), DEBUG, true);
+                    logEvent(bytesSentStr.c_str(), DEBUG, log, true);
                 }
             }
         }

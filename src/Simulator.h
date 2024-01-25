@@ -65,6 +65,7 @@ private:
     std::atomic<bool> m_shouldExit = false;
     std::atomic<bool> m_isPreparing = false;
     std::atomic<bool> m_isCalculating = false;
+    std::atomic<bool> m_isResetting = false;
     std::atomic<bool> m_pauseStatus = false;
 
     // input parameters
@@ -281,6 +282,16 @@ private:
     bool isCalculating()
     {
         return m_isCalculating;
+    }
+
+        /**
+     *  Gets the resetting status.
+     *
+     *  @return Resetting status.
+     */
+    bool isResetting()
+    {
+        return m_isResetting;
     }
 
     /**

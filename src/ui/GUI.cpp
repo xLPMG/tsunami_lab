@@ -57,16 +57,19 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
 
 void tsunami_lab::ui::GUI::updateData()
 {
-    m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION));
-    std::string l_responseString = m_communicator.receiveFromServer();
-    if (json::accept(l_responseString))
+    if (m_connected)
     {
-        xlpmg::Message l_responseMessage = xlpmg::jsonToMessage(json::parse(l_responseString));
-        m_usedRAM = l_responseMessage.args.value("USED_RAM", (double)0);
-        m_totalRAM = l_responseMessage.args.value("TOTAL_RAM", (double)0);
-        if (l_responseMessage.args.contains("CPU_USAGE"))
+        m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION), false);
+        std::string l_responseString = m_communicator.receiveFromServer(false);
+        if (json::accept(l_responseString))
         {
-            m_cpuData = l_responseMessage.args["CPU_USAGE"].get<std::vector<float>>();
+            xlpmg::Message l_responseMessage = xlpmg::jsonToMessage(json::parse(l_responseString));
+            m_usedRAM = l_responseMessage.args.value("USED_RAM", (double)0);
+            m_totalRAM = l_responseMessage.args.value("TOTAL_RAM", (double)0);
+            if (l_responseMessage.args.contains("CPU_USAGE"))
+            {
+                m_cpuData = l_responseMessage.args["CPU_USAGE"].get<std::vector<float>>();
+            }
         }
     }
 }
@@ -179,8 +182,6 @@ int tsunami_lab::ui::GUI::launch()
     // Load Fonts here
 
     // Our state
-    bool m_connected = false;
-
     bool show_demo_window = false;
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
@@ -227,12 +228,19 @@ int tsunami_lab::ui::GUI::launch()
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
 
-            for (unsigned long i = 0; i < m_cpuData.size(); ++i)
+            if (m_cpuData.size() > 0)
             {
-                ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
+                ImGui::ProgressBar(m_cpuData[0] / 100, ImVec2(0.0f, 0.0f));
                 ImGui::SameLine();
-                ImGui::Text("%s %lu", "CPU: ", i);
+                ImGui::Text("Overall CPU usage");
+                for (unsigned long i = 1; i < m_cpuData.size(); ++i)
+                {
+                    ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
+                    ImGui::SameLine();
+                    ImGui::Text("%s %lu", "CPU: ", i-1);
+                }
             }
+
             ImGui::Text("%f / %f GB RAM usage", m_usedRAM, m_totalRAM);
 
             //-------------------------------------------//
@@ -294,15 +302,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK));
-                        if (m_communicator.checkServerResponse())
-                        {
-                            m_connected = true;
-                        }
-                        else
-                        {
-                            m_connected = false;
-                        }
+                       m_connected = m_communicator.isConnected;
                     }
                     ImGui::BeginDisabled(!m_connected);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
