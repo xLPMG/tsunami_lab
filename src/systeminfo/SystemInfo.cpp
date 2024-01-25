@@ -158,6 +158,7 @@ void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &data
 
 std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
 {
+std::vector<float> cpuUsage;
 #ifdef __linux__
     if (m_firstCPURead)
     {
@@ -167,7 +168,6 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     }
 
     std::vector<CPUData> currentData;
-    std::vector<float> cpuUsage;
     readCPUData(currentData);
 
     for (size_t i = 0; i < currentData.size(); ++i)
@@ -192,7 +192,6 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     return cpuUsage;
 #elif __APPLE__ || __MACH__
     std::array<char, 128> l_buffer;
-    std::vector<float> l_result;
     std::unique_ptr<FILE, decltype(&pclose)> l_pipe(popen("top -l 2 | grep -E '^CPU' | tail -1 | LC_NUMERIC='C' awk '{s=$3+$5} END {print s}' &", "r"), pclose);
     if (!l_pipe)
     {
@@ -200,8 +199,8 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     }
     while (fgets(l_buffer.data(), l_buffer.size(), l_pipe.get()) != nullptr)
     {
-        l_result.push_back(std::stof(l_buffer.data()));
+        cpuUsage.push_back(std::stof(l_buffer.data()));
     }
-    return l_result;
 #endif
+return cpuUsage;
 }
