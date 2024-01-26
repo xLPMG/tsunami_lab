@@ -37,7 +37,8 @@ private:
   bool m_connected = false;
 
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
-  int m_dataUpdateFrequency = 5;
+  int m_systemInfoUpdateFrequency = 2;
+  bool m_logSystemInfoDataTransmission = false;
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
@@ -145,11 +146,9 @@ private:
   json createConfigJson();
 
   /**
-   * Updates local config parameters with current server data.
-   *
-   * TODO: implementation
+   * Gets info on CPU and RAM usage from the server.
    */
-  void updateData();
+  void updateSystemInfo();
 
 public:
   /**

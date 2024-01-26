@@ -55,12 +55,12 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
     return system(commandChars);
 }
 
-void tsunami_lab::ui::GUI::updateData()
+void tsunami_lab::ui::GUI::updateSystemInfo()
 {
     if (m_connected)
     {
-        m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION), false);
-        std::string l_responseString = m_communicator.receiveFromServer(false);
+        m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION), m_logSystemInfoDataTransmission);
+        std::string l_responseString = m_communicator.receiveFromServer(m_logSystemInfoDataTransmission);
         if (json::accept(l_responseString))
         {
             xlpmg::Message l_responseMessage = xlpmg::jsonToMessage(json::parse(l_responseString));
@@ -186,6 +186,7 @@ int tsunami_lab::ui::GUI::launch()
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
+    bool showSystemInfoWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -215,34 +216,12 @@ int tsunami_lab::ui::GUI::launch()
 
         ImGui::NewFrame();
 
-        if (m_lastDataUpdate <= std::chrono::system_clock::now())
-        {
-            updateData();
-            m_lastDataUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_dataUpdateFrequency);
-        }
-
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
         // Main window
         {
             ImGui::Begin("Welcome to the Tsunami Simulator GUI!");
-
-            if (m_cpuData.size() > 0)
-            {
-                ImGui::ProgressBar(m_cpuData[0] / 100, ImVec2(0.0f, 0.0f));
-                ImGui::SameLine();
-                ImGui::Text("Overall CPU usage");
-                for (unsigned long i = 1; i < m_cpuData.size(); ++i)
-                {
-                    ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
-                    ImGui::SameLine();
-                    ImGui::Text("%s %lu", "CPU: ", i-1);
-                }
-            }
-
-            ImGui::Text("%f / %f GB RAM usage", m_usedRAM, m_totalRAM);
-
             //-------------------------------------------//
             //-----------------MAIN TABS-----------------//
             //-------------------------------------------//
@@ -302,7 +281,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
-                       m_connected = m_communicator.isConnected;
+                        m_connected = m_communicator.isConnected;
                     }
                     ImGui::BeginDisabled(!m_connected);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
@@ -483,6 +462,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
                     ImGui::Checkbox("Show client log", &showClientLog);
+                    ImGui::Checkbox("Show system info", &showSystemInfoWindow);
                     ImGui::EndTabItem();
                 }
                 //------------------------------------------//
@@ -542,14 +522,13 @@ int tsunami_lab::ui::GUI::launch()
                         if (json::accept(response))
                         {
                             xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                            m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int) 0);
-                            m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int) 0);
-                            m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int) 0);
-                            m_estimatedLeftTime = ((m_maxTimeSteps-m_currentTimeStep) * m_timePerTimeStep) /1000;
-                            
+                            m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
+                            m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
+                            m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
+                            m_estimatedLeftTime = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
+
                             std::cout << responseMessage.args << std::endl;
                         }
-                         
                     }
                     ImGui::Text("current Time Step: %i", m_currentTimeStep);
                     ImGui::Text("Max Time Steps: %i", m_maxTimeSteps);
@@ -1115,6 +1094,51 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::TextWrapped("This could lead to unwanted results: for example changing the cell amount and then writing into a previous netcdf solution file could result in its corruption.");
             ImGui::Spacing();
             ImGui::TextWrapped("Our advice: only set config data before running a simulation and if you are not writing into an existing solution file.");
+            ImGui::End();
+        }
+        //--------------------------------------------//
+        //-------------SYSTEM INFORMATION-------------//
+        //--------------------------------------------//
+        if (showSystemInfoWindow)
+        {
+            if (m_lastDataUpdate <= std::chrono::system_clock::now())
+            {
+                updateSystemInfo();
+                m_lastDataUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_systemInfoUpdateFrequency);
+            }
+
+            ImGui::Begin("System information");
+
+            ImGui::Text("%f / %f GiB RAM usage", m_usedRAM, m_totalRAM);
+
+            if (m_cpuData.size() > 0)
+            {
+                ImGui::ProgressBar(m_cpuData[0] / 100, ImVec2(0.0f, 0.0f));
+                ImGui::SameLine();
+                ImGui::Text("%% overall CPU usage");
+
+                if (ImGui::TreeNode("Core info"))
+                {
+                    for (unsigned long i = 1; i < m_cpuData.size(); ++i)
+                    {
+                        ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
+                        ImGui::SameLine();
+                        ImGui::Text("%s %lu", "CPU: ", i - 1);
+                    }
+                    ImGui::TreePop();
+                }
+            }
+            if (ImGui::TreeNode("Update settings"))
+            {
+                ImGui::InputInt("Update frequency", &m_systemInfoUpdateFrequency, 0);
+                ImGui::SetItemTooltip("in seconds");
+                ImGui::SameLine();
+                HelpMarker("The server will update data with a constant frequency. With this option, you can only specify the frequency with which the client/gui is getting that data from the server.");
+                m_systemInfoUpdateFrequency = abs(m_systemInfoUpdateFrequency);
+
+                ImGui::Checkbox("Log data transmission", &m_logSystemInfoDataTransmission);
+                ImGui::TreePop();
+            }
             ImGui::End();
         }
 

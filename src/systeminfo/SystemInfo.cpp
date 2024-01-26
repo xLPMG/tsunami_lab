@@ -56,13 +56,13 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
     long long l_totalPhysMem = l_memInfo.totalram;
     // Multiply in next statement to avoid int overflow on right hand side...
     l_totalPhysMem *= l_memInfo.mem_unit;
-    l_totalPhysMem *= m_bytesToGB;
+    l_totalPhysMem *= m_bytesToGiB;
     o_totalRAM = l_totalPhysMem;
 
     long long l_physMemUsed = l_memInfo.totalram - l_memInfo.freeram;
     // Multiply in next statement to avoid int overflow on right hand side...
     l_physMemUsed *= l_memInfo.mem_unit;
-    l_physMemUsed *= m_bytesToGB;
+    l_physMemUsed *= m_bytesToGiB;
     o_usedRAM = l_physMemUsed;
 
 #elif __APPLE__ || __MACH__
@@ -73,7 +73,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
     unsigned long l_length = sizeof(int64_t);
     sysctl(l_mib, 2, &l_physicalMemoryLong, &l_length, NULL, 0);
     double l_physicalMemoryDouble = l_physicalMemoryLong;
-    l_physicalMemoryDouble *= m_bytesToGB;
+    l_physicalMemoryDouble *= m_bytesToGiB;
     o_totalRAM = l_physicalMemoryDouble;
 
     std::array<char, 128> l_buffer;
@@ -135,7 +135,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
             l_pages -= std::stol(l_valueString);
         }
     }
-    o_usedRAM = (l_pages * (double)l_pagesize) * m_bytesToGB;
+    o_usedRAM = (l_pages * (double)l_pagesize) * m_bytesToGiB;
 #endif
 }
 
