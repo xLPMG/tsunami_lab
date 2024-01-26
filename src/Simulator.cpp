@@ -187,19 +187,12 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "TSUNAMIEVENT2D")
   {
-    tsunami_lab::io::NetCdf *l_netCdfTE2D = new tsunami_lab::io::NetCdf(m_nx,
-                                                                        m_ny,
-                                                                        m_nk,
-                                                                        m_simulationSizeX,
-                                                                        m_simulationSizeY,
-                                                                        m_offsetX,
-                                                                        m_offsetY,
-                                                                        m_netcdfOutputPath,
-                                                                        m_checkPointFilePath);
     m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
                                                       m_displacementFilePath.c_str(),
-                                                      l_netCdfTE2D,
-                                                      m_nx);
+                                                      m_simulationSizeX,
+                                                      m_simulationSizeY,
+                                                      m_offsetX,
+                                                      m_offsetY);
   }
   else if (m_setupChoice == "ARTIFICIAL2D")
   {
@@ -211,63 +204,32 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CHILE")
   {
-    m_simulationSizeX = 3500000;
-    m_simulationSizeY = 2950000;
-    m_offsetX = -2999875;
-    m_offsetY = -1449875;
-
-    tsunami_lab::io::NetCdf *l_netCdfChile = new tsunami_lab::io::NetCdf(m_nx,
-                                                                         m_ny,
-                                                                         m_nk,
-                                                                         m_simulationSizeX,
-                                                                         m_simulationSizeY,
-                                                                         m_offsetX,
-                                                                         m_offsetY,
-                                                                         m_netcdfOutputPath,
-                                                                         m_checkPointFilePath);
     m_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/chile/chile_gebco20_usgs_250m_bath_fixed.nc",
                                                       "resources/chile/chile_gebco20_usgs_250m_displ_fixed.nc",
-                                                      l_netCdfChile,
-                                                      m_nx);
+                                                      m_simulationSizeX,
+                                                      m_simulationSizeY,
+                                                      m_offsetX,
+                                                      m_offsetY);
   }
   else if (m_setupChoice == "TOHOKU")
   {
-    m_simulationSizeX = 2700000;
-    m_simulationSizeY = 1500000;
-    m_offsetX = -199875;
-    m_offsetY = -749875;
-
-    tsunami_lab::io::NetCdf *l_netCdfTohoku = new tsunami_lab::io::NetCdf(m_nx,
-                                                                          m_ny,
-                                                                          m_nk,
-                                                                          m_simulationSizeX,
-                                                                          m_simulationSizeY,
-                                                                          m_offsetX,
-                                                                          m_offsetY,
-                                                                          m_netcdfOutputPath,
-                                                                          m_checkPointFilePath);
-    m_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco08_ucsb3_250m_bath.nc",
-                                                      "resources/tohoku/tohoku_gebco08_ucsb3_250m_displ.nc",
-                                                      l_netCdfTohoku,
-                                                      m_nx);
+    m_setup = new tsunami_lab::setups::TsunamiEvent2d("resources/tohoku/tohoku_gebco20_usgs_250m_bath.nc",
+                                                      "resources/tohoku/tohoku_gebco20_usgs_250m_displ.nc",
+                                                      m_simulationSizeX,
+                                                      m_simulationSizeY,
+                                                      m_offsetX,
+                                                      m_offsetY);
   }
   else if (m_setupChoice == "CUSTOM")
   {
     if (m_ny > 1)
     {
-      tsunami_lab::io::NetCdf *l_netCdfCustom = new tsunami_lab::io::NetCdf(m_nx,
-                                                                            m_ny,
-                                                                            m_nk,
-                                                                            m_simulationSizeX,
-                                                                            m_simulationSizeY,
-                                                                            m_offsetX,
-                                                                            m_offsetY,
-                                                                            m_netcdfOutputPath,
-                                                                            m_checkPointFilePath);
       m_setup = new tsunami_lab::setups::TsunamiEvent2d(m_bathymetryFilePath.c_str(),
                                                         m_displacementFilePath.c_str(),
-                                                        l_netCdfCustom,
-                                                        m_nx);
+                                                        m_simulationSizeX,
+                                                        m_simulationSizeY,
+                                                        m_offsetX,
+                                                        m_offsetY);
     }
     else
     {

@@ -510,7 +510,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_h != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -537,7 +536,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_h != nullptr && i_b != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -564,7 +562,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_hu != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -592,7 +589,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_hv != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)

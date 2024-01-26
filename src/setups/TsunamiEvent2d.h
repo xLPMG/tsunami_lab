@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Two-dimensional  tsunami event
  **/
 #ifndef TSUNAMI_LAB_SETUPS_TSUNAMI_EVENT_2D
@@ -26,42 +26,53 @@ namespace tsunami_lab
 class tsunami_lab::setups::TsunamiEvent2d : public Setup
 {
 private:
-  // value for delta
+  //! value for delta
   t_real m_delta = 20;
-
-  // stride size
-  t_idx m_stride = 0;
-
-  //bathymetry file path
+  //! bathymetry file path
   const char *m_bathymetryPath;
-
-  //displacement file path
+  //! displacement file path
   const char *m_displacementPath;
-
-  // amount of cells
+  //! offset of the bathymetry domain in x-direction
+  t_real m_bathymetryOffsetX = 0;
+  //! offset of the displacement domain in y-direction
+  t_real m_bathymetryOffsetY = 0;
+  //! offset of the displacement domain in x-direction
+  t_real m_displacementOffsetX = 0;
+  //! offset of the displacement domain in y-direction
+  t_real m_displacementOffsetY = 0;
+  //! distance between to bathymetry samples in x-direction
+  t_real m_bathymetrySampleDistanceX = 0;
+  //! inverse distance between to bathymetry samples in x-direction
+  t_real m_bathymetrySampleDistanceXInverse = 0;
+  //! distance between to bathymetry samples in y-direction
+  t_real m_bathymetrySampleDistanceY = 0;
+  //! inverse distance between to bathymetry samples in y-direction
+  t_real m_bathymetrySampleDistanceYInverse = 0;
+  //! distance between to displacement samples in x-direction
+  t_real m_displacementSampleDistanceX = 0;
+  //! inverse distance between to displacement samples in x-direction
+  t_real m_displacementSampleDistanceXInverse = 0;
+  //! distance between to displacement samples in y-direction
+  t_real m_displacementSampleDistanceY = 0;
+  //! inverse distance between to displacement samples in y-direction
+  t_real m_displacementSampleDistanceYInverse = 0;
+  //! amount of cells bathymetry
   t_idx m_nxB = 0, m_nyB = 0;
-  // bathymetry data x
+  //! bathymetry data x
   t_real *m_xDataB = nullptr;
-  // bathymetry data y
+  //! bathymetry data y
   t_real *m_yDataB = nullptr;
-  // bathymetry
+  //! bathymetry
   t_real *m_b = nullptr;
-  //
-  t_idx m_lastNegativeIndexBX = 0;
-  t_idx m_lastNegativeIndexBY = 0;
 
-  // displacements
-  // amount of cells
+  //! amount of cells displacement
   t_idx m_nxD = 0, m_nyD = 0;
-  // displacement data x
+  //! displacement data x
   t_real *m_xDataD = nullptr;
-  // displacement data x
+  //! displacement data x
   t_real *m_yDataD = nullptr;
-  // displacement
+  //! displacement
   t_real *m_d = nullptr;
-  //
-  t_idx m_lastNegativeIndexDX = 0;
-  t_idx m_lastNegativeIndexDY = 0;
 
   /**
    * gets the value for bathymetry at a point
@@ -84,19 +95,24 @@ private:
 public:
   /**
    * Constructor.
+   * 
    * @param i_bathymetryPath path to file containing bathymetry data
    * @param i_displacementPath path to file containing bathymetry data
-   * @param i_netCdf NetCdf instance
-   * @param i_stride stride
+   * @param o_domainSizeX size of the domain in x-direction
+   * @param o_domainSizeY size of the domain in y-direction
+   * @param o_offsetX offset of the domain in x-direction
+   * @param o_offsetY offset of the domain in y-direction
    **/
   TsunamiEvent2d(const char *i_bathymetryPath,
                  const char *i_displacementPath,
-                 tsunami_lab::io::NetCdf *i_netCdf,
-                 t_idx i_stride);
+                 t_real &o_domainSizeX,
+                 t_real &o_domainSizeY,
+                 t_real &o_offsetX,
+                 t_real &o_offsetY);
 
   /**
    * Destructor.
-   * 
+   *
    **/
   ~TsunamiEvent2d();
 

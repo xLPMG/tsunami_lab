@@ -4,7 +4,7 @@
     "outputFileName":"chile_5000_solution",
     "nx":700,
     "ny":590,
-    "endTime":15000,
-    "writingFrequency":500,
-    "checkpointFrequency": 10
+    "endTime":10000,
+    "writingFrequency":80,
+    "checkpointFrequency": 0
 }
