@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10. Project Phase &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/assignments/project.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Namespaces" href="../categories/namespaces.html" />
+    <link rel="prev" title="9. Parallelization" href="09.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">What is the tsunami lab?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html#what-does-the-code-do">What does the code do?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html#documentation-structure">Documentation structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/assignments.html">Assignments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01.html">1. Riemann Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02.html">2. Finite Volume Discretization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03.html">3. Bathymetry &amp; Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04.html">4. Two-Dimensional Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05.html">5. Large Data Input and Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06.html">6. Tsunami Simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07.html">7. Checkpointing and Coarse Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09.html">9. Parallelization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">10. Project Phase</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gui">GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communicator">Communicator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server">Server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/assignments.html">Assignments</a></li>
+      <li class="breadcrumb-item active">10. Project Phase</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/assignments/project.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="project-phase">
+<h1>10. Project Phase<a class="headerlink" href="#project-phase" title="Link to this heading"></a></h1>
+<p>In the project phase we decided to implement a userfriendly Gui. The aim is to make the usage of our Tsunami solver
+as easy and interactive as possible.</p>
+<section id="gui">
+<h2>GUI<a class="headerlink" href="#gui" title="Link to this heading"></a></h2>
+<img alt="../../_images/task-10-Gui_help.png" src="../../_images/task-10-Gui_help.png" />
+<p>For the layout we chose to use multiple tabs, in order to make the use more clear.
+The first page gives general informations about the project and refers to our website.</p>
+<img alt="../../_images/task-10-Gui_connectivity.png" src="../../_images/task-10-Gui_connectivity.png" />
+<p>Tab number two handles the the connection to thhe server. The properties for interacting with the server are getting set here.
+Furthermore, the connection can also be disconnected here.</p>
+<img alt="../../_images/task-10-Gui_windows.png" src="../../_images/task-10-Gui_windows.png" />
+<p>On the next page the user can find all options of configuration for the simulation. The simulation parameters like cell amount, size and offset can be set here.
+In Addition to that, compiler and run time options can be found here. These contain differetn modes, compiler options, flags and usage choices.
+After selecting the simulation has to be recompiled with the according button below.</p>
+<img alt="../../_images/task-10-Gui_select.png" src="../../_images/task-10-Gui_select.png" />
+<p>The last tab contains further actions to interact with the simulation. First, the simulation can be started or killed here.
+Also files for the bathymetry and displacement can be chosen. As an addition, the user can get data like the heigth from the simulation.</p>
+</section>
+<section id="communicator">
+<h2>Communicator<a class="headerlink" href="#communicator" title="Link to this heading"></a></h2>
+<p>For communication between simulation and the gui Luca-Philipp introduced a communication library.
+The <strong>Communicator.cpp</strong> library can be used to easily create a client-server TCP connection and handle its communication and logging.</p>
+<p><strong>communicator_api</strong></p>
+<p>Since all communication happens using text over TCP, we had to implement a structure that both server and client can adhere to
+in order to guarantee correct communication. For this, we decided to send all data in JSON format. Furthermore, each message
+follows a strict pattern. It consists of 3 parts: the TYPE which provides information on the nature of the message,
+the KEY which is a unique identifier for each message, and ARGS containing other message data (such as parameters) in JSON format.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span><span class="w"> </span><span class="nc">MessagePart</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">TYPE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ARGS</span>
+<span class="p">};</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="nc">MessageType</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">SERVER_CALL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FUNCTION_CALL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">OTHER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SERVER_RESPONSE</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Message</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">MessageType</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MessageType</span><span class="o">::</span><span class="n">OTHER</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NONE&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>It also implements various functions to convert from and to json format, such as <code class="docutils literal notranslate"><span class="pre">messageToJson()</span></code>, <code class="docutils literal notranslate"><span class="pre">messageToJsonString()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">jsonToMessage()</span></code>.</p>
+<p><strong>Communicator.hpp</strong></p>
+<p>The library provides functions to start server and client and to send messages to each other.
+Transmitted data is logged and can be retrieved via <code class="docutils literal notranslate"><span class="pre">getLog()</span></code>.
+Describing the detailed code here would be too extensive and not necessary, as this library
+is rather just a tool for us to develop the actually interesting code.</p>
+<p><strong>Communication example</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">communicator_api.h</span></code></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="n">START_SIMULATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">MessageType</span><span class="o">::</span><span class="n">SERVER_CALL</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;start_simulation&quot;</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>Client-side usage:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">xlpmg</span><span class="o">::</span><span class="n">Communicator</span><span class="w"> </span><span class="n">m_communicator</span><span class="p">;</span>
+<span class="n">m_communicator</span><span class="p">.</span><span class="n">startClient</span><span class="p">(</span><span class="n">IPADDRESS</span><span class="p">,</span><span class="w"> </span><span class="n">PORT</span><span class="p">)</span>
+
+<span class="p">[...]</span>
+
+<span class="n">xlpmg</span><span class="o">::</span><span class="n">Message</span><span class="w"> </span><span class="n">startSimMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xlpmg</span><span class="o">::</span><span class="n">START_SIMULATION</span><span class="p">;</span>
+<span class="n">m_communicator</span><span class="p">.</span><span class="n">sendToServer</span><span class="p">(</span><span class="n">messageToJsonString</span><span class="p">(</span><span class="n">startSimMsg</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Server-side usage:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">xlpmg</span><span class="o">::</span><span class="n">Communicator</span><span class="w"> </span><span class="n">m_communicator</span><span class="p">;</span>
+<span class="n">m_communicator</span><span class="p">.</span><span class="n">startServer</span><span class="p">(</span><span class="n">m_PORT</span><span class="p">);</span>
+
+<span class="c1">// listen for key</span>
+</pre></div>
+</div>
+</section>
+<section id="server">
+<h2>Server<a class="headerlink" href="#server" title="Link to this heading"></a></h2>
+<p>TODO</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="09.html" class="btn btn-neutral float-left" title="9. Parallelization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../categories/namespaces.html" class="btn btn-neutral float-right" title="Namespaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

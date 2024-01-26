@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; tsunami_lab  documentation</title>
+  <title>What is the tsunami lab? &mdash; tsunami_lab  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
@@ -48,10 +48,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#documentation-structure">Documentation structure</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is the tsunami lab?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#what-does-the-code-do">What does the code do?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#documentation-structure">Documentation structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 </ul>
@@ -75,7 +74,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Introduction</li>
+      <li class="breadcrumb-item active">What is the tsunami lab?</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/files/categories/introduction.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,14 +84,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
-<p>This project was created as part of the Tsunami course in the winter semester 2023/24 at FSU Jena.
-The lectures content was implemented by <a class="reference external" href="https://github.com/xLPMG">Luca-Philipp Grumbach</a> and <a class="reference external" href="https://github.com/ZeyxRew">Richard Hofmann</a> as weekly homework / exam assignments.</p>
-<p>Visit the homepage for more information:
-<a class="reference external" href="https://scalable.uni-jena.de/opt/tsunami/">https://scalable.uni-jena.de/opt/tsunami/</a></p>
+  <section id="what-is-the-tsunami-lab">
+<h1>What is the tsunami lab?<a class="headerlink" href="#what-is-the-tsunami-lab" title="Link to this heading"></a></h1>
+<p>The <a class="reference external" href="https://scalable.uni-jena.de/opt/tsunami/">tsunami lab</a> is a course taught at the <a class="reference external" href="https://www.uni-jena.de/en/universityofjena">University of Jena</a> as
+the practical lab for the lecture on parallel computing.
+The goal is to write a C++ tsunami <a class="reference external" href="https://en.wikipedia.org/wiki/Wave_equation">wave equation</a> <a class="reference external" href="https://www.clawpack.org/riemann_book/html/Index.html">solver</a>, optimize and parallelize it and run tsunami simulations on an <a class="reference external" href="https://www.hpe.com/asia_pac/en/what-is/hpc-clusters.html">HPC cluster</a>.</p>
+<p>During the class, we received weekly assignments which make up the final grade. Our (<a class="reference external" href="https://github.com/xLPMG">Luca-Philipp Grumbach</a> and <a class="reference external" href="https://github.com/ZeyxRew">Richard Hofmann</a>)
+implementations of the given weekly tasks are what make up this repository - a fully functional 2D wave equation solver for Linux and MacOS.</p>
+</section>
+<section id="what-does-the-code-do">
+<h1>What does the code do?<a class="headerlink" href="#what-does-the-code-do" title="Link to this heading"></a></h1>
+<p>The solver can be used either with pre-defined setups or with custom <a class="reference external" href="https://en.wikipedia.org/wiki/Bathymetry">bathymetry</a> &amp; <a class="reference external" href="https://en.wikipedia.org/wiki/Displacement_(fluid)">displacement</a> files.
+A bathymetry file contains info on the depth of water, while the displacement file describes the effects on the water level due to e.g. an earthquake.</p>
+<p>Using this data, our program will numerically calculate (if specified in parallel on multiple CPU cores) the wave propagation after the initial input data, that is specifically
+calculate and output how a tsunami forms and moves after an earthquake.</p>
+<p>The solver outputs this data either in form of a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file or a <code class="docutils literal notranslate"><span class="pre">netcdf</span></code> file (recommended for large data).
+This data can then be visualized, for example using <a class="reference external" href="https://www.paraview.org/">Paraview</a>:</p>
+</section>
 <section id="documentation-structure">
-<h2>Documentation structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h2>
+<h1>Documentation structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h1>
 <p>This documentation is divided into different categories categories:</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -113,7 +123,6 @@ The lectures content was implemented by <a class="reference external" href="http
 </dl>
 </li>
 </ul>
-</section>
 </section>
 
 
