@@ -113,6 +113,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
             l_line.pop_back(); // remove dot
 
             int l_i = l_line.length() - 1; // last character
+            // iterate to start of number
             while (l_i != 0 && !isspace(l_line[l_i]))
             {
                 --l_i;
@@ -125,6 +126,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
             l_line.pop_back(); // remove dot
 
             int l_i = l_line.length() - 1; // last character
+            // iterate to start of number
             while (l_i != 0 && !isspace(l_line[l_i]))
             {
                 --l_i;
@@ -137,7 +139,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
 #endif
 }
 
-void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &data)
+void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &o_data)
 {
     std::ifstream file("/proc/stat");
     std::string line;
@@ -152,45 +154,44 @@ void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &data
         {
             CPUData cpu;
             ss >> cpu.user >> cpu.nice >> cpu.system >> cpu.idle >> cpu.iowait >> cpu.irq >> cpu.softirq >> cpu.steal >> cpu.guest >> cpu.guest_nice;
-            data.push_back(cpu);
+            o_data.push_back(cpu);
         }
     }
 }
 
 std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
 {
-std::vector<float> cpuUsage;
+    std::vector<float> l_cpuUsage;
 #ifdef __linux__
     if (m_firstCPURead)
     {
         m_firstCPURead = false;
-        readCPUData(lastData);
-        return std::vector<float>(lastData.size(), 0.0);
+        readCPUData(m_lastData);
+        return std::vector<float>(m_lastData.size(), 0.0);
     }
 
-    std::vector<CPUData> currentData;
-    readCPUData(currentData);
+    std::vector<CPUData> l_currentData;
+    readCPUData(l_currentData);
 
-    for (size_t i = 0; i < currentData.size(); ++i)
+    for (size_t i = 0; i < l_currentData.size(); ++i)
     {
-        unsigned long long totalDelta = (currentData[i].user + currentData[i].nice +
-                                         currentData[i].system + currentData[i].idle +
-                                         currentData[i].iowait + currentData[i].irq +
-                                         currentData[i].softirq + currentData[i].steal +
-                                         currentData[i].guest + currentData[i].guest_nice) -
-                                        (lastData[i].user + lastData[i].nice +
-                                         lastData[i].system + lastData[i].idle +
-                                         lastData[i].iowait + lastData[i].irq +
-                                         lastData[i].softirq + lastData[i].steal +
-                                         lastData[i].guest + lastData[i].guest_nice);
+        unsigned long long l_totalDelta = (l_currentData[i].user + l_currentData[i].nice +
+                                           l_currentData[i].system + l_currentData[i].idle +
+                                           l_currentData[i].iowait + l_currentData[i].irq +
+                                           l_currentData[i].softirq + l_currentData[i].steal +
+                                           l_currentData[i].guest + l_currentData[i].guest_nice) -
+                                          (m_lastData[i].user + m_lastData[i].nice +
+                                           m_lastData[i].system + m_lastData[i].idle +
+                                           m_lastData[i].iowait + m_lastData[i].irq +
+                                           m_lastData[i].softirq + m_lastData[i].steal +
+                                           m_lastData[i].guest + m_lastData[i].guest_nice);
 
-        unsigned long long idleDelta = (currentData[i].idle + currentData[i].iowait) -
-                                       (lastData[i].idle + lastData[i].iowait);
+        unsigned long long l_idleDelta = (l_currentData[i].idle + l_currentData[i].iowait) -
+                                         (m_lastData[i].idle + m_lastData[i].iowait);
 
-        double coreUsage = 100.0 * (1.0 - (static_cast<float>(idleDelta) / totalDelta));
-        cpuUsage.push_back(coreUsage);
+        double l_coreUsage = 100.0 * (1.0 - (static_cast<float>(l_idleDelta) / l_totalDelta));
+        cpuUsage.push_back(l_coreUsage);
     }
-    return cpuUsage;
 #elif __APPLE__ || __MACH__
     std::array<char, 128> l_buffer;
     std::unique_ptr<FILE, decltype(&pclose)> l_pipe(popen("top -l 2 | grep -E '^CPU' | tail -1 | LC_NUMERIC='C' awk '{s=$3+$5} END {print s}' &", "r"), pclose);
@@ -200,8 +201,8 @@ std::vector<float> cpuUsage;
     }
     while (fgets(l_buffer.data(), l_buffer.size(), l_pipe.get()) != nullptr)
     {
-        cpuUsage.push_back(std::stof(l_buffer.data()));
+        l_cpuUsage.push_back(std::stof(l_buffer.data()));
     }
 #endif
-return cpuUsage;
+    return l_cpuUsage;
 }

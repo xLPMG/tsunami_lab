@@ -3,7 +3,7 @@
  * @author Richard Hofmann
  *
  * # Description
- * Provides info on the system usage.
+ * Provides info on the system such as CPU and RAM usage.
  **/
 #ifndef TSUNAMI_LAB_SYSTEMINFO_SYSTEMINFO_H
 #define TSUNAMI_LAB_SYSTEMINFO_SYSTEMINFO_H
@@ -21,8 +21,12 @@ namespace tsunami_lab
 class tsunami_lab::systeminfo::SystemInfo
 {
 private:
-    double m_bytesToGB = 0.00000000093132257; // 1/(1024*1024*1024) Converts bytes to GB
-    bool m_firstCPURead = true;
+
+    //! Conversion constant from bytes to gigabytes (1/1000^3)
+    double m_bytesToGB = 0.000000001;
+
+    //! To check whether its the first time of reading cpu usage data; Linux only
+    [[maybe_unused]] bool m_firstCPURead = true;
 
     struct CPUData
     {
@@ -38,14 +42,40 @@ private:
         unsigned long long guest_nice;
     };
 
-    std::vector<CPUData> lastData;
+    //! Vector for last read cpu usage data; Linux only
+    [[maybe_unused]] std::vector<CPUData> m_lastData;
 
-    void readCPUData(std::vector<CPUData>& data);
+  /**
+   * Reads CPU usage data from /proc/stat
+   *
+   * @param o_data output vector for collected data.
+   */
+    void readCPUData(std::vector<CPUData>& o_data);
 
 public:
+  /**
+   * Contructor.
+   */
     SystemInfo();
 
+   /**
+   * Gets RAM usage data.
+   *
+   * @param o_totalRAM output pointer for total RAM value.
+   * @param o_usedRAM output pointer for used RAM value.
+   */
     void getRAMUsage(double &o_totalRAM, double &o_usedRAM);
+
+   /**
+   * @brief Gets CPU usage data.
+   * 
+   * This function collects CPU usage data. On MacOS it will return one
+   * value as the overall CPU usage over all cores. This value is read from
+   * the "top" command. On Linux, /proc/stat is read and the
+   * values are calculated for each core.
+   *
+   * @return Vector with CPU usage in percent for each core.
+   */
     std::vector<float> getCPUUsage();
 };
 #endif

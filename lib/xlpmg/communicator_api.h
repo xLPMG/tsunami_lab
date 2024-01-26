@@ -1,8 +1,8 @@
 /**
  * @author Luca-Philipp Grumbach
  *
- * # Description
- * Communicator API.
+ * @brief Communicator API.
+ * 
  * This file provides an interface with pre-defined
  * messages to enable a correct transmission of
  * information between client and server.
