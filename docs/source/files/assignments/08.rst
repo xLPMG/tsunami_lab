@@ -4,6 +4,10 @@
 8.1 ARA
 ========
 
+.. figure:: https://wiki.uni-jena.de/download/attachments/22453005/IMG_7381_0p5.JPG?version=1&modificationDate=1625042348365&api=v2
+    
+    HPC-Cluster ARA. Source: https://wiki.uni-jena.de/pages/viewpage.action?pageId=22453005
+
 8.1.1 - Uploading and running the code
 ----------------------------------------
 
