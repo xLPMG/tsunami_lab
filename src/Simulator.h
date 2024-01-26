@@ -501,7 +501,7 @@ private:
      *  Sets up a station.
      *
      *  @param i_locationX location of the station in x-direction
-     *  @param i_locationX location of the station in y-direction
+     *  @param i_locationY location of the station in y-direction
      *  @param i_stationName name of the station
      *  @return void
      */
@@ -519,7 +519,6 @@ private:
     /**
      *  Starts the calculation with the set parameters.
      *
-     *  @param i_config path to the config file
      *  @return void
      */
     void runCalculation();

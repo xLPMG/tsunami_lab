@@ -23,7 +23,7 @@ inside the ``tsunami_lab`` folder. To start the server, run
 
 .. code::
     
-    ./build/tsunami_lab <PORT>
+    ./build/tsunami_lab server <PORT>
 
 also from inside the ``tsunami_lab`` folder. The ``<PORT>`` parameter specifies which port will be used for the remote connection.
 
