@@ -8,3 +8,8 @@ The lectures content was implemented by `Luca-Philipp Grumbach <https://github.c
 Further information is available from: https://scalable.uni-jena.de/opt/tsunami/
 
 The documentation can be found here: https://xlpmg.github.io/tsunami_lab/index.html
+
+.. image:: docs/source/_static/assets/chile_bathymetry.png
+  :alt: Bathymetry of chile
+
+
