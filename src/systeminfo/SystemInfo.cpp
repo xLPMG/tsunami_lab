@@ -141,16 +141,16 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
 
 void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &o_data)
 {
-    std::ifstream file("/proc/stat");
-    std::string line;
+    std::ifstream l_file("/proc/stat");
+    std::string l_line;
 
-    while (std::getline(file, line))
+    while (std::getline(l_file, l_line))
     {
-        std::istringstream ss(line);
-        std::string cpuLabel;
-        ss >> cpuLabel;
+        std::istringstream ss(l_line);
+        std::string l_cpuLabel;
+        ss >> l_cpuLabel;
 
-        if (cpuLabel.find("cpu") != std::string::npos)
+        if (l_cpuLabel.find("cpu") != std::string::npos)
         {
             CPUData cpu;
             ss >> cpu.user >> cpu.nice >> cpu.system >> cpu.idle >> cpu.iowait >> cpu.irq >> cpu.softirq >> cpu.steal >> cpu.guest >> cpu.guest_nice;
@@ -190,7 +190,7 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
                                          (m_lastData[i].idle + m_lastData[i].iowait);
 
         double l_coreUsage = 100.0 * (1.0 - (static_cast<float>(l_idleDelta) / l_totalDelta));
-        cpuUsage.push_back(l_coreUsage);
+        l_cpuUsage.push_back(l_coreUsage);
     }
 #elif __APPLE__ || __MACH__
     std::array<char, 128> l_buffer;

@@ -26,7 +26,7 @@ private:
     double m_bytesToGB = 0.000000001;
 
     //! To check whether its the first time of reading cpu usage data; Linux only
-    [[maybe_unused]] bool m_firstCPURead = true;
+    bool m_firstCPURead = true;
 
     struct CPUData
     {
@@ -43,7 +43,7 @@ private:
     };
 
     //! Vector for last read cpu usage data; Linux only
-    [[maybe_unused]] std::vector<CPUData> m_lastData;
+    std::vector<CPUData> m_lastData;
 
   /**
    * Reads CPU usage data from /proc/stat
