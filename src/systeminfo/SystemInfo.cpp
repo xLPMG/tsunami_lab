@@ -25,11 +25,11 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <array>
 #include <vector>
+#include <fstream>
 #include <sstream>
-#include <algorithm>
-#include <regex>
+
+#include <chrono>
 
 #ifdef __linux__
 static unsigned long long l_lastTotalUser, l_lastTotalUserLow, l_lastTotalSys, l_lastTotalIdle;
@@ -100,7 +100,7 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
     }
     while (fgets(l_buffer.data(), l_buffer.size(), l_pipePageInfo.get()) != nullptr)
     {
-       l_pageInfo += l_buffer.data();
+        l_pageInfo += l_buffer.data();
     }
 
     std::istringstream l_lines(l_pageInfo);
@@ -136,99 +136,62 @@ void tsunami_lab::systeminfo::SystemInfo::getRAMUsage(double &o_totalRAM, double
 #endif
 }
 
-#ifdef __linux__
-
-bool compareFirstDigit(const std::string &i_str1, const std::string &i_str2)
+void tsunami_lab::systeminfo::SystemInfo::readCPUData(std::vector<CPUData> &data)
 {
-    // Find the position of the first digit after "%Cpu"
-    size_t l_pos1 = i_str1.find_first_of("0123456789");
-    size_t l_pos2 = i_str2.find_first_of("0123456789");
+    std::ifstream file("/proc/stat");
+    std::string line;
 
-    // Extract the digits and convert them to integers for comparison
-    int l_num1 = std::stoi(i_str1.substr(l_pos1));
-    int l_num2 = std::stoi(i_str2.substr(l_pos2));
-
-    return l_num1 < l_num2;
-}
-
-std::vector<std::string> splitString(const std::string &i_input, const std::string &i_delimiter)
-{
-    std::vector<std::string> l_parts;
-    size_t l_startPos = 0;
-    size_t l_foundPos = i_input.find(i_delimiter);
-
-    while (l_foundPos != std::string::npos)
+    while (std::getline(file, line))
     {
-        l_parts.push_back(i_input.substr(l_startPos, l_foundPos - l_startPos));
-        l_startPos = l_foundPos + i_delimiter.length();
-        l_foundPos = i_input.find(i_delimiter, l_startPos);
+        std::istringstream ss(line);
+        std::string cpuLabel;
+        ss >> cpuLabel;
+
+        if (cpuLabel.find("cpu") != std::string::npos)
+        {
+            CPUData cpu;
+            ss >> cpu.user >> cpu.nice >> cpu.system >> cpu.idle >> cpu.iowait >> cpu.irq >> cpu.softirq >> cpu.steal >> cpu.guest >> cpu.guest_nice;
+            data.push_back(cpu);
+        }
     }
-
-    // Add the last part after the last delimiter
-    l_parts.push_back(i_input.substr(l_startPos));
-
-    return l_parts;
 }
-#endif
 
 std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
 {
-    std::array<char, 128> l_buffer;
-    std::string l_stringBuffer;
-    std::vector<float> l_result;
-
+std::vector<float> cpuUsage;
 #ifdef __linux__
-    std::unique_ptr<FILE, decltype(&pclose)> l_pipe(popen("LC_NUMERIC='C' top -bn 1 -1 | grep '^%Cpu'", "r"), pclose);
-    if (!l_pipe)
+    if (m_firstCPURead)
     {
-        throw std::runtime_error("popen() failed!");
-    }
-    while (fgets(l_buffer.data(), l_buffer.size(), l_pipe.get()) != nullptr)
-    {
-        l_stringBuffer += l_buffer.data();
-    }
-    /* the string buffer now looks like: (example)
-    %Cpu0  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st     %Cpu1  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-    %Cpu2  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st     %Cpu3  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-    */
-
-    // erase line breaks
-    l_stringBuffer.erase(std::remove(l_stringBuffer.begin(), l_stringBuffer.end(), '\n'), l_stringBuffer.cend());
-
-    //split by "%Cpu"
-    std::vector<std::string> l_cpuStrings = splitString(l_stringBuffer, "%Cpu");
-    /* l_cpuStrings entries:
-
-    0  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st   
-    1  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-    2  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st     
-    3  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-    */
-   //notice that the first line is empty because of the way we're splitting.
-   //-> remove the first entry
-   l_cpuStrings.erase(l_cpuStrings.begin());
-
-    for (const auto &l_cpuData : l_cpuStrings)
-    {
-        // l_cpuData example: "0  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st"
-        std::regex l_pattern("\\b(\\d+).\\d+\\s+id\\b");
-        std::smatch l_match;
-        // match wil look like: "100.0 id"
-        if (std::regex_search(l_cpuData, l_match, l_pattern))
-        {
-            std::string l_IdleValue = l_match[0];
-
-            // remove " id"
-            l_IdleValue.erase(l_IdleValue.length() - 3);
-
-            // we now have the idle time in percent of the cpu core. subtract by 100 to get the used amount
-            l_result.push_back(100.0 - std::stof(l_IdleValue));
-        }
+        m_firstCPURead = false;
+        readCPUData(lastData);
+        return std::vector<float>(lastData.size(), 0.0);
     }
 
-    return l_result;
+    std::vector<CPUData> currentData;
+    readCPUData(currentData);
 
+    for (size_t i = 0; i < currentData.size(); ++i)
+    {
+        unsigned long long totalDelta = (currentData[i].user + currentData[i].nice +
+                                         currentData[i].system + currentData[i].idle +
+                                         currentData[i].iowait + currentData[i].irq +
+                                         currentData[i].softirq + currentData[i].steal +
+                                         currentData[i].guest + currentData[i].guest_nice) -
+                                        (lastData[i].user + lastData[i].nice +
+                                         lastData[i].system + lastData[i].idle +
+                                         lastData[i].iowait + lastData[i].irq +
+                                         lastData[i].softirq + lastData[i].steal +
+                                         lastData[i].guest + lastData[i].guest_nice);
+
+        unsigned long long idleDelta = (currentData[i].idle + currentData[i].iowait) -
+                                       (lastData[i].idle + lastData[i].iowait);
+
+        double coreUsage = 100.0 * (1.0 - (static_cast<float>(idleDelta) / totalDelta));
+        cpuUsage.push_back(coreUsage);
+    }
+    return cpuUsage;
 #elif __APPLE__ || __MACH__
+    std::array<char, 128> l_buffer;
     std::unique_ptr<FILE, decltype(&pclose)> l_pipe(popen("top -l 2 | grep -E '^CPU' | tail -1 | LC_NUMERIC='C' awk '{s=$3+$5} END {print s}' &", "r"), pclose);
     if (!l_pipe)
     {
@@ -236,9 +199,8 @@ std::vector<float> tsunami_lab::systeminfo::SystemInfo::getCPUUsage()
     }
     while (fgets(l_buffer.data(), l_buffer.size(), l_pipe.get()) != nullptr)
     {
-        l_result.push_back(std::stof(l_buffer.data()));
+        cpuUsage.push_back(std::stof(l_buffer.data()));
     }
 #endif
-
-    return l_result;
+return cpuUsage;
 }

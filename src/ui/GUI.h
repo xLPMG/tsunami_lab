@@ -34,6 +34,7 @@ private:
 
   int PORT = 8080;
   char IPADDRESS[16] = "127.0.0.1";
+  bool m_connected = false;
 
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
   int m_dataUpdateFrequency = 5;

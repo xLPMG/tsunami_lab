@@ -5,16 +5,30 @@
 #include "systeminfo/SystemInfo.h"
 
 #include <thread>
+#include <atomic>
 using json = nlohmann::json;
 
 int m_PORT = 8080;
 bool m_EXIT = false;
 tsunami_lab::Simulator *simulator = nullptr;
 std::thread m_simulationThread;
+std::thread m_updateThread;
+std::atomic<bool> m_stopUpdating = false;
 bool m_isSimulationRunning = false;
 
+// updating
+std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate = std::chrono::high_resolution_clock::now();
+int m_dataUpdateFrequency = 10;
+
+// temp files
 std::string m_bathTempFile = "bathymetry_temp.nc";
 std::string m_displTempFile = "displacement_temp.nc";
+
+// system info
+tsunami_lab::systeminfo::SystemInfo l_systemInfo;
+double l_usedRAM = 0;
+double l_totalRAM = 0;
+std::vector<float> l_cpuUsage;
 
 int execWithOutput(std::string i_cmd, std::string i_outputFile)
 {
@@ -30,16 +44,48 @@ int exec(std::string i_cmd)
 
 void exitSimulationThread()
 {
-    if (m_simulationThread.joinable())
+    std::cout << "Terminating as soon as possible..." << std::endl;
+    simulator->shouldExit(true);
+}
+
+void checkSimThreadActive()
+{
+    if (simulator->isPreparing() || simulator->isCalculating() || simulator->isResetting())
     {
-        std::cout << "Terminating..." << std::endl;
-        simulator->shouldExit(true);
-        // wait until thread has finished
-        m_simulationThread.join();
-        std::cout << "Thread terminated." << std::endl;
-        // prepare for next run
+        m_isSimulationRunning = true;
+    }
+    else
+    {
+        if (m_simulationThread.joinable())
+        {
+            m_simulationThread.join();
+        }
         m_isSimulationRunning = false;
+    }
+}
+
+bool canRunThread()
+{
+    checkSimThreadActive();
+    if (m_isSimulationRunning)
+    {
+        return false;
+    }
+    else
+    {
         simulator->shouldExit(false);
+        m_isSimulationRunning = true;
+        return true;
+    }
+}
+
+void updateData()
+{
+    if (m_lastDataUpdate <= std::chrono::high_resolution_clock::now())
+    {
+        l_cpuUsage = l_systemInfo.getCPUUsage();
+        l_systemInfo.getRAMUsage(l_totalRAM, l_usedRAM);
+        m_lastDataUpdate = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(m_dataUpdateFrequency);
     }
 }
 
@@ -58,14 +104,17 @@ int main(int i_argc, char *i_argv[])
             m_PORT = atoi(i_argv[2]);
         }
 
-        tsunami_lab::systeminfo::SystemInfo l_systemInfo;
-        double l_usedRAM = 0;
-        double l_totalRAM = 0;
-        std::vector<float> l_cpuUsage;
-
         xlpmg::Communicator l_communicator;
         l_communicator.startServer(m_PORT);
-        m_simulationThread = std::thread(&tsunami_lab::Simulator::prepareForCalculation, simulator);
+        if (canRunThread())
+        {
+            m_simulationThread = std::thread(&tsunami_lab::Simulator::prepareForCalculation, simulator);
+        }
+
+        m_updateThread = std::thread([]
+                                     { while (!m_stopUpdating){ updateData();} });
+        m_updateThread.detach();
+
         while (!m_EXIT)
         {
             std::string l_rawData = l_communicator.receiveFromClient();
@@ -98,22 +147,20 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::START_SIMULATION.key)
                 {
-                    std::cout << "Start simulator" << std::endl;
-                    std::string l_config = l_parsedData.at(xlpmg::ARGS);
-                    if (simulator->isPreparing())
+                    std::string l_config = l_args;
+                    if (simulator->isPreparing() || simulator->isCalculating())
                     {
-                        std::cout << "Warning: Did not start simulator because setup is still in progress." << std::endl;
+                        std::cout << "Warning: Did not start simulator because it is still preparing or calculating." << std::endl;
                     }
                     else
                     {
-                        if (!m_isSimulationRunning)
+                        if (canRunThread())
                         {
-                            if (m_simulationThread.joinable())
-                            {
-                                m_simulationThread.join();
-                            }
                             m_simulationThread = std::thread(&tsunami_lab::Simulator::start, simulator, l_config);
-                            m_isSimulationRunning = true;
+                        }
+                        else
+                        {
+                            std::cout << "Warning: Did not start simulator because it is still running." << std::endl;
                         }
                     }
                 }
@@ -123,22 +170,13 @@ int main(int i_argc, char *i_argv[])
                 }
                 else if (l_key == xlpmg::GET_SYSTEM_INFORMATION.key)
                 {
-                    std::thread t1([&l_systemInfo, &l_cpuUsage]
-                                   { l_cpuUsage = l_systemInfo.getCPUUsage(); });
-                    t1.detach();
-
-                    std::thread t2([&l_systemInfo, &l_totalRAM, &l_usedRAM]
-                                   { l_systemInfo.getRAMUsage(l_totalRAM, l_usedRAM); });
-                    t2.detach();
-
                     xlpmg::Message l_response = {xlpmg::SERVER_RESPONSE, "system_information"};
                     json l_data;
                     l_data["USED_RAM"] = l_usedRAM;
                     l_data["TOTAL_RAM"] = l_totalRAM;
                     l_data["CPU_USAGE"] = l_cpuUsage;
                     l_response.args = l_data;
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_response));
-
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_response), false);
                 }
                 else if (l_key == xlpmg::COMPILE.key)
                 {
@@ -248,7 +286,14 @@ int main(int i_argc, char *i_argv[])
                 if (l_key == xlpmg::RESET_SIMULATOR.key)
                 {
                     exitSimulationThread();
-                    simulator->resetSimulator();
+                    if (canRunThread())
+                    {
+                        m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
+                    }
+                    else
+                    {
+                        std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
+                    }
                 }
                 else if (l_key == xlpmg::GET_TIME_VALUES.key)
                 {
@@ -298,7 +343,14 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
                     simulator->loadConfigDataJson(l_args);
-                    simulator->resetSimulator();
+                    if (canRunThread())
+                    {
+                        m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
+                    }
+                    else
+                    {
+                        std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
+                    }
                 }
                 else if (l_key == xlpmg::DELETE_CHECKPOINTS.key)
                 {
@@ -344,6 +396,11 @@ int main(int i_argc, char *i_argv[])
             m_simulationThread.join();
         }
 
+        m_stopUpdating = true;
+        if (m_updateThread.joinable())
+        {
+            m_updateThread.join();
+        }
         std::remove(m_bathTempFile.c_str());
         std::remove(m_displTempFile.c_str());
     }

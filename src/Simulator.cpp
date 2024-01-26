@@ -123,11 +123,6 @@ void tsunami_lab::Simulator::loadConfiguration()
   else if (l_boundaryStringB == "wall" || l_boundaryStringB == "WALL")
     m_boundaryB = Boundary::WALL;
 
-  m_useFileIO = m_configData.value("useFileIO", true);
-#ifdef NOFILESYSTEM
-  m_useFileIO = false;
-#endif
-
   m_bathymetryFilePath = m_configData.value("bathymetry", m_bathymetryFilePath);
   m_displacementFilePath = m_configData.value("displacement", m_displacementFilePath);
 
@@ -642,7 +637,8 @@ void tsunami_lab::Simulator::deleteStations()
 
 void tsunami_lab::Simulator::resetSimulator()
 {
-  std::cout << "Resetting solver" << std::endl;
+  m_isResetting = true;
+  std::cout << "Resetting solver..." << std::endl;
   m_simTime = 0;
   m_timeStep = 0;
   m_hMax = std::numeric_limits<tsunami_lab::t_real>::lowest();
@@ -650,6 +646,8 @@ void tsunami_lab::Simulator::resetSimulator()
   m_preparingTime = 0;
   freeMemory();
   prepareForCalculation();
+  std::cout << "Reset complete." << std::endl;
+  m_isResetting = false;
 }
 
 //------------------------------------------//
@@ -762,6 +760,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
 
   m_isPreparing = false;
   m_isPrepared = true;
+  std::cout << "Preparation complete." << std::endl;
 }
 
 void tsunami_lab::Simulator::runCalculation()
@@ -905,7 +904,6 @@ int tsunami_lab::Simulator::start(std::string i_config)
     return 0;
   }
   // END BREAKPOINT
-
   //------------------------------------------//
   //---------------CALCULATION----------------//
   //------------------------------------------//
