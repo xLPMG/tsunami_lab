@@ -250,31 +250,19 @@ int main(int i_argc, char *i_argv[])
                     exitSimulationThread();
                     simulator->resetSimulator();
                 }
-                else if (l_key == xlpmg::GET_TIMESTEP.key)
+                else if (l_key == xlpmg::GET_TIME_VALUES.key)
                 {
-                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getTimeStep()};
+                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "get_time_values"};
+                    tsunami_lab::t_idx l_currentTimeStep, l_maxTimeStep;
+                    tsunami_lab::t_real l_timePerTimeStep;
+                    simulator->getTimeValues(l_currentTimeStep, l_maxTimeStep, l_timePerTimeStep);
+                    json l_data;
+                    l_data["currentTimeStep"] = l_currentTimeStep;
+                    l_data["maxTimeStep"] = l_maxTimeStep;
+                    l_data["timePerTimeStep"] = l_timePerTimeStep;
+                    response.args = l_data;
                     l_communicator.sendToClient(xlpmg::messageToJsonString(response));
-                }
-                else if (l_key == xlpmg::GET_MAX_TIMESTEPS.key)
-                {
-                    xlpmg::Message response = {xlpmg::SERVER_RESPONSE, "time_step_data", simulator->getMaxTimeStep()};
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
-                }
-                else if (l_key == xlpmg::GET_CURRENT_RUNTIME.key)
-                {
-                    xlpmg::Message response = {
-                        xlpmg::SERVER_RESPONSE,
-                        "run_time_data",
-                    };
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
-                }
-                else if (l_key == xlpmg::GET_ESTIMATED_LEFT_TIME.key)
-                {
-                    xlpmg::Message response = {
-                        xlpmg::SERVER_RESPONSE,
-                        "time_left_estimation",
-                    };
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
+
                 }
                 else if (l_key == xlpmg::TOGGLE_FILEIO.key)
                 {

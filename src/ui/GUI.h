@@ -118,8 +118,10 @@ private:
 
   //simulation status
   bool m_isPausing = false;
-  // long m_timeStep = 0;
-  // long m_maxTimeSteps = 0;
+   int m_currentTimeStep = 0;
+   int m_maxTimeSteps = 0;
+   int m_timePerTimeStep = 0;
+   double m_estimatedLeftTime = 0;
 
     std::vector<float> m_cpuData;
     double m_totalRAM = 0;

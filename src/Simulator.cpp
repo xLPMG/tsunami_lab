@@ -97,7 +97,7 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
-  
+
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
   if (l_boundaryStringL == "outflow" || l_boundaryStringL == "OUTFLOW")
@@ -166,7 +166,7 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CIRCULARDAMBREAK2D")
   {
-    m_setup = new tsunami_lab::setups::CircularDamBreak2d(m_height);
+    m_setup = new tsunami_lab::setups::CircularDamBreak2d(m_height, m_diameter);
   }
   else if (m_setupChoice == "RARERARE1D")
   {
@@ -837,10 +837,11 @@ void tsunami_lab::Simulator::runCalculation()
       }
     }
 
-    //pausing the simulation
-     while(m_pauseStatus){
-         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-     }
+    // pausing the simulation
+    while (m_pauseStatus)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
 
     // BREAKPOINT
     if (m_shouldExit)

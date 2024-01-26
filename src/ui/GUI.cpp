@@ -534,46 +534,26 @@ int tsunami_lab::ui::GUI::launch()
                             }
                         }
                     }
-                    if (ImGui::Button("Get time step"))
+                    if (ImGui::Button("Get time values"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP));
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIME_VALUES));
                         std::string response = m_communicator.receiveFromServer();
+
                         if (json::accept(response))
                         {
                             xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int) 0);
+                            m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int) 0);
+                            m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int) 0);
+                            m_estimatedLeftTime = ((m_maxTimeSteps-m_currentTimeStep) * m_timePerTimeStep) /1000;
+                            
                             std::cout << responseMessage.args << std::endl;
                         }
+                         
                     }
-                    if (ImGui::Button("Get max time step"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
-                        std::string response = m_communicator.receiveFromServer();
-                        if (json::accept(response))
-                        {
-                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                            std::cout << responseMessage.args << std::endl;
-                        }
-                    }
-                    if (ImGui::Button("Get max time step"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
-                        std::string response = m_communicator.receiveFromServer();
-                        if (json::accept(response))
-                        {
-                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                            std::cout << responseMessage.args << std::endl;
-                        }
-                    }
-                    if (ImGui::Button("Get time left estimation"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_MAX_TIMESTEPS));
-                        std::string response = m_communicator.receiveFromServer();
-                        if (json::accept(response))
-                        {
-                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                            std::cout << responseMessage.args << std::endl;
-                        }
-                    }
+                    ImGui::Text("current Time Step: %i", m_currentTimeStep);
+                    ImGui::Text("Max Time Steps: %i", m_maxTimeSteps);
+                    ImGui::Text("estimated left time: %f", m_estimatedLeftTime);
 
                     if (ImGui::Button("Get simulation sizes"))
                     {

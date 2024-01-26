@@ -137,13 +137,10 @@ namespace xlpmg
   inline const Message TOGGLE_FILEIO = {MessageType::FUNCTION_CALL, "toggle_fileio"};
 
   //! Returns the current timestep from the simulator.
-  inline const Message GET_TIMESTEP = {MessageType::FUNCTION_CALL, "get_current_timestep"};
+  inline const Message GET_TIME_VALUES = {MessageType::FUNCTION_CALL, "get_time_values"};
 
   //! Returns the current simulation sizes from the simulator.
   inline const Message GET_SIMULATION_SIZES = {MessageType::FUNCTION_CALL, "get_simulation_sizes"};
-
-  //! Returns the max timesteps from the simulator.
-  inline const Message GET_MAX_TIMESTEPS = {MessageType::FUNCTION_CALL, "get_max_timesteps"};
 
   //! Tells the server to start sending height data. (buffered)
   inline const Message GET_HEIGHT_DATA = {MessageType::FUNCTION_CALL, "get_height_data"};
@@ -168,12 +165,6 @@ namespace xlpmg
 
   //! continue simulation
   inline const Message CONTINUE_SIMULATION = {MessageType::SERVER_CALL, "continue_simulation"};
-
-  //! gets the current run time
-  inline const Message GET_CURRENT_RUNTIME = {MessageType::SERVER_CALL, "get_current_runtime"};
-
-  //! gets a time left estimation
-  inline const Message GET_ESTIMATED_LEFT_TIME = {MessageType::SERVER_CALL, "get_estimated_left_time"};
 
   //! gets the system info such as CPU and RAM usage
   inline const Message GET_SYSTEM_INFORMATION = {MessageType::SERVER_CALL, "get_system_information"};
