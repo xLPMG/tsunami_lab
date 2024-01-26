@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Usage" href="usage.html" />
-    <link rel="prev" title="What is the tsunami lab?" href="introduction.html" /> 
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,9 +48,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">What is the tsunami lab?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html#what-does-the-code-do">What does the code do?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html#documentation-structure">Documentation structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository-from-github">1. Cloning the repository from GitHub</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#initializing-updating-submodules">2. Initializing &amp; updating submodules</a></li>
@@ -122,6 +120,11 @@ brew<span class="w"> </span>install<span class="w"> </span>gcc
 <li><p>Ubuntu: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libnetcdf-dev</span></code></p></li>
 <li><p><a class="reference external" href="https://downloads.unidata.ucar.edu/netcdf/">Windows</a></p></li>
 </ul>
+<p>The program comes with a gui, for which you will need the <a class="reference external" href="https://www.glfw.org/">GLFW</a> library.</p>
+<p>You may use the tsunami solver without any gui and thus without the <code class="docutils literal notranslate"><span class="pre">GLFW</span></code> library, but you’ll have to specify this by later compiling with</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span><span class="w"> </span><span class="n">gui</span><span class="o">=</span><span class="n">no</span>
+</pre></div>
+</div>
 </section>
 <section id="building-the-project">
 <h2>4. Building the project<a class="headerlink" href="#building-the-project" title="Link to this heading"></a></h2>
@@ -129,19 +132,11 @@ brew<span class="w"> </span>install<span class="w"> </span>gcc
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons
 </pre></div>
 </div>
-<p>for Linux/Windows. If you are on MacOS, use</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span><span class="s2">&quot;osx&quot;</span>
-</pre></div>
-</div>
 <p>If you wish to build the project for benchmarking without file output, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>benchmark
 </pre></div>
 </div>
-<p>for Linux/Windows. If you are on MacOS, use</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scons<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>benchmark+osx
-</pre></div>
-</div>
-<p>For further run configurations view the SConstruct file at the root of the tsunami_lab directory.</p>
+<p>For further run configurations view the SConstruct file at the root of the tsunami_lab directory or checkout the options inside the GUI.</p>
 </section>
 <section id="additional-build-parameters">
 <h2>Additional build parameters<a class="headerlink" href="#additional-build-parameters" title="Link to this heading"></a></h2>
@@ -184,7 +179,7 @@ To access it, open the <code class="docutils literal notranslate"><span class="p
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="introduction.html" class="btn btn-neutral float-left" title="What is the tsunami lab?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

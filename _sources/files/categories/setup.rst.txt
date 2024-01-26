@@ -37,6 +37,14 @@ For I/O, the project requires the ``NetCdf`` library to be installed:
 - Ubuntu: ``sudo apt-get install libnetcdf-dev``
 - `Windows <https://downloads.unidata.ucar.edu/netcdf/>`_
 
+The program comes with a gui, for which you will need the `GLFW <https://www.glfw.org/>`_ library.
+
+You may use the tsunami solver without any gui and thus without the ``GLFW`` library, but you'll have to specify this by later compiling with
+
+.. code-block::
+
+    scons gui=no
+
 4. Building the project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Navigate to the in step 1 created ``tsunami_lab`` folder and run
@@ -45,26 +53,13 @@ Navigate to the in step 1 created ``tsunami_lab`` folder and run
 
     scons 
 
-for Linux/Windows. If you are on MacOS, use
-
-.. code:: bash
-
-    scons mode="osx"
-
 If you wish to build the project for benchmarking without file output, run
 
 .. code:: bash
 
     scons mode=benchmark
 
-for Linux/Windows. If you are on MacOS, use
-
-.. code:: bash
-
-    scons mode=benchmark+osx
-
-
-For further run configurations view the SConstruct file at the root of the tsunami_lab directory.
+For further run configurations view the SConstruct file at the root of the tsunami_lab directory or checkout the options inside the GUI.
 
 Additional build parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

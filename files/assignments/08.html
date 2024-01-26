@@ -49,9 +49,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">What is the tsunami lab?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html#what-does-the-code-do">What does the code do?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html#documentation-structure">Documentation structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
 </ul>
@@ -123,6 +121,12 @@
 <h1>8. Optimization<a class="headerlink" href="#optimization" title="Link to this heading"></a></h1>
 <section id="ara">
 <h2>8.1 ARA<a class="headerlink" href="#ara" title="Link to this heading"></a></h2>
+<figure class="align-default" id="id1">
+<img alt="https://wiki.uni-jena.de/download/attachments/22453005/IMG_7381_0p5.JPG?version=1&amp;modificationDate=1625042348365&amp;api=v2" src="https://wiki.uni-jena.de/download/attachments/22453005/IMG_7381_0p5.JPG?version=1&amp;modificationDate=1625042348365&amp;api=v2" />
+<figcaption>
+<p><span class="caption-text">HPC-Cluster ARA. Source: <a class="reference external" href="https://wiki.uni-jena.de/pages/viewpage.action?pageId=22453005">https://wiki.uni-jena.de/pages/viewpage.action?pageId=22453005</a></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <section id="uploading-and-running-the-code">
 <h3>8.1.1 - Uploading and running the code<a class="headerlink" href="#uploading-and-running-the-code" title="Link to this heading"></a></h3>
 <p>First we cloned our github repository to “beegfs” and transfered the bythymetry and displacement data with “wget <a class="reference external" href="https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz">https://cloud.uni-jena.de/s/CqrDBqiMyKComPc/download/data_in.tar.xz</a> -O tsunami_lab_data_in.tar.xz” there.</p>
@@ -185,8 +189,8 @@ The benchmarking mode disables all file output (and also skips all imports of <c
 </section>
 <section id="results">
 <h4>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h4>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">execution times on different devices</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">execution times on different devices</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Device</p></th>
 <th class="head"><p>Config</p></th>
@@ -329,8 +333,8 @@ while the private PC seems to have better single core performance.</p>
 </pre></div>
 </div>
 <p>We ran the <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> program in benchmarking mode without file output. The results can be seen below.</p>
-<table class="docutils align-default" id="id2">
-<caption><span class="caption-text">execution times for different compilers and optimization flags</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">execution times for different compilers and optimization flags</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Compiler</p></th>
 <th class="head"><p>Optimization flag</p></th>
