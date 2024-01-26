@@ -34,12 +34,18 @@ private:
 
   int PORT = 8080;
   char IPADDRESS[16] = "127.0.0.1";
+  bool m_connected = false;
 
   std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
-  float m_dataUpdateFrequency = 1;
-  int m_clientReadBufferSize = m_communicator.BUFF_SIZE_DEFAULT;
+  int m_systemInfoUpdateFrequency = 2;
+  bool m_logSystemInfoDataTransmission = false;
+  int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
+  int m_serverSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
 
   // compiler options
+  int m_serverRestartPort = 8080;
   const char *m_compileModes[5] = {"release", "debug", "release+san", "debug+san", "benchmark"};
   int m_compileMode = 0;
   char m_compilerChoice[256] = "";
@@ -62,55 +68,94 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
-  const char *m_events[3] = {"Tohoku", "Chile", "Custom"};
-  int event_current = 0;
+  const char *m_tsunamiEvents[5] = {"CUSTOM", "TOHOKU", "CHILE", "ARTIFICIAL2D","CIRCULARDAMBREAK2D"};
+  int m_tsunamiEvent = 0;
   int m_nx = 1;
   int m_ny = 1;
-  float m_simulationSizeX = 0;
-  float m_simulationSizeY = 0;
-  int m_endTime = 1000;
+  int m_nk = 1;
+  float m_simulationSizeX = 10;
+  float m_simulationSizeY = 1;
+  float m_offsetX = 0;
+  float m_offsetY = 0;
+  int m_endTime = 30;
   bool m_useFileIO = true;
+  const char *m_outputMethods[2] = {"netcdf", "csv"};
+  int m_outputMethod = 0;
   int m_writingFrequency = 100;
+  char m_outputFileName[256] = "solution";
+  int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
+  int m_height = 0;
+  int m_diameter = 0;
+
+  std::string m_bathymetryFilePath = "";
+  std::string m_displacementFilePath = "";
+
+  char m_remoteBathFilePath[256] ="";
+  char m_remoteDisFilePath[256] ="";
+
 
   // outflow conditions
-  bool m_outflowL = false;
-  bool m_outflowR = false;
-  bool m_outflowT = false;
-  bool m_outflowB = false;
+  bool m_boundaryL = false;
+  bool m_boundaryR = false;
+  bool m_boundaryT = false;
+  bool m_boundaryB = false;
+
+  // stations
+  struct Station
+  {
+    std::string name;
+    float positionX = 0;
+    float positionY = 0;
+    bool isSelected = false;
+  };
+
+  std::vector<Station> m_stations;
+  float m_currStationX = 0;
+  float m_currStationY = 0;
+  char m_currStationName[256] = "";
 
   // client log
   bool m_clientLogAutoScroll = true;
 
+  //simulation status
+  bool m_isPausing = false;
+   int m_currentTimeStep = 0;
+   int m_maxTimeSteps = 0;
+   int m_timePerTimeStep = 0;
+   double m_estimatedLeftTime = 0;
+
+    std::vector<float> m_cpuData;
+    double m_totalRAM = 0;
+    double m_usedRAM = 0;
+
   /**
-  * Executes a shell command.
-  * 
-  * @param i_cmd command
-  * @param i_outputFile file to pipe the shell output to
-  * @return exit code
-  */
+   * Executes a shell command.
+   *
+   * @param i_cmd command
+   * @param i_outputFile file to pipe the shell output to
+   * @return exit code
+   */
   int exec(std::string i_cmd, std::string i_outputFile);
 
   /**
-  * Creates a config json from local config parameters.
-  * 
-  * @return config as json object
-  */
+   * Creates a config json from local config parameters.
+   *
+   * @return config as json object
+   */
   json createConfigJson();
 
   /**
-  * Updates local config parameters with current server data.
-  * 
-  * TODO: implementation
-  */
-  void updateData();
+   * Gets info on CPU and RAM usage from the server.
+   */
+  void updateSystemInfo();
 
 public:
   /**
-  * Entry-point for the GUI.
-  * 
-  * @return exit code
-  */
+   * Entry-point for the GUI.
+   *
+   * @return exit code
+   */
   int launch();
 };
 

@@ -55,12 +55,18 @@ private:
     //------------------------------------------//
     //----------------VARIABLES-----------------//
     //------------------------------------------//
+
     // config parameters
     std::string m_configFilePath = "configs/config.json";
     json m_configData;
 
+    std::atomic<bool> m_isPrepared = false;
     std::atomic<bool> m_useFileIO = true;
     std::atomic<bool> m_shouldExit = false;
+    std::atomic<bool> m_isPreparing = false;
+    std::atomic<bool> m_isCalculating = false;
+    std::atomic<bool> m_isResetting = false;
+    std::atomic<bool> m_pauseStatus = false;
 
     // input parameters
     std::string m_bathymetryFilePath = "";
@@ -78,7 +84,7 @@ private:
         CSV = 1
     };
     DataWriter m_dataWriter = NETCDF;
-    tsunami_lab::io::NetCdf *m_netCdf;
+    tsunami_lab::io::NetCdf *m_netCdf = nullptr;
 
     // checkpointing
     bool m_checkpointExists = false;
@@ -88,11 +94,11 @@ private:
 
     // setup parameters
     std::string m_setupChoice = "";
-    tsunami_lab::setups::Setup *m_setup;
+    tsunami_lab::setups::Setup *m_setup = nullptr;
 
     // simulation parameters
     std::string m_solver = "";
-    tsunami_lab::patches::WavePropagation *m_waveProp;
+    tsunami_lab::patches::WavePropagation *m_waveProp = nullptr;
     tsunami_lab::t_idx m_nx = 0;
     tsunami_lab::t_idx m_ny = 0;
     tsunami_lab::t_idx m_nk = 1;
@@ -103,7 +109,8 @@ private:
     tsunami_lab::t_real m_dx = 0;
     tsunami_lab::t_real m_dy = 0;
     tsunami_lab::t_real m_endTime = 0;
-
+    tsunami_lab::t_real m_height = 0;
+    tsunami_lab::t_real m_diameter = 0;
     // boundary conditions
     Boundary m_boundaryL = Boundary::OUTFLOW;
     Boundary m_boundaryR = Boundary::OUTFLOW;
@@ -130,12 +137,12 @@ private:
     //-------------END OF VARIABLES-------------//
     //------------------------------------------//
 
-    /**                                                           \
-     *  Determines if a string ends with another string.          \
-     *                                                            \
-     * @param i_str input string to check                         \
-     * @param i_suffix possible suffix of i_str                   \
-     * @return true if i_str ends with i_suffix, otherwise false. \
+    /**
+     *  Determines if a string ends with another string.
+     *
+     * @param i_str input string to check
+     * @param i_suffix possible suffix of i_str
+     * @return true if i_str ends with i_suffix, otherwise false.
      */
     bool endsWith(std::string const &i_str, std::string const &i_suffix);
 
@@ -174,6 +181,13 @@ private:
     void setUpNetCdf();
 
     /**
+     *  Creates a WavePropagation object.
+     *
+     *  @return void
+     */
+    void createWaveProp();
+
+    /**
      *  Helper method that constructs the solver.
      *
      *  @return void
@@ -209,6 +223,31 @@ private:
      */
     void deriveTimeStep();
 
+    //-------------------------------------------//
+    //-------------PRIVATE DELETERS--------------//
+    //-------------------------------------------//
+
+    /**
+     *  Deletes the setup.
+     *
+     *  @return void
+     */
+    void deleteSetup();
+
+    /**
+     *  Deletes the WavePropagation object.
+     *
+     *  @return void
+     */
+    void deleteWaveProp();
+
+    /**
+     *  Deletes the NetCdf object.
+     *
+     *  @return void
+     */
+    void deleteNetCdf();
+
     /**
      *  Helper method that frees the allocated memory.
      *
@@ -216,26 +255,84 @@ private:
      */
     void freeMemory();
 
-public:
+ public:
+    std::atomic<double> m_calculationTime = 0;
+    std::atomic<double> m_preparingTime = 0;
+    std::atomic<double> m_timePerTimeStep = 0;
+
     //------------------------------------------//
     //-----------------GETTERS------------------//
     //------------------------------------------//
 
+    /**
+     *  Gets the preparing status.
+     *
+     *  @return Preparing status.
+     */
+    bool isPreparing()
+    {
+        return m_isPreparing;
+    }
+
+    /**
+     *  Gets the calculating status.
+     *
+     *  @return Calculating status.
+     */
+    bool isCalculating()
+    {
+        return m_isCalculating;
+    }
+
+        /**
+     *  Gets the resetting status.
+     *
+     *  @return Resetting status.
+     */
+    bool isResetting()
+    {
+        return m_isResetting;
+    }
+
+    /**
+     *  Gets a pointer to the current Wavepropagation patch.
+     *
+     *  @return pointer to wavepropagation patch.
+     */
     tsunami_lab::patches::WavePropagation *getWaveProp()
     {
         return m_waveProp;
     }
 
+    /**
+     *  Gets the setup choice.
+     *
+     *  @return void
+     */
     void getSetupChoice(std::string &o_setupChoice)
     {
         o_setupChoice = m_setupChoice;
     }
 
-    tsunami_lab::t_idx getTimeStep()
+    /**
+     *  Gets the maximum timestep.
+     *
+     *  @return time step
+     */
+    void getTimeValues(tsunami_lab::t_idx &o_currenttimeStep,
+                       tsunami_lab::t_idx &o_maxTimeStep,
+                       tsunami_lab::t_real &o_timePerTimestep)
     {
-        return m_timeStep;
+        o_currenttimeStep = m_timeStep;
+        o_maxTimeStep = m_timeStepMax;
+        o_timePerTimestep = m_timePerTimeStep;
     }
 
+    /**
+     *  Gets the cell amounts.
+     *
+     *  @return void
+     */
     void getCellAmount(tsunami_lab::t_idx &o_ncellsX,
                        tsunami_lab::t_idx &o_ncellsY)
     {
@@ -243,18 +340,109 @@ public:
         o_ncellsY = m_ny;
     }
 
+    /**
+     *  Gets the simulation size.
+     *
+     *  @return void
+     */
+    void getSimulationSize(tsunami_lab::t_real &o_sizeX,
+                           tsunami_lab::t_real &o_sizeY)
+    {
+        o_sizeX = m_simulationSizeX;
+        o_sizeY = m_simulationSizeY;
+    }
+
+    /**
+     *  Gets the simulation offset.
+     *
+     *  @return void
+     */
+    void getSimulationOffset(tsunami_lab::t_real &o_offsetX,
+                             tsunami_lab::t_real &o_offsetY)
+    {
+        o_offsetX = m_offsetX;
+        o_offsetY = m_offsetY;
+    }
+
     //------------------------------------------//
     //-----------------SETTERS------------------//
     //------------------------------------------//
 
+    /**
+     *  Sets the setup choice.
+     *
+     *  @param i_setupChoice Setup choice.
+     *  @return void
+     */
     void setSetupChoice(std::string i_setupChoice)
     {
         m_setupChoice = i_setupChoice;
     }
 
-    //------------------------------------------//
-    //----------------FUNCTIONS-----------------//
-    //------------------------------------------//
+    /**
+     *  Sets the cell amount.
+     *
+     *  @param i_ncellsX cells in x-direction.
+     *  @param i_ncellsY cells in y-direction.
+     *  @return void
+     */
+    void setCellAmount(tsunami_lab::t_idx i_ncellsX,
+                       tsunami_lab::t_idx i_ncellsY)
+    {
+        m_nx = i_ncellsX;
+        m_ny = i_ncellsY;
+    }
+
+    /**
+     *  Sets the offset.
+     *
+     *  @param i_offsetX offset in x-direction.
+     *  @param i_offsetY offset in y-direction.
+     *  @return void
+     */
+    void setOffset(tsunami_lab::t_idx i_offsetX,
+                   tsunami_lab::t_idx i_offsetY)
+    {
+        m_offsetX = i_offsetX;
+        m_offsetY = i_offsetY;
+    }
+
+    /**
+     *  Sets the bathymetry file path.
+     *
+     *  @param i_filePath file path.
+     *  @return void
+     */
+    void setBathymetryFilePath(std::string i_filePath)
+    {
+        m_bathymetryFilePath = i_filePath;
+    }
+
+    /**
+     *  Sets displacement file path.
+     *
+     *  @param i_filePath file path.
+     *  @return void
+     */
+    void setDisplacementFilePath(std::string i_filePath)
+    {
+        m_displacementFilePath = i_filePath;
+    }
+
+    /**
+     *  Sets the prepared flag.
+     *
+     *  @param i_prepared prepared flag
+     *  @return void
+     */
+    void setPrepared(bool i_prepared)
+    {
+        m_isPrepared = i_prepared;
+    }
+
+    //--------------------------------------------//
+    //--------------PUBLIC DELETERS---------------//
+    //--------------------------------------------//
 
     /**
      * Destructor which frees all allocated memory.
@@ -262,11 +450,29 @@ public:
     ~Simulator();
 
     /**
-     *  Creates a WavePropagation object.
+     *  Deletes the Checkpoint files.
      *
      *  @return void
      */
-    void createWaveProp();
+    void deleteCheckpoints();
+
+    /**
+     *  Deletes all stations.
+     *
+     *  @return void
+     */
+    void deleteStations();
+
+    /**
+     *  Resets the simulator.
+     *
+     *  @return void
+     */
+    void resetSimulator();
+
+    //------------------------------------------//
+    //----------------FUNCTIONS-----------------//
+    //------------------------------------------//
 
     /**
      *  Calls the netcdf writeCheckpoint function with necessary parameters.
@@ -304,6 +510,13 @@ public:
                     std::string i_stationName);
 
     /**
+     *  Prepares the solver for calculation.
+     *
+     *  @return void
+     */
+    void prepareForCalculation();
+
+    /**
      *  Starts the calculation with the set parameters.
      *
      *  @param i_config path to the config file
@@ -332,7 +545,7 @@ public:
     int start(std::string i_config);
 
     /**
-     *  Sets the exit flag to provided a safe-exit mechanism.
+     *  Sets the exit flag to provide a safe-exit mechanism.
      *
      *  @param i_shouldExit whether to exit or not.
      *  @return void
@@ -341,6 +554,19 @@ public:
     {
         m_shouldExit = i_shouldExit;
     };
+
+    /**
+     *  Sets the pause flag.
+     *
+     *  @param i_pauseStatus whether to pause or not.
+     *  @return void
+     */
+    void setPausingStatus(bool i_pauseStatus)
+    {
+        m_pauseStatus = i_pauseStatus;
+    };
+
+    double computeEstimatedTimeLeft();
 };
 
 #endif

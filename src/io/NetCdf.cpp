@@ -12,7 +12,7 @@
 #include <filesystem>
 #endif
 
-void tsunami_lab::io::NetCdf::checkNcErr(tsunami_lab::t_idx i_err)
+void checkNcErr(tsunami_lab::t_idx i_err)
 {
     if (i_err)
     {
@@ -463,12 +463,10 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
 {
     t_idx start[] = {m_writingStepsCount, 0, 0};
     t_idx count[] = {1, m_nky, m_nkx};
-
     t_real *l_data = new t_real[m_nkx * m_nky];
     int l_i = 0;
 
-    t_real l_averagingFactor = 1/ m_k * m_k;
-
+    t_real l_averagingFactor = 1 / m_k * m_k;
 
     // set up file and write bathymetry on first call
     if (!m_outputFileOpened)
@@ -512,7 +510,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_h != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -539,7 +536,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_h != nullptr && i_b != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -566,7 +562,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_hu != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -594,7 +589,6 @@ void tsunami_lab::io::NetCdf::write(t_idx i_stride,
     memset(l_data, 0, m_nkx * m_nky * sizeof(t_real));
     if (i_hv != nullptr)
     {
-        int l_i = 0;
         for (t_idx l_gy = 0; l_gy < m_ny; l_gy += m_k)
         {
             for (t_idx l_gx = 0; l_gx < m_nx; l_gx += m_k)
@@ -921,4 +915,12 @@ void tsunami_lab::io::NetCdf::loadCheckpointDimensions(const char *i_checkpointF
         m_writingStepsCount = 0;
 
     checkNcErr(nc_close(l_ncIdCheckRead));
+}
+
+void tsunami_lab::io::NetCdf::flush()
+{
+    if (m_outputFileOpened)
+    {
+        nc_sync(m_ncId);
+    }
 }

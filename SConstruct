@@ -144,6 +144,13 @@ env = conf.Finish()
 # generate help message
 Help( vars.GenerateHelpText( env ) )
 
+####################
+#  ENABLE THREADS  #
+####################
+env.Append( LINKFLAGS = [ '-lpthread' ] )
+if OS != "Darwin": 
+  env.Append( CXXFLAGS = [ '-pthread' ] )
+
 #####################
 #   DEFAULT FLAGS   #
 #####################
@@ -236,8 +243,7 @@ if 'yes' in env['gui']:
   # add other OS specific flags
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
-else:
-  env.Append( CXXFLAGS = [ '-DNOGUI' ] )
+
 #####################
 # GET SOURCE FILES  #
 #####################

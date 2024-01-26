@@ -1,6 +1,7 @@
 build/
 _build/
 _templates/
+temp/
 
 .sconsign.dblite
 .sconf_temp

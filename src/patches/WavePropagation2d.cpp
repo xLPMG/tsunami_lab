@@ -12,6 +12,8 @@
 #include <omp.h>
 #endif
 
+#include <iostream>
+
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
                                                            t_idx i_nCellsY,
                                                            Boundary i_boundaryL,
@@ -28,9 +30,7 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
 
   // allocate memory including a single ghost cell on each side
   t_idx l_totalCells = (m_nCellsX + 2) * (m_nCellsY + 2);
-#ifdef USEOMP
-#pragma omp parallel for
-#endif
+
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
     m_h[l_st] = new t_real[l_totalCells];
@@ -40,9 +40,6 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCellsX,
   m_b = new t_real[l_totalCells];
 
 // init to zero
-#ifdef USEOMP
-#pragma omp parallel for collapse(2)
-#endif
   for (unsigned short l_st = 0; l_st < 2; l_st++)
   {
     for (t_idx l_ce = 0; l_ce < l_totalCells; l_ce++)

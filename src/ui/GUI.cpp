@@ -6,13 +6,15 @@
  * Entry point of the GUI.
  **/
 
-#include "imgui.h"
+#include <imgui.h>
+#include <imfilebrowser.h>
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
 #include "xlpmg/Communicator.hpp"
 #include "xlpmg/communicator_api.h"
 #include "../constants.h"
+#include "../io/NetCdf.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -33,8 +35,13 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <algorithm>
+#include <vector>
 
-// ui components
+#include <thread>
+#include <future>
+
+#include "../systeminfo/SystemInfo.h"
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -48,12 +55,22 @@ int tsunami_lab::ui::GUI::exec(std::string i_cmd, std::string i_outputFile)
     return system(commandChars);
 }
 
-void tsunami_lab::ui::GUI::updateData()
+void tsunami_lab::ui::GUI::updateSystemInfo()
 {
-    if (std::chrono::system_clock::now() - m_lastDataUpdate >= std::chrono::duration<float>(m_dataUpdateFrequency))
+    if (m_connected)
     {
-        // TODO: update
-        m_lastDataUpdate = std::chrono::system_clock::now();
+        m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::GET_SYSTEM_INFORMATION), m_logSystemInfoDataTransmission);
+        std::string l_responseString = m_communicator.receiveFromServer(m_logSystemInfoDataTransmission);
+        if (json::accept(l_responseString))
+        {
+            xlpmg::Message l_responseMessage = xlpmg::jsonToMessage(json::parse(l_responseString));
+            m_usedRAM = l_responseMessage.args.value("USED_RAM", (double)0);
+            m_totalRAM = l_responseMessage.args.value("TOTAL_RAM", (double)0);
+            if (l_responseMessage.args.contains("CPU_USAGE"))
+            {
+                m_cpuData = l_responseMessage.args["CPU_USAGE"].get<std::vector<float>>();
+            }
+        }
     }
 }
 
@@ -72,26 +89,35 @@ static void HelpMarker(const char *desc)
 json tsunami_lab::ui::GUI::createConfigJson()
 {
     json config = {{"solver", "fwave"},
-                   {"nx", m_simulationSizeX},
-                   {"ny", m_simulationSizeY},
+                   {"nx", m_nx},
+                   {"ny", m_ny},
+                   {"nk", m_nk},
+                   {"simulationSizeX", m_simulationSizeX},
+                   {"simulationSizeY", m_simulationSizeY},
+                   {"offsetX", m_offsetX},
+                   {"offsetY", m_offsetY},
                    {"endTime", m_endTime},
                    {"useFileIO", m_useFileIO},
                    {"writingFrequency", m_writingFrequency},
+                   {"outputFileName", m_outputFileName},
                    {"checkpointFrequency", m_checkpointFrequency},
-                   {"hasBoundaryL", m_outflowL},
-                   {"hasBoundaryR", m_outflowR},
-                   {"hasBoundaryT", m_outflowT},
-                   {"hasBoundaryB", m_outflowB}};
-
-    if (event_current == 1)
+                   {"hasBoundaryL", m_boundaryL},
+                   {"hasBoundaryR", m_boundaryR},
+                   {"hasBoundaryT", m_boundaryT},
+                   {"hasBoundaryB", m_boundaryB},
+                   {"setup", m_tsunamiEvents[m_tsunamiEvent]},
+                   {"bathymetry", m_remoteBathFilePath},
+                   {"displacement", m_remoteDisFilePath},
+                   {"height", m_height},
+                   {"diameter", m_diameter}};
+    // stations
+    for (Station l_s : m_stations)
     {
-        config.push_back({"setup", "tohoku"});
-        config.push_back({"outputFileName", "tohoku_solution"});
-    }
-    else
-    {
-        config.push_back({"setup", "chile"});
-        config.push_back({"outputFileName", "chile_solution"});
+        json l_stationData;
+        l_stationData["name"] = l_s.name;
+        l_stationData["locX"] = l_s.positionX;
+        l_stationData["locY"] = l_s.positionY;
+        config["stations"].push_back(l_stationData);
     }
 
     return config;
@@ -156,15 +182,24 @@ int tsunami_lab::ui::GUI::launch()
     // Load Fonts here
 
     // Our state
-    bool m_connected = false;
-
     bool show_demo_window = false;
     bool showCompilerOptionsWindow = false;
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
+    bool showSystemInfoWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    ImGui::FileBrowser fileDialogBath;
+    ImGui::FileBrowser fileDialogDis;
+
+    // (optional) set browser properties
+    fileDialogBath.SetTitle("Filesystem");
+    fileDialogBath.SetTypeFilters({".nc"});
+    fileDialogDis.SetTitle("Filesystem");
+    fileDialogDis.SetTypeFilters({".nc"});
+
+    tsunami_lab::systeminfo::SystemInfo systemInfo;
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -180,8 +215,6 @@ int tsunami_lab::ui::GUI::launch()
         ImGui_ImplGlfw_NewFrame();
 
         ImGui::NewFrame();
-
-        updateData();
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
@@ -219,7 +252,10 @@ int tsunami_lab::ui::GUI::launch()
                 //--------------------------------------------//
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
+                    int width = 32;
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("Port", &PORT, 0);
                     PORT = abs(PORT);
 
@@ -233,28 +269,19 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
                     ImGui::EndDisabled();
-
                     ImGui::SameLine();
-
                     ImGui::BeginDisabled(!m_connected);
                     if (ImGui::Button("Disconnect"))
                     {
                         m_communicator.stopClient();
                         m_connected = false;
                     }
-                    ImGui::EndDisabled();
 
+                    ImGui::EndDisabled();
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::CHECK_MESSAGE)) == 0)
-                        {
-                            m_connected = true;
-                        }
-                        else
-                        {
-                            m_connected = false;
-                        }
+                        m_connected = m_communicator.isConnected;
                     }
                     ImGui::BeginDisabled(!m_connected);
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
@@ -262,7 +289,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 1.0f, 1.0f));
                     if (ImGui::Button("Shutdown server"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER_MESSAGE)) == 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::SHUTDOWN_SERVER)) == 0)
                         {
                             m_connected = false;
                         }
@@ -270,25 +297,162 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopStyleColor(3);
                     ImGui::EndDisabled();
 
+                    ImGui::PushID(301);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("", &m_clientReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_DEFAULT)).c_str());
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
                     ImGui::SameLine();
                     if (ImGui::Button("Set"))
                     {
                         m_communicator.setReadBufferSize(m_clientReadBufferSize);
                     }
+
                     ImGui::SetItemTooltip("Sets the input.");
                     ImGui::SameLine();
-                    ImGui::Text("Buffer size (client)");
+                    ImGui::Text("Buffer size for receiving (client)");
                     ImGui::SameLine();
                     HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
                     if (m_clientReadBufferSize < 256)
                     {
                         m_clientReadBufferSize = 256;
                     }
+                    ImGui::PopID();
+
+                    ImGui::PushID(302);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                    ImGui::InputInt("", &m_clientSendBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        m_communicator.setSendBufferSize(m_clientSendBufferSize);
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size for sending (client)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Send Window.");
+                    if (m_clientSendBufferSize < 256)
+                    {
+                        m_clientSendBufferSize = 256;
+                    }
+                    ImGui::PopID();
+
+                    ImGui::PushID(303);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                    ImGui::InputInt("", &m_serverReadBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+
+                        xlpmg::Message msg = xlpmg::SET_READ_BUFFER_SIZE;
+                        msg.args = m_serverReadBufferSize;
+                        m_communicator.sendToServer(messageToJsonString(msg));
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size for receiving (server)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
+                    if (m_serverReadBufferSize < 256)
+                    {
+                        m_serverReadBufferSize = 256;
+                    }
+                    ImGui::PopID();
+
+                    ImGui::PushID(304);
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                    ImGui::InputInt("", &m_serverSendBufferSize, 0);
+                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button("Set"))
+                    {
+                        xlpmg::Message msg = xlpmg::SET_SEND_BUFFER_SIZE;
+                        msg.args = m_serverSendBufferSize;
+                        m_communicator.sendToServer(messageToJsonString(msg));
+                    }
+                    ImGui::SetItemTooltip("Sets the input.");
+                    ImGui::SameLine();
+                    ImGui::Text("Buffer size for sending (server)");
+                    ImGui::SameLine();
+                    HelpMarker("Size of the TCP Send Window.");
+                    if (m_serverSendBufferSize < 256)
+                    {
+                        m_serverSendBufferSize = 256;
+                    }
+                    ImGui::PopID();
+
                     ImGui::EndTabItem();
                 }
+                //--------------------------------------------//
+                //----------------Simulator-------------------//
+                //--------------------------------------------//
+                if (ImGui::BeginTabItem("Simulator"))
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 1.0f, 0.8f));
+                    if (ImGui::Button("Run simulation"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::SetItemTooltip("Will start the computational loop. If you have already run a simulation, make sure to reset it first to clear the old data.");
 
+                    ImGui::SameLine();
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 1.0f, 0.8f));
+                    if (ImGui::Button("Reset simulation"))
+                    {
+                        xlpmg::Message startSimMsg = xlpmg::RESET_SIMULATOR;
+                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::SetItemTooltip("Deletes previous cached computated data but keeps the loaded config, stations and checkpoint files.");
+
+                    ImGui::SameLine();
+                    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.7f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 1.0f, 8.0f));
+                    if (ImGui::Button("Kill simulation"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
+                    }
+                    ImGui::PopStyleColor(3);
+                    ImGui::EndTabItem();
+
+                    if (ImGui::Button("Pause Simulation"))
+                    {
+                        if (!m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::PAUSE_SIMULATION));
+                            m_isPausing = true;
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Continue Simulation"))
+                    {
+                        if (m_isPausing)
+                        {
+                            m_communicator.sendToServer(messageToJsonString(xlpmg::CONTINUE_SIMULATION));
+                            m_isPausing = false;
+                        }
+                    }
+
+                    if (ImGui::Button("Delete checkpoint"))
+                    {
+                        xlpmg::Message deleteCPMsg = xlpmg::DELETE_CHECKPOINTS;
+                        m_communicator.sendToServer(messageToJsonString(deleteCPMsg));
+                    }
+                    if (ImGui::Button("Delete stations"))
+                    {
+                        xlpmg::Message deleteStationsMsg = xlpmg::DELETE_STATIONS;
+                        m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
+                    }
+                }
                 //-------------------------------------------//
                 //------------------WINDOWS------------------//
                 //-------------------------------------------//
@@ -298,6 +462,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
                     ImGui::Checkbox("Show client log", &showClientLog);
+                    ImGui::Checkbox("Show system info", &showSystemInfoWindow);
                     ImGui::EndTabItem();
                 }
                 //------------------------------------------//
@@ -305,20 +470,9 @@ int tsunami_lab::ui::GUI::launch()
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if (ImGui::Button("Run simulation"))
-                    {
-                        xlpmg::Message startSimMsg = xlpmg::START_SIMULATION_MESSAGE;
-                        m_communicator.sendToServer(messageToJsonString(startSimMsg));
-                    }
-                    ImGui::SameLine();
-                    if (ImGui::Button("Kill simulation"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION_MESSAGE));
-                    }
-
                     if (ImGui::Button("Get height data"))
                     {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA_MESSAGE)) == 0)
+                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
                         {
                             unsigned long l_index = 0;
                             bool l_finished = false;
@@ -360,15 +514,30 @@ int tsunami_lab::ui::GUI::launch()
                             }
                         }
                     }
-                    if (ImGui::Button("Get time step"))
+                    if (ImGui::Button("Get time values"))
                     {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIMESTEP_MESSAGE));
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIME_VALUES));
                         std::string response = m_communicator.receiveFromServer();
+
                         if (json::accept(response))
                         {
                             xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+                            m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
+                            m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
+                            m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
+                            m_estimatedLeftTime = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
+
                             std::cout << responseMessage.args << std::endl;
                         }
+                    }
+                    ImGui::Text("current Time Step: %i", m_currentTimeStep);
+                    ImGui::Text("Max Time Steps: %i", m_maxTimeSteps);
+                    ImGui::Text("estimated left time: %f", m_estimatedLeftTime);
+
+                    if (ImGui::Button("Get simulation sizes"))
+                    {
+                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
+                        std::cout << m_communicator.receiveFromServer() << std::endl;
                     }
 
                     ImGui::EndTabItem();
@@ -395,14 +564,14 @@ int tsunami_lab::ui::GUI::launch()
 
             if (ImGui::Button("Clear"))
             {
-                m_communicator.clearClientLog();
+                m_communicator.clearLog();
             }
             ImGui::SameLine();
             ImGui::Checkbox("Auto-Scroll", &m_clientLogAutoScroll);
             if (ImGui::BeginChild("scrolling", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-                m_communicator.getClientLog(m_clientLog);
+                m_communicator.getLog(m_clientLog);
                 ImGui::TextUnformatted(m_clientLog.c_str());
                 ImGui::PopStyleVar();
 
@@ -474,6 +643,13 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::SameLine();
             HelpMarker("If you choose a runner, the server will be restarted after compilation.");
 
+            if (m_runner != 0)
+            {
+                ImGui::InputInt("Server port", &m_serverRestartPort, 0);
+                ImGui::SameLine();
+                HelpMarker("Port which the server will use when starting.");
+            }
+
             if (m_runner == 2)
             {
 
@@ -506,13 +682,13 @@ int tsunami_lab::ui::GUI::launch()
                 switch (m_runner)
                 {
                 case 0:
-                    recompileMsg = xlpmg::COMPILE_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE;
                     break;
                 case 1:
-                    recompileMsg = xlpmg::COMPILE_RUN_BASH_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE_RUN_BASH;
                     break;
                 case 2:
-                    recompileMsg = xlpmg::COMPILE_RUN_SBATCH_MESSAGE;
+                    recompileMsg = xlpmg::COMPILE_RUN_SBATCH;
                     break;
                 }
 
@@ -540,17 +716,18 @@ int tsunami_lab::ui::GUI::launch()
                 }
                 if (!m_useFilesystem)
                 {
-                    options.append("use_filesystem=no");
+                    options.append(" use_filesystem=no");
                 }
 
                 if (!m_useGui)
                 {
-                    options.append("gui=no");
+                    options.append(" gui=no");
                 }
 
                 json compileArgs;
                 compileArgs["ENV"] = "";
                 compileArgs["OPT"] = options;
+                compileArgs["POR"] = m_serverRestartPort;
 
                 if (m_runner == 2)
                 {
@@ -564,7 +741,7 @@ int tsunami_lab::ui::GUI::launch()
 
                 if (m_checkpointBeforeRecomp)
                 {
-                    m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT_MESSAGE));
+                    m_communicator.sendToServer(messageToJsonString(xlpmg::WRITE_CHECKPOINT));
                 }
                 m_communicator.sendToServer(messageToJsonString(recompileMsg));
                 m_connected = false;
@@ -582,16 +759,190 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::Begin("Simulation parameters", &showSimulationParameterWindow);
 
             short width = 24;
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
+
+            if (!strcmp(m_tsunamiEvents[m_tsunamiEvent], "CIRCULARDAMBREAK2D"))
+            {
+                ImGui::InputInt("Waterheight", &m_height, 0);
+                ImGui::InputInt("Diameter", &m_diameter, 0);
+            }
+
+            ImGui::BeginDisabled(m_tsunamiEvent != 0);
+            if (ImGui::TreeNode("Bathymetry"))
+            {
+                // open file dialog when user clicks this button
+                if (ImGui::Button("Select bathymetry file"))
+                    fileDialogBath.Open();
+
+                fileDialogBath.Display();
+
+                if (fileDialogBath.HasSelected())
+                {
+                    m_bathymetryFilePath = fileDialogBath.GetSelected().string();
+                    fileDialogBath.ClearSelected();
+                }
+
+                ImGui::SameLine();
+                ImGui::TextWrapped("%s", ("File: " + m_bathymetryFilePath).c_str());
+
+                // send bathymetry
+                ImGui::PushID(438);
+                if (ImGui::Button("Send to server"))
+                {
+                    xlpmg::Message l_bathymetryDataMsg = xlpmg::SET_BATHYMETRY_DATA;
+                    std::ifstream l_bathFile(m_bathymetryFilePath, std::ios::binary);
+                    l_bathFile.unsetf(std::ios::skipws);
+                    std::streampos l_fileSize;
+                    l_bathFile.seekg(0, std::ios::end);
+                    l_fileSize = l_bathFile.tellg();
+                    l_bathFile.seekg(0, std::ios::beg);
+                    std::vector<std::uint8_t> vec;
+                    vec.reserve(l_fileSize);
+                    vec.insert(vec.begin(),
+                               std::istream_iterator<std::uint8_t>(l_bathFile),
+                               std::istream_iterator<std::uint8_t>());
+                    l_bathymetryDataMsg.args = json::binary(vec);
+                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
+                }
+                if (ImGui::Button("Load dimensions from file"))
+                {
+                    // set local variables
+                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "x", l_nCellsX);
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "y", l_nCellsY);
+
+                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
+                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
+                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
+                    tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(),
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
+                    m_nx = l_nCellsX;
+                    m_ny = l_nCellsY;
+                    if (m_xData[0] < m_xData[l_nCellsX - 1])
+                    {
+                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
+                    }
+                    if (m_yData[0] < m_yData[l_nCellsY - 1])
+                    {
+                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
+                    }
+                    m_offsetX = m_xData[0];
+                    m_offsetY = m_yData[0];
+                }
+
+                ImGui::SameLine();
+                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
+                ImGui::PopID();
+
+                ImGui::InputText("Output file name", m_remoteBathFilePath, IM_ARRAYSIZE(m_remoteBathFilePath));
+
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Displacement"))
+            {
+                if (ImGui::Button("Select displacement file"))
+                    fileDialogDis.Open();
+
+                fileDialogDis.Display();
+
+                if (fileDialogDis.HasSelected())
+                {
+                    m_displacementFilePath = fileDialogDis.GetSelected().string();
+                    fileDialogDis.ClearSelected();
+                }
+                ImGui::SameLine();
+                ImGui::TextWrapped("%s", ("File: " + m_displacementFilePath).c_str());
+
+                // send displacement
+                ImGui::PushID(439);
+                if (ImGui::Button("Send to server"))
+                {
+                    xlpmg::Message l_displacementMsg = xlpmg::SET_DISPLACEMENT_DATA;
+                    std::ifstream l_displFile(m_displacementFilePath, std::ios::binary);
+                    l_displFile.unsetf(std::ios::skipws);
+                    std::streampos l_fileSize;
+                    l_displFile.seekg(0, std::ios::end);
+                    l_fileSize = l_displFile.tellg();
+                    l_displFile.seekg(0, std::ios::beg);
+                    std::vector<std::uint8_t> vec;
+                    vec.reserve(l_fileSize);
+                    vec.insert(vec.begin(),
+                               std::istream_iterator<std::uint8_t>(l_displFile),
+                               std::istream_iterator<std::uint8_t>());
+                    l_displacementMsg.args = json::binary(vec);
+                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
+                }
+                if (ImGui::Button("Load dimensions from file"))
+                {
+                    // set local variables
+                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "x", l_nCellsX);
+                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "y", l_nCellsY);
+
+                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
+                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
+                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
+                    tsunami_lab::io::NetCdf::read(m_displacementFilePath.c_str(),
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
+                    m_nx = l_nCellsX;
+                    m_ny = l_nCellsY;
+                    if (m_xData[0] < m_xData[l_nCellsX - 1])
+                    {
+                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
+                    }
+                    if (m_yData[0] < m_yData[l_nCellsY - 1])
+                    {
+                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
+                    }
+                    else
+                    {
+                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
+                    }
+                    m_offsetX = m_xData[0];
+                    m_offsetY = m_yData[0];
+                }
+                ImGui::SameLine();
+                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
+                ImGui::PopID();
+
+                ImGui::InputText("Remote displacement file path", m_remoteDisFilePath, IM_ARRAYSIZE(m_remoteDisFilePath));
+
+                ImGui::TreePop();
+            }
+
+            ImGui::EndDisabled();
+
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells X", &m_nx, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells Y", &m_ny, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputInt("Coarse output resolution", &m_nk, 0);
             m_nx = abs(m_nx);
             m_ny = abs(m_ny);
+            m_nk = abs(m_nk);
 
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::Combo("Tsunami Event", &event_current, m_events, IM_ARRAYSIZE(m_events));
-
+            ImGui::BeginDisabled(m_tsunamiEvent != 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
@@ -600,47 +951,74 @@ int tsunami_lab::ui::GUI::launch()
             m_simulationSizeY = abs(m_simulationSizeY);
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Offset X", &m_offsetX, 0);
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputFloat("Offset Y", &m_offsetY, 0);
+            ImGui::EndDisabled();
+
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);
             ImGui::SetItemTooltip("in simulated seconds");
             m_endTime = abs(m_endTime);
 
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::Checkbox("Use file I/O", &m_useFileIO);
-            ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
-
-            if (ImGui::Button("Enable file I/O"))
+            // FILE I/O
+            if (ImGui::TreeNode("File I/O"))
             {
-                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                toggleFileIOMsg.args = "true";
-                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                m_useFileIO = true;
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::Checkbox("Use file I/O", &m_useFileIO);
+                ImGui::SetItemTooltip("The value of this checkbox will only take effect after sending the config to the server.");
+
+                if (ImGui::Button("Enable file I/O"))
+                {
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO;
+                    toggleFileIOMsg.args = "true";
+                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    m_useFileIO = true;
+                }
+                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+                ImGui::SameLine();
+                if (ImGui::Button("Disable file I/O"))
+                {
+                    xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO;
+                    toggleFileIOMsg.args = "false";
+                    m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
+                    m_useFileIO = false;
+                }
+                ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
+
+                ImGui::BeginDisabled(!m_useFileIO);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::Combo("Output Method", &m_outputMethod, m_outputMethods, IM_ARRAYSIZE(m_outputMethods));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
+                ImGui::SetItemTooltip("in time steps");
+                ImGui::SameLine();
+                HelpMarker("Sets the frequency of writing into a solution file.");
+                m_writingFrequency = abs(m_writingFrequency);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputText("Output file name", m_outputFileName, IM_ARRAYSIZE(m_outputFileName));
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Station capture frequency", &m_stationFrequency, 0);
+                ImGui::SetItemTooltip("in simulated seconds");
+                ImGui::SameLine();
+                HelpMarker("Sets the frequency with which stations capture data.");
+                m_writingFrequency = abs(m_writingFrequency);
+
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
+                ImGui::SetItemTooltip("in real-time seconds");
+                ImGui::SameLine();
+                HelpMarker("A negative frequency will disable file output.");
+
+                ImGui::EndDisabled();
+
+                ImGui::TreePop();
             }
-            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-            ImGui::SameLine();
-            if (ImGui::Button("Disable file I/O"))
-            {
-                xlpmg::Message toggleFileIOMsg = xlpmg::TOGGLE_FILEIO_MESSAGE;
-                toggleFileIOMsg.args = "false";
-                m_communicator.sendToServer(messageToJsonString(toggleFileIOMsg));
-                m_useFileIO = false;
-            }
-            ImGui::SetItemTooltip("You may use this button during a running simulation and it should take effect immediately.");
-
-            ImGui::BeginDisabled(!m_useFileIO);
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::InputInt("Writing frequency", &m_writingFrequency, 0);
-            ImGui::SetItemTooltip("in time steps");
-            ImGui::SameLine();
-            HelpMarker("Sets the frequency of writing into a solution file.");
-            m_writingFrequency = abs(m_writingFrequency);
-            ImGui::EndDisabled();
-
-            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-            ImGui::InputInt("Checkpointing frequency", &m_checkpointFrequency, 0);
-            ImGui::SetItemTooltip("in real-time seconds");
-            ImGui::SameLine();
-            HelpMarker("A negative frequency will disable file output.");
-
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             bool outFlowNode = ImGui::TreeNode("Boundary conditions");
             ImGui::SameLine();
@@ -648,16 +1026,64 @@ int tsunami_lab::ui::GUI::launch()
             if (outFlowNode)
             {
                 ImGui::TextWrapped("Check if that side has a boundary, preventing the waves to leave the domain.");
-                ImGui::Checkbox("Left", &m_outflowL);
-                ImGui::Checkbox("Right", &m_outflowR);
-                ImGui::Checkbox("Top", &m_outflowT);
-                ImGui::Checkbox("Bottom", &m_outflowB);
+                ImGui::Checkbox("Left", &m_boundaryL);
+                ImGui::Checkbox("Right", &m_boundaryR);
+                ImGui::Checkbox("Top", &m_boundaryT);
+                ImGui::Checkbox("Bottom", &m_boundaryB);
                 ImGui::TreePop();
             }
 
-            if (ImGui::Button("Send config to server"))
+            if (ImGui::TreeNode("Stations"))
             {
-                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON_MESSAGE;
+                ImGui::InputText("Station name", m_currStationName, IM_ARRAYSIZE(m_currStationName));
+                ImGui::InputFloat("Location X", &m_currStationX, 0);
+                ImGui::InputFloat("Location Y", &m_currStationY, 0);
+
+                if (ImGui::Button("Add"))
+                {
+                    if (strlen(m_currStationName) > 0)
+                    {
+                        bool l_nameExists = false;
+                        for (Station l_s : m_stations)
+                        {
+                            if (l_s.name == m_currStationName)
+                            {
+                                l_nameExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!l_nameExists)
+                        {
+                            Station l_station = {m_currStationName, m_currStationX, m_currStationY};
+                            m_stations.push_back(l_station);
+                        }
+                    }
+                }
+
+                ImGui::BeginListBox("Stations");
+                auto it = m_stations.begin();
+                while (it != m_stations.end())
+                {
+                    std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
+                    if (ImGui::Selectable(name.c_str(), it->isSelected))
+                    {
+                        it = m_stations.erase(it);
+                    }
+                    else
+                    {
+                        it++;
+                    }
+                }
+                ImGui::EndListBox();
+                ImGui::SetItemTooltip("Click to remove");
+
+                ImGui::TreePop();
+            }
+
+            if (ImGui::Button("Update server with changes"))
+            {
+                xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON;
                 saveConfigMsg.args = createConfigJson();
                 m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
             }
@@ -668,6 +1094,51 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::TextWrapped("This could lead to unwanted results: for example changing the cell amount and then writing into a previous netcdf solution file could result in its corruption.");
             ImGui::Spacing();
             ImGui::TextWrapped("Our advice: only set config data before running a simulation and if you are not writing into an existing solution file.");
+            ImGui::End();
+        }
+        //--------------------------------------------//
+        //-------------SYSTEM INFORMATION-------------//
+        //--------------------------------------------//
+        if (showSystemInfoWindow)
+        {
+            if (m_lastDataUpdate <= std::chrono::system_clock::now())
+            {
+                updateSystemInfo();
+                m_lastDataUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_systemInfoUpdateFrequency);
+            }
+
+            ImGui::Begin("System information");
+
+            ImGui::Text("%f / %f GiB RAM usage", m_usedRAM, m_totalRAM);
+
+            if (m_cpuData.size() > 0)
+            {
+                ImGui::ProgressBar(m_cpuData[0] / 100, ImVec2(0.0f, 0.0f));
+                ImGui::SameLine();
+                ImGui::Text("%% overall CPU usage");
+
+                if (ImGui::TreeNode("Core info"))
+                {
+                    for (unsigned long i = 1; i < m_cpuData.size(); ++i)
+                    {
+                        ImGui::ProgressBar(m_cpuData[i] / 100, ImVec2(0.0f, 0.0f));
+                        ImGui::SameLine();
+                        ImGui::Text("%s %lu", "CPU: ", i - 1);
+                    }
+                    ImGui::TreePop();
+                }
+            }
+            if (ImGui::TreeNode("Update settings"))
+            {
+                ImGui::InputInt("Update frequency", &m_systemInfoUpdateFrequency, 0);
+                ImGui::SetItemTooltip("in seconds");
+                ImGui::SameLine();
+                HelpMarker("The server will update data with a constant frequency. With this option, you can only specify the frequency with which the client/gui is getting that data from the server.");
+                m_systemInfoUpdateFrequency = abs(m_systemInfoUpdateFrequency);
+
+                ImGui::Checkbox("Log data transmission", &m_logSystemInfoDataTransmission);
+                ImGui::TreePop();
+            }
             ImGui::End();
         }
 

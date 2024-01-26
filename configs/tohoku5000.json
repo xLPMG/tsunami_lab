@@ -5,5 +5,5 @@
     "nx":540,
     "ny":300,
     "endTime":15000,
-    "writingFrequency":100
+    "writingFrequency":80
 }

@@ -4,8 +4,8 @@
  * # Description
  * Library to easily create a client-server connection and handle its communication and logging.
  **/
-#ifndef COMMUNICATOR
-#define COMMUNICATOR
+#ifndef COMMUNICATOR_H
+#define COMMUNICATOR_H
 
 #include <stdio.h>
 #include <string.h>
@@ -20,6 +20,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 
 namespace xlpmg
 {
@@ -27,7 +28,7 @@ namespace xlpmg
     {
     private:
         int TIMEOUT = 2;
-        std::string clientLog = "";
+        std::string logData = "";
         int sockStatus, sockValread, sockClient_fd = -1;
         int server_fd, new_socket;
 
@@ -36,48 +37,92 @@ namespace xlpmg
             SENT,
             RECEIVED,
             ERROR,
-            INFO
+            INFO,
+            DEBUG
         };
 
-        /// @brief Adds a string to the client log with correct formatting.
+        /// @brief Adds a string to the log with correct formatting.
         /// @param message string to add to the log.
+        /// @param logtype @see xlpmg::Communicator::LogType
+        /// @param log Whether the message should be logged or not.
         /// @param logtype type of message.
-        void logToClient(std::string message, LogType logtype)
+        void logEvent(std::string message, LogType logtype, bool log, bool replaceLastLine = false)
         {
+            if(!log){
+                return;
+            }
+
+            std::string line = "";
+
             auto now = std::chrono::system_clock::now();
             auto timer = std::chrono::system_clock::to_time_t(now);
             std::tm bt = *std::localtime(&timer);
             std::ostringstream oss;
             oss << "[" << std::put_time(&bt, "%H:%M:%S") << "]";
             std::string timeStamp = oss.str();
-            clientLog.append(timeStamp);
+            line.append(timeStamp);
             switch (logtype)
             {
             case SENT:
-                clientLog.append(" Sent    : ");
+                line.append(" Sent    : ");
                 break;
             case RECEIVED:
-                clientLog.append(" Received: ");
+                line.append(" Received: ");
                 break;
             case ERROR:
-                clientLog.append(" Error   : ");
+                line.append(" Error   : ");
                 break;
             case INFO:
-                clientLog.append(" Info    : ");
+                line.append(" Info    : ");
+                break;
+            case DEBUG:
+                line.append(" Debug   : ");
                 break;
             }
-            clientLog.append(message);
-            clientLog.append("\n");
+            line.append(message);
+
+            if (!replaceLastLine)
+            {
+                std::cout << line << std::endl;
+                logData.append(line);
+                logData.append("\n");
+            }
+            else
+            {
+                std::cout << line << "\t\r" << std::flush;
+                size_t position = logData.length() - 2;
+                while (position > 0 && (logData[position] != '\n'))
+                {
+                    position--;
+                }
+                logData = logData.substr(0, position + 1);
+                logData.append(line);
+                logData.append("\n");
+            }
         }
 
     public:
-        //! size of the reading buffer
-        const unsigned int BUFF_SIZE_DEFAULT = 8096;
-        unsigned int BUFF_SIZE = BUFF_SIZE_DEFAULT;
+        //! default size of the reading buffer
+        const unsigned int BUFF_SIZE_READ_DEFAULT = 8096;
+        //! actual size of the reading buffer
+        unsigned int BUFF_SIZE_READ = BUFF_SIZE_READ_DEFAULT;
+
+        //! default size of the sending buffer
+        const unsigned int BUFF_SIZE_SEND_DEFAULT = 8096;
+        //! actual size of the sending buffer
+        unsigned int BUFF_SIZE_SEND = BUFF_SIZE_SEND_DEFAULT;
+
+        //! true if there is a connection
+        bool isConnected = false;
 
         void setReadBufferSize(unsigned int newSize)
         {
-            BUFF_SIZE = newSize;
+            BUFF_SIZE_READ = newSize;
+        }
+
+        void setSendBufferSize(unsigned int newSize)
+        {
+            BUFF_SIZE_SEND = newSize;
         }
 
         ////////////////////
@@ -96,10 +141,11 @@ namespace xlpmg
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
-                logToClient("Socket creation error", ERROR);
+                logEvent("Socket creation error", ERROR, true);
+                isConnected = false;
                 return -1;
             }
-            logToClient("Socket created.", INFO);
+            logEvent("Socket created.", INFO, true);
 
             setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
             setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
@@ -111,18 +157,21 @@ namespace xlpmg
             // form
             if (inet_pton(AF_INET, IPADDRESS, &serv_addr.sin_addr) <= 0)
             {
-                logToClient("Invalid address/ Address not supported.", ERROR);
+                logEvent("Invalid address/ Address not supported.", ERROR, true);
+                isConnected = false;
                 return -1;
             }
 
             if ((sockStatus = connect(sockClient_fd, (struct sockaddr *)&serv_addr,
                                       sizeof(serv_addr))) < 0)
             {
-                logToClient("Connection failed.", ERROR);
+                logEvent("Connection failed.", ERROR, true);
+                isConnected = false;
                 return -1;
             }
             std::string ipString = std::string(IPADDRESS) + ":" + std::to_string(PORT);
-            logToClient("Socket connected to " + ipString, INFO);
+            logEvent("Socket connected to " + ipString, INFO, true);
+            isConnected = true;
             return sockStatus;
         }
 
@@ -131,60 +180,149 @@ namespace xlpmg
         {
             // closing the connected socket
             close(sockClient_fd);
+            isConnected = false;
         }
 
         /// @brief Receives a message from the server.
         /// @return Message as string.
-        std::string receiveFromServer()
+        /// @param log Whether the message should be logged or not.
+        std::string receiveFromServer(bool log = true)
         {
             if (sockClient_fd < 0)
             {
-                logToClient("Reading failed: Socket not initialized.", ERROR);
+                logEvent("Reading failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
                 return "FAIL";
             }
-            char readBuffer[BUFF_SIZE];
-            memset(readBuffer, 0, BUFF_SIZE);
-            sockValread = read(sockClient_fd, readBuffer,
-                               BUFF_SIZE - 1); // subtract 1 for the null
-                                               // terminator at the end
-            if (sockValread < 0)
+            std::string message = "";
+            char readBuffer[BUFF_SIZE_READ];
+            bool finished = false;
+            unsigned long totalBytes = 0;
+
+            logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log);
+
+            while (!finished)
             {
-                logToClient("Reading failed or timed out.", ERROR);
-                return "FAIL";
+                memset(readBuffer, 0, BUFF_SIZE_READ);
+                sockValread = read(sockClient_fd, readBuffer,
+                                   BUFF_SIZE_READ - 1); // subtract 1 for the null
+                                                        // terminator at the end
+                if (sockValread < 0)
+                {
+                    logEvent("Reading failed or timed out.", ERROR, log);
+                    isConnected = false;
+                    return "FAIL";
+                }
+
+                if (strlen(readBuffer) > 0)
+                {
+                    logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log, true);
+                }
+
+                message += std::string(readBuffer);
+                totalBytes += strlen(readBuffer);
+
+                if (message[message.length() - 2] == '#' && message[message.length() - 1] == '!')
+                {
+                    message.pop_back();
+                    message.pop_back();
+                    if (message.length() < 400)
+                    {
+                        logEvent(message, RECEIVED, log);
+                    }
+                    else
+                    {
+                        logEvent("Message is too long to be displayed.", RECEIVED, log);
+                    }
+                    finished = true;
+                }
             }
-            else
-            {
-                logToClient(std::string(readBuffer), RECEIVED);
-                return std::string(readBuffer);
-            }
+            isConnected = true;
+            return message;
+        }
+
+        /// @brief Checks if the server responded with OK.
+        /// @return true if server responded
+        bool checkServerResponse()
+        {
+            // char readBuffer[BUFF_SIZE_READ];
+            // memset(readBuffer, 0, BUFF_SIZE_READ);
+            // sockValread = read(sockClient_fd, readBuffer,
+            //                    BUFF_SIZE_READ - 1); // subtract 1 for the null
+            // bool returnValue = true;
+            // if (std::string(readBuffer).compare("OK") != 0)
+            //     returnValue = false;
+
+            // // DONE
+            // sockValread = read(sockClient_fd, readBuffer,
+            //                    BUFF_SIZE_READ - 1); // subtract 1 for the null
+            // if (std::string(readBuffer).compare("DONE") != 0)
+            //     returnValue = false;
+
+            return true;
         }
 
         /// @brief Sends a message to the server.
         /// @param message String to send.
-        int sendToServer(std::string message)
+        /// @param log Whether the message should be logged or not.
+        int sendToServer(std::string message, bool log = true)
         {
             if (sockClient_fd < 0)
             {
-                clientLog.append("Error   : Sending failed: Socket not initialized \n");
+                logEvent("Sending failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
                 return 1;
             }
-            send(sockClient_fd, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
-            logToClient(message, SENT);
+            // terminator
+            message.append("#!");
 
-            return strcmp(receiveFromServer().c_str(), "OK");
+            if (message.length() < BUFF_SIZE_SEND)
+            {
+                send(sockClient_fd, message.c_str(), strlen(message.c_str()), 0);
+                logEvent(message, SENT, log);
+                std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
+                logEvent(bytesSentStr.c_str(), DEBUG, log);
+            }
+            else
+            {
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO, log);
+                logEvent("0%", DEBUG, log);
+                unsigned long bytes_total = 0;
+                const char *data_ptr = message.data();
+                std::size_t data_size = message.size();
+                int bytes_sent;
+                while (data_size > 0)
+                {
+                    bytes_sent = send(sockClient_fd, data_ptr, data_size, 0);
+                    if (bytes_sent < 0)
+                    {
+                        isConnected = false;
+                        return -1;
+                    }
+
+                    data_ptr += bytes_sent;
+                    bytes_total += bytes_sent;
+                    data_size -= bytes_sent;
+                    int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
+                    std::string bytesSentStr = std::to_string(percentage) + "%";
+                    logEvent(bytesSentStr.c_str(), DEBUG, log, true);
+                }
+            }
+            isConnected = true;
+            return 0;
         }
 
-        /// @brief Gets the log data of the client.
-        /// @param o_clientLog Pointer to the string which the log will be written into.
-        void getClientLog(std::string &o_clientLog)
+        /// @brief Gets the log data.
+        /// @param o_logData Pointer to the string which the log will be written into.
+        void getLog(std::string &o_logData)
         {
-            o_clientLog = clientLog;
+            o_logData = logData;
         }
 
-        /// @brief Clears the log data of the client.
-        void clearClientLog()
+        /// @brief Clears the log data.
+        void clearLog()
         {
-            clientLog.clear();
+            logData.clear();
         }
 
         ////////////////////
@@ -204,6 +342,7 @@ namespace xlpmg
             if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
                 perror("socket failed");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
 
@@ -213,6 +352,7 @@ namespace xlpmg
                            sizeof(opt)))
             {
                 perror("setsockopt");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             address.sin_family = AF_INET;
@@ -224,19 +364,23 @@ namespace xlpmg
                      sizeof(address)) < 0)
             {
                 perror("bind failed");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             if (listen(server_fd, 3) < 0)
             {
                 perror("listen");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
             if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
                                      &addrlen)) < 0)
             {
                 perror("accept");
+                isConnected = false;
                 exit(EXIT_FAILURE);
             }
+            isConnected = true;
         }
 
         /// @brief Stops all connections of the server.
@@ -246,26 +390,96 @@ namespace xlpmg
             close(new_socket);
             // closing the listening socket
             close(server_fd);
+
+            isConnected = false;
         }
 
         /// @brief Receives a message froma  client.
         /// @return Message as string.
-        std::string receiveFromClient()
+        /// @param log Whether the message should be logged or not.
+        std::string receiveFromClient(bool log = true)
         {
-            char readBuffer[BUFF_SIZE];
-            memset(readBuffer, 0, BUFF_SIZE);
-            sockValread = read(new_socket, readBuffer,
-                               BUFF_SIZE - 1); // subtract 1 for the null
-                                               // terminator at the end
-            send(new_socket, "OK", strlen("OK"), MSG_NOSIGNAL);
-            return std::string(readBuffer);
+            if (new_socket < 0)
+            {
+                logEvent("Reading failed: Socket not initialized.", ERROR, log);
+                isConnected = false;
+                return "FAIL";
+            }
+            std::string message = "";
+            char readBuffer[BUFF_SIZE_READ];
+            bool finished = false;
+            unsigned long totalBytes = 0;
+
+            while (!finished)
+            {
+                memset(readBuffer, 0, BUFF_SIZE_READ);
+                sockValread = read(new_socket, readBuffer,
+                                   BUFF_SIZE_READ - 1);
+                if (sockValread < 0)
+                {
+                    logEvent("Reading failed or timed out.", ERROR, log);
+                    isConnected = false;
+                    return "FAIL";
+                }
+
+                message += std::string(readBuffer);
+                totalBytes += strlen(readBuffer);
+
+                if (message[message.length() - 2] == '#' && message[message.length() - 1] == '!')
+                {
+                    message.pop_back();
+                    message.pop_back();
+                    if (message.length() < 400)
+                    {
+                        logEvent(message, RECEIVED, log);
+                    }
+                    else
+                    {
+                        logEvent("Message is too long to be displayed.", RECEIVED, log);
+                    }
+                    finished = true;
+                }
+            }
+            return message;
         }
 
         /// @brief Sends a message to a client.
         /// @param message Message to send.
-        void sendToClient(std::string message)
+        /// @param log Whether the message should be logged or not.
+        void sendToClient(std::string message, bool log = true)
         {
-            send(new_socket, message.c_str(), strlen(message.c_str()), MSG_NOSIGNAL);
+            // terminator
+            message.append("#!");
+
+            if (strlen(message.c_str()) < BUFF_SIZE_SEND)
+            {
+                send(new_socket, message.c_str(), strlen(message.c_str()), 0);
+                logEvent(message, SENT, log);
+                std::string bytesSentStr = "=> " + std::to_string(strlen(message.c_str())) + " Bytes";
+                logEvent(bytesSentStr.c_str(), DEBUG, log);
+            }
+            else
+            {
+                logEvent("Sending buffered message (" + std::to_string(strlen(message.c_str())) + " Bytes = " + std::to_string((double)strlen(message.c_str()) / 1000000) + " MB)             ", INFO, log);
+                logEvent("0%", DEBUG, log);
+                unsigned long bytes_total = 0;
+                const char *data_ptr = message.data();
+                std::size_t data_size = message.size();
+                int bytes_sent;
+                while (data_size > 0)
+                {
+                    bytes_sent = send(sockClient_fd, data_ptr, data_size, 0);
+                    if (bytes_sent < 0)
+                        return;
+
+                    data_ptr += bytes_sent;
+                    bytes_total += bytes_sent;
+                    data_size -= bytes_sent;
+                    int percentage = std::max((double)0, std::min(((double)bytes_total / strlen(message.c_str())) * 100, (double)100));
+                    std::string bytesSentStr = std::to_string(percentage) + "%";
+                    logEvent(bytesSentStr.c_str(), DEBUG, log, true);
+                }
+            }
         }
     };
 }

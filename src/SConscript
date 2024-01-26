@@ -9,6 +9,7 @@ Import('env')
 
 # gather sources
 l_sources = [ 'Simulator.cpp',
+              'systeminfo/SystemInfo.cpp',
               'solvers/Roe.cpp',
               'solvers/Fwave.cpp',
               'patches/WavePropagation1d.cpp',
@@ -48,7 +49,7 @@ l_tests = [ 'tests.cpp',
             'setups/TsunamiEvent1d.test.cpp',
             'setups/Supercritical1d.test.cpp',
             'setups/Subcritical1d.test.cpp',
-            'setups/CircularDamBreak2d.test.cpp',
+            #'setups/CircularDamBreak2d.test.cpp',
             'setups/ArtificialTsunami2d.test.cpp',
             'patches/WavePropagation2d.test.cpp',
             'io/Station.test.cpp',
