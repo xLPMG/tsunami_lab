@@ -17,7 +17,7 @@ std::atomic<bool> m_stopUpdating = false;
 bool m_isSimulationRunning = false;
 
 // updating
-std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate = std::chrono::high_resolution_clock::now();
+std::chrono::time_point m_lastDataUpdate = std::chrono::high_resolution_clock::now();
 int m_dataUpdateFrequency = 10;
 
 // temp files
