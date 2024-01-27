@@ -134,6 +134,10 @@ private:
   double m_totalRAM = 0;
   double m_usedRAM = 0;
 
+  std::vector<float> m_stationValuesX;
+  std::vector<float> m_stationValuesY;
+  std::string m_stationFilePath = "";
+
   /**
    * Executes a shell command.
    *

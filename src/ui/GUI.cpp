@@ -7,6 +7,8 @@
  **/
 
 #include <imgui.h>
+#include <implot.h>
+#include <implot_internal.h>
 #include <imfilebrowser.h>
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -15,6 +17,7 @@
 #include "xlpmg/communicator_api.h"
 #include "../constants.h"
 #include "../io/NetCdf.h"
+#include "../io/Csv.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -181,6 +184,7 @@ int tsunami_lab::ui::GUI::launch()
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
@@ -208,12 +212,15 @@ int tsunami_lab::ui::GUI::launch()
 
     ImGui::FileBrowser fileDialogBath;
     ImGui::FileBrowser fileDialogDis;
+    ImGui::FileBrowser fileDialogStation;
 
     // (optional) set browser properties
     fileDialogBath.SetTitle("Filesystem");
     fileDialogBath.SetTypeFilters({".nc"});
     fileDialogDis.SetTitle("Filesystem");
     fileDialogDis.SetTypeFilters({".nc"});
+    fileDialogStation.SetTitle("Filesystem");
+    fileDialogStation.SetTypeFilters({".csv"});
 
     tsunami_lab::systeminfo::SystemInfo systemInfo;
     // Main loop
@@ -233,7 +240,10 @@ int tsunami_lab::ui::GUI::launch()
         ImGui::NewFrame();
 
         if (show_demo_window)
+        {
             ImGui::ShowDemoWindow(&show_demo_window);
+            ImPlot::ShowDemoWindow();
+        }
 
         // Main window
         {
@@ -1211,6 +1221,37 @@ int tsunami_lab::ui::GUI::launch()
         }
         ImGui::End();
 
+        // STATIONS
+        ImGui::Begin("stations");
+
+        if (ImGui::Button("Select station data file"))
+            fileDialogStation.Open();
+
+        fileDialogStation.Display();
+
+        if (fileDialogStation.HasSelected())
+        {
+            m_bathymetryFilePath = fileDialogStation.GetSelected().string();
+            fileDialogStation.ClearSelected();
+        }
+
+        if (ImGui::Button("load"))
+        {
+            // csv file path
+            std::ifstream l_inputFile(m_stationFilePath);
+            std::vector<std::string> l_row;
+            std::string l_line;
+
+            std::getline(l_inputFile, l_line); // skip header
+            while (getline(l_inputFile, l_line))
+            {
+                tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
+                m_stationValuesX.push_back(stof(l_row[0])); // time
+                m_stationValuesY.push_back(stof(l_row[5])); // total height
+            }
+        }
+        ImGui::End();
+
         // Rendering
         ImGui::Render();
         int display_w, display_h;
@@ -1221,6 +1262,7 @@ int tsunami_lab::ui::GUI::launch()
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
