@@ -97,6 +97,9 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
+  m_height = m_configData.value("height",0);
+  m_diameter = m_configData.value("diameter",0);
+
 
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
@@ -345,7 +348,6 @@ void tsunami_lab::Simulator::constructSolver()
         // END BREAKPOINT
 
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
-
         m_waveProp->setHeight(l_cx,
                               l_cy,
                               l_hCheck[l_cx + l_cy * m_nx]);
