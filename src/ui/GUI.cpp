@@ -1234,11 +1234,16 @@ int tsunami_lab::ui::GUI::launch()
             m_stationFilePath = fileDialogStation.GetSelected().string();
             fileDialogStation.ClearSelected();
 
+            m_stationTime.clear();
+            m_stationMomentumX.clear();
+            m_stationMomentumY.clear();
+            m_stationBathymetry.clear();
+            m_stationTotalHeight.clear();
+
             // load data
             std::ifstream l_inputFile(m_stationFilePath);
             std::vector<std::string> l_row;
             std::string l_line;
-            std::cout << "start reading " << m_stationFilePath << std::endl;
             std::getline(l_inputFile, l_line); // skip header
             while (getline(l_inputFile, l_line))
             {
@@ -1251,9 +1256,9 @@ int tsunami_lab::ui::GUI::launch()
             }
         }
         ImGui::SameLine();
-        ImGui::Text("Selected file: %s",m_stationFilePath.c_str());
+        ImGui::Text("Selected file: %s", m_stationFilePath.c_str());
 
-        std::string l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1)+": heights";
+        std::string l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": heights";
         if (ImPlot::BeginPlot(l_plotName.c_str()))
         {
             ImPlot::SetupAxes("time in seconds", "height in metres");
@@ -1261,7 +1266,7 @@ int tsunami_lab::ui::GUI::launch()
             ImPlot::PlotLine("water level", &m_stationTime[0], &m_stationTotalHeight[0], m_stationTime.size());
             ImPlot::EndPlot();
         }
-        l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1)+": momenta";
+        l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": momenta";
         if (ImPlot::BeginPlot(l_plotName.c_str()))
         {
             ImPlot::SetupAxes("time in seconds", "momentum in m^2/s");
