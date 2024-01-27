@@ -36,9 +36,14 @@ private:
   char IPADDRESS[16] = "127.0.0.1";
   bool m_connected = false;
 
-  std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
+  std::chrono::time_point<std::chrono::system_clock> m_lastSystemInfoUpdate;
   int m_systemInfoUpdateFrequency = 2;
   bool m_logSystemInfoDataTransmission = false;
+
+  std::chrono::time_point<std::chrono::system_clock> m_lastTimeValuesUpdate;
+  int m_timeValuesUpdateFrequency = 2;
+  bool m_logTimeValuesDataTransmission = false;
+
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
@@ -91,9 +96,8 @@ private:
   std::string m_bathymetryFilePath = "";
   std::string m_displacementFilePath = "";
 
-  char m_remoteBathFilePath[256] ="";
-  char m_remoteDisFilePath[256] ="";
-
+  char m_remoteBathFilePath[256] = "";
+  char m_remoteDisFilePath[256] = "";
 
   // outflow conditions
   bool m_boundaryL = false;
@@ -118,16 +122,17 @@ private:
   // client log
   bool m_clientLogAutoScroll = true;
 
-  //simulation status
+  // simulation status
+  std::string m_simulationStatus = "UNKNOWN";
   bool m_isPausing = false;
-   int m_currentTimeStep = 0;
-   int m_maxTimeSteps = 0;
-   int m_timePerTimeStep = 0;
-   double m_estimatedLeftTime = 0;
+  int m_currentTimeStep = 0;
+  int m_maxTimeSteps = 0;
+  int m_timePerTimeStep = 0;
+  double m_estimatedTimeLeft = 0;
 
-    std::vector<float> m_cpuData;
-    double m_totalRAM = 0;
-    double m_usedRAM = 0;
+  std::vector<float> m_cpuData;
+  double m_totalRAM = 0;
+  double m_usedRAM = 0;
 
   /**
    * Executes a shell command.
@@ -149,6 +154,11 @@ private:
    * Gets info on CPU and RAM usage from the server.
    */
   void updateSystemInfo();
+
+  /**
+   * Gets info on time step and time per time step from the server.
+   */
+  void updateTimeValues();
 
 public:
   /**

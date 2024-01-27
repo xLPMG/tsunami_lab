@@ -38,6 +38,7 @@ For I/O, the project requires the ``NetCdf`` library to be installed:
 - `Windows <https://downloads.unidata.ucar.edu/netcdf/>`_
 
 The program comes with a gui, for which you will need the `GLFW <https://www.glfw.org/>`_ library.
+On MacOS, you can install it easily using `Homebrew. <https://formulae.brew.sh/formula/glfw>`_
 
 You may use the tsunami solver without any gui and thus without the ``GLFW`` library, but you'll have to specify this by later compiling with
 

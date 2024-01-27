@@ -305,9 +305,24 @@ int main(int i_argc, char *i_argv[])
                     l_data["currentTimeStep"] = l_currentTimeStep;
                     l_data["maxTimeStep"] = l_maxTimeStep;
                     l_data["timePerTimeStep"] = l_timePerTimeStep;
+                    if (simulator->isCalculating())
+                    {
+                        l_data["status"] = "CALCULATING";
+                    }
+                    else if (simulator->isPreparing())
+                    {
+                        l_data["status"] = "PREPARING";
+                    }
+                    else if (simulator->isResetting())
+                    {
+                        l_data["status"] = "RESETTING";
+                    }
+                    else
+                    {
+                        l_data["status"] = "IDLE";
+                    }
                     response.args = l_data;
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
-
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(response), false);
                 }
                 else if (l_key == xlpmg::TOGGLE_FILEIO.key)
                 {

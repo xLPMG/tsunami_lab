@@ -278,6 +278,10 @@ void tsunami_lab::Simulator::setUpNetCdf()
     std::cout << "  Current simulation time:  " << m_simTime << std::endl;
     std::cout << "  Current time step:        " << m_timeStep << std::endl;
     std::cout << std::endl;
+
+    if(m_timeStepMax < m_timeStep){
+      m_timeStepMax = m_timeStep;
+    }
   }
   else
   {
@@ -506,7 +510,7 @@ void tsunami_lab::Simulator::deriveTimeStep()
   }
 
   // calculate max time steps
-  m_timeStepMax = std::ceil(m_endTime / m_dt) + 1;
+  m_timeStepMax = std::ceil(m_endTime / m_dt);
   std::cout << "Note: max " << m_timeStepMax << " steps will be computed." << std::endl;
   // derive scaling for a time step
   m_scalingX = m_dt / m_dx;
@@ -819,8 +823,7 @@ void tsunami_lab::Simulator::runCalculation()
     m_timeStep++;
     m_simTime += m_dt;
 
-    auto l_endTimeStepTimer = std::chrono::high_resolution_clock::now();
-    auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(l_endTimeStepTimer - l_beginCalc);
+    auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - l_beginCalc);
     m_timePerTimeStep = l_durationTimeSteps.count() / m_timeStep;
   }
 

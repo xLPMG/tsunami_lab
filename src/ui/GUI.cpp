@@ -74,6 +74,21 @@ void tsunami_lab::ui::GUI::updateSystemInfo()
     }
 }
 
+void tsunami_lab::ui::GUI::updateTimeValues()
+{
+    m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIME_VALUES), m_logTimeValuesDataTransmission);
+    std::string response = m_communicator.receiveFromServer(m_logTimeValuesDataTransmission);
+    if (json::accept(response))
+    {
+        xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
+        m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
+        m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
+        m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
+        m_estimatedTimeLeft = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
+        m_simulationStatus = responseMessage.args.value("status", "UNKNOWN");
+    }
+}
+
 static void HelpMarker(const char *desc)
 {
     ImGui::TextDisabled("(?)");
@@ -187,6 +202,7 @@ int tsunami_lab::ui::GUI::launch()
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
+    bool showSimulationControlsWindow = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -385,11 +401,13 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::EndTabItem();
                 }
-                //--------------------------------------------//
-                //----------------Simulator-------------------//
-                //--------------------------------------------//
-                if (ImGui::BeginTabItem("Simulator"))
+                //----------------------------------------------//
+                //------------Simulation Controls---------------//
+                //----------------------------------------------//
+                if (showSimulationControlsWindow)
                 {
+                    ImGui::Begin("Simulation controls");
+
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 1.0f, 0.8f));
@@ -422,7 +440,6 @@ int tsunami_lab::ui::GUI::launch()
                         m_communicator.sendToServer(messageToJsonString(xlpmg::KILL_SIMULATION));
                     }
                     ImGui::PopStyleColor(3);
-                    ImGui::EndTabItem();
 
                     if (ImGui::Button("Pause Simulation"))
                     {
@@ -442,16 +459,62 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
 
+                    // SIMULATION STATUS
+                    ImGui::SeparatorText("Simulation status");
+                    if (m_lastTimeValuesUpdate <= std::chrono::system_clock::now() && m_connected)
+                    {
+                        updateTimeValues();
+                        m_lastTimeValuesUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_timeValuesUpdateFrequency);
+                    }
+                    ImGui::Text("STATUS: %s", m_simulationStatus.c_str());
+
+                    ImGui::Text("%i / %i time steps", m_currentTimeStep, m_maxTimeSteps);
+                    ImGui::SameLine();
+                    HelpMarker("The continuous dimension of time is discretized using 'time steps'. The length of a time step is computed anew for each simulation in a way such that the waves do not interact with each other.");
+
+                    ImGui::Text("Time per time step: %i", m_timePerTimeStep);
+                    ImGui::SetItemTooltip("in milliseconds");
+                    ImGui::SameLine();
+                    HelpMarker("The time the solver takes to compute one time step.");
+
+                    ImGui::Text("Estimated time left: %f", m_estimatedTimeLeft);
+                    ImGui::SetItemTooltip("in seconds");
+                    ImGui::SameLine();
+                    HelpMarker("Time until the solver has finished the whole computation.");
+
+                    ImGui::PushID(472);
+                    if (ImGui::TreeNode("Update settings"))
+                    {
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * 16);
+                        ImGui::InputInt("Update frequency", &m_timeValuesUpdateFrequency, 0);
+                        ImGui::SetItemTooltip("in seconds");
+                        ImGui::SameLine();
+                        HelpMarker("The server will update data with a constant frequency. With this option, you can only specify the frequency with which the client/gui is getting that data from the server.");
+                        m_timeValuesUpdateFrequency = abs(m_timeValuesUpdateFrequency);
+
+                        ImGui::Checkbox("Log data transmission", &m_logTimeValuesDataTransmission);
+                        ImGui::TreePop();
+                    }
+                    ImGui::PopID();
+
+                    // CLEANUP
+                    ImGui::SeparatorText("Cleanup");
+
                     if (ImGui::Button("Delete checkpoint"))
                     {
                         xlpmg::Message deleteCPMsg = xlpmg::DELETE_CHECKPOINTS;
                         m_communicator.sendToServer(messageToJsonString(deleteCPMsg));
                     }
+
+                    ImGui::SameLine();
+
                     if (ImGui::Button("Delete stations"))
                     {
                         xlpmg::Message deleteStationsMsg = xlpmg::DELETE_STATIONS;
                         m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
                     }
+
+                    ImGui::End();
                 }
                 //-------------------------------------------//
                 //------------------WINDOWS------------------//
@@ -459,6 +522,7 @@ int tsunami_lab::ui::GUI::launch()
                 if (ImGui::BeginTabItem("Windows"))
                 {
                     ImGui::Checkbox("Show Demo Window", &show_demo_window);
+                    ImGui::Checkbox("Show simulation controls", &showSimulationControlsWindow);
                     ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
                     ImGui::Checkbox("Show client log", &showClientLog);
@@ -514,25 +578,6 @@ int tsunami_lab::ui::GUI::launch()
                             }
                         }
                     }
-                    if (ImGui::Button("Get time values"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_TIME_VALUES));
-                        std::string response = m_communicator.receiveFromServer();
-
-                        if (json::accept(response))
-                        {
-                            xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
-                            m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
-                            m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
-                            m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
-                            m_estimatedLeftTime = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
-
-                            std::cout << responseMessage.args << std::endl;
-                        }
-                    }
-                    ImGui::Text("current Time Step: %i", m_currentTimeStep);
-                    ImGui::Text("Max Time Steps: %i", m_maxTimeSteps);
-                    ImGui::Text("estimated left time: %f", m_estimatedLeftTime);
 
                     if (ImGui::Button("Get simulation sizes"))
                     {
@@ -1101,10 +1146,10 @@ int tsunami_lab::ui::GUI::launch()
         //--------------------------------------------//
         if (showSystemInfoWindow)
         {
-            if (m_lastDataUpdate <= std::chrono::system_clock::now())
+            if (m_lastSystemInfoUpdate <= std::chrono::system_clock::now())
             {
                 updateSystemInfo();
-                m_lastDataUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_systemInfoUpdateFrequency);
+                m_lastSystemInfoUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_systemInfoUpdateFrequency);
             }
 
             ImGui::Begin("System information");
