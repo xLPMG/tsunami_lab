@@ -134,8 +134,11 @@ private:
   double m_totalRAM = 0;
   double m_usedRAM = 0;
 
-  std::vector<float> m_stationValuesX;
-  std::vector<float> m_stationValuesY;
+  std::vector<float> m_stationTime;
+  std::vector<float> m_stationBathymetry;
+  std::vector<float> m_stationMomentumX;
+  std::vector<float> m_stationMomentumY;
+  std::vector<float> m_stationTotalHeight;
   std::string m_stationFilePath = "";
 
   /**

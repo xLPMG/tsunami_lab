@@ -1222,7 +1222,7 @@ int tsunami_lab::ui::GUI::launch()
         ImGui::End();
 
         // STATIONS
-        ImGui::Begin("stations");
+        ImGui::Begin("Station data");
 
         if (ImGui::Button("Select station data file"))
             fileDialogStation.Open();
@@ -1231,24 +1231,43 @@ int tsunami_lab::ui::GUI::launch()
 
         if (fileDialogStation.HasSelected())
         {
-            m_bathymetryFilePath = fileDialogStation.GetSelected().string();
+            m_stationFilePath = fileDialogStation.GetSelected().string();
             fileDialogStation.ClearSelected();
-        }
 
-        if (ImGui::Button("load"))
-        {
-            // csv file path
+            // load data
             std::ifstream l_inputFile(m_stationFilePath);
             std::vector<std::string> l_row;
             std::string l_line;
-
+            std::cout << "start reading " << m_stationFilePath << std::endl;
             std::getline(l_inputFile, l_line); // skip header
             while (getline(l_inputFile, l_line))
             {
                 tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
-                m_stationValuesX.push_back(stof(l_row[0])); // time
-                m_stationValuesY.push_back(stof(l_row[5])); // total height
+                m_stationTime.push_back(stof(l_row[0]));
+                m_stationMomentumX.push_back(stof(l_row[2]));
+                m_stationMomentumY.push_back(stof(l_row[3]));
+                m_stationBathymetry.push_back(stof(l_row[4]));
+                m_stationTotalHeight.push_back(stof(l_row[5]));
             }
+        }
+        ImGui::SameLine();
+        ImGui::Text("Selected file: %s",m_stationFilePath.c_str());
+
+        std::string l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1)+": heights";
+        if (ImPlot::BeginPlot(l_plotName.c_str()))
+        {
+            ImPlot::SetupAxes("time in seconds", "height in metres");
+            ImPlot::PlotLine("bathymetry", &m_stationTime[0], &m_stationBathymetry[0], m_stationTime.size());
+            ImPlot::PlotLine("water level", &m_stationTime[0], &m_stationTotalHeight[0], m_stationTime.size());
+            ImPlot::EndPlot();
+        }
+        l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1)+": momenta";
+        if (ImPlot::BeginPlot(l_plotName.c_str()))
+        {
+            ImPlot::SetupAxes("time in seconds", "momentum in m^2/s");
+            ImPlot::PlotLine("momentum in x-direction", &m_stationTime[0], &m_stationMomentumX[0], m_stationTime.size());
+            ImPlot::PlotLine("momentum in y-direction", &m_stationTime[0], &m_stationMomentumY[0], m_stationTime.size());
+            ImPlot::EndPlot();
         }
         ImGui::End();
 
