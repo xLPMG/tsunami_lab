@@ -11,6 +11,7 @@
 
 #include "xlpmg/Communicator.hpp"
 #include <chrono>
+#include "../constants.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -95,7 +96,6 @@ private:
   int m_diameter = 0;
   float m_timeStepScaling = 1;
 
-
   std::string m_bathymetryFilePath = "";
   std::string m_displacementFilePath = "";
 
@@ -143,6 +143,17 @@ private:
   std::vector<float> m_stationMomentumY;
   std::vector<float> m_stationTotalHeight;
   std::string m_stationFilePath = "";
+
+  tsunami_lab::t_real *m_heightData = nullptr;
+  tsunami_lab::t_real *m_bathymetryData = nullptr;
+  float scale_min = -1;
+  float scale_max = 1;
+  long currCellsX = 0;
+  long currCellsY = 0;
+  int currOffsetX = 0;
+  int currOffsetY = 0;
+  int currSimSizeX = 0;
+  int currSimSizeY = 0;
 
   /**
    * Executes a shell command.

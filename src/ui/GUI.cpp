@@ -209,6 +209,7 @@ int tsunami_lab::ui::GUI::launch()
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
     bool showSimulationControlsWindow = false;
+    bool showDataVisualizer = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -223,6 +224,14 @@ int tsunami_lab::ui::GUI::launch()
     fileDialogDis.SetTypeFilters({".nc"});
     fileDialogStation.SetTitle("Filesystem");
     fileDialogStation.SetTypeFilters({".csv"});
+    ImColor m_rbColormapRGB[256] = {
+        {59, 76, 192}, {59, 76, 192}, {60, 78, 194}, {61, 80, 195}, {62, 81, 197}, {64, 83, 198}, {65, 85, 200}, {66, 87, 201}, {67, 88, 203}, {68, 90, 204}, {69, 92, 206}, {71, 93, 207}, {72, 95, 209}, {73, 97, 210}, {74, 99, 211}, {75, 100, 213}, {77, 102, 214}, {78, 104, 215}, {79, 105, 217}, {80, 107, 218}, {82, 109, 219}, {83, 110, 221}, {84, 112, 222}, {85, 114, 223}, {87, 115, 224}, {88, 117, 225}, {89, 119, 227}, {90, 120, 228}, {92, 122, 229}, {93, 124, 230}, {94, 125, 231}, {96, 127, 232}, {97, 129, 233}, {98, 130, 234}, {100, 132, 235}, {101, 133, 236}, {102, 135, 237}, {103, 137, 238}, {105, 138, 239}, {106, 140, 240}, {107, 141, 240}, {109, 143, 241}, {110, 144, 242}, {111, 146, 243}, {113, 147, 244}, {114, 149, 244}, {116, 150, 245}, {117, 152, 246}, {118, 153, 246}, {120, 155, 247}, {121, 156, 248}, {122, 157, 248}, {124, 159, 249}, {125, 160, 249}, {127, 162, 250}, {128, 163, 250}, {129, 164, 251}, {131, 166, 251}, {132, 167, 252}, {133, 168, 252}, {135, 170, 252}, {136, 171, 253}, {138, 172, 253}, {139, 174, 253}, {140, 175, 254}, {142, 176, 254}, {143, 177, 254}, {145, 179, 254}, {146, 180, 254}, {147, 181, 255}, {149, 182, 255}, {150, 183, 255}, {152, 185, 255}, {153, 186, 255}, {154, 187, 255}, {156, 188, 255}, {157, 189, 255}, {158, 190, 255}, {160, 191, 255}, {161, 192, 255}, {163, 193, 255}, {164, 194, 254}, {165, 195, 254}, {167, 196, 254}, {168, 197, 254}, {169, 198, 254}, {171, 199, 253}, {172, 200, 253}, {173, 201, 253}, {175, 202, 252}, {176, 203, 252}, {177, 203, 252}, {179, 204, 251}, {180, 205, 251}, {181, 206, 250}, {183, 207, 250}, {184, 207, 249}, {185, 208, 249}, {186, 209, 248}, {188, 209, 247}, {189, 210, 247}, {190, 211, 246}, {191, 211, 246}, {193, 212, 245}, {194, 213, 244}, {195, 213, 243}, {196, 214, 243}, {198, 214, 242}, {199, 215, 241}, {200, 215, 240}, {201, 216, 239}, {202, 216, 239}, {204, 217, 238}, {205, 217, 237}, {206, 217, 236}, {207, 218, 235}, {208, 218, 234}, {209, 218, 233}, {210, 219, 232}, {211, 219, 231}, {212, 219, 230}, {214, 220, 229}, {215, 220, 228}, {216, 220, 227}, {217, 220, 225}, {218, 220, 224}, {219, 220, 223}, {220, 221, 222}, {221, 221, 221}, {222, 220, 219}, {223, 220, 218}, {224, 219, 216}, {225, 219, 215}, {226, 218, 214}, {227, 218, 212}, {228, 217, 211}, {229, 216, 209}, {230, 216, 208}, {231, 215, 206}, {232, 215, 205}, {233, 214, 203}, {233, 213, 202}, {234, 212, 200}, {235, 212, 199}, {236, 211, 197}, {237, 210, 196}, {237, 209, 194}, {238, 208, 193}, {239, 208, 191}, {239, 207, 190}, {240, 206, 188}, {240, 205, 187}, {241, 204, 185}, {242, 203, 183}, {242, 202, 182}, {243, 201, 180}, {243, 200, 179}, {243, 199, 177}, {244, 198, 176}, {244, 197, 174}, {245, 196, 173}, {245, 195, 171}, {245, 194, 169}, {246, 193, 168}, {246, 192, 166}, {246, 190, 165}, {246, 189, 163}, {247, 188, 161}, {247, 187, 160}, {247, 186, 158}, {247, 184, 157}, {247, 183, 155}, {247, 182, 153}, {247, 181, 152}, {247, 179, 150}, {247, 178, 149}, {247, 177, 147}, {247, 175, 146}, {247, 174, 144}, {247, 172, 142}, {247, 171, 141}, {247, 170, 139}, {247, 168, 138}, {247, 167, 136}, {247, 165, 135}, {246, 164, 133}, {246, 162, 131}, {246, 161, 130}, {246, 159, 128}, {245, 158, 127}, {245, 156, 125}, {245, 155, 124}, {244, 153, 122}, {244, 151, 121}, {243, 150, 119}, {243, 148, 117}, {242, 147, 116}, {242, 145, 114}, {241, 143, 113}, {241, 142, 111}, {240, 140, 110}, {240, 138, 108}, {239, 136, 107}, {239, 135, 105}, {238, 133, 104}, {237, 131, 102}, {237, 129, 101}, {236, 128, 99}, {235, 126, 98}, {235, 124, 96}, {234, 122, 95}, {233, 120, 94}, {232, 118, 92}, {231, 117, 91}, {230, 115, 89}, {230, 113, 88}, {229, 111, 86}, {228, 109, 85}, {227, 107, 84}, {226, 105, 82}, {225, 103, 81}, {224, 101, 79}, {223, 99, 78}, {222, 97, 77}, {221, 95, 75}, {220, 93, 74}, {219, 91, 73}, {218, 89, 71}, {217, 87, 70}, {215, 85, 69}, {214, 82, 67}, {213, 80, 66}, {212, 78, 65}, {211, 76, 64}, {210, 74, 62}, {208, 71, 61}, {207, 69, 60}, {206, 67, 59}, {204, 64, 57}, {203, 62, 56}, {202, 59, 55}, {200, 57, 54}, {199, 54, 53}, {198, 52, 51}, {196, 49, 50}, {195, 46, 49}, {193, 43, 48}, {192, 40, 47}, {191, 37, 46}, {189, 34, 44}, {188, 30, 43}, {186, 26, 42}, {185, 22, 41}, {183, 17, 40}, {182, 11, 39}, {180, 4, 38}};
+    ImVec4 m_rbColormapVec4[256];
+    for (long i = 0; i < 256; i++)
+    {
+        m_rbColormapVec4[i] = m_rbColormapRGB[i];
+    }
+    ImPlot::AddColormap("WATERHEIGHTSMAP", &m_rbColormapVec4[0], 256, false);
 
     tsunami_lab::systeminfo::SystemInfo systemInfo;
     // Main loop
@@ -418,7 +427,7 @@ int tsunami_lab::ui::GUI::launch()
                 //----------------------------------------------//
                 if (showSimulationControlsWindow)
                 {
-                    ImGui::Begin("Simulation controls");
+                    ImGui::Begin("Simulation controls", &showSimulationControlsWindow);
 
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
@@ -537,6 +546,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::Checkbox("Show simulation controls", &showSimulationControlsWindow);
                     ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                    ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
                     ImGui::Checkbox("Show client log", &showClientLog);
                     ImGui::Checkbox("Show system info", &showSystemInfoWindow);
                     ImGui::EndTabItem();
@@ -546,51 +556,6 @@ int tsunami_lab::ui::GUI::launch()
                 //------------------------------------------//
                 if (ImGui::BeginTabItem("Experimental"))
                 {
-                    if (ImGui::Button("Get height data"))
-                    {
-                        if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
-                        {
-                            unsigned long l_index = 0;
-                            bool l_finished = false;
-                            tsunami_lab::t_real l_heights[500 * 500]{0};
-
-                            std::string data = "";
-                            while (!l_finished)
-                            {
-                                std::string l_response = m_communicator.receiveFromServer();
-                                if (json::accept(l_response) && xlpmg::jsonToMessage(json::parse(l_response)).key == xlpmg::BUFFERED_SEND_FINISHED.key)
-                                {
-                                    l_finished = true;
-                                }
-                                else
-                                {
-                                    data += l_response;
-                                }
-                            }
-                            if (json::accept(data))
-                            {
-                                xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(data));
-
-                                std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
-                                std::string l_num;
-                                while (getline(l_stream, l_num, ','))
-                                {
-                                    l_heights[l_index] = std::stof(l_num);
-                                    l_index++;
-                                }
-                            }
-
-                            for (int y = 0; y < 500; y++)
-                            {
-                                for (int x = 0; x < 500; x++)
-                                {
-                                    std::cout << l_heights[x + y * 500] << " ";
-                                }
-                                std::cout << std::endl;
-                            }
-                        }
-                    }
-
                     if (ImGui::Button("Get simulation sizes"))
                     {
                         m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
@@ -827,7 +792,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::InputInt("Diameter", &m_diameter, 0);
             }
 
-            if(m_tsunamiEvent == 2)
+            if (m_tsunamiEvent == 2)
             {
                 ImGui::BeginDisabled();
             }
@@ -863,8 +828,8 @@ int tsunami_lab::ui::GUI::launch()
                     std::vector<std::uint8_t> vec;
                     vec.reserve(l_fileSize);
                     vec.insert(vec.begin(),
-                            std::istream_iterator<std::uint8_t>(l_bathFile),
-                            std::istream_iterator<std::uint8_t>());
+                               std::istream_iterator<std::uint8_t>(l_bathFile),
+                               std::istream_iterator<std::uint8_t>());
                     l_bathymetryDataMsg.args = json::binary(vec);
                     m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
                 }
@@ -879,10 +844,10 @@ int tsunami_lab::ui::GUI::launch()
                     tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
                     tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
                     tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(),
-                                                "z",
-                                                &m_xData,
-                                                &m_yData,
-                                                &m_data);
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
                     m_nx = l_nCellsX;
                     m_ny = l_nCellsY;
                     if (m_xData[0] < m_xData[l_nCellsX - 1])
@@ -942,8 +907,8 @@ int tsunami_lab::ui::GUI::launch()
                     std::vector<std::uint8_t> vec;
                     vec.reserve(l_fileSize);
                     vec.insert(vec.begin(),
-                            std::istream_iterator<std::uint8_t>(l_displFile),
-                            std::istream_iterator<std::uint8_t>());
+                               std::istream_iterator<std::uint8_t>(l_displFile),
+                               std::istream_iterator<std::uint8_t>());
                     l_displacementMsg.args = json::binary(vec);
                     m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
                 }
@@ -958,10 +923,10 @@ int tsunami_lab::ui::GUI::launch()
                     tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
                     tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
                     tsunami_lab::io::NetCdf::read(m_displacementFilePath.c_str(),
-                                                "z",
-                                                &m_xData,
-                                                &m_yData,
-                                                &m_data);
+                                                  "z",
+                                                  &m_xData,
+                                                  &m_yData,
+                                                  &m_data);
                     m_nx = l_nCellsX;
                     m_ny = l_nCellsY;
                     if (m_xData[0] < m_xData[l_nCellsX - 1])
@@ -992,7 +957,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::TreePop();
             }
 
-            if(m_tsunamiEvent == 2)
+            if (m_tsunamiEvent == 2)
             {
                 ImGui::EndDisabled();
             }
@@ -1144,14 +1109,14 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::TreePop();
             }
 
-            if(ImGui::TreeNode("Time step scaling")){
+            if (ImGui::TreeNode("Time step scaling"))
+            {
                 ImGui::Text("Current time step scaling: %f", m_timeStepScaling);
                 ImGui::SliderFloat("Scaling (0-1)", &m_timeStepScaling, 0.0f, 1.0f, "%.3f");
                 ImGui::SameLine();
                 HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation");
                 ImGui::TreePop();
             }
-
 
             if (ImGui::Button("Update server with changes"))
             {
@@ -1292,6 +1257,101 @@ int tsunami_lab::ui::GUI::launch()
             ImPlot::EndPlot();
         }
         ImGui::End();
+
+        if (showDataVisualizer)
+        {
+            ImGui::SetNextWindowSize(ImVec2(640, 640), ImGuiCond_FirstUseEver);
+            ImGui::Begin("Data visualizer", &showDataVisualizer);
+            if (ImGui::Button("Get data from server"))
+            {
+                m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
+                std::string l_res = m_communicator.receiveFromServer();
+                if (json::accept(l_res))
+                {
+                    xlpmg::Message l_simSizes = xlpmg::jsonToMessage(json::parse(l_res));
+
+                    if (m_heightData != nullptr)
+                    {
+                        delete[] m_heightData;
+                        m_heightData = nullptr;
+                    }
+                    if (m_bathymetryData != nullptr)
+                    {
+                        delete[] m_bathymetryData;
+                        m_bathymetryData = nullptr;
+                    }
+
+                    currCellsX = l_simSizes.args.value("cellsX", 0);
+                    currCellsY = l_simSizes.args.value("cellsY", 0);
+                    currOffsetX = l_simSizes.args.value("offsetX", 0);
+                    currOffsetY = l_simSizes.args.value("offsetY", 0);
+                    currSimSizeX = l_simSizes.args.value("simulationSizeX", 0);
+                    currSimSizeY = l_simSizes.args.value("simulationSizeY", 0);
+                    m_heightData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
+                    m_bathymetryData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
+
+                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
+                    {
+                        std::string l_response = m_communicator.receiveFromServer();
+
+                        if (json::accept(l_response))
+                        {
+                            xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
+
+                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                            std::string l_num;
+                            unsigned long l_index = 0;
+                            while (getline(l_stream, l_num, ','))
+                            {
+                                m_heightData[l_index] = std::stof(l_num);
+                                l_index++;
+                            }
+                        }
+                    }
+
+                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_BATHYMETRY_DATA)) == 0)
+                    {
+                        std::string l_response = m_communicator.receiveFromServer();
+
+                        if (json::accept(l_response))
+                        {
+                            xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
+
+                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                            std::string l_num;
+                            unsigned long l_index = 0;
+                            while (getline(l_stream, l_num, ','))
+                            {
+                                m_bathymetryData[l_index] = std::stof(l_num);
+                                l_index++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            ImGui::SetNextItemWidth(225);
+            ImGui::DragFloatRange2("Min / Max", &scale_min, &scale_max, 0.01f, -20, 20);
+            ImPlot::PushColormap("WATERHEIGHTSMAP");
+            ImPlot::ColormapScale("Colormap scale", scale_min, scale_max, ImVec2(60, 225));
+            ImGui::SameLine();
+            if (ImPlot::BeginPlot("Water height and bathymetry", ImVec2(550, 550)))
+            {
+                ImPlot::SetupAxesLimits(currOffsetX, currOffsetX + currSimSizeX, currOffsetY, currOffsetY + currSimSizeY);
+                if (m_heightData != nullptr)
+                {
+                    ImPlot::PlotHeatmap("water level", m_heightData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                }
+                if (m_bathymetryData != nullptr)
+                {
+                    ImPlot::PlotHeatmap("bathymetry", m_bathymetryData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                }
+                ImPlot::EndPlot();
+            }
+            ImPlot::PopColormap();
+
+            ImGui::End();
+        }
 
         // Rendering
         ImGui::Render();

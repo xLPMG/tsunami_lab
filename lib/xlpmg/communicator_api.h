@@ -145,6 +145,9 @@ namespace xlpmg
   //! Tells the server to start sending height data. (buffered)
   inline const Message GET_HEIGHT_DATA = {MessageType::FUNCTION_CALL, "get_height_data"};
 
+    //! Tells the server to start sending bathymetry data. (buffered)
+  inline const Message GET_BATHYMETRY_DATA = {MessageType::FUNCTION_CALL, "get_bathymetry_data"};
+
   //! Sets the cell amount of the simulation.
   inline const Message SET_OFFSET = {MessageType::FUNCTION_CALL, "set_offset"};
 
