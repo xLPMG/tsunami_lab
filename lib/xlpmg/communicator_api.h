@@ -109,17 +109,14 @@ namespace xlpmg
   //! Server will recompile with provided arguments and run using an sbatch script.
   inline const Message COMPILE_RUN_SBATCH = {MessageType::SERVER_CALL, "compile_run_sbatch", ""};
 
+  //! For sending a file to the server
+  inline const Message SEND_FILE = {MessageType::SERVER_CALL, "send_file"};
+
   //! Tells the server to change the read buffer size.
   inline const Message SET_READ_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_read_buffer_size"};
 
     //! Tells the server to change the send buffer size.
   inline const Message SET_SEND_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_send_buffer_size"};
-
-  //! Sends bathymetry data to the server.
-  inline const Message SET_BATHYMETRY_DATA = {MessageType::SERVER_CALL, "set_bathymetry_data"};
-
-  //! Sends displacement data to the server.
-  inline const Message SET_DISPLACEMENT_DATA = {MessageType::SERVER_CALL, "set_displacement_data"};
 
   //! Simulator will reset.
   inline const Message RESET_SIMULATOR = {MessageType::FUNCTION_CALL, "reset_simulator"};

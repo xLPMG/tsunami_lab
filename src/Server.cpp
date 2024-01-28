@@ -247,24 +247,12 @@ int main(int i_argc, char *i_argv[])
                 {
                     l_communicator.setSendBufferSize(l_args);
                 }
-
-                else if (l_key == xlpmg::SET_BATHYMETRY_DATA.key)
+                else if (l_key == xlpmg::SEND_FILE.key)
                 {
-                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
-                    auto l_writeFile = std::fstream(m_bathTempFile, std::ios::out | std::ios::binary);
+                    std::vector<std::uint8_t> l_byteVector = l_args["data"]["bytes"];
+                    auto l_writeFile = std::fstream(l_args.value("path",""), std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
-                    simulator->setBathymetryFilePath(m_bathTempFile);
-                    simulator->setPrepared(false);
-                }
-                else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
-                {
-                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
-                    auto l_writeFile = std::fstream(m_displTempFile, std::ios::out | std::ios::binary);
-                    l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
-                    l_writeFile.close();
-                    simulator->setDisplacementFilePath(m_displTempFile);
-                    simulator->setPrepared(false);
                 }
                 else if (l_key == xlpmg::CONTINUE_SIMULATION.key)
                 {

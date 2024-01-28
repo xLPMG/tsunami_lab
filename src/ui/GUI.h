@@ -96,11 +96,11 @@ private:
   int m_diameter = 0;
   float m_timeStepScaling = 1;
 
-  std::string m_bathymetryFilePath = "";
-  std::string m_displacementFilePath = "";
+  char m_transferFilePath[256] = "";
+  char m_transferFilePathDestination[256] = "";
 
-  char m_remoteBathFilePath[256] = "";
-  char m_remoteDisFilePath[256] = "";
+  char m_bathymetryFilePath[256] = "";
+  char m_displacementFilePath[256] = "";
 
   // outflow conditions
   bool m_boundaryL = false;

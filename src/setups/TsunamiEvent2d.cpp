@@ -32,6 +32,8 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
     m_bathymetryPath = i_bathymetryPath;
     m_displacementPath = i_displacementPath;
 
+    std::cout <<i_bathymetryPath <<" : "<<exists(i_bathymetryPath) << std::endl;
+
     if (exists(i_bathymetryPath))
     {
         netcdf::getDimensionSize(i_bathymetryPath,
@@ -61,6 +63,17 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
                      &m_xDataB,
                      &m_yDataB,
                      &m_b);
+
+        m_bathymetryOffsetX = m_xDataB[0];
+        m_bathymetryOffsetY = m_yDataB[0];
+        m_bathymetrySampleDistanceX = m_xDataB[1] - m_xDataB[0];
+        m_bathymetrySampleDistanceY = m_yDataB[1] - m_yDataB[0];
+        m_bathymetrySampleDistanceXInverse = 1 / m_bathymetrySampleDistanceX;
+        m_bathymetrySampleDistanceYInverse = 1 / m_bathymetrySampleDistanceY;
+        o_domainSizeX = m_xDataB[m_nxB - 1] - m_xDataB[0];
+        o_domainSizeY = m_yDataB[m_nyB - 1] - m_yDataB[0];
+        o_offsetX = m_xDataB[0];
+        o_offsetY = m_yDataB[0];
     }
 
     m_xDataD = new t_real[m_nxD];
@@ -73,27 +86,14 @@ tsunami_lab::setups::TsunamiEvent2d::TsunamiEvent2d(const char *i_bathymetryPath
                      &m_xDataD,
                      &m_yDataD,
                      &m_d);
+
+        m_displacementOffsetX = m_xDataD[0];
+        m_displacementOffsetY = m_yDataD[0];
+        m_displacementSampleDistanceX = m_xDataD[1] - m_xDataD[0];
+        m_displacementSampleDistanceY = m_yDataD[1] - m_yDataD[0];
+        m_displacementSampleDistanceXInverse = 1 / m_displacementSampleDistanceX;
+        m_displacementSampleDistanceYInverse = 1 / m_displacementSampleDistanceY;
     }
-
-    m_bathymetryOffsetX = m_xDataB[0];
-    m_bathymetryOffsetY = m_yDataB[0];
-    m_displacementOffsetX = m_xDataD[0];
-    m_displacementOffsetY = m_yDataD[0];
-
-    m_bathymetrySampleDistanceX = m_xDataB[1] - m_xDataB[0];
-    m_bathymetrySampleDistanceY = m_yDataB[1] - m_yDataB[0];
-    m_displacementSampleDistanceX = m_xDataD[1] - m_xDataD[0];
-    m_displacementSampleDistanceY = m_yDataD[1] - m_yDataD[0];
-
-    m_bathymetrySampleDistanceXInverse = 1 / m_bathymetrySampleDistanceX;
-    m_bathymetrySampleDistanceYInverse = 1 / m_bathymetrySampleDistanceY;
-    m_displacementSampleDistanceXInverse = 1 / m_displacementSampleDistanceX;
-    m_displacementSampleDistanceYInverse = 1 / m_displacementSampleDistanceY;
-
-    o_domainSizeX = m_xDataB[m_nxB - 1] - m_xDataB[0];
-    o_domainSizeY = m_yDataB[m_nyB - 1] - m_yDataB[0];
-    o_offsetX = m_xDataB[0];
-    o_offsetY = m_yDataB[0];
 }
 
 tsunami_lab::setups::TsunamiEvent2d::~TsunamiEvent2d()

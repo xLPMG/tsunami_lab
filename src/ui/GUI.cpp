@@ -124,8 +124,8 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"hasBoundaryT", m_boundaryT},
                    {"hasBoundaryB", m_boundaryB},
                    {"setup", m_tsunamiEvents[m_tsunamiEvent]},
-                   {"bathymetry", m_remoteBathFilePath},
-                   {"displacement", m_remoteDisFilePath},
+                   {"bathymetry", m_bathymetryFilePath},
+                   {"displacement", m_displacementFilePath},
                    {"height", m_height},
                    {"baseHeight", m_baseHeight},
                    {"diameter", m_diameter},
@@ -213,16 +213,11 @@ int tsunami_lab::ui::GUI::launch()
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    ImGui::FileBrowser fileDialogBath;
-    ImGui::FileBrowser fileDialogDis;
+    ImGui::FileBrowser fileBrowser;
     ImGui::FileBrowser fileDialogStation;
 
     // (optional) set browser properties
-    fileDialogBath.SetTitle("Filesystem");
-    fileDialogBath.SetTypeFilters({".nc"});
-    fileDialogDis.SetTitle("Filesystem");
-    fileDialogDis.SetTypeFilters({".nc"});
-    fileDialogStation.SetTitle("Filesystem");
+    fileBrowser.SetTitle("Filesystem");
     fileDialogStation.SetTypeFilters({".csv"});
     ImColor m_rbColormapRGB[256] = {
         {59, 76, 192}, {59, 76, 192}, {60, 78, 194}, {61, 80, 195}, {62, 81, 197}, {64, 83, 198}, {65, 85, 200}, {66, 87, 201}, {67, 88, 203}, {68, 90, 204}, {69, 92, 206}, {71, 93, 207}, {72, 95, 209}, {73, 97, 210}, {74, 99, 211}, {75, 100, 213}, {77, 102, 214}, {78, 104, 215}, {79, 105, 217}, {80, 107, 218}, {82, 109, 219}, {83, 110, 221}, {84, 112, 222}, {85, 114, 223}, {87, 115, 224}, {88, 117, 225}, {89, 119, 227}, {90, 120, 228}, {92, 122, 229}, {93, 124, 230}, {94, 125, 231}, {96, 127, 232}, {97, 129, 233}, {98, 130, 234}, {100, 132, 235}, {101, 133, 236}, {102, 135, 237}, {103, 137, 238}, {105, 138, 239}, {106, 140, 240}, {107, 141, 240}, {109, 143, 241}, {110, 144, 242}, {111, 146, 243}, {113, 147, 244}, {114, 149, 244}, {116, 150, 245}, {117, 152, 246}, {118, 153, 246}, {120, 155, 247}, {121, 156, 248}, {122, 157, 248}, {124, 159, 249}, {125, 160, 249}, {127, 162, 250}, {128, 163, 250}, {129, 164, 251}, {131, 166, 251}, {132, 167, 252}, {133, 168, 252}, {135, 170, 252}, {136, 171, 253}, {138, 172, 253}, {139, 174, 253}, {140, 175, 254}, {142, 176, 254}, {143, 177, 254}, {145, 179, 254}, {146, 180, 254}, {147, 181, 255}, {149, 182, 255}, {150, 183, 255}, {152, 185, 255}, {153, 186, 255}, {154, 187, 255}, {156, 188, 255}, {157, 189, 255}, {158, 190, 255}, {160, 191, 255}, {161, 192, 255}, {163, 193, 255}, {164, 194, 254}, {165, 195, 254}, {167, 196, 254}, {168, 197, 254}, {169, 198, 254}, {171, 199, 253}, {172, 200, 253}, {173, 201, 253}, {175, 202, 252}, {176, 203, 252}, {177, 203, 252}, {179, 204, 251}, {180, 205, 251}, {181, 206, 250}, {183, 207, 250}, {184, 207, 249}, {185, 208, 249}, {186, 209, 248}, {188, 209, 247}, {189, 210, 247}, {190, 211, 246}, {191, 211, 246}, {193, 212, 245}, {194, 213, 244}, {195, 213, 243}, {196, 214, 243}, {198, 214, 242}, {199, 215, 241}, {200, 215, 240}, {201, 216, 239}, {202, 216, 239}, {204, 217, 238}, {205, 217, 237}, {206, 217, 236}, {207, 218, 235}, {208, 218, 234}, {209, 218, 233}, {210, 219, 232}, {211, 219, 231}, {212, 219, 230}, {214, 220, 229}, {215, 220, 228}, {216, 220, 227}, {217, 220, 225}, {218, 220, 224}, {219, 220, 223}, {220, 221, 222}, {221, 221, 221}, {222, 220, 219}, {223, 220, 218}, {224, 219, 216}, {225, 219, 215}, {226, 218, 214}, {227, 218, 212}, {228, 217, 211}, {229, 216, 209}, {230, 216, 208}, {231, 215, 206}, {232, 215, 205}, {233, 214, 203}, {233, 213, 202}, {234, 212, 200}, {235, 212, 199}, {236, 211, 197}, {237, 210, 196}, {237, 209, 194}, {238, 208, 193}, {239, 208, 191}, {239, 207, 190}, {240, 206, 188}, {240, 205, 187}, {241, 204, 185}, {242, 203, 183}, {242, 202, 182}, {243, 201, 180}, {243, 200, 179}, {243, 199, 177}, {244, 198, 176}, {244, 197, 174}, {245, 196, 173}, {245, 195, 171}, {245, 194, 169}, {246, 193, 168}, {246, 192, 166}, {246, 190, 165}, {246, 189, 163}, {247, 188, 161}, {247, 187, 160}, {247, 186, 158}, {247, 184, 157}, {247, 183, 155}, {247, 182, 153}, {247, 181, 152}, {247, 179, 150}, {247, 178, 149}, {247, 177, 147}, {247, 175, 146}, {247, 174, 144}, {247, 172, 142}, {247, 171, 141}, {247, 170, 139}, {247, 168, 138}, {247, 167, 136}, {247, 165, 135}, {246, 164, 133}, {246, 162, 131}, {246, 161, 130}, {246, 159, 128}, {245, 158, 127}, {245, 156, 125}, {245, 155, 124}, {244, 153, 122}, {244, 151, 121}, {243, 150, 119}, {243, 148, 117}, {242, 147, 116}, {242, 145, 114}, {241, 143, 113}, {241, 142, 111}, {240, 140, 110}, {240, 138, 108}, {239, 136, 107}, {239, 135, 105}, {238, 133, 104}, {237, 131, 102}, {237, 129, 101}, {236, 128, 99}, {235, 126, 98}, {235, 124, 96}, {234, 122, 95}, {233, 120, 94}, {232, 118, 92}, {231, 117, 91}, {230, 115, 89}, {230, 113, 88}, {229, 111, 86}, {228, 109, 85}, {227, 107, 84}, {226, 105, 82}, {225, 103, 81}, {224, 101, 79}, {223, 99, 78}, {222, 97, 77}, {221, 95, 75}, {220, 93, 74}, {219, 91, 73}, {218, 89, 71}, {217, 87, 70}, {215, 85, 69}, {214, 82, 67}, {213, 80, 66}, {212, 78, 65}, {211, 76, 64}, {210, 74, 62}, {208, 71, 61}, {207, 69, 60}, {206, 67, 59}, {204, 64, 57}, {203, 62, 56}, {202, 59, 55}, {200, 57, 54}, {199, 54, 53}, {198, 52, 51}, {196, 49, 50}, {195, 46, 49}, {193, 43, 48}, {192, 40, 47}, {191, 37, 46}, {189, 34, 44}, {188, 30, 43}, {186, 26, 42}, {185, 22, 41}, {183, 17, 40}, {182, 11, 39}, {180, 4, 38}};
@@ -551,6 +546,52 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::Checkbox("Show system info", &showSystemInfoWindow);
                     ImGui::EndTabItem();
                 }
+                //---------------------------------------------//
+                //----------------FILE TRANSFER----------------//
+                //---------------------------------------------//
+                if (ImGui::BeginTabItem("File transfer"))
+                {
+                    if (ImGui::Button("Select a file"))
+                        fileBrowser.Open();
+
+                    fileBrowser.Display();
+
+                    if (fileBrowser.HasSelected())
+                    {
+                        strcpy(m_transferFilePath, fileBrowser.GetSelected().c_str());
+                        fileBrowser.ClearSelected();
+                    }
+
+                    ImGui::InputTextWithHint("File to send", "or directly input the file path here", m_transferFilePath, IM_ARRAYSIZE(m_transferFilePath));
+
+                    ImGui::InputTextWithHint("./resources/filename.extension","File path on the server", m_transferFilePathDestination, IM_ARRAYSIZE(m_transferFilePathDestination));
+
+                    if (ImGui::Button("Send file"))
+                    {
+                        if (strlen(m_transferFilePath) > 0 && strlen(m_transferFilePathDestination) > 0)
+                        {
+                            xlpmg::Message l_sendFileMsg = xlpmg::SEND_FILE;
+                            json l_arguments;
+                            l_arguments["path"] = m_transferFilePathDestination;
+
+                            std::ifstream l_fileData(m_transferFilePath, std::ios::binary);
+                            l_fileData.unsetf(std::ios::skipws);
+                            std::streampos l_fileSize;
+                            l_fileData.seekg(0, std::ios::end);
+                            l_fileSize = l_fileData.tellg();
+                            l_fileData.seekg(0, std::ios::beg);
+                            std::vector<std::uint8_t> vec;
+                            vec.reserve(l_fileSize);
+                            vec.insert(vec.begin(),
+                                       std::istream_iterator<std::uint8_t>(l_fileData),
+                                       std::istream_iterator<std::uint8_t>());
+                            l_arguments["data"] = json::binary(vec);
+                            l_sendFileMsg.args = l_arguments;
+                            m_communicator.sendToServer(xlpmg::messageToJsonString(l_sendFileMsg));
+                        }
+                    }
+                    ImGui::EndTabItem();
+                }
                 //------------------------------------------//
                 //--------------UNSROTED ITEMS--------------//
                 //------------------------------------------//
@@ -796,166 +837,15 @@ int tsunami_lab::ui::GUI::launch()
             {
                 ImGui::BeginDisabled();
             }
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputText("Bathymetry file", m_bathymetryFilePath, IM_ARRAYSIZE(m_bathymetryFilePath));
+            ImGui::SameLine();
+            HelpMarker("Must be a valid bathymetry file on the file path. Path is specified relative to the executable.");
 
-            if (ImGui::TreeNode("Bathymetry"))
-            {
-                // open file dialog when user clicks this button
-                if (ImGui::Button("Select bathymetry file"))
-                    fileDialogBath.Open();
-
-                fileDialogBath.Display();
-
-                if (fileDialogBath.HasSelected())
-                {
-                    m_bathymetryFilePath = fileDialogBath.GetSelected().string();
-                    fileDialogBath.ClearSelected();
-                }
-
-                ImGui::SameLine();
-                ImGui::TextWrapped("%s", ("File: " + m_bathymetryFilePath).c_str());
-
-                // send bathymetry
-                ImGui::PushID(438);
-                if (ImGui::Button("Send to server"))
-                {
-                    xlpmg::Message l_bathymetryDataMsg = xlpmg::SET_BATHYMETRY_DATA;
-                    std::ifstream l_bathFile(m_bathymetryFilePath, std::ios::binary);
-                    l_bathFile.unsetf(std::ios::skipws);
-                    std::streampos l_fileSize;
-                    l_bathFile.seekg(0, std::ios::end);
-                    l_fileSize = l_bathFile.tellg();
-                    l_bathFile.seekg(0, std::ios::beg);
-                    std::vector<std::uint8_t> vec;
-                    vec.reserve(l_fileSize);
-                    vec.insert(vec.begin(),
-                               std::istream_iterator<std::uint8_t>(l_bathFile),
-                               std::istream_iterator<std::uint8_t>());
-                    l_bathymetryDataMsg.args = json::binary(vec);
-                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
-                }
-                if (ImGui::Button("Load dimensions from file"))
-                {
-                    // set local variables
-                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
-                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "x", l_nCellsX);
-                    tsunami_lab::io::NetCdf::getDimensionSize(m_bathymetryFilePath.c_str(), "y", l_nCellsY);
-
-                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
-                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
-                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
-                    tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(),
-                                                  "z",
-                                                  &m_xData,
-                                                  &m_yData,
-                                                  &m_data);
-                    m_nx = l_nCellsX;
-                    m_ny = l_nCellsY;
-                    if (m_xData[0] < m_xData[l_nCellsX - 1])
-                    {
-                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
-                    }
-                    else
-                    {
-                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
-                    }
-                    if (m_yData[0] < m_yData[l_nCellsY - 1])
-                    {
-                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
-                    }
-                    else
-                    {
-                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
-                    }
-                    m_offsetX = m_xData[0];
-                    m_offsetY = m_yData[0];
-                }
-
-                ImGui::SameLine();
-                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
-                ImGui::PopID();
-
-                ImGui::InputText("Output file name", m_remoteBathFilePath, IM_ARRAYSIZE(m_remoteBathFilePath));
-
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Displacement"))
-            {
-                if (ImGui::Button("Select displacement file"))
-                    fileDialogDis.Open();
-
-                fileDialogDis.Display();
-
-                if (fileDialogDis.HasSelected())
-                {
-                    m_displacementFilePath = fileDialogDis.GetSelected().string();
-                    fileDialogDis.ClearSelected();
-                }
-                ImGui::SameLine();
-                ImGui::TextWrapped("%s", ("File: " + m_displacementFilePath).c_str());
-
-                // send displacement
-                ImGui::PushID(439);
-                if (ImGui::Button("Send to server"))
-                {
-                    xlpmg::Message l_displacementMsg = xlpmg::SET_DISPLACEMENT_DATA;
-                    std::ifstream l_displFile(m_displacementFilePath, std::ios::binary);
-                    l_displFile.unsetf(std::ios::skipws);
-                    std::streampos l_fileSize;
-                    l_displFile.seekg(0, std::ios::end);
-                    l_fileSize = l_displFile.tellg();
-                    l_displFile.seekg(0, std::ios::beg);
-                    std::vector<std::uint8_t> vec;
-                    vec.reserve(l_fileSize);
-                    vec.insert(vec.begin(),
-                               std::istream_iterator<std::uint8_t>(l_displFile),
-                               std::istream_iterator<std::uint8_t>());
-                    l_displacementMsg.args = json::binary(vec);
-                    m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
-                }
-                if (ImGui::Button("Load dimensions from file"))
-                {
-                    // set local variables
-                    tsunami_lab::t_idx l_nCellsX, l_nCellsY;
-                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "x", l_nCellsX);
-                    tsunami_lab::io::NetCdf::getDimensionSize(m_displacementFilePath.c_str(), "y", l_nCellsY);
-
-                    tsunami_lab::t_real *m_xData = new tsunami_lab::t_real[l_nCellsX];
-                    tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
-                    tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
-                    tsunami_lab::io::NetCdf::read(m_displacementFilePath.c_str(),
-                                                  "z",
-                                                  &m_xData,
-                                                  &m_yData,
-                                                  &m_data);
-                    m_nx = l_nCellsX;
-                    m_ny = l_nCellsY;
-                    if (m_xData[0] < m_xData[l_nCellsX - 1])
-                    {
-                        m_simulationSizeX = m_xData[l_nCellsX - 1] - m_xData[0];
-                    }
-                    else
-                    {
-                        m_simulationSizeX = m_xData[0] - m_xData[l_nCellsX - 1];
-                    }
-                    if (m_yData[0] < m_yData[l_nCellsY - 1])
-                    {
-                        m_simulationSizeY = m_yData[l_nCellsY - 1] - m_yData[0];
-                    }
-                    else
-                    {
-                        m_simulationSizeY = m_yData[0] - m_yData[l_nCellsY - 1];
-                    }
-                    m_offsetX = m_xData[0];
-                    m_offsetY = m_yData[0];
-                }
-                ImGui::SameLine();
-                HelpMarker("Sets cell amount, simulation size and offset based on estimates from the loaded file.");
-                ImGui::PopID();
-
-                ImGui::InputText("Remote displacement file path", m_remoteDisFilePath, IM_ARRAYSIZE(m_remoteDisFilePath));
-
-                ImGui::TreePop();
-            }
+            ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+            ImGui::InputText("Displacement file", m_displacementFilePath, IM_ARRAYSIZE(m_displacementFilePath));
+            ImGui::SameLine();
+            HelpMarker("Must be a valid displacement file on the file path. Path is specified relative to the executable.");
 
             if (m_tsunamiEvent == 2)
             {
