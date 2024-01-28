@@ -551,45 +551,76 @@ int tsunami_lab::ui::GUI::launch()
                 //---------------------------------------------//
                 if (ImGui::BeginTabItem("File transfer"))
                 {
-                    if (ImGui::Button("Select a file"))
-                        fileBrowser.Open();
-
-                    fileBrowser.Display();
-
-                    if (fileBrowser.HasSelected())
+                    if (ImGui::CollapsingHeader("Send to server"))
                     {
-                        strcpy(m_transferFilePath, fileBrowser.GetSelected().c_str());
-                        fileBrowser.ClearSelected();
-                    }
+                        ImGui::Indent();
+                        if (ImGui::Button("Select a file"))
+                            fileBrowser.Open();
 
-                    ImGui::InputTextWithHint("File to send", "or directly input the file path here", m_transferFilePath, IM_ARRAYSIZE(m_transferFilePath));
+                        fileBrowser.Display();
 
-                    ImGui::InputTextWithHint("./resources/filename.extension","File path on the server", m_transferFilePathDestination, IM_ARRAYSIZE(m_transferFilePathDestination));
-
-                    if (ImGui::Button("Send file"))
-                    {
-                        if (strlen(m_transferFilePath) > 0 && strlen(m_transferFilePathDestination) > 0)
+                        if (fileBrowser.HasSelected())
                         {
-                            xlpmg::Message l_sendFileMsg = xlpmg::SEND_FILE;
-                            json l_arguments;
-                            l_arguments["path"] = m_transferFilePathDestination;
+                            strcpy(m_transferLocalFilePath, fileBrowser.GetSelected().c_str());
+                            fileBrowser.ClearSelected();
+                        }
 
-                            std::ifstream l_fileData(m_transferFilePath, std::ios::binary);
-                            l_fileData.unsetf(std::ios::skipws);
-                            std::streampos l_fileSize;
-                            l_fileData.seekg(0, std::ios::end);
-                            l_fileSize = l_fileData.tellg();
-                            l_fileData.seekg(0, std::ios::beg);
-                            std::vector<std::uint8_t> vec;
-                            vec.reserve(l_fileSize);
-                            vec.insert(vec.begin(),
-                                       std::istream_iterator<std::uint8_t>(l_fileData),
-                                       std::istream_iterator<std::uint8_t>());
-                            l_arguments["data"] = json::binary(vec);
-                            l_sendFileMsg.args = l_arguments;
-                            m_communicator.sendToServer(xlpmg::messageToJsonString(l_sendFileMsg));
+                        ImGui::InputTextWithHint("Local file path", "or directly input the file path here", m_transferLocalFilePath, IM_ARRAYSIZE(m_transferLocalFilePath));
+
+                        ImGui::InputTextWithHint("Remote file path", "./resources/filename.extension", m_transferRemoteFilePath, IM_ARRAYSIZE(m_transferRemoteFilePath));
+
+                        if (ImGui::Button("Send file"))
+                        {
+                            if (strlen(m_transferLocalFilePath) > 0 && strlen(m_transferRemoteFilePath) > 0)
+                            {
+                                xlpmg::Message l_sendFileMsg = xlpmg::SEND_FILE;
+                                json l_arguments;
+                                l_arguments["path"] = m_transferRemoteFilePath;
+
+                                std::ifstream l_fileData(m_transferLocalFilePath, std::ios::binary);
+                                l_fileData.unsetf(std::ios::skipws);
+                                std::streampos l_fileSize;
+                                l_fileData.seekg(0, std::ios::end);
+                                l_fileSize = l_fileData.tellg();
+                                l_fileData.seekg(0, std::ios::beg);
+                                std::vector<std::uint8_t> vec;
+                                vec.reserve(l_fileSize);
+                                vec.insert(vec.begin(),
+                                           std::istream_iterator<std::uint8_t>(l_fileData),
+                                           std::istream_iterator<std::uint8_t>());
+                                l_arguments["data"] = json::binary(vec);
+                                l_sendFileMsg.args = l_arguments;
+                                m_communicator.sendToServer(xlpmg::messageToJsonString(l_sendFileMsg));
+                            }
+                        }
+                        ImGui::Unindent();
+                    }
+                    if (ImGui::CollapsingHeader("Receive from server"))
+                    {
+                        ImGui::InputText("Remote file path", m_transferRemoteFilePath, IM_ARRAYSIZE(m_transferRemoteFilePath));
+                        ImGui::InputText("Local file path", m_transferLocalFilePath, IM_ARRAYSIZE(m_transferLocalFilePath));
+                        if (ImGui::Button("Receive file"))
+                        {
+                            xlpmg::Message l_rcvMsg = xlpmg::RECV_FILE;
+                            json l_rcvArgs;
+                            l_rcvArgs["path"] = m_transferLocalFilePath;
+                            l_rcvArgs["pathDestination"] = m_transferRemoteFilePath;
+                            l_rcvMsg.args = l_rcvArgs;
+                            m_communicator.sendToServer(xlpmg::messageToJsonString(l_rcvMsg));
+
+                            std::string l_response = m_communicator.receiveFromServer();
+                            if (json::accept(l_response))
+                            {
+                                xlpmg::Message l_responseMsg = xlpmg::jsonToMessage(json::parse(l_response));
+                                std::vector<std::uint8_t> l_byteVector = l_responseMsg.args["data"]["bytes"];
+                                auto l_writeFile = std::fstream(l_responseMsg.args.value("path", ""), std::ios::out | std::ios::binary);
+                                l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
+                                l_writeFile.close();
+                            }
                         }
                     }
+                    ImGui::SeparatorText("INFO");
+                    ImGui::TextWrapped("");
                     ImGui::EndTabItem();
                 }
                 //------------------------------------------//

@@ -96,8 +96,8 @@ private:
   int m_diameter = 0;
   float m_timeStepScaling = 1;
 
-  char m_transferFilePath[256] = "";
-  char m_transferFilePathDestination[256] = "";
+  char m_transferLocalFilePath[256] = "";
+  char m_transferRemoteFilePath[256] = "";
 
   char m_bathymetryFilePath[256] = "";
   char m_displacementFilePath[256] = "";

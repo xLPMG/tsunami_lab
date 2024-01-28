@@ -112,6 +112,9 @@ namespace xlpmg
   //! For sending a file to the server
   inline const Message SEND_FILE = {MessageType::SERVER_CALL, "send_file"};
 
+  //! For receiving a file from the server
+  inline const Message RECV_FILE = {MessageType::SERVER_CALL, "recv_file"};
+
   //! Tells the server to change the read buffer size.
   inline const Message SET_READ_BUFFER_SIZE = {MessageType::SERVER_CALL, "set_read_buffer_size"};
 

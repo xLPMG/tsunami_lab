@@ -250,9 +250,36 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::SEND_FILE.key)
                 {
                     std::vector<std::uint8_t> l_byteVector = l_args["data"]["bytes"];
-                    auto l_writeFile = std::fstream(l_args.value("path",""), std::ios::out | std::ios::binary);
+                    auto l_writeFile = std::fstream(l_args.value("path", ""), std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
+                }
+                else if (l_key == xlpmg::RECV_FILE.key)
+                {
+                    std::string l_file = l_args.value("path", "");
+                    std::string l_fileDestination = l_args.value("pathDestination", "");
+
+                    if (l_file.length() > 0 && l_fileDestination.length() > 0)
+                    {
+                        xlpmg::Message l_response = {xlpmg::SERVER_RESPONSE, "file_data"};
+                        json l_arguments;
+                        l_arguments["path"] = l_fileDestination;
+
+                        std::ifstream l_fileData(l_file, std::ios::binary);
+                        l_fileData.unsetf(std::ios::skipws);
+                        std::streampos l_fileSize;
+                        l_fileData.seekg(0, std::ios::end);
+                        l_fileSize = l_fileData.tellg();
+                        l_fileData.seekg(0, std::ios::beg);
+                        std::vector<std::uint8_t> vec;
+                        vec.reserve(l_fileSize);
+                        vec.insert(vec.begin(),
+                                   std::istream_iterator<std::uint8_t>(l_fileData),
+                                   std::istream_iterator<std::uint8_t>());
+                        l_arguments["data"] = json::binary(vec);
+                        l_response.args = l_arguments;
+                        l_communicator.sendToClient(xlpmg::messageToJsonString(l_response));
+                    }
                 }
                 else if (l_key == xlpmg::CONTINUE_SIMULATION.key)
                 {
