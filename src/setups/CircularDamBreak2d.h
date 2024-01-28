@@ -2,7 +2,7 @@
  * @author Luca-Philipp Grumbach
  * @author Richard Hofmann
  *
- * # Description 
+ * # Description
  * Two-dimensional circular dam break problem.
  **/
 #ifndef TSUNAMI_LAB_SETUPS_CIRCULAR_DAM_BREAK_2D_H
@@ -24,12 +24,12 @@ namespace tsunami_lab
 class tsunami_lab::setups::CircularDamBreak2d : public Setup
 {
 private:
-//Initial height of the water
-t_real m_height = 0;
-//diameter of the circular wave
-t_real m_diameter = 0;
-//radius of the circular wave
-t_real m_radius = 0;
+  // Initial height of the water
+  t_real m_height = 0;
+  // radius of the circular wave
+  t_real m_radius = 0;
+  // water height we return if position ist not in the circle
+  t_real m_baseHeight = 0;
 
 public:
   /**
@@ -38,6 +38,7 @@ public:
    * @param i_diameter diameter of the circular wave
    **/
   CircularDamBreak2d(tsunami_lab::t_real i_height,
+                     tsunami_lab::t_real i_baseHeight,
                      tsunami_lab::t_real i_diameter);
 
   /**
@@ -51,7 +52,7 @@ public:
 
   /**
    * Gets the momentum in x-direction.
-   * 
+   *
    * @return momentum in x-direction.
    **/
   t_real getMomentumX(t_real,

@@ -98,7 +98,10 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
   m_height = m_configData.value("height",0);
+  m_baseHeight = m_configData.value("baseHeight", 0);
   m_diameter = m_configData.value("diameter",0);
+  m_timeStepScaling = m_configData.value("timeStepScaling",1);
+
 
 
   // read boundary config
@@ -164,7 +167,7 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CIRCULARDAMBREAK2D")
   {
-    m_setup = new tsunami_lab::setups::CircularDamBreak2d(10, 10);
+    m_setup = new tsunami_lab::setups::CircularDamBreak2d(m_height, m_baseHeight, m_diameter);
   }
   else if (m_setupChoice == "RARERARE1D")
   {
@@ -506,7 +509,7 @@ void tsunami_lab::Simulator::deriveTimeStep()
   }
   else
   {
-    m_dt = 0.45 * std::min(m_dx, m_dy) / l_speedMax;
+    m_dt = 0.45 * std::min(m_dx, m_dy) / l_speedMax; //TODO Add timestepScaling
   }
 
   // calculate max time steps

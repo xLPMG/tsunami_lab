@@ -127,7 +127,9 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"bathymetry", m_remoteBathFilePath},
                    {"displacement", m_remoteDisFilePath},
                    {"height", m_height},
-                   {"diameter", m_diameter}};
+                   {"baseHeight", m_baseHeight},
+                   {"diameter", m_diameter},
+                   {"timeStepScaling", m_timeStepScaling}};
     // stations
     for (Station l_s : m_stations)
     {
@@ -821,10 +823,15 @@ int tsunami_lab::ui::GUI::launch()
             if (!strcmp(m_tsunamiEvents[m_tsunamiEvent], "CIRCULARDAMBREAK2D"))
             {
                 ImGui::InputInt("Waterheight", &m_height, 0);
+                ImGui::InputInt("Base water Height", &m_baseHeight, 0);
                 ImGui::InputInt("Diameter", &m_diameter, 0);
             }
 
-            ImGui::BeginDisabled(m_tsunamiEvent != 0);
+            if(m_tsunamiEvent == 2)
+            {
+                ImGui::BeginDisabled();
+            }
+
             if (ImGui::TreeNode("Bathymetry"))
             {
                 // open file dialog when user clicks this button
@@ -856,8 +863,8 @@ int tsunami_lab::ui::GUI::launch()
                     std::vector<std::uint8_t> vec;
                     vec.reserve(l_fileSize);
                     vec.insert(vec.begin(),
-                               std::istream_iterator<std::uint8_t>(l_bathFile),
-                               std::istream_iterator<std::uint8_t>());
+                            std::istream_iterator<std::uint8_t>(l_bathFile),
+                            std::istream_iterator<std::uint8_t>());
                     l_bathymetryDataMsg.args = json::binary(vec);
                     m_communicator.sendToServer(xlpmg::messageToJsonString(l_bathymetryDataMsg));
                 }
@@ -872,10 +879,10 @@ int tsunami_lab::ui::GUI::launch()
                     tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
                     tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
                     tsunami_lab::io::NetCdf::read(m_bathymetryFilePath.c_str(),
-                                                  "z",
-                                                  &m_xData,
-                                                  &m_yData,
-                                                  &m_data);
+                                                "z",
+                                                &m_xData,
+                                                &m_yData,
+                                                &m_data);
                     m_nx = l_nCellsX;
                     m_ny = l_nCellsY;
                     if (m_xData[0] < m_xData[l_nCellsX - 1])
@@ -935,8 +942,8 @@ int tsunami_lab::ui::GUI::launch()
                     std::vector<std::uint8_t> vec;
                     vec.reserve(l_fileSize);
                     vec.insert(vec.begin(),
-                               std::istream_iterator<std::uint8_t>(l_displFile),
-                               std::istream_iterator<std::uint8_t>());
+                            std::istream_iterator<std::uint8_t>(l_displFile),
+                            std::istream_iterator<std::uint8_t>());
                     l_displacementMsg.args = json::binary(vec);
                     m_communicator.sendToServer(xlpmg::messageToJsonString(l_displacementMsg));
                 }
@@ -951,10 +958,10 @@ int tsunami_lab::ui::GUI::launch()
                     tsunami_lab::t_real *m_yData = new tsunami_lab::t_real[l_nCellsY];
                     tsunami_lab::t_real *m_data = new tsunami_lab::t_real[l_nCellsX * l_nCellsY];
                     tsunami_lab::io::NetCdf::read(m_displacementFilePath.c_str(),
-                                                  "z",
-                                                  &m_xData,
-                                                  &m_yData,
-                                                  &m_data);
+                                                "z",
+                                                &m_xData,
+                                                &m_yData,
+                                                &m_data);
                     m_nx = l_nCellsX;
                     m_ny = l_nCellsY;
                     if (m_xData[0] < m_xData[l_nCellsX - 1])
@@ -985,7 +992,10 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::TreePop();
             }
 
-            ImGui::EndDisabled();
+            if(m_tsunamiEvent == 2)
+            {
+                ImGui::EndDisabled();
+            }
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("Cells X", &m_nx, 0);
@@ -997,7 +1007,6 @@ int tsunami_lab::ui::GUI::launch()
             m_ny = abs(m_ny);
             m_nk = abs(m_nk);
 
-            ImGui::BeginDisabled(m_tsunamiEvent != 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
@@ -1009,7 +1018,6 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset X", &m_offsetX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
-            ImGui::EndDisabled();
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);
@@ -1135,6 +1143,15 @@ int tsunami_lab::ui::GUI::launch()
 
                 ImGui::TreePop();
             }
+
+            if(ImGui::TreeNode("Time step scaling")){
+                ImGui::Text("Current time step scaling: %f", m_timeStepScaling);
+                ImGui::SliderFloat("Scaling (0-1)", &m_timeStepScaling, 0.0f, 1.0f, "%.3f");
+                ImGui::SameLine();
+                HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation");
+                ImGui::TreePop();
+            }
+
 
             if (ImGui::Button("Update server with changes"))
             {

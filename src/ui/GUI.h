@@ -91,7 +91,10 @@ private:
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
   int m_height = 0;
+  int m_baseHeight = 0;
   int m_diameter = 0;
+  float m_timeStepScaling = 1;
+
 
   std::string m_bathymetryFilePath = "";
   std::string m_displacementFilePath = "";

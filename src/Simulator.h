@@ -110,7 +110,9 @@ private:
     tsunami_lab::t_real m_dy = 0;
     tsunami_lab::t_real m_endTime = 0;
     tsunami_lab::t_real m_height = 0;
+    tsunami_lab::t_real m_baseHeight = 0;
     tsunami_lab::t_real m_diameter = 0;
+    tsunami_lab::t_real m_timeStepScaling = 0;
     // boundary conditions
     Boundary m_boundaryL = Boundary::OUTFLOW;
     Boundary m_boundaryR = Boundary::OUTFLOW;
