@@ -7,7 +7,7 @@
     "nx":100,
     "ny":100,
     "setup":"CIRCULARDAMBREAK2D",
-    "writingFrequency":100,
+    "writingFrequency":50,
     "endTime":50,
     "stations":[
         { "name":"station_1", "locX":0, "locY":10 },

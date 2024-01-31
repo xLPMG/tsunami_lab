@@ -127,7 +127,7 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"bathymetry", m_bathymetryFilePath},
                    {"displacement", m_displacementFilePath},
                    {"height", m_height},
-                   {"timeStepScaling", std::ceil(m_timeStepScaling * 100.0)},
+                   {"timeStepScaling", m_timeStepScaling},
                    {"baseHeight", m_baseHeight},
                    {"diameter", m_diameter}};
     // stations
@@ -1035,13 +1035,12 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::Text("Current time step scaling: %f", m_timeStepScaling);
                 ImGui::SliderFloat("Scaling (0-1)", &m_timeStepScaling, 0.1f, 1.0f, "%.2f");
                 ImGui::SameLine();
-                HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation");
+                HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation. However this also increases the computation time."); 
                 ImGui::TreePop();
             }
 
             if (ImGui::Button("Update server with changes"))
             {
-                std::cout<< "gui -"<<m_timeStepScaling<<std::endl;
                 xlpmg::Message saveConfigMsg = xlpmg::LOAD_CONFIG_JSON;
                 saveConfigMsg.args = createConfigJson();
                 m_communicator.sendToServer(xlpmg::messageToJsonString(saveConfigMsg));
