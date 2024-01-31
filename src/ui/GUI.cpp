@@ -1010,21 +1010,23 @@ int tsunami_lab::ui::GUI::launch()
                     }
                 }
 
-                ImGui::BeginListBox("Stations");
-                auto it = m_stations.begin();
-                while (it != m_stations.end())
+                if (ImGui::BeginListBox("Stations"))
                 {
-                    std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
-                    if (ImGui::Selectable(name.c_str(), it->isSelected))
+                    auto it = m_stations.begin();
+                    while (it != m_stations.end())
                     {
-                        it = m_stations.erase(it);
+                        std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
+                        if (ImGui::Selectable(name.c_str(), it->isSelected))
+                        {
+                            it = m_stations.erase(it);
+                        }
+                        else
+                        {
+                            it++;
+                        }
                     }
-                    else
-                    {
-                        it++;
-                    }
+                    ImGui::EndListBox();
                 }
-                ImGui::EndListBox();
                 ImGui::SetItemTooltip("Click to remove");
 
                 ImGui::TreePop();
@@ -1035,7 +1037,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::Text("Current time step scaling: %f", m_timeStepScaling);
                 ImGui::SliderFloat("Scaling (0-1)", &m_timeStepScaling, 0.1f, 1.0f, "%.2f");
                 ImGui::SameLine();
-                HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation. However this also increases the computation time."); 
+                HelpMarker("The default value is 1. Smaller numbers lead to more timesteps and thus to a more detailed simulation. However this also increases the computation time.");
                 ImGui::TreePop();
             }
 
