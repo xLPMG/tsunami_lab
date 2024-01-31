@@ -94,7 +94,7 @@ private:
   int m_height = 0;
   int m_baseHeight = 0;
   int m_diameter = 0;
-  float m_timeStepScaling = 1;
+  float m_timeStepScaling = 1.0f;
 
   char m_transferLocalFilePath[256] = "";
   char m_transferRemoteFilePath[256] = "";

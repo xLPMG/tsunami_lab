@@ -85,6 +85,7 @@ void tsunami_lab::Simulator::loadConfiguration()
 {
   std::cout << ">> Loading configuration from local json data" << std::endl;
 
+  std::cout<<m_configData<<std::endl;
   m_solver = m_configData.value("solver", "fwave");
   // read size config
   m_nx = m_configData.value("nx", 1);
@@ -100,9 +101,9 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_height = m_configData.value("height",0);
   m_baseHeight = m_configData.value("baseHeight", 0);
   m_diameter = m_configData.value("diameter",0);
-  m_timeStepScaling = m_configData.value("timeStepScaling",1);
+  m_timeStepScaling = m_configData.value("timeStepScaling",100);
 
-
+  m_timeStepScaling /=100; // without this step m_timespteps was set to 0 every time a json value is not 1
 
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
@@ -509,7 +510,7 @@ void tsunami_lab::Simulator::deriveTimeStep()
   }
   else
   {
-    m_dt = 0.45 * std::min(m_dx, m_dy) / l_speedMax; //TODO Add timestepScaling
+    m_dt = m_timeStepScaling * 0.45 * std::min(m_dx, m_dy) / l_speedMax; //TODO Add timestepScaling
   }
 
   // calculate max time steps
