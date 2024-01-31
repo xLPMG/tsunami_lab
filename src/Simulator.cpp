@@ -161,7 +161,7 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "DAMBREAK1D")
   {
-    m_setup = new tsunami_lab::setups::DamBreak1d(10, 5, m_simulationSizeX / 2);
+    m_setup = new tsunami_lab::setups::DamBreak1d(m_height, m_baseHeight, m_simulationSizeX / 2);
   }
   else if (m_setupChoice == "CIRCULARDAMBREAK2D")
   {

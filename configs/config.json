@@ -8,10 +8,8 @@
     "ny":100,
     "setup":"CIRCULARDAMBREAK2D",
     "writingFrequency":50,
-    "endTime":50,
-    "stations":[
-        { "name":"station_1", "locX":0, "locY":10 },
-        { "name":"station_2", "locX":5, "locY":10 },
-        { "name":"station_3", "locX":10, "locY":10 }
-    ]
+    "endTime":30,
+    "baseHeight":5,
+    "diameter":10,
+    "height":100
 }

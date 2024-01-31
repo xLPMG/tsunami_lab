@@ -209,6 +209,7 @@ int tsunami_lab::ui::GUI::launch()
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
     bool showSimulationControlsWindow = false;
+    bool showStationDataVisualizer = false;
     bool showDataVisualizer = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -488,12 +489,14 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     HelpMarker("The continuous dimension of time is discretized using 'time steps'. The length of a time step is computed anew for each simulation in a way such that the waves do not interact with each other.");
 
-                    ImGui::Text("Time per time step: %i", m_timePerTimeStep);
+                    ImGui::ProgressBar((float)m_currentTimeStep / (float)m_maxTimeSteps, ImVec2(0.0f, 0.0f));
+
+                    ImGui::Text("Time per time step: %ims", m_timePerTimeStep);
                     ImGui::SetItemTooltip("in milliseconds");
                     ImGui::SameLine();
                     HelpMarker("The time the solver takes to compute one time step.");
 
-                    ImGui::Text("Estimated time left: %f", m_estimatedTimeLeft);
+                    ImGui::Text("Estimated time left: %is", (int)m_estimatedTimeLeft);
                     ImGui::SetItemTooltip("in seconds");
                     ImGui::SameLine();
                     HelpMarker("Time until the solver has finished the whole computation.");
@@ -541,6 +544,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::Checkbox("Show simulation controls", &showSimulationControlsWindow);
                     ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                     ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                    ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
                     ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
                     ImGui::Checkbox("Show client log", &showClientLog);
                     ImGui::Checkbox("Show system info", &showSystemInfoWindow);
@@ -854,13 +858,26 @@ int tsunami_lab::ui::GUI::launch()
 
             short width = 24;
 
+            ImGui::InputTextWithHint("Config file path", "configs/config.json", m_configFilePath, IM_ARRAYSIZE(m_configFilePath));
+            if (ImGui::Button("Load config"))
+            {
+                xlpmg::Message l_loadConfigMsg = xlpmg::LOAD_CONFIG_FILE;
+                l_loadConfigMsg.args = m_configFilePath;
+                m_communicator.sendToServer(messageToJsonString(l_loadConfigMsg));
+            }
+
+            ImGui::SeparatorText("Custom options");
+
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::Combo("Tsunami Event", &m_tsunamiEvent, m_tsunamiEvents, IM_ARRAYSIZE(m_tsunamiEvents));
 
             if (!strcmp(m_tsunamiEvents[m_tsunamiEvent], "CIRCULARDAMBREAK2D"))
             {
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                 ImGui::InputInt("Waterheight", &m_height, 0);
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                 ImGui::InputInt("Base water Height", &m_baseHeight, 0);
+                ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                 ImGui::InputInt("Diameter", &m_diameter, 0);
             }
 
@@ -1127,60 +1144,62 @@ int tsunami_lab::ui::GUI::launch()
         ImGui::End();
 
         // STATIONS
-        ImGui::Begin("Station data");
-
-        if (ImGui::Button("Select station data file"))
-            fileDialogStation.Open();
-
-        fileDialogStation.Display();
-
-        if (fileDialogStation.HasSelected())
+        if (showStationDataVisualizer)
         {
-            m_stationFilePath = fileDialogStation.GetSelected().string();
-            fileDialogStation.ClearSelected();
+            ImGui::Begin("Station data", &showStationDataVisualizer);
 
-            m_stationTime.clear();
-            m_stationMomentumX.clear();
-            m_stationMomentumY.clear();
-            m_stationBathymetry.clear();
-            m_stationTotalHeight.clear();
+            if (ImGui::Button("Select station data file"))
+                fileDialogStation.Open();
 
-            // load data
-            std::ifstream l_inputFile(m_stationFilePath);
-            std::vector<std::string> l_row;
-            std::string l_line;
-            std::getline(l_inputFile, l_line); // skip header
-            while (getline(l_inputFile, l_line))
+            fileDialogStation.Display();
+
+            if (fileDialogStation.HasSelected())
             {
-                tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
-                m_stationTime.push_back(stof(l_row[0]));
-                m_stationMomentumX.push_back(stof(l_row[2]));
-                m_stationMomentumY.push_back(stof(l_row[3]));
-                m_stationBathymetry.push_back(stof(l_row[4]));
-                m_stationTotalHeight.push_back(stof(l_row[5]));
+                m_stationFilePath = fileDialogStation.GetSelected().string();
+                fileDialogStation.ClearSelected();
+
+                m_stationTime.clear();
+                m_stationMomentumX.clear();
+                m_stationMomentumY.clear();
+                m_stationBathymetry.clear();
+                m_stationTotalHeight.clear();
+
+                // load data
+                std::ifstream l_inputFile(m_stationFilePath);
+                std::vector<std::string> l_row;
+                std::string l_line;
+                std::getline(l_inputFile, l_line); // skip header
+                while (getline(l_inputFile, l_line))
+                {
+                    tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
+                    m_stationTime.push_back(stof(l_row[0]));
+                    m_stationMomentumX.push_back(stof(l_row[2]));
+                    m_stationMomentumY.push_back(stof(l_row[3]));
+                    m_stationBathymetry.push_back(stof(l_row[4]));
+                    m_stationTotalHeight.push_back(stof(l_row[5]));
+                }
             }
-        }
-        ImGui::SameLine();
-        ImGui::Text("Selected file: %s", m_stationFilePath.c_str());
+            ImGui::SameLine();
+            ImGui::Text("Selected file: %s", m_stationFilePath.c_str());
 
-        std::string l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": heights";
-        if (ImPlot::BeginPlot(l_plotName.c_str()))
-        {
-            ImPlot::SetupAxes("time in seconds", "height in metres");
-            ImPlot::PlotLine("bathymetry", &m_stationTime[0], &m_stationBathymetry[0], m_stationTime.size());
-            ImPlot::PlotLine("water level", &m_stationTime[0], &m_stationTotalHeight[0], m_stationTime.size());
-            ImPlot::EndPlot();
+            std::string l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": heights";
+            if (ImPlot::BeginPlot(l_plotName.c_str()))
+            {
+                ImPlot::SetupAxes("time in seconds", "height in metres");
+                ImPlot::PlotLine("bathymetry", &m_stationTime[0], &m_stationBathymetry[0], m_stationTime.size());
+                ImPlot::PlotLine("water level", &m_stationTime[0], &m_stationTotalHeight[0], m_stationTime.size());
+                ImPlot::EndPlot();
+            }
+            l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": momenta";
+            if (ImPlot::BeginPlot(l_plotName.c_str()))
+            {
+                ImPlot::SetupAxes("time in seconds", "momentum in m^2/s");
+                ImPlot::PlotLine("momentum in x-direction", &m_stationTime[0], &m_stationMomentumX[0], m_stationTime.size());
+                ImPlot::PlotLine("momentum in y-direction", &m_stationTime[0], &m_stationMomentumY[0], m_stationTime.size());
+                ImPlot::EndPlot();
+            }
+            ImGui::End();
         }
-        l_plotName = m_stationFilePath.substr(m_stationFilePath.find_last_of("/\\") + 1) + ": momenta";
-        if (ImPlot::BeginPlot(l_plotName.c_str()))
-        {
-            ImPlot::SetupAxes("time in seconds", "momentum in m^2/s");
-            ImPlot::PlotLine("momentum in x-direction", &m_stationTime[0], &m_stationMomentumX[0], m_stationTime.size());
-            ImPlot::PlotLine("momentum in y-direction", &m_stationTime[0], &m_stationMomentumY[0], m_stationTime.size());
-            ImPlot::EndPlot();
-        }
-        ImGui::End();
-
         if (showDataVisualizer)
         {
             ImGui::SetNextWindowSize(ImVec2(640, 640), ImGuiCond_FirstUseEver);

@@ -406,6 +406,17 @@ int main(int i_argc, char *i_argv[])
                     {
                         std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
                     }
+                }else if (l_key == xlpmg::LOAD_CONFIG_FILE.key)
+                {
+                    simulator->loadConfigDataFromFile(l_args);
+                    if (canRunThread())
+                    {
+                        m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
+                    }
+                    else
+                    {
+                        std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
+                    }
                 }
                 else if (l_key == xlpmg::DELETE_CHECKPOINTS.key)
                 {

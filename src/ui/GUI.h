@@ -74,6 +74,7 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
+  char m_configFilePath[256] = "";
   const char *m_tsunamiEvents[3] = {"CUSTOM", "ARTIFICIAL2D", "CIRCULARDAMBREAK2D"};
   int m_tsunamiEvent = 0;
   int m_nx = 1;

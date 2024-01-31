@@ -23,7 +23,7 @@ tsunami_lab::t_real tsunami_lab::setups::CircularDamBreak2d::getHeight(t_real i_
                                                                        t_real i_y) const
 {
     tsunami_lab::t_real sumOfSquares = i_x * i_x + i_y * i_y;
-    return std::sqrt(sumOfSquares) < m_radius ? m_height : m_baseHeight;
+    return std::sqrt(sumOfSquares) < m_radius ? m_height-getBathymetry(i_x, i_y) : m_baseHeight-getBathymetry(i_x, i_y);
 }
 
 tsunami_lab::t_real tsunami_lab::setups::CircularDamBreak2d::getMomentumX(t_real, t_real) const
@@ -38,5 +38,5 @@ tsunami_lab::t_real tsunami_lab::setups::CircularDamBreak2d::getMomentumY(t_real
 
 tsunami_lab::t_real tsunami_lab::setups::CircularDamBreak2d::getBathymetry(t_real, t_real) const
 {
-    return 0;
+    return -100;
 }
