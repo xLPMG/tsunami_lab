@@ -468,9 +468,11 @@ namespace xlpmg
                 int bytes_sent;
                 while (data_size > 0)
                 {
-                    bytes_sent = send(sockClient_fd, data_ptr, data_size, 0);
+                    bytes_sent = send(new_socket, data_ptr, data_size, 0);
                     if (bytes_sent < 0)
+                    {
                         return;
+                    }
 
                     data_ptr += bytes_sent;
                     bytes_total += bytes_sent;

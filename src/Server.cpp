@@ -247,24 +247,39 @@ int main(int i_argc, char *i_argv[])
                 {
                     l_communicator.setSendBufferSize(l_args);
                 }
-
-                else if (l_key == xlpmg::SET_BATHYMETRY_DATA.key)
+                else if (l_key == xlpmg::SEND_FILE.key)
                 {
-                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
-                    auto l_writeFile = std::fstream(m_bathTempFile, std::ios::out | std::ios::binary);
+                    std::vector<std::uint8_t> l_byteVector = l_args["data"]["bytes"];
+                    auto l_writeFile = std::fstream(l_args.value("path", ""), std::ios::out | std::ios::binary);
                     l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
                     l_writeFile.close();
-                    simulator->setBathymetryFilePath(m_bathTempFile);
-                    simulator->setPrepared(false);
                 }
-                else if (l_key == xlpmg::SET_DISPLACEMENT_DATA.key)
+                else if (l_key == xlpmg::RECV_FILE.key)
                 {
-                    std::vector<std::uint8_t> l_byteVector = l_args["bytes"];
-                    auto l_writeFile = std::fstream(m_displTempFile, std::ios::out | std::ios::binary);
-                    l_writeFile.write((char *)&l_byteVector[0], l_byteVector.size());
-                    l_writeFile.close();
-                    simulator->setDisplacementFilePath(m_displTempFile);
-                    simulator->setPrepared(false);
+                    std::string l_file = l_args.value("path", "");
+                    std::string l_fileDestination = l_args.value("pathDestination", "");
+
+                    if (l_file.length() > 0 && l_fileDestination.length() > 0)
+                    {
+                        xlpmg::Message l_response = {xlpmg::SERVER_RESPONSE, "file_data"};
+                        json l_arguments;
+                        l_arguments["path"] = l_fileDestination;
+
+                        std::ifstream l_fileData(l_file, std::ios::binary);
+                        l_fileData.unsetf(std::ios::skipws);
+                        std::streampos l_fileSize;
+                        l_fileData.seekg(0, std::ios::end);
+                        l_fileSize = l_fileData.tellg();
+                        l_fileData.seekg(0, std::ios::beg);
+                        std::vector<std::uint8_t> vec;
+                        vec.reserve(l_fileSize);
+                        vec.insert(vec.begin(),
+                                   std::istream_iterator<std::uint8_t>(l_fileData),
+                                   std::istream_iterator<std::uint8_t>());
+                        l_arguments["data"] = json::binary(vec);
+                        l_response.args = l_arguments;
+                        l_communicator.sendToClient(xlpmg::messageToJsonString(l_response));
+                    }
                 }
                 else if (l_key == xlpmg::CONTINUE_SIMULATION.key)
                 {
@@ -305,9 +320,24 @@ int main(int i_argc, char *i_argv[])
                     l_data["currentTimeStep"] = l_currentTimeStep;
                     l_data["maxTimeStep"] = l_maxTimeStep;
                     l_data["timePerTimeStep"] = l_timePerTimeStep;
+                    if (simulator->isCalculating())
+                    {
+                        l_data["status"] = "CALCULATING";
+                    }
+                    else if (simulator->isPreparing())
+                    {
+                        l_data["status"] = "PREPARING";
+                    }
+                    else if (simulator->isResetting())
+                    {
+                        l_data["status"] = "RESETTING";
+                    }
+                    else
+                    {
+                        l_data["status"] = "IDLE";
+                    }
                     response.args = l_data;
-                    l_communicator.sendToClient(xlpmg::messageToJsonString(response));
-
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(response), false);
                 }
                 else if (l_key == xlpmg::TOGGLE_FILEIO.key)
                 {
@@ -323,22 +353,47 @@ int main(int i_argc, char *i_argv[])
                 else if (l_key == xlpmg::GET_HEIGHT_DATA.key)
                 {
                     xlpmg::Message l_heightDataMsg = {xlpmg::SERVER_RESPONSE, "height_data", nullptr};
+
                     // get data from simulation
                     if (simulator->getWaveProp() != nullptr)
                     {
                         tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
                         const tsunami_lab::t_real *l_heightData = l_waveprop->getHeight();
+                        const tsunami_lab::t_real *l_bathymetryData = l_waveprop->getBathymetry();
                         // calculate array size
                         tsunami_lab::t_idx l_ncellsX, l_ncellsY;
                         simulator->getCellAmount(l_ncellsX, l_ncellsY);
-                        unsigned long totalCells = l_ncellsX * l_ncellsY;
-                        for (tsunami_lab::t_idx i = 0; i < totalCells; i++)
+                        for (tsunami_lab::t_idx y = 0; y < l_ncellsY; y++)
                         {
-                            l_heightDataMsg.args.push_back(l_heightData[i]);
+                            for (tsunami_lab::t_idx x = 0; x < l_ncellsX; x++)
+                            {
+                                l_heightDataMsg.args.push_back(l_heightData[x + l_waveprop->getStride() * y] + l_bathymetryData[x + l_waveprop->getStride() * y]);
+                            }
                         }
-                        l_communicator.sendToClient(xlpmg::messageToJsonString(l_heightDataMsg));
-                        l_communicator.sendToClient(xlpmg::messageToJsonString(xlpmg::BUFFERED_SEND_FINISHED));
                     }
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_heightDataMsg));
+                }
+                else if (l_key == xlpmg::GET_BATHYMETRY_DATA.key)
+                {
+                    xlpmg::Message l_bathyDataMsg = {xlpmg::SERVER_RESPONSE, "bathymetry_data", nullptr};
+
+                    // get data from simulation
+                    if (simulator->getWaveProp() != nullptr)
+                    {
+                        tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
+                        const tsunami_lab::t_real *l_bathymetryData = l_waveprop->getBathymetry();
+                        // calculate array size
+                        tsunami_lab::t_idx l_ncellsX, l_ncellsY;
+                        simulator->getCellAmount(l_ncellsX, l_ncellsY);
+                        for (tsunami_lab::t_idx y = 0; y < l_ncellsY; y++)
+                        {
+                            for (tsunami_lab::t_idx x = 0; x < l_ncellsX; x++)
+                            {
+                                l_bathyDataMsg.args.push_back(l_bathymetryData[x + l_waveprop->getStride() * y]);
+                            }
+                        }
+                    }
+                    l_communicator.sendToClient(xlpmg::messageToJsonString(l_bathyDataMsg));
                 }
                 else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                 {
@@ -370,8 +425,8 @@ int main(int i_argc, char *i_argv[])
                     simulator->getSimulationOffset(l_offsetX, l_offsetY);
                     l_msg.args["cellsX"] = l_ncellsX;
                     l_msg.args["cellsY"] = l_ncellsY;
-                    l_msg.args["sizeX"] = l_simulationSizeX;
-                    l_msg.args["sizeY"] = l_simulationSizeY;
+                    l_msg.args["simulationSizeX"] = l_simulationSizeX;
+                    l_msg.args["simulationSizeY"] = l_simulationSizeY;
                     l_msg.args["offsetX"] = l_offsetX;
                     l_msg.args["offsetY"] = l_offsetY;
                     l_communicator.sendToClient(xlpmg::messageToJsonString(l_msg));

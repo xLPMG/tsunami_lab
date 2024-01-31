@@ -1,11 +1,17 @@
 {
     "solver": "fwave",
-    "simulationSizeX": 10000,
-    "simulationSizeY": 10000,
-    "offsetX": 5000,
-    "offsetY": 5000,
-    "nx":500,
-    "ny":500,
-    "setup":"ARTIFICIAL2D",
-    "endTime":50
+    "simulationSizeX": 100,
+    "simulationSizeY": 100,
+    "offsetX": -50,
+    "offsetY": -50,
+    "nx":100,
+    "ny":100,
+    "setup":"CIRCULARDAMBREAK2D",
+    "writingFrequency":50,
+    "endTime":50,
+    "stations":[
+        { "name":"station_1", "locX":0, "locY":10 },
+        { "name":"station_2", "locX":5, "locY":10 },
+        { "name":"station_3", "locX":10, "locY":10 }
+    ]
 }

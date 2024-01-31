@@ -97,6 +97,10 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
+  m_height = m_configData.value("height",10);
+  m_baseHeight = m_configData.value("baseHeight", 5);
+  m_diameter = m_configData.value("diameter",10);
+  m_timeStepScaling = m_configData.value("timeStepScaling",1.0);
 
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
@@ -161,7 +165,7 @@ void tsunami_lab::Simulator::constructSetup()
   }
   else if (m_setupChoice == "CIRCULARDAMBREAK2D")
   {
-    m_setup = new tsunami_lab::setups::CircularDamBreak2d(m_height, m_diameter);
+    m_setup = new tsunami_lab::setups::CircularDamBreak2d(m_height, m_baseHeight, m_diameter);
   }
   else if (m_setupChoice == "RARERARE1D")
   {
@@ -275,6 +279,10 @@ void tsunami_lab::Simulator::setUpNetCdf()
     std::cout << "  Current simulation time:  " << m_simTime << std::endl;
     std::cout << "  Current time step:        " << m_timeStep << std::endl;
     std::cout << std::endl;
+
+    if(m_timeStepMax < m_timeStep){
+      m_timeStepMax = m_timeStep;
+    }
   }
   else
   {
@@ -345,7 +353,6 @@ void tsunami_lab::Simulator::constructSolver()
         // END BREAKPOINT
 
         m_hMax = std::max(l_hCheck[l_cx + l_cy * m_nx], m_hMax);
-
         m_waveProp->setHeight(l_cx,
                               l_cy,
                               l_hCheck[l_cx + l_cy * m_nx]);
@@ -500,11 +507,11 @@ void tsunami_lab::Simulator::deriveTimeStep()
   }
   else
   {
-    m_dt = 0.45 * std::min(m_dx, m_dy) / l_speedMax;
+    m_dt = m_timeStepScaling * 0.45 * std::min(m_dx, m_dy) / l_speedMax;
   }
 
   // calculate max time steps
-  m_timeStepMax = std::ceil(m_endTime / m_dt) + 1;
+  m_timeStepMax = std::ceil(m_endTime / m_dt);
   std::cout << "Note: max " << m_timeStepMax << " steps will be computed." << std::endl;
   // derive scaling for a time step
   m_scalingX = m_dt / m_dx;
@@ -817,8 +824,7 @@ void tsunami_lab::Simulator::runCalculation()
     m_timeStep++;
     m_simTime += m_dt;
 
-    auto l_endTimeStepTimer = std::chrono::high_resolution_clock::now();
-    auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(l_endTimeStepTimer - l_beginCalc);
+    auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - l_beginCalc);
     m_timePerTimeStep = l_durationTimeSteps.count() / m_timeStep;
   }
 

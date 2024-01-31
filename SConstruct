@@ -240,6 +240,7 @@ env.Append( CXXFLAGS = [ '-isystem', 'submodules/json/single_include' ] )
 if 'yes' in env['gui']:
   env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/' ] )
   env.Append( CXXFLAGS = [ '-isystem', 'submodules/imgui/backends/' ] )
+  env.Append( CXXFLAGS = [ '-isystem', 'submodules/implot/' ] )
   # add other OS specific flags
   if OS == "Darwin": 
     env.AppendUnique(FRAMEWORKS=Split('OpenGL Cocoa IOKit CoreVideo'))
@@ -266,7 +267,10 @@ if 'yes' in env['gui']:
                       'submodules/imgui/imgui_tables.cpp',
                       'submodules/imgui/imgui_widgets.cpp',
                       'submodules/imgui/backends/imgui_impl_glfw.cpp', 
-                      'submodules/imgui/backends/imgui_impl_opengl3.cpp']
+                      'submodules/imgui/backends/imgui_impl_opengl3.cpp',
+                      'submodules/implot/implot_demo.cpp',
+                      'submodules/implot/implot_items.cpp',
+                      'submodules/implot/implot.cpp',]
 
 #####################
 #  SPECIFY TARGETS  #

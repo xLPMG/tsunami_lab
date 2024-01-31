@@ -11,6 +11,7 @@
 
 #include "xlpmg/Communicator.hpp"
 #include <chrono>
+#include "../constants.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -36,9 +37,14 @@ private:
   char IPADDRESS[16] = "127.0.0.1";
   bool m_connected = false;
 
-  std::chrono::time_point<std::chrono::system_clock> m_lastDataUpdate;
+  std::chrono::time_point<std::chrono::system_clock> m_lastSystemInfoUpdate;
   int m_systemInfoUpdateFrequency = 2;
   bool m_logSystemInfoDataTransmission = false;
+
+  std::chrono::time_point<std::chrono::system_clock> m_lastTimeValuesUpdate;
+  int m_timeValuesUpdateFrequency = 2;
+  bool m_logTimeValuesDataTransmission = false;
+
   int m_clientReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_clientSendBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
   int m_serverReadBufferSize = m_communicator.BUFF_SIZE_READ_DEFAULT;
@@ -68,7 +74,7 @@ private:
   char m_sbTim[256] = "10:00:00";
 
   // simulation parameters
-  const char *m_tsunamiEvents[5] = {"CUSTOM", "TOHOKU", "CHILE", "ARTIFICIAL2D","CIRCULARDAMBREAK2D"};
+  const char *m_tsunamiEvents[3] = {"CUSTOM", "ARTIFICIAL2D", "CIRCULARDAMBREAK2D"};
   int m_tsunamiEvent = 0;
   int m_nx = 1;
   int m_ny = 1;
@@ -86,14 +92,15 @@ private:
   int m_stationFrequency = 0;
   int m_checkpointFrequency = 10;
   int m_height = 0;
+  int m_baseHeight = 0;
   int m_diameter = 0;
+  float m_timeStepScaling = 1.0f;
 
-  std::string m_bathymetryFilePath = "";
-  std::string m_displacementFilePath = "";
+  char m_transferLocalFilePath[256] = "";
+  char m_transferRemoteFilePath[256] = "";
 
-  char m_remoteBathFilePath[256] ="";
-  char m_remoteDisFilePath[256] ="";
-
+  char m_bathymetryFilePath[256] = "";
+  char m_displacementFilePath[256] = "";
 
   // outflow conditions
   bool m_boundaryL = false;
@@ -118,16 +125,35 @@ private:
   // client log
   bool m_clientLogAutoScroll = true;
 
-  //simulation status
+  // simulation status
+  std::string m_simulationStatus = "UNKNOWN";
   bool m_isPausing = false;
-   int m_currentTimeStep = 0;
-   int m_maxTimeSteps = 0;
-   int m_timePerTimeStep = 0;
-   double m_estimatedLeftTime = 0;
+  int m_currentTimeStep = 0;
+  int m_maxTimeSteps = 0;
+  int m_timePerTimeStep = 0;
+  double m_estimatedTimeLeft = 0;
 
-    std::vector<float> m_cpuData;
-    double m_totalRAM = 0;
-    double m_usedRAM = 0;
+  std::vector<float> m_cpuData;
+  double m_totalRAM = 0;
+  double m_usedRAM = 0;
+
+  std::vector<float> m_stationTime;
+  std::vector<float> m_stationBathymetry;
+  std::vector<float> m_stationMomentumX;
+  std::vector<float> m_stationMomentumY;
+  std::vector<float> m_stationTotalHeight;
+  std::string m_stationFilePath = "";
+
+  tsunami_lab::t_real *m_heightData = nullptr;
+  tsunami_lab::t_real *m_bathymetryData = nullptr;
+  float scale_min = -1;
+  float scale_max = 1;
+  long currCellsX = 0;
+  long currCellsY = 0;
+  int currOffsetX = 0;
+  int currOffsetY = 0;
+  int currSimSizeX = 0;
+  int currSimSizeY = 0;
 
   /**
    * Executes a shell command.
@@ -149,6 +175,11 @@ private:
    * Gets info on CPU and RAM usage from the server.
    */
   void updateSystemInfo();
+
+  /**
+   * Gets info on time step and time per time step from the server.
+   */
+  void updateTimeValues();
 
 public:
   /**
