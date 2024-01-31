@@ -120,7 +120,8 @@ brew<span class="w"> </span>install<span class="w"> </span>gcc
 <li><p>Ubuntu: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libnetcdf-dev</span></code></p></li>
 <li><p><a class="reference external" href="https://downloads.unidata.ucar.edu/netcdf/">Windows</a></p></li>
 </ul>
-<p>The program comes with a gui, for which you will need the <a class="reference external" href="https://www.glfw.org/">GLFW</a> library.</p>
+<p>The program comes with a gui, for which you will need the <a class="reference external" href="https://www.glfw.org/">GLFW</a> library.
+On MacOS, you can install it easily using <a class="reference external" href="https://formulae.brew.sh/formula/glfw">Homebrew.</a></p>
 <p>You may use the tsunami solver without any gui and thus without the <code class="docutils literal notranslate"><span class="pre">GLFW</span></code> library, but you’ll have to specify this by later compiling with</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">scons</span><span class="w"> </span><span class="n">gui</span><span class="o">=</span><span class="n">no</span>
 </pre></div>
