@@ -28,7 +28,7 @@ namespace xlpmg
     {
     private:
         // Timeout value for socket operations in seconds
-        int TIMEOUT = 2;
+        int TIMEOUT = 20;
         // Log data for storing communication logs
         std::string logData = "";
         // Socket related variables
@@ -265,7 +265,7 @@ namespace xlpmg
          */
         bool checkServerResponse()
         {
-            return true;
+            
         }
 
         /**

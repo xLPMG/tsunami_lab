@@ -1,11 +1,13 @@
+###################
 10. Project Phase
-********************
+###################
 
 In the project phase we decided to implement a userfriendly Gui. The aim is to make the usage of our Tsunami solver
 as easy and interactive as possible. 
 
+*********************
 GUI (Client-side)
-==================
+*********************
 
 ..  image:: ../../_static/assets/task-10-Gui_help.png
 
@@ -28,20 +30,22 @@ After selecting the simulation has to be recompiled with the according button be
 The last tab contains further actions to interact with the simulation. First, the simulation can be started or killed here.
 Also files for the bathymetry and displacement can be chosen. As an addition, the user can get data like the heigth from the simulation. 
 
+*********************
 Server-side
-=============
+*********************
 
+*********************
 Libraries
-==============
+*********************
 
 Communicator
-**************
+=====================
 
 For communication between simulation and the GUI we implemented a communication library. 
 The **Communicator.hpp** library can be used to easily create a client-server TCP connection and handle its communication and logging.
 
 Communicator API
-******************
+=====================
 
 (**File: communicator_api.h**)
 
