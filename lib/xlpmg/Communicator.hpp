@@ -27,13 +27,11 @@ namespace xlpmg
     class Communicator
     {
     private:
-        // Timeout value for socket operations in seconds
-        int TIMEOUT = 20;
         // Log data for storing communication logs
         std::string logData = "";
-        // Socket related variables
+        // Client socket related variables
         int sockStatus, sockValread, sockClient_fd = -1;
-        // Socket related variables
+        // Server socket related variables
         int server_fd, new_socket;
 
         /**
@@ -113,25 +111,60 @@ namespace xlpmg
             }
         }
 
+        /**
+         * Sets the send timeout for a socket.
+         * @param socket The socket to set the send timeout for.
+         * @param timeout The timeout value in seconds.
+         */
+        void setSendTimeout(int socket, long timeout){
+            struct timeval tv;
+            tv.tv_sec = timeout;
+            tv.tv_usec = 0;
+            setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
+        }
+
+        /**
+         * Sets the receive timeout for a socket.
+         * @param socket The socket to set the receive timeout for.
+         * @param timeout The timeout value in seconds.
+         */
+        void setRecvTimeout(int socket, long timeout){
+            struct timeval tv;
+            tv.tv_sec = timeout;
+            tv.tv_usec = 0;
+            setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
+        }
+
     public:
+        // Timeout value for normal socket operations in seconds
+        static const long TIMEOUT = 2;
         //! default size of the reading buffer
-        const unsigned int BUFF_SIZE_READ_DEFAULT = 8096;
+        unsigned int BUFF_SIZE_READ_DEFAULT = 8096;
         //! actual size of the reading buffer
         unsigned int BUFF_SIZE_READ = BUFF_SIZE_READ_DEFAULT;
-
         //! default size of the sending buffer
-        const unsigned int BUFF_SIZE_SEND_DEFAULT = 8096;
+        unsigned int BUFF_SIZE_SEND_DEFAULT = 8096;
         //! actual size of the sending buffer
         unsigned int BUFF_SIZE_SEND = BUFF_SIZE_SEND_DEFAULT;
 
         //! true if there is a connection
         bool isConnected = false;
 
+        /**
+         * @brief Sets the read buffer size.
+         * 
+         * @param newSize The new size of the read buffer.
+         */
         void setReadBufferSize(unsigned int newSize)
         {
             BUFF_SIZE_READ = newSize;
         }
 
+        /**
+         * @brief Sets the send buffer size.
+         * 
+         * @param newSize The new size of the send buffer.
+         */
         void setSendBufferSize(unsigned int newSize)
         {
             BUFF_SIZE_SEND = newSize;
@@ -149,9 +182,6 @@ namespace xlpmg
         int startClient(char *IPADDRESS, int PORT)
         {
             struct sockaddr_in serv_addr;
-            struct timeval tv;
-            tv.tv_sec = TIMEOUT;
-            tv.tv_usec = 0;
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
@@ -161,8 +191,8 @@ namespace xlpmg
             }
             logEvent("Socket created.", INFO, true);
 
-            setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
-            setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
+            setSendTimeout(sockClient_fd, TIMEOUT);
+            setRecvTimeout(sockClient_fd, TIMEOUT);
 
             serv_addr.sin_family = AF_INET;
             serv_addr.sin_port = htons(PORT);
@@ -191,7 +221,7 @@ namespace xlpmg
 
         /**
          * @brief Stops all connections of the client socket.
-        */
+         */
         void stopClient()
         {
             // closing the connected socket
@@ -202,9 +232,10 @@ namespace xlpmg
         /**
          * @brief Receives a message from the server.
          * @return Message as string.
+         * @param timeout Timeout for the operation in seconds.
          * @param log Whether the message should be logged or not.
          */
-        std::string receiveFromServer(bool log = true)
+        std::string receiveFromServer(long timeout = TIMEOUT, bool log = true)
         {
             if (sockClient_fd < 0)
             {
@@ -216,6 +247,8 @@ namespace xlpmg
             char readBuffer[BUFF_SIZE_READ];
             bool finished = false;
             unsigned long totalBytes = 0;
+
+            setRecvTimeout(sockClient_fd, timeout);
 
             logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log);
 
@@ -255,26 +288,19 @@ namespace xlpmg
                     finished = true;
                 }
             }
+            setRecvTimeout(sockClient_fd, TIMEOUT);
             isConnected = true;
             return message;
         }
 
         /**
-         * @brief Checks if the server is reachable.
-         * @return true if server responded.
-         */
-        bool checkServerResponse()
-        {
-            
-        }
-
-        /**
          * @brief Sends a message to the server.
          * @param message String to send.
+         * @param timeout Timeout for the operation in seconds.
          * @param log Whether the message should be logged or not.
          * @return 0 if successful, 1 otherwise.
          */
-        int sendToServer(std::string message, bool log = true)
+        int sendToServer(std::string message, long timeout = TIMEOUT, bool log = true)
         {
             if (sockClient_fd < 0)
             {
@@ -282,6 +308,9 @@ namespace xlpmg
                 isConnected = false;
                 return 1;
             }
+
+            setSendTimeout(sockClient_fd, timeout);
+
             // terminator
             message.append("#!");
 
@@ -317,6 +346,7 @@ namespace xlpmg
                     logEvent(bytesSentStr.c_str(), DEBUG, log, true);
                 }
             }
+            setSendTimeout(sockClient_fd, TIMEOUT);
             isConnected = true;
             return 0;
         }
@@ -370,9 +400,12 @@ namespace xlpmg
                 isConnected = false;
                 exit(EXIT_FAILURE);
             }
+            
             address.sin_family = AF_INET;
             address.sin_addr.s_addr = INADDR_ANY;
             address.sin_port = htons(PORT);
+
+            setSendTimeout(new_socket, TIMEOUT);
 
             // Forcefully attaching socket to the port 8080
             if (bind(server_fd, (struct sockaddr *)&address,

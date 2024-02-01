@@ -151,10 +151,10 @@ private:
   float scale_max = 1;
   long currCellsX = 0;
   long currCellsY = 0;
-  int currOffsetX = 0;
-  int currOffsetY = 0;
-  int currSimSizeX = 0;
-  int currSimSizeY = 0;
+  tsunami_lab::t_real currOffsetX = 0;
+  tsunami_lab::t_real currOffsetY = 0;
+  tsunami_lab::t_real currSimSizeX = 0;
+  tsunami_lab::t_real currSimSizeY = 0;
 
   /**
    * Executes a shell command.

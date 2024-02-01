@@ -16,13 +16,10 @@ std::thread m_updateThread;
 std::atomic<bool> m_stopUpdating = false;
 bool m_isSimulationRunning = false;
 
-// updating
+// last update time point
 std::chrono::time_point m_lastDataUpdate = std::chrono::high_resolution_clock::now();
+// data update frequency in ms
 int m_dataUpdateFrequency = 10;
-
-// temp files
-std::string m_bathTempFile = "bathymetry_temp.nc";
-std::string m_displTempFile = "displacement_temp.nc";
 
 // system info
 tsunami_lab::systeminfo::SystemInfo l_systemInfo;
@@ -143,6 +140,12 @@ int main(int i_argc, char *i_argv[])
                     {
                         exitSimulationThread();
                     }
+                    else if (l_key == xlpmg::WRITE_CHECKPOINT.key)
+                    {
+                        std::cout << "Writing checkpoint" << std::endl;
+                        simulator->writeCheckpoint();
+                    }
+
                     else if (l_key == xlpmg::PAUSE_SIMULATION.key)
                     {
                         std::cout << "Pause simulation" << std::endl;
@@ -160,7 +163,7 @@ int main(int i_argc, char *i_argv[])
                 {
                     if (l_key == xlpmg::CHECK.key)
                     {
-                        l_communicator.sendToClient("OK");
+                        std::cout << "A client requested a check." << std::endl;
                     }
                     else if (l_key == xlpmg::START_SIMULATION.key)
                     {
@@ -417,13 +420,11 @@ int main(int i_argc, char *i_argv[])
                         xlpmg::Message l_heightDataMsg = xlpmg::SERVER_RESPONSE;
                         l_heightDataMsg.key = "height_data";
                         json l_data;
-
                         // get data from simulation
                         if (simulator->getWaveProp() != nullptr)
                         {
                             tsunami_lab::patches::WavePropagation *l_waveprop = simulator->getWaveProp();
                             const tsunami_lab::t_real *l_heightData = l_waveprop->getHeight();
-                            const tsunami_lab::t_real *l_bathymetryData = l_waveprop->getBathymetry();
                             // calculate array size
                             tsunami_lab::t_idx l_ncellsX, l_ncellsY;
                             simulator->getCellAmount(l_ncellsX, l_ncellsY);
@@ -431,12 +432,13 @@ int main(int i_argc, char *i_argv[])
                             {
                                 for (tsunami_lab::t_idx x = 0; x < l_ncellsX; x++)
                                 {
-                                    l_data.push_back(l_heightData[x + l_waveprop->getStride() * y] + l_bathymetryData[x + l_waveprop->getStride() * y]);
+                                    l_data.push_back(l_heightData[x + l_waveprop->getStride() * y]);
                                 }
                             }
                         }
                         l_heightDataMsg.args = l_data;
                         l_communicator.sendToClient(xlpmg::messageToJsonString(l_heightDataMsg));
+                        
                     }
                     else if (l_key == xlpmg::GET_BATHYMETRY_DATA.key)
                     {
@@ -513,8 +515,6 @@ int main(int i_argc, char *i_argv[])
         {
             m_updateThread.join();
         }
-        std::remove(m_bathTempFile.c_str());
-        std::remove(m_displTempFile.c_str());
     }
     //------------------------------------------//
     //--------------STANDARD MODE---------------//

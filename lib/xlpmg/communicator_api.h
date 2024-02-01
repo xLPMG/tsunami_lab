@@ -194,9 +194,9 @@ namespace xlpmg
   // HIGH
 
   //! Tells the server to start sending height data. (buffered)
-  inline const Message GET_HEIGHT_DATA = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::MEDIUM, "get_height_data"};
+  inline const Message GET_HEIGHT_DATA = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::HIGH, "get_height_data"};
   //! Tells the server to start sending bathymetry data. (buffered)
-  inline const Message GET_BATHYMETRY_DATA = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::MEDIUM, "get_bathymetry_data"};
+  inline const Message GET_BATHYMETRY_DATA = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::HIGH, "get_bathymetry_data"};
 
   // MEDIUM
 

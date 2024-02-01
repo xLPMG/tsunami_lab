@@ -314,6 +314,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     if (ImGui::Button("Check connection"))
                     {
+                        m_communicator.sendToServer(xlpmg::messageToJsonString(xlpmg::CHECK));
                         m_connected = m_communicator.isConnected;
                     }
                     ImGui::BeginDisabled(!m_connected);
@@ -624,7 +625,7 @@ int tsunami_lab::ui::GUI::launch()
                         }
                     }
                     ImGui::SeparatorText("INFO");
-                    ImGui::TextWrapped("");
+                    ImGui::TextWrapped("Our file transfer implementaion uses byte transfer over standard tcp sockets without additional security or performance. For large or confident files we recommend using other services such as sftp.");
                     ImGui::EndTabItem();
                 }
                 //------------------------------------------//
@@ -1225,40 +1226,20 @@ int tsunami_lab::ui::GUI::launch()
 
                     currCellsX = l_simSizes.args.value("cellsX", 0);
                     currCellsY = l_simSizes.args.value("cellsY", 0);
-                    currOffsetX = l_simSizes.args.value("offsetX", 0);
-                    currOffsetY = l_simSizes.args.value("offsetY", 0);
-                    currSimSizeX = l_simSizes.args.value("simulationSizeX", 0);
-                    currSimSizeY = l_simSizes.args.value("simulationSizeY", 0);
-                    m_heightData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
+                    currOffsetX = l_simSizes.args.value("offsetX", 0.f);
+                    currOffsetY = l_simSizes.args.value("offsetY", 0.f);
+                    currSimSizeX = l_simSizes.args.value("simulationSizeX", 0.f);
+                    currSimSizeY = l_simSizes.args.value("simulationSizeY", 0.f);
                     m_bathymetryData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
-
-                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
-                    {
-                        std::string l_response = m_communicator.receiveFromServer();
-
-                        if (json::accept(l_response))
-                        {
-                            xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
-
-                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
-                            std::string l_num;
-                            unsigned long l_index = 0;
-                            while (getline(l_stream, l_num, ','))
-                            {
-                                m_heightData[l_index] = std::stof(l_num);
-                                l_index++;
-                            }
-                        }
-                    }
+                    m_heightData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
 
                     if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_BATHYMETRY_DATA)) == 0)
                     {
-                        std::string l_response = m_communicator.receiveFromServer();
+                        std::string l_response = m_communicator.receiveFromServer(600);
 
                         if (json::accept(l_response))
                         {
                             xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
-
                             std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
                             std::string l_num;
                             unsigned long l_index = 0;
@@ -1269,32 +1250,56 @@ int tsunami_lab::ui::GUI::launch()
                             }
                         }
                     }
+
+                    if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_HEIGHT_DATA)) == 0)
+                    {
+                        std::string l_response = m_communicator.receiveFromServer(600);
+
+                        if (json::accept(l_response))
+                        {
+                            xlpmg::Message msg = xlpmg::jsonToMessage(json::parse(l_response));
+
+                            std::stringstream l_stream(msg.args.dump().substr(1, msg.args.dump().size() - 2));
+                            std::string l_num;
+                            unsigned long l_index = 0;
+                            while (getline(l_stream, l_num, ','))
+                            {
+                                m_heightData[l_index] = std::stof(l_num) + m_bathymetryData[l_index];
+                                l_index++;
+                            }
+                        }
+                    }
                 }
             }
+
+            ImGui::SameLine();
+            HelpMarker("The GUI might freeze as its waiting for the server response. This might take several minutes depending on how many cells need to be processed.");
 
             ImGui::SetNextItemWidth(225);
             ImGui::DragFloatRange2("Min / Max", &scale_min, &scale_max, 0.01f, -20, 20);
             ImPlot::PushColormap("WATERHEIGHTSMAP");
             ImPlot::ColormapScale("Colormap scale", scale_min, scale_max, ImVec2(60, 225));
             ImGui::SameLine();
-            if (ImPlot::BeginPlot("Water height and bathymetry", ImVec2(550, 550)))
+            if (m_bathymetryData != nullptr || m_heightData != nullptr)
             {
-                ImPlot::SetupAxesLimits(currOffsetX, currOffsetX + currSimSizeX, currOffsetY, currOffsetY + currSimSizeY);
-                if (m_heightData != nullptr)
+
+                if (ImPlot::BeginPlot("Water height and bathymetry", ImVec2(550, 550)))
                 {
-                    ImPlot::PlotHeatmap("water level", m_heightData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                    ImPlot::SetupAxesLimits(currOffsetX, currOffsetX + currSimSizeX, currOffsetY, currOffsetY + currSimSizeY);
+                    if (m_bathymetryData != nullptr)
+                    {
+                        ImPlot::PlotHeatmap("bathymetry", m_bathymetryData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                    }
+                    if (m_heightData != nullptr)
+                    {
+                        ImPlot::PlotHeatmap("water level", m_heightData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                    }
+                    ImPlot::EndPlot();
                 }
-                if (m_bathymetryData != nullptr)
-                {
-                    ImPlot::PlotHeatmap("bathymetry", m_bathymetryData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
-                }
-                ImPlot::EndPlot();
             }
             ImPlot::PopColormap();
-
             ImGui::End();
         }
-
         // Rendering
         ImGui::Render();
         int display_w, display_h;
