@@ -47,28 +47,91 @@ We then use an ``std::thread`` to run the simulation in a separate thread, so th
 Note that only one simulation thread can be running at a time, but the GUI also provides an option to kill the current thread.
 
 *********************
-Build process
+Compiling
 *********************
+
+SConstruct
+======================
+
+As a base four our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
+We chose the `GLFW <https://www.glfw.org/>`_ implementation as it is cross-platform and also very well known.
+
+Currently we support building the sources on Linux, MacOS and Windows and therefore had to implement different include processes for each platform:
+
+.. code-block:: python
+
+    if 'yes' in env['gui']:
+      if OS == "Linux":
+        if not conf.CheckLib('glfw'):
+          print ('Did not find the glfw library!')
+          exit(1)
+        elif not conf.CheckLib('GL'):
+          print ('Did not find the GL library!')
+          exit(1)
+
+      elif OS == "Darwin":  
+        if not conf.CheckLib('glfw'):
+          print ('Did not find the glfw library!')
+          exit(1)
+
+      elif OS == "Windows":
+        if not conf.CheckLib('glfw3'):
+          print ('Did not find the glfw3 library!')
+          exit(1)
+        elif not conf.CheckLib('gdi32'):
+          print ('Did not find the gdi32 library!')
+          exit(1)
+        elif not conf.CheckLib('opengl32'):
+          print ('Did not find the opengl32 library!')
+          exit(1)
+        elif not conf.CheckLib('imm32'):
+          print ('Did not find the imm32 library!')
+          exit(1)
+
+We also added the ImGui and ImPlot sources to the build path.
+
+If ``gui=no`` is set in the compile command, the GUI will not be built (therefore all GUI libraries ignored) and the program can be run normally using ``./tsunami_lab``.
+
+Known error when building documentary
+======================================
+
+When building the documentary, the following error may occur:
+
+.. code-block:: bash
+
+    home/lpmg/tsunami_lab/docs/source/files/namespaces/lib.rst:6: WARNING: Error when parsing function declaration.
+    If the function has no return type:
+    Error in declarator or parameters-and-qualifiers
+    Invalid C++ declaration: Expected identifier in nested name. [error at 50]
+    NLOHMANN_JSON_SERIALIZE_ENUM (MessageExpectation, {{NO_RESPONSE, "no_response"}, {EXPECT_RESPONSE, "expect_response"}})
+    --------------------------------------------------^
+
+    [...]
+
+This is because the C++ parser does know now about this macro and therefore identifies it as wrong syntax.
+However the code is correct `(view the documentation here) <https://json.nlohmann.me/api/macros/nlohmann_json_serialize_enum/>`_
+and we have not found away to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
+The documentation should still build correctly.
 
 *********************
 Libraries
 *********************
 
-To keep the main code clean, we decided to export most of the code associated with communication to external libraries:
+To keep the main code tidy, we decided to export most of the code associated with communication to external libraries:
 the Communicator and the API. The code itself is already extensively documented, so we will only give a brief overview here.
 
 .. note:: 
     
     The Communicator itself and the API do not depend on eachother, so the Communicator can be used without the API and vice versa.
     The Communicator provides functionality for sending text over TCP and the API provides a structure for the messages that are sent.
-    That is why messages from the API have to converted to text before they can be sent.
+    That is why messages from the API need to be converted to text before they can be sent.
 
 Communicator
 =====================
 
 For communication between simulation and the GUI we implemented a communication library. 
 The **Communicator.hpp** library can be used to easily create a client-server TCP connection and handle its communication and logging.
-Both the server and client use the same library, but call different functions to initialize the connection and send messages.
+Both the server and client use the same library, but call different functions to initialize the connection and send/receive messages.
 
 There are also features such as different log messages with time stamps or automatic buffered sending if the message exceeds the buffer size.
 All this code is hidden behind a simple interface, so the actual code stays clean and easy to read.
