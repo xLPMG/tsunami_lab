@@ -65,9 +65,19 @@
 <li class="toctree-l2"><a class="reference internal" href="08.html">8. Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="09.html">9. Parallelization</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">10. Project Phase</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#gui">GUI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#communicator">Communicator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#server">Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preface">Preface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui-client-side">GUI (Client-side)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server-side">Server-side</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiling">Compiling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sconstruct">SConstruct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#known-error-when-building-documentary">Known error when building documentary</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#libraries">Libraries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#communicator">Communicator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#communicator-api">Communicator API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -102,89 +112,125 @@
              
   <section id="project-phase">
 <h1>10. Project Phase<a class="headerlink" href="#project-phase" title="Link to this heading"></a></h1>
-<p>In the project phase we decided to implement a userfriendly Gui. The aim is to make the usage of our Tsunami solver
+<p>In the project phase we decided to implement a user-friendly Gui. The aim was to make the usage of our Tsunami solver
 as easy and interactive as possible.</p>
-<section id="gui">
-<h2>GUI<a class="headerlink" href="#gui" title="Link to this heading"></a></h2>
-<img alt="../../_images/task-10-Gui_help.png" src="../../_images/task-10-Gui_help.png" />
-<p>For the layout we chose to use multiple tabs, in order to make the use more clear.
-The first page gives general informations about the project and refers to our website.</p>
-<img alt="../../_images/task-10-Gui_connectivity.png" src="../../_images/task-10-Gui_connectivity.png" />
-<p>Tab number two handles the the connection to thhe server. The properties for interacting with the server are getting set here.
-Furthermore, the connection can also be disconnected here.</p>
-<img alt="../../_images/task-10-Gui_windows.png" src="../../_images/task-10-Gui_windows.png" />
-<p>On the next page the user can find all options of configuration for the simulation. The simulation parameters like cell amount, size and offset can be set here.
-In Addition to that, compiler and run time options can be found here. These contain differetn modes, compiler options, flags and usage choices.
-After selecting the simulation has to be recompiled with the according button below.</p>
-<img alt="../../_images/task-10-Gui_select.png" src="../../_images/task-10-Gui_select.png" />
-<p>The last tab contains further actions to interact with the simulation. First, the simulation can be started or killed here.
-Also files for the bathymetry and displacement can be chosen. As an addition, the user can get data like the heigth from the simulation.</p>
+<section id="preface">
+<h2>Preface<a class="headerlink" href="#preface" title="Link to this heading"></a></h2>
+<p>While we tried to stick to our plan as best as we could, we decided to do some things a little different.
+The biggest difference being a Client-Server approach although we explicitly mentioned we would not realize this.
+The original triggering point for this were all kinds of loading times and issues with concurrency:
+for any GUI application, one of the key features is its responsiveness to user input. Be it numerical input or just clicking and moving things around - the GUI should react as fast as possible.
+Integrating a GUI directly into the solver application while maintaining this responsiveness meant that the GUI and every other task the actual solver does, need to be separated in different threads
+to assure that the GUI thread has always time for the user.</p>
+<p>We started off with this directly integrated and threaded approach and quickly realized that handling correct communication between two or more asynchronous running threads was getting closer and closer to just having two separate applications communicating over an API.
+Knowing that this approach meant we would have to invest a lot more effort and work overtime, we decided on taking this path nontheless as it would come with a lot of other benefits as well.
+Now, using the Server-Client model we have a GUI that can just send commands to the server without needing to wait for a response (most of the time, unless you’re specifically asking for data such as water/bathymetry data).</p>
+<p>It can also be used in scenarios when using a more powerful machine (e.g. HPC-Cluster) without display access. Just start the program as a server on the remote machine and control it from home via laptop - its that easy.</p>
 </section>
+<section id="gui-client-side">
+<h2>GUI (Client-side)<a class="headerlink" href="#gui-client-side" title="Link to this heading"></a></h2>
+</section>
+<section id="server-side">
+<h2>Server-side<a class="headerlink" href="#server-side" title="Link to this heading"></a></h2>
+<p>The first thing we did was to modularize our main <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> program.</p>
+<p>The original <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> had one main function that executed the whole program loop.
+The code was moved to <code class="docutils literal notranslate"><span class="pre">Simulator.cpp</span></code> and we now have separate functions for the different parts of the program, such as <code class="docutils literal notranslate"><span class="pre">prepareForCalculation()</span></code> and <code class="docutils literal notranslate"><span class="pre">runCalculation()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">prepareForCalculation()</span></code> itself also calls different functions, such as <code class="docutils literal notranslate"><span class="pre">setupFolders()</span></code>, <code class="docutils literal notranslate"><span class="pre">loadConfiguration()</span></code>, <code class="docutils literal notranslate"><span class="pre">constructSetup()</span></code> and so on.
+We did this to have finer control, as we can now execute single parts of the program without having to run the whole simulation.</p>
+<p>The next step was to implement a server that can be controlled via a GUI. The code for this can be found in <code class="docutils literal notranslate"><span class="pre">Server.cpp</span></code>.
+If the program is started with the <code class="docutils literal notranslate"><span class="pre">server</span></code> flag, it will start a server on the local machine and wait for connections.
+Once a connection is established, the server will wait for commands from the client and execute them.
+To not iterate through all message keys to find the right one, a message contains extra information such as urgency and response expectation.</p>
+<p>The actual simulation is started by sending a <code class="docutils literal notranslate"><span class="pre">START_SIMULATION</span></code> message to the server.
+We then use an <code class="docutils literal notranslate"><span class="pre">std::thread</span></code> to run the simulation in a separate thread, so the server can still receive commands while the simulation is running.
+Note that only one simulation thread can be running at a time, but the GUI also provides an option to kill the current thread.</p>
+</section>
+<section id="compiling">
+<h2>Compiling<a class="headerlink" href="#compiling" title="Link to this heading"></a></h2>
+<section id="sconstruct">
+<h3>SConstruct<a class="headerlink" href="#sconstruct" title="Link to this heading"></a></h3>
+<p>As a base four our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
+We chose the <a class="reference external" href="https://www.glfw.org/">GLFW</a> implementation as it is cross-platform and also very well known.</p>
+<p>Currently we support building the sources on Linux, MacOS and Windows and therefore had to implement different include processes for each platform:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">in</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;gui&#39;</span><span class="p">]:</span>
+  <span class="k">if</span> <span class="n">OS</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;glfw&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the glfw library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;GL&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the GL library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">elif</span> <span class="n">OS</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;glfw&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the glfw library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">elif</span> <span class="n">OS</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;glfw3&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the glfw3 library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;gdi32&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the gdi32 library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;opengl32&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the opengl32 library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">conf</span><span class="o">.</span><span class="n">CheckLib</span><span class="p">(</span><span class="s1">&#39;imm32&#39;</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Did not find the imm32 library!&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We also added the ImGui and ImPlot sources to the build path.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">gui=no</span></code> is set in the compile command, the GUI will not be built (therefore all GUI libraries ignored) and the program can be run normally using <code class="docutils literal notranslate"><span class="pre">./tsunami_lab</span></code>.</p>
+</section>
+<section id="known-error-when-building-documentary">
+<h3>Known error when building documentary<a class="headerlink" href="#known-error-when-building-documentary" title="Link to this heading"></a></h3>
+<p>When building the documentary, the following error may occur:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>home/lpmg/tsunami_lab/docs/source/files/namespaces/lib.rst:6:<span class="w"> </span>WARNING:<span class="w"> </span>Error<span class="w"> </span>when<span class="w"> </span>parsing<span class="w"> </span><span class="k">function</span><span class="w"> </span>declaration.
+If<span class="w"> </span>the<span class="w"> </span><span class="k">function</span><span class="w"> </span>has<span class="w"> </span>no<span class="w"> </span><span class="k">return</span><span class="w"> </span>type:
+Error<span class="w"> </span><span class="k">in</span><span class="w"> </span>declarator<span class="w"> </span>or<span class="w"> </span>parameters-and-qualifiers
+Invalid<span class="w"> </span>C++<span class="w"> </span>declaration:<span class="w"> </span>Expected<span class="w"> </span>identifier<span class="w"> </span><span class="k">in</span><span class="w"> </span>nested<span class="w"> </span>name.<span class="w"> </span><span class="o">[</span>error<span class="w"> </span>at<span class="w"> </span><span class="m">50</span><span class="o">]</span>
+NLOHMANN_JSON_SERIALIZE_ENUM<span class="w"> </span><span class="o">(</span>MessageExpectation,<span class="w"> </span><span class="o">{{</span>NO_RESPONSE,<span class="w"> </span><span class="s2">&quot;no_response&quot;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span>EXPECT_RESPONSE,<span class="w"> </span><span class="s2">&quot;expect_response&quot;</span><span class="o">}})</span>
+--------------------------------------------------^
+
+<span class="o">[</span>...<span class="o">]</span>
+</pre></div>
+</div>
+<p>This is because the C++ parser does know now about this macro and therefore identifies it as wrong syntax.
+However the code is correct <a class="reference external" href="https://json.nlohmann.me/api/macros/nlohmann_json_serialize_enum/">(view the documentation here)</a>
+and we have not found away to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
+The documentation should still build correctly.</p>
+</section>
+</section>
+<section id="libraries">
+<h2>Libraries<a class="headerlink" href="#libraries" title="Link to this heading"></a></h2>
+<p>To keep the main code tidy, we decided to export most of the code associated with communication to external libraries:
+the Communicator and the API. The code itself is already extensively documented, so we will only give a brief overview here.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Communicator itself and the API do not depend on eachother, so the Communicator can be used without the API and vice versa.
+The Communicator provides functionality for sending text over TCP and the API provides a structure for the messages that are sent.
+That is why messages from the API need to be converted to text before they can be sent.</p>
+</div>
 <section id="communicator">
-<h2>Communicator<a class="headerlink" href="#communicator" title="Link to this heading"></a></h2>
-<p>For communication between simulation and the gui Luca-Philipp introduced a communication library.
-The <strong>Communicator.cpp</strong> library can be used to easily create a client-server TCP connection and handle its communication and logging.</p>
-<p><strong>communicator_api</strong></p>
+<h3>Communicator<a class="headerlink" href="#communicator" title="Link to this heading"></a></h3>
+<p>For communication between simulation and the GUI we implemented a communication library.
+The <strong>Communicator.hpp</strong> library can be used to easily create a client-server TCP connection and handle its communication and logging.
+Both the server and client use the same library, but call different functions to initialize the connection and send/receive messages.</p>
+<p>There are also features such as different log messages with time stamps or automatic buffered sending if the message exceeds the buffer size.
+All this code is hidden behind a simple interface, so the actual code stays clean and easy to read.</p>
+</section>
+<section id="communicator-api">
+<h3>Communicator API<a class="headerlink" href="#communicator-api" title="Link to this heading"></a></h3>
+<p>(<strong>File: communicator_api.h</strong>)</p>
 <p>Since all communication happens using text over TCP, we had to implement a structure that both server and client can adhere to
-in order to guarantee correct communication. For this, we decided to send all data in JSON format. Furthermore, each message
-follows a strict pattern. It consists of 3 parts: the TYPE which provides information on the nature of the message,
-the KEY which is a unique identifier for each message, and ARGS containing other message data (such as parameters) in JSON format.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span><span class="w"> </span><span class="nc">MessagePart</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">TYPE</span><span class="p">,</span>
-<span class="w">    </span><span class="n">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">ARGS</span>
-<span class="p">};</span>
-
-<span class="k">enum</span><span class="w"> </span><span class="nc">MessageType</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">SERVER_CALL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">FUNCTION_CALL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">OTHER</span><span class="p">,</span>
-<span class="w">    </span><span class="n">SERVER_RESPONSE</span>
-<span class="p">};</span>
-
-<span class="k">struct</span><span class="w"> </span><span class="nc">Message</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">MessageType</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MessageType</span><span class="o">::</span><span class="n">OTHER</span><span class="p">;</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NONE&quot;</span><span class="p">;</span>
-<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-<p>It also implements various functions to convert from and to json format, such as <code class="docutils literal notranslate"><span class="pre">messageToJson()</span></code>, <code class="docutils literal notranslate"><span class="pre">messageToJsonString()</span></code>
-and <code class="docutils literal notranslate"><span class="pre">jsonToMessage()</span></code>.</p>
-<p><strong>Communicator.hpp</strong></p>
-<p>The library provides functions to start server and client and to send messages to each other.
-Transmitted data is logged and can be retrieved via <code class="docutils literal notranslate"><span class="pre">getLog()</span></code>.
-Describing the detailed code here would be too extensive and not necessary, as this library
-is rather just a tool for us to develop the actually interesting code.</p>
-<p><strong>Communication example</strong></p>
-<p><code class="docutils literal notranslate"><span class="pre">communicator_api.h</span></code></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="n">START_SIMULATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">MessageType</span><span class="o">::</span><span class="n">SERVER_CALL</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;start_simulation&quot;</span><span class="p">};</span>
-</pre></div>
-</div>
-<p>Client-side usage:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">xlpmg</span><span class="o">::</span><span class="n">Communicator</span><span class="w"> </span><span class="n">m_communicator</span><span class="p">;</span>
-<span class="n">m_communicator</span><span class="p">.</span><span class="n">startClient</span><span class="p">(</span><span class="n">IPADDRESS</span><span class="p">,</span><span class="w"> </span><span class="n">PORT</span><span class="p">)</span>
-
-<span class="p">[...]</span>
-
-<span class="n">xlpmg</span><span class="o">::</span><span class="n">Message</span><span class="w"> </span><span class="n">startSimMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xlpmg</span><span class="o">::</span><span class="n">START_SIMULATION</span><span class="p">;</span>
-<span class="n">m_communicator</span><span class="p">.</span><span class="n">sendToServer</span><span class="p">(</span><span class="n">messageToJsonString</span><span class="p">(</span><span class="n">startSimMsg</span><span class="p">));</span>
-</pre></div>
-</div>
-<p>Server-side usage:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">xlpmg</span><span class="o">::</span><span class="n">Communicator</span><span class="w"> </span><span class="n">m_communicator</span><span class="p">;</span>
-<span class="n">m_communicator</span><span class="p">.</span><span class="n">startServer</span><span class="p">(</span><span class="n">m_PORT</span><span class="p">);</span>
-
-<span class="c1">// listen for key</span>
-</pre></div>
+in order to guarantee correct communication. For this, we decided to send all data in JSON format and a <code class="docutils literal notranslate"><span class="pre">Message</span></code> struct.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For further information, see <a class="reference internal" href="../namespaces/lib.html#ns-lib"><span class="std std-ref">lib</span></a></p>
 </div>
 </section>
-<section id="server">
-<h2>Server<a class="headerlink" href="#server" title="Link to this heading"></a></h2>
-<p>TODO</p>
 </section>
 </section>
 
@@ -199,7 +245,7 @@ is rather just a tool for us to develop the actually interesting code.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

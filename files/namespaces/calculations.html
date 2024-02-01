@@ -56,8 +56,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Calculations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Calculations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab12calculationsE"><code class="docutils literal notranslate"><span class="pre">calculations</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab12calculations6FroudeE"><code class="docutils literal notranslate"><span class="pre">calculations::Froude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">lib</a></li>
 <li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
@@ -93,17 +100,20 @@
              
   <section id="calculations">
 <span id="ns-calc"></span><h1>Calculations<a class="headerlink" href="#calculations" title="Link to this heading"></a></h1>
-<dl class="cpp class">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Froude</span></span></span><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab12calculationsE">
+<span id="_CPPv3N11tsunami_lab12calculationsE"></span><span id="_CPPv2N11tsunami_lab12calculationsE"></span><span id="tsunami_lab::calculations"></span><span class="target" id="namespacetsunami__lab_1_1calculations"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">calculations</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab12calculationsE" title="Link to this definition"></a><br /></dt>
+<dd><dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab12calculations6FroudeE">
+<span id="_CPPv3N11tsunami_lab12calculations6FroudeE"></span><span id="_CPPv2N11tsunami_lab12calculations6FroudeE"></span><span id="tsunami_lab::calculations::Froude"></span><span class="target" id="classtsunami__lab_1_1calculations_1_1_froude"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Froude</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab12calculations6FroudeE" title="Link to this definition"></a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;Froude.h&gt;</em></div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMaxFroude</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Setup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_setup</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_domainSize</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stepSize</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_maxFroude</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_maxFroudePosition</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Gets the maximum Froude number within a given domain.</p>
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab12calculations6Froude12getMaxFroudeEPN11tsunami_lab6setups5SetupE5t_idx6t_realR6t_realR6t_real">
+<span id="_CPPv3N11tsunami_lab12calculations6Froude12getMaxFroudeEPN11tsunami_lab6setups5SetupE5t_idx6t_realR6t_realR6t_real"></span><span id="_CPPv2N11tsunami_lab12calculations6Froude12getMaxFroudeEPN11tsunami_lab6setups5SetupE5t_idx6t_realR6t_realR6t_real"></span><span id="tsunami_lab::calculations::Froude::getMaxFroude__tsunami_lab::setups::SetupP.t_idx.t_real.t_realR.t_realR"></span><span class="target" id="classtsunami__lab_1_1calculations_1_1_froude_1abf8713c8438dbca6452af5ee13a68501"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMaxFroude</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="setups.html#_CPPv4N11tsunami_lab6setupsE" title="tsunami_lab::setups"><span class="n"><span class="pre">setups</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="setups.html#_CPPv4N11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_setup</span></span>, <span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_domainSize</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stepSize</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_maxFroude</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_maxFroudePosition</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab12calculations6Froude12getMaxFroudeEPN11tsunami_lab6setups5SetupE5t_idx6t_realR6t_realR6t_real" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the maximum <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number within a given domain.</p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach </p>
 </dd>
@@ -113,31 +123,31 @@
 </p>
 <section id="classtsunami__lab_1_1calculations_1_1_froude_1autotoc_md0">
 <h2>Description<a class="headerlink" href="#classtsunami__lab_1_1calculations_1_1_froude_1autotoc_md0" title="Link to this heading"></a></h2>
-<p>Froude number calculation </p>
+<p id="classtsunami__lab_1_1calculations_1_1_froude_1autotoc_md0"><a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number calculation </p>
 </section>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_setup</strong> – setup for which the Froude number will be calculated for </p></li>
+<li><p><strong>i_setup</strong> – setup for which the <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number will be calculated for </p></li>
 <li><p><strong>i_domainSize</strong> – size of the domain in which the max Fraude number will be searched for </p></li>
 <li><p><strong>i_stepSize</strong> – accuracy of the data queries towards th setup </p></li>
-<li><p><strong>o_maxFroude</strong> – maximum Froude number output </p></li>
-<li><p><strong>o_maxFroudePosition</strong> – position of the maximum Froude number</p></li>
+<li><p><strong>o_maxFroude</strong> – maximum <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number output </p></li>
+<li><p><strong>o_maxFroudePosition</strong> – position of the maximum <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getFroude</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">setups</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Setup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_setup</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_position</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_Froude</span></span><span class="sig-paren">)</span><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab12calculations6Froude9getFroudeEPN11tsunami_lab6setups5SetupE6t_realR6t_real">
+<span id="_CPPv3N11tsunami_lab12calculations6Froude9getFroudeEPN11tsunami_lab6setups5SetupE6t_realR6t_real"></span><span id="_CPPv2N11tsunami_lab12calculations6Froude9getFroudeEPN11tsunami_lab6setups5SetupE6t_realR6t_real"></span><span id="tsunami_lab::calculations::Froude::getFroude__tsunami_lab::setups::SetupP.t_real.t_realR"></span><span class="target" id="classtsunami__lab_1_1calculations_1_1_froude_1a311589a1e846377b1d152a21fb2a1f4d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getFroude</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="setups.html#_CPPv4N11tsunami_lab6setupsE" title="tsunami_lab::setups"><span class="n"><span class="pre">setups</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="setups.html#_CPPv4N11tsunami_lab6setups5SetupE" title="tsunami_lab::setups::Setup"><span class="n"><span class="pre">Setup</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_setup</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_position</span></span>, <span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_Froude</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab12calculations6Froude9getFroudeEPN11tsunami_lab6setups5SetupE6t_realR6t_real" title="Link to this definition"></a><br /></dt>
 <dd><p>Gets the Fraude number for a specified location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i_setup</strong> – setup for which the Froude number will be calculated for </p></li>
+<li><p><strong>i_setup</strong> – setup for which the <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number will be calculated for </p></li>
 <li><p><strong>i_position</strong> – location of the queried point </p></li>
-<li><p><strong>o_Froude</strong> – Froude number output </p></li>
+<li><p><strong>o_Froude</strong> – <a class="reference internal" href="#classtsunami__lab_1_1calculations_1_1_froude"><span class="std std-ref">Froude</span></a> number output </p></li>
 </ul>
 </dd>
 </dl>
@@ -147,12 +157,14 @@
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
 <dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_g</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">9.80665</span></span><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab12calculations6Froude3m_gE">
+<span id="_CPPv3N11tsunami_lab12calculations6Froude3m_gE"></span><span id="_CPPv2N11tsunami_lab12calculations6Froude3m_gE"></span><span id="tsunami_lab::calculations::Froude::m_g__t_real"></span><span class="target" id="classtsunami__lab_1_1calculations_1_1_froude_1a1a7f58223c66f7aa1a7fba61364cdd2b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_g</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">9.80665</span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab12calculations6Froude3m_gE" title="Link to this definition"></a><br /></dt>
 <dd><p>gravity </p>
 </dd></dl>
 
 </div>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -168,7 +180,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

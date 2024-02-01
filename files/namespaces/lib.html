@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lib &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/namespaces/lib.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Patches" href="patches.html" />
+    <link rel="prev" title="I/O" href="io.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Namespaces</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">lib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv45xlpmg"><code class="docutils literal notranslate"><span class="pre">xlpmg</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg11MessagePartE"><code class="docutils literal notranslate"><span class="pre">xlpmg::MessagePart</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE"><code class="docutils literal notranslate"><span class="pre">xlpmg::MessageExpectation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE"><code class="docutils literal notranslate"><span class="pre">xlpmg::MessageUrgency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg13messageToJsonE7Message"><code class="docutils literal notranslate"><span class="pre">xlpmg::messageToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg19messageToJsonStringE7Message"><code class="docutils literal notranslate"><span class="pre">xlpmg::messageToJsonString()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg13jsonToMessageE4json"><code class="docutils literal notranslate"><span class="pre">xlpmg::jsonToMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15KILL_SIMULATIONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::KILL_SIMULATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16WRITE_CHECKPOINTE"><code class="docutils literal notranslate"><span class="pre">xlpmg::WRITE_CHECKPOINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16PAUSE_SIMULATIONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::PAUSE_SIMULATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15SHUTDOWN_SERVERE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SHUTDOWN_SERVER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg5CHECKE"><code class="docutils literal notranslate"><span class="pre">xlpmg::CHECK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16START_SIMULATIONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::START_SIMULATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg19CONTINUE_SIMULATIONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::CONTINUE_SIMULATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15RESET_SIMULATORE"><code class="docutils literal notranslate"><span class="pre">xlpmg::RESET_SIMULATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg13TOGGLE_FILEIOE"><code class="docutils literal notranslate"><span class="pre">xlpmg::TOGGLE_FILEIO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg7COMPILEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::COMPILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16COMPILE_RUN_BASHE"><code class="docutils literal notranslate"><span class="pre">xlpmg::COMPILE_RUN_BASH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg18COMPILE_RUN_SBATCHE"><code class="docutils literal notranslate"><span class="pre">xlpmg::COMPILE_RUN_SBATCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg18DELETE_CHECKPOINTSE"><code class="docutils literal notranslate"><span class="pre">xlpmg::DELETE_CHECKPOINTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15DELETE_STATIONSE"><code class="docutils literal notranslate"><span class="pre">xlpmg::DELETE_STATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg10SET_OFFSETE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SET_OFFSET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15SET_CELL_AMOUNTE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SET_CELL_AMOUNT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg9SEND_FILEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SEND_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16LOAD_CONFIG_JSONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::LOAD_CONFIG_JSON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg16LOAD_CONFIG_FILEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::LOAD_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg20SET_READ_BUFFER_SIZEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SET_READ_BUFFER_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg20SET_SEND_BUFFER_SIZEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SET_SEND_BUFFER_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15GET_TIME_VALUESE"><code class="docutils literal notranslate"><span class="pre">xlpmg::GET_TIME_VALUES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg22GET_SYSTEM_INFORMATIONE"><code class="docutils literal notranslate"><span class="pre">xlpmg::GET_SYSTEM_INFORMATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg20GET_SIMULATION_SIZESE"><code class="docutils literal notranslate"><span class="pre">xlpmg::GET_SIMULATION_SIZES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15GET_HEIGHT_DATAE"><code class="docutils literal notranslate"><span class="pre">xlpmg::GET_HEIGHT_DATA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg19GET_BATHYMETRY_DATAE"><code class="docutils literal notranslate"><span class="pre">xlpmg::GET_BATHYMETRY_DATA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg9RECV_FILEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::RECV_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg22BUFFERED_SEND_FINISHEDE"><code class="docutils literal notranslate"><span class="pre">xlpmg::BUFFERED_SEND_FINISHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg15SERVER_RESPONSEE"><code class="docutils literal notranslate"><span class="pre">xlpmg::SERVER_RESPONSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE"><code class="docutils literal notranslate"><span class="pre">xlpmg::Message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5xlpmg12CommunicatorE"><code class="docutils literal notranslate"><span class="pre">Communicator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">UI</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/namespaces.html">Namespaces</a></li>
+      <li class="breadcrumb-item active">lib</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/namespaces/lib.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lib">
+<span id="ns-lib"></span><h1>lib<a class="headerlink" href="#lib" title="Link to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45xlpmg">
+<span id="_CPPv35xlpmg"></span><span id="_CPPv25xlpmg"></span><span id="xlpmg"></span><span class="target" id="namespacexlpmg"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xlpmg</span></span></span><a class="headerlink" href="#_CPPv45xlpmg" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="#classxlpmg_1_1_communicator"><span class="std std-ref">Communicator</span></a> API. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach</p>
+</dd>
+</dl>
+</p>
+<section id="namespacexlpmg_1autotoc_md68">
+<h2>Description<a class="headerlink" href="#namespacexlpmg_1autotoc_md68" title="Link to this heading"></a></h2>
+<p id="namespacexlpmg_1autotoc_md68">Library to easily create a client-server connection and handle its communication and logging.</p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Luca-Philipp Grumbach</p>
+</dd>
+</dl>
+</p>
+</section>
+<section id="namespacexlpmg_1autotoc_md69">
+<h2>Description<a class="headerlink" href="#namespacexlpmg_1autotoc_md69" title="Link to this heading"></a></h2>
+<p id="namespacexlpmg_1autotoc_md69">This file provides an interface with pre-defined messages to enable a correct transmission of information between client and server. </p>
+</section>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg11MessagePartE">
+<span id="_CPPv3N5xlpmg11MessagePartE"></span><span id="_CPPv2N5xlpmg11MessagePartE"></span><span class="target" id="namespacexlpmg_1ac4b8e5f132d5a7b59fa29824d357ee53"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MessagePart</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg11MessagePartE" title="Link to this definition"></a><br /></dt>
+<dd><p>Enum representing the different parts of a message. </p>
+<p>The MessagePart enum defines the different parts of a message, including the expectation, urgency, key, and arguments. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg11MessagePart11EXPECTATIONE">
+<span id="_CPPv3N5xlpmg11MessagePart11EXPECTATIONE"></span><span id="_CPPv2N5xlpmg11MessagePart11EXPECTATIONE"></span><span class="target" id="namespacexlpmg_1ac4b8e5f132d5a7b59fa29824d357ee53a4505a649eff617feb8e73996cc0f849f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EXPECTATION</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg11MessagePart11EXPECTATIONE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg11MessagePart7URGENCYE">
+<span id="_CPPv3N5xlpmg11MessagePart7URGENCYE"></span><span id="_CPPv2N5xlpmg11MessagePart7URGENCYE"></span><span class="target" id="namespacexlpmg_1ac4b8e5f132d5a7b59fa29824d357ee53ae0ec6cd7464adbabe335683456f1110e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">URGENCY</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg11MessagePart7URGENCYE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg11MessagePart3KEYE">
+<span id="_CPPv3N5xlpmg11MessagePart3KEYE"></span><span id="_CPPv2N5xlpmg11MessagePart3KEYE"></span><span class="target" id="namespacexlpmg_1ac4b8e5f132d5a7b59fa29824d357ee53a9e77c3d49dd3c2ec77c3bce5a17c6c4c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">KEY</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg11MessagePart3KEYE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg11MessagePart4ARGSE">
+<span id="_CPPv3N5xlpmg11MessagePart4ARGSE"></span><span id="_CPPv2N5xlpmg11MessagePart4ARGSE"></span><span class="target" id="namespacexlpmg_1ac4b8e5f132d5a7b59fa29824d357ee53a14c46d86698170ec0e3a0a13d55d8513"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ARGS</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg11MessagePart4ARGSE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg18MessageExpectationE">
+<span id="_CPPv3N5xlpmg18MessageExpectationE"></span><span id="_CPPv2N5xlpmg18MessageExpectationE"></span><span class="target" id="namespacexlpmg_1a344d14ea9b17ca4eb6a881a0c6bb1973"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MessageExpectation</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg18MessageExpectationE" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE">
+<span id="_CPPv3N5xlpmg18MessageExpectation11NO_RESPONSEE"></span><span id="_CPPv2N5xlpmg18MessageExpectation11NO_RESPONSEE"></span><span class="target" id="namespacexlpmg_1a344d14ea9b17ca4eb6a881a0c6bb1973a209b51ce72277ddfcedebb85c485d560"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NO_RESPONSE</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE">
+<span id="_CPPv3N5xlpmg18MessageExpectation15EXPECT_RESPONSEE"></span><span id="_CPPv2N5xlpmg18MessageExpectation15EXPECT_RESPONSEE"></span><span class="target" id="namespacexlpmg_1a344d14ea9b17ca4eb6a881a0c6bb1973ac637e8e2841841878e513a80ecbc2660"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg14MessageUrgencyE">
+<span id="_CPPv3N5xlpmg14MessageUrgencyE"></span><span id="_CPPv2N5xlpmg14MessageUrgencyE"></span><span class="target" id="namespacexlpmg_1a49f0c4fdb0304143af16540b983a91e7"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MessageUrgency</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg14MessageUrgency8CRITICAlE">
+<span id="_CPPv3N5xlpmg14MessageUrgency8CRITICAlE"></span><span id="_CPPv2N5xlpmg14MessageUrgency8CRITICAlE"></span><span class="target" id="namespacexlpmg_1a49f0c4fdb0304143af16540b983a91e7a3adcfd705e845746346aba25fca89827"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CRITICAl</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg14MessageUrgency4HIGHE">
+<span id="_CPPv3N5xlpmg14MessageUrgency4HIGHE"></span><span id="_CPPv2N5xlpmg14MessageUrgency4HIGHE"></span><span class="target" id="namespacexlpmg_1a49f0c4fdb0304143af16540b983a91e7aed4e82136670ec3b5790ac0433d62d45"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HIGH</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg14MessageUrgency6MEDIUME">
+<span id="_CPPv3N5xlpmg14MessageUrgency6MEDIUME"></span><span id="_CPPv2N5xlpmg14MessageUrgency6MEDIUME"></span><span class="target" id="namespacexlpmg_1a49f0c4fdb0304143af16540b983a91e7ab43c2dd600ff1d6446470fb8bb38cddc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MEDIUM</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg14MessageUrgency3LOWE">
+<span id="_CPPv3N5xlpmg14MessageUrgency3LOWE"></span><span id="_CPPv2N5xlpmg14MessageUrgency3LOWE"></span><span class="target" id="namespacexlpmg_1a49f0c4fdb0304143af16540b983a91e7a5c87feef1049e9b9ca9d170493cc7beb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LOW</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg14MessageUrgency3LOWE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacexlpmg_1a7af3cd7dba8dc565df78fe161e7a29f0"></span><span class="sig-name descname"><span class="pre">NLOHMANN_JSON_SERIALIZE_ENUM</span> <span class="pre">(MessageExpectation,</span> <span class="pre">{{NO_RESPONSE,</span> <span class="pre">&quot;no_response&quot;},</span> <span class="pre">{EXPECT_RESPONSE,</span> <span class="pre">&quot;expect_response&quot;}})</span></span></dt>
+<dd><p>Macro to briefly define a mapping between MessageExpectation enum and JSON. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacexlpmg_1a4a8996a53b5a038a55af0eb0ce39df35"></span><span class="sig-name descname"><span class="pre">NLOHMANN_JSON_SERIALIZE_ENUM</span> <span class="pre">(MessageUrgency,</span> <span class="pre">{{CRITICAl,</span> <span class="pre">&quot;critical&quot;},</span> <span class="pre">{HIGH,</span> <span class="pre">&quot;high&quot;},</span> <span class="pre">{MEDIUM,</span> <span class="pre">&quot;medium&quot;},</span> <span class="pre">{LOW,</span> <span class="pre">&quot;low&quot;}})</span></span></dt>
+<dd><p>Macro to briefly define a mapping between MessageUrgency enum and JSON. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg13messageToJsonE7Message">
+<span id="_CPPv3N5xlpmg13messageToJsonE7Message"></span><span id="_CPPv2N5xlpmg13messageToJsonE7Message"></span><span id="xlpmg::messageToJson__Message"></span><span class="target" id="namespacexlpmg_1a5a3a356a9240e986a26770401217976a"></span><span class="n"><span class="pre">json</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">messageToJson</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_message</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg13messageToJsonE7Message" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a <a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a> to json object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_message</strong> – message </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>message as json object </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg19messageToJsonStringE7Message">
+<span id="_CPPv3N5xlpmg19messageToJsonStringE7Message"></span><span id="_CPPv2N5xlpmg19messageToJsonStringE7Message"></span><span id="xlpmg::messageToJsonString__Message"></span><span class="target" id="namespacexlpmg_1a0afa260c14b6e240acaa2485f73fa24d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">messageToJsonString</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">message</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg19messageToJsonStringE7Message" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a <a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a> to a json string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_message</strong> – message </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>message as json string </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg13jsonToMessageE4json">
+<span id="_CPPv3N5xlpmg13jsonToMessageE4json"></span><span id="_CPPv2N5xlpmg13jsonToMessageE4json"></span><span id="xlpmg::jsonToMessage__json"></span><span class="target" id="namespacexlpmg_1a83cb5aa40e04acdc3af2c67e9369280d"></span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">jsonToMessage</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">json</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_json</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg13jsonToMessageE4json" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a json object to a <a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_json</strong> – json object </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>message </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15KILL_SIMULATIONE">
+<span id="_CPPv3N5xlpmg15KILL_SIMULATIONE"></span><span id="_CPPv2N5xlpmg15KILL_SIMULATIONE"></span><span id="xlpmg::KILL_SIMULATION__MessageC"></span><span class="target" id="namespacexlpmg_1a88dfc3d26763897e55d0d18951a21e39"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">KILL_SIMULATION</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;kill_simulation&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15KILL_SIMULATIONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Server will stop the running simulation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16WRITE_CHECKPOINTE">
+<span id="_CPPv3N5xlpmg16WRITE_CHECKPOINTE"></span><span id="_CPPv2N5xlpmg16WRITE_CHECKPOINTE"></span><span id="xlpmg::WRITE_CHECKPOINT__MessageC"></span><span class="target" id="namespacexlpmg_1a683dc131bf6f074e080f094e19f42942"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WRITE_CHECKPOINT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;write_checkpoint&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16WRITE_CHECKPOINTE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the Simulator to write a checkpoint. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16PAUSE_SIMULATIONE">
+<span id="_CPPv3N5xlpmg16PAUSE_SIMULATIONE"></span><span id="_CPPv2N5xlpmg16PAUSE_SIMULATIONE"></span><span id="xlpmg::PAUSE_SIMULATION__MessageC"></span><span class="target" id="namespacexlpmg_1a97ffddd626b4cae28cd3ba1b30eaa27f"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PAUSE_SIMULATION</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;pause_simulation&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16PAUSE_SIMULATIONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Pauses a simulation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15SHUTDOWN_SERVERE">
+<span id="_CPPv3N5xlpmg15SHUTDOWN_SERVERE"></span><span id="_CPPv2N5xlpmg15SHUTDOWN_SERVERE"></span><span id="xlpmg::SHUTDOWN_SERVER__MessageC"></span><span class="target" id="namespacexlpmg_1a0e18c49c06da2d6264625ee2c943f16a"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SHUTDOWN_SERVER</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;shutdown_server&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15SHUTDOWN_SERVERE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to shutdown. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg5CHECKE">
+<span id="_CPPv3N5xlpmg5CHECKE"></span><span id="_CPPv2N5xlpmg5CHECKE"></span><span id="xlpmg::CHECK__MessageC"></span><span class="target" id="namespacexlpmg_1a9cee8bb87fe9cf277478d87295b8860a"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CHECK</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;CHECK&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg5CHECKE" title="Link to this definition"></a><br /></dt>
+<dd><p>Should not not induce any functionality and is only used to check if the other side responds. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16START_SIMULATIONE">
+<span id="_CPPv3N5xlpmg16START_SIMULATIONE"></span><span id="_CPPv2N5xlpmg16START_SIMULATIONE"></span><span id="xlpmg::START_SIMULATION__MessageC"></span><span class="target" id="namespacexlpmg_1aa723d767c397807a9cf73a349d2d3897"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">START_SIMULATION</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;start_simulation&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16START_SIMULATIONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to start the simulator. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg19CONTINUE_SIMULATIONE">
+<span id="_CPPv3N5xlpmg19CONTINUE_SIMULATIONE"></span><span id="_CPPv2N5xlpmg19CONTINUE_SIMULATIONE"></span><span id="xlpmg::CONTINUE_SIMULATION__MessageC"></span><span class="target" id="namespacexlpmg_1a25b636d393ab3aecadb37eac611de563"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CONTINUE_SIMULATION</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;continue_simulation&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg19CONTINUE_SIMULATIONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Continues a simulation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15RESET_SIMULATORE">
+<span id="_CPPv3N5xlpmg15RESET_SIMULATORE"></span><span id="_CPPv2N5xlpmg15RESET_SIMULATORE"></span><span id="xlpmg::RESET_SIMULATOR__MessageC"></span><span class="target" id="namespacexlpmg_1a5959f644742cc5eafb9cb43a0454aa22"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RESET_SIMULATOR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;reset_simulator&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15RESET_SIMULATORE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the Simulator to reset. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg13TOGGLE_FILEIOE">
+<span id="_CPPv3N5xlpmg13TOGGLE_FILEIOE"></span><span id="_CPPv2N5xlpmg13TOGGLE_FILEIOE"></span><span id="xlpmg::TOGGLE_FILEIO__MessageC"></span><span class="target" id="namespacexlpmg_1ae8af93ce96613ef20dc8aa08566d4b61"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TOGGLE_FILEIO</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;toggle_fileio&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg13TOGGLE_FILEIOE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the Simulator to toggle file i/o usage to given argument. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7COMPILEE">
+<span id="_CPPv3N5xlpmg7COMPILEE"></span><span id="_CPPv2N5xlpmg7COMPILEE"></span><span id="xlpmg::COMPILE__MessageC"></span><span class="target" id="namespacexlpmg_1a70f9e4f7ac62da9f01540e848d9b86b7"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">COMPILE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;compile&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg7COMPILEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Server will recompile with provided arguments. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16COMPILE_RUN_BASHE">
+<span id="_CPPv3N5xlpmg16COMPILE_RUN_BASHE"></span><span id="_CPPv2N5xlpmg16COMPILE_RUN_BASHE"></span><span id="xlpmg::COMPILE_RUN_BASH__MessageC"></span><span class="target" id="namespacexlpmg_1addcc459c34a0f5f7d89020fbfb742253"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">COMPILE_RUN_BASH</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;compile_run_bash&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16COMPILE_RUN_BASHE" title="Link to this definition"></a><br /></dt>
+<dd><p>Server will recompile with provided arguments and run using a bash script. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg18COMPILE_RUN_SBATCHE">
+<span id="_CPPv3N5xlpmg18COMPILE_RUN_SBATCHE"></span><span id="_CPPv2N5xlpmg18COMPILE_RUN_SBATCHE"></span><span id="xlpmg::COMPILE_RUN_SBATCH__MessageC"></span><span class="target" id="namespacexlpmg_1a1a50f74cbd5c83a9a31958314a537975"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">COMPILE_RUN_SBATCH</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;compile_run_sbatch&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg18COMPILE_RUN_SBATCHE" title="Link to this definition"></a><br /></dt>
+<dd><p>Server will recompile with provided arguments and run using an sbatch script. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg18DELETE_CHECKPOINTSE">
+<span id="_CPPv3N5xlpmg18DELETE_CHECKPOINTSE"></span><span id="_CPPv2N5xlpmg18DELETE_CHECKPOINTSE"></span><span id="xlpmg::DELETE_CHECKPOINTS__MessageC"></span><span class="target" id="namespacexlpmg_1abd8f138375d8660771ca7530ffbe7efc"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DELETE_CHECKPOINTS</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;delete_checkpoints&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg18DELETE_CHECKPOINTSE" title="Link to this definition"></a><br /></dt>
+<dd><p>Deletes checkpoints. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15DELETE_STATIONSE">
+<span id="_CPPv3N5xlpmg15DELETE_STATIONSE"></span><span id="_CPPv2N5xlpmg15DELETE_STATIONSE"></span><span id="xlpmg::DELETE_STATIONS__MessageC"></span><span class="target" id="namespacexlpmg_1a594521d5df1f597042bf6b5fb0e87e28"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DELETE_STATIONS</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;delete_stations&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15DELETE_STATIONSE" title="Link to this definition"></a><br /></dt>
+<dd><p>Deletes stations. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg10SET_OFFSETE">
+<span id="_CPPv3N5xlpmg10SET_OFFSETE"></span><span id="_CPPv2N5xlpmg10SET_OFFSETE"></span><span id="xlpmg::SET_OFFSET__MessageC"></span><span class="target" id="namespacexlpmg_1a23e93e9de98273d919e12cb9f45973f4"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SET_OFFSET</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;set_offset&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg10SET_OFFSETE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the cell amount of the simulation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15SET_CELL_AMOUNTE">
+<span id="_CPPv3N5xlpmg15SET_CELL_AMOUNTE"></span><span id="_CPPv2N5xlpmg15SET_CELL_AMOUNTE"></span><span id="xlpmg::SET_CELL_AMOUNT__MessageC"></span><span class="target" id="namespacexlpmg_1a0a98c7b24f936a73e83ef730bf4de7c4"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SET_CELL_AMOUNT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;set_cell_amount&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15SET_CELL_AMOUNTE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the offset of the simulation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg9SEND_FILEE">
+<span id="_CPPv3N5xlpmg9SEND_FILEE"></span><span id="_CPPv2N5xlpmg9SEND_FILEE"></span><span id="xlpmg::SEND_FILE__MessageC"></span><span class="target" id="namespacexlpmg_1aa1478c01dc91a37edd3812e9efd577ac"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SEND_FILE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency3LOWE" title="xlpmg::MessageUrgency::LOW"><span class="n"><span class="pre">LOW</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;send_file&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg9SEND_FILEE" title="Link to this definition"></a><br /></dt>
+<dd><p>For sending a file to the server. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16LOAD_CONFIG_JSONE">
+<span id="_CPPv3N5xlpmg16LOAD_CONFIG_JSONE"></span><span id="_CPPv2N5xlpmg16LOAD_CONFIG_JSONE"></span><span id="xlpmg::LOAD_CONFIG_JSON__MessageC"></span><span class="target" id="namespacexlpmg_1a95008f6bf035304d2a2a9d5620e2e87e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LOAD_CONFIG_JSON</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency3LOWE" title="xlpmg::MessageUrgency::LOW"><span class="n"><span class="pre">LOW</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;load_config_json&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16LOAD_CONFIG_JSONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the Simulator to load config from json data. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg16LOAD_CONFIG_FILEE">
+<span id="_CPPv3N5xlpmg16LOAD_CONFIG_FILEE"></span><span id="_CPPv2N5xlpmg16LOAD_CONFIG_FILEE"></span><span id="xlpmg::LOAD_CONFIG_FILE__MessageC"></span><span class="target" id="namespacexlpmg_1afab85e6579cccc40e24d8f022bacd76f"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LOAD_CONFIG_FILE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency3LOWE" title="xlpmg::MessageUrgency::LOW"><span class="n"><span class="pre">LOW</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;load_config_file&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg16LOAD_CONFIG_FILEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the Simulator to load config from .json config file. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg20SET_READ_BUFFER_SIZEE">
+<span id="_CPPv3N5xlpmg20SET_READ_BUFFER_SIZEE"></span><span id="_CPPv2N5xlpmg20SET_READ_BUFFER_SIZEE"></span><span id="xlpmg::SET_READ_BUFFER_SIZE__MessageC"></span><span class="target" id="namespacexlpmg_1a774e47ec0f6bf3e929ffe2b3ad510cfa"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SET_READ_BUFFER_SIZE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;set_read_buffer_size&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg20SET_READ_BUFFER_SIZEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to change the read buffer size. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg20SET_SEND_BUFFER_SIZEE">
+<span id="_CPPv3N5xlpmg20SET_SEND_BUFFER_SIZEE"></span><span id="_CPPv2N5xlpmg20SET_SEND_BUFFER_SIZEE"></span><span id="xlpmg::SET_SEND_BUFFER_SIZE__MessageC"></span><span class="target" id="namespacexlpmg_1acc9c13cb3ca550d5110ddd4f55a00448"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SET_SEND_BUFFER_SIZE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;set_send_buffer_size&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg20SET_SEND_BUFFER_SIZEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to change the send buffer size. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15GET_TIME_VALUESE">
+<span id="_CPPv3N5xlpmg15GET_TIME_VALUESE"></span><span id="_CPPv2N5xlpmg15GET_TIME_VALUESE"></span><span id="xlpmg::GET_TIME_VALUES__MessageC"></span><span class="target" id="namespacexlpmg_1a7576e135bfc4cde8b46af63ee0a9951e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GET_TIME_VALUES</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;get_time_values&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15GET_TIME_VALUESE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the current timestep from the simulator. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg22GET_SYSTEM_INFORMATIONE">
+<span id="_CPPv3N5xlpmg22GET_SYSTEM_INFORMATIONE"></span><span id="_CPPv2N5xlpmg22GET_SYSTEM_INFORMATIONE"></span><span id="xlpmg::GET_SYSTEM_INFORMATION__MessageC"></span><span class="target" id="namespacexlpmg_1a98cd425bc55d603a04be2d4685353a1e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GET_SYSTEM_INFORMATION</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;get_system_information&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg22GET_SYSTEM_INFORMATIONE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets system info such as CPU and RAM usage. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg20GET_SIMULATION_SIZESE">
+<span id="_CPPv3N5xlpmg20GET_SIMULATION_SIZESE"></span><span id="_CPPv2N5xlpmg20GET_SIMULATION_SIZESE"></span><span id="xlpmg::GET_SIMULATION_SIZES__MessageC"></span><span class="target" id="namespacexlpmg_1a45bd2a5d6703e8970116a1512c96facf"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GET_SIMULATION_SIZES</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;get_simulation_sizes&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg20GET_SIMULATION_SIZESE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the current simulation sizes from the simulator. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15GET_HEIGHT_DATAE">
+<span id="_CPPv3N5xlpmg15GET_HEIGHT_DATAE"></span><span id="_CPPv2N5xlpmg15GET_HEIGHT_DATAE"></span><span id="xlpmg::GET_HEIGHT_DATA__MessageC"></span><span class="target" id="namespacexlpmg_1ae19fa66fe0995800d7da2b914629b50c"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GET_HEIGHT_DATA</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;get_height_data&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15GET_HEIGHT_DATAE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to start sending height data. (buffered) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg19GET_BATHYMETRY_DATAE">
+<span id="_CPPv3N5xlpmg19GET_BATHYMETRY_DATAE"></span><span id="_CPPv2N5xlpmg19GET_BATHYMETRY_DATAE"></span><span id="xlpmg::GET_BATHYMETRY_DATA__MessageC"></span><span class="target" id="namespacexlpmg_1ac7b472d799d17d22bae9a065bde92f63"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GET_BATHYMETRY_DATA</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency4HIGHE" title="xlpmg::MessageUrgency::HIGH"><span class="n"><span class="pre">HIGH</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;get_bathymetry_data&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg19GET_BATHYMETRY_DATAE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the server to start sending bathymetry data. (buffered) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg9RECV_FILEE">
+<span id="_CPPv3N5xlpmg9RECV_FILEE"></span><span id="_CPPv2N5xlpmg9RECV_FILEE"></span><span id="xlpmg::RECV_FILE__MessageC"></span><span class="target" id="namespacexlpmg_1aa44846fcb52f38bc55209190600da8fe"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RECV_FILE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation15EXPECT_RESPONSEE" title="xlpmg::MessageExpectation::EXPECT_RESPONSE"><span class="n"><span class="pre">EXPECT_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency3LOWE" title="xlpmg::MessageUrgency::LOW"><span class="n"><span class="pre">LOW</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;recv_file&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg9RECV_FILEE" title="Link to this definition"></a><br /></dt>
+<dd><p>For receiving a file from the server. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg22BUFFERED_SEND_FINISHEDE">
+<span id="_CPPv3N5xlpmg22BUFFERED_SEND_FINISHEDE"></span><span id="_CPPv2N5xlpmg22BUFFERED_SEND_FINISHEDE"></span><span id="xlpmg::BUFFERED_SEND_FINISHED__MessageC"></span><span class="target" id="namespacexlpmg_1a48a21f1ac418e1b6550d13c75e7bdf6c"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BUFFERED_SEND_FINISHED</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;buff_send_finished&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg22BUFFERED_SEND_FINISHEDE" title="Link to this definition"></a><br /></dt>
+<dd><p>Tells the client that a buffered sending operation has finished. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg15SERVER_RESPONSEE">
+<span id="_CPPv3N5xlpmg15SERVER_RESPONSEE"></span><span id="_CPPv2N5xlpmg15SERVER_RESPONSEE"></span><span id="xlpmg::SERVER_RESPONSE__MessageC"></span><span class="target" id="namespacexlpmg_1a7ee45072f729f13b451bd29f61378d6b"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg7MessageE" title="xlpmg::Message"><span class="n"><span class="pre">Message</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SERVER_RESPONSE</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency8CRITICAlE" title="xlpmg::MessageUrgency::CRITICAl"><span class="n"><span class="pre">CRITICAl</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;server_response&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N5xlpmg15SERVER_RESPONSEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Server response template. </p>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7MessageE">
+<span id="_CPPv3N5xlpmg7MessageE"></span><span id="_CPPv2N5xlpmg7MessageE"></span><span id="xlpmg::Message"></span><span class="target" id="structxlpmg_1_1_message"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Message</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg7MessageE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;communicator_api.h&gt;</em></div>
+<p>Struct representing a message in the communicator API.</p>
+<section id="structxlpmg_1_1_message_1autotoc_md70">
+<h2>Description<a class="headerlink" href="#structxlpmg_1_1_message_1autotoc_md70" title="Link to this heading"></a></h2>
+<p id="structxlpmg_1_1_message_1autotoc_md70">This struct contains information about the urgency, key, and arguments of a message. </p>
+</section>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7Message11expectationE">
+<span id="_CPPv3N5xlpmg7Message11expectationE"></span><span id="_CPPv2N5xlpmg7Message11expectationE"></span><span id="xlpmg::Message::expectation__MessageExpectation"></span><span class="target" id="structxlpmg_1_1_message_1a122a3cf9d59af5c9cfb353713d6b3e56"></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expectation</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectationE" title="xlpmg::MessageExpectation"><span class="n"><span class="pre">MessageExpectation</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg18MessageExpectation11NO_RESPONSEE" title="xlpmg::MessageExpectation::NO_RESPONSE"><span class="n"><span class="pre">NO_RESPONSE</span></span></a><a class="headerlink" href="#_CPPv4N5xlpmg7Message11expectationE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7Message7urgencyE">
+<span id="_CPPv3N5xlpmg7Message7urgencyE"></span><span id="_CPPv2N5xlpmg7Message7urgencyE"></span><span id="xlpmg::Message::urgency__MessageUrgency"></span><span class="target" id="structxlpmg_1_1_message_1adde673da08bbb390ae18fa1aedc159c7"></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">urgency</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgencyE" title="xlpmg::MessageUrgency"><span class="n"><span class="pre">MessageUrgency</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5xlpmg14MessageUrgency6MEDIUME" title="xlpmg::MessageUrgency::MEDIUM"><span class="n"><span class="pre">MEDIUM</span></span></a><a class="headerlink" href="#_CPPv4N5xlpmg7Message7urgencyE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7Message3keyE">
+<span id="_CPPv3N5xlpmg7Message3keyE"></span><span id="_CPPv2N5xlpmg7Message3keyE"></span><span id="xlpmg::Message::key__ss"></span><span class="target" id="structxlpmg_1_1_message_1afe483672d0926feaba55ad365ef35288"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">key</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;NONE&quot;</span></span><a class="headerlink" href="#_CPPv4N5xlpmg7Message3keyE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg7Message4argsE">
+<span id="_CPPv3N5xlpmg7Message4argsE"></span><span id="_CPPv2N5xlpmg7Message4argsE"></span><span id="xlpmg::Message::args__json"></span><span class="target" id="structxlpmg_1_1_message_1a7b384f605c79a6da203a7ad4b044d382"></span><span class="n"><span class="pre">json</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">args</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><a class="headerlink" href="#_CPPv4N5xlpmg7Message4argsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12CommunicatorE">
+<span id="_CPPv3N5xlpmg12CommunicatorE"></span><span id="_CPPv2N5xlpmg12CommunicatorE"></span><span id="xlpmg::Communicator"></span><span class="target" id="classxlpmg_1_1_communicator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Communicator</span></span></span><a class="headerlink" href="#_CPPv4N5xlpmg12CommunicatorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator17setReadBufferSizeEj">
+<span id="_CPPv3N5xlpmg12Communicator17setReadBufferSizeEj"></span><span id="_CPPv2N5xlpmg12Communicator17setReadBufferSizeEj"></span><span id="xlpmg::Communicator::setReadBufferSize__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1ad36fe577b34d45a6f6675a093f270154"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setReadBufferSize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">newSize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator17setReadBufferSizeEj" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the read buffer size. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newSize</strong> – The new size of the read buffer. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator17setSendBufferSizeEj">
+<span id="_CPPv3N5xlpmg12Communicator17setSendBufferSizeEj"></span><span id="_CPPv2N5xlpmg12Communicator17setSendBufferSizeEj"></span><span id="xlpmg::Communicator::setSendBufferSize__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1a33b76ee367cf61d9451324de34e4ab68"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setSendBufferSize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">newSize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator17setSendBufferSizeEj" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the send buffer size. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newSize</strong> – The new size of the send buffer. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator11startClientEPci">
+<span id="_CPPv3N5xlpmg12Communicator11startClientEPci"></span><span id="_CPPv2N5xlpmg12Communicator11startClientEPci"></span><span id="xlpmg::Communicator::startClient__cP.i"></span><span class="target" id="classxlpmg_1_1_communicator_1a95c2aa9202e6cc9532605ca9581ad586"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">startClient</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">IPADDRESS</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">PORT</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator11startClientEPci" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a client socket and searches for a server. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>PORT</strong> – Port for communication with server. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, -1 for errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator10stopClientEv">
+<span id="_CPPv3N5xlpmg12Communicator10stopClientEv"></span><span id="_CPPv2N5xlpmg12Communicator10stopClientEv"></span><span id="xlpmg::Communicator::stopClient"></span><span class="target" id="classxlpmg_1_1_communicator_1aa7e4eac08359c1ea2157c6520a851986"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stopClient</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator10stopClientEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Stops all connections of the client socket. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator17receiveFromServerElb">
+<span id="_CPPv3N5xlpmg12Communicator17receiveFromServerElb"></span><span id="_CPPv2N5xlpmg12Communicator17receiveFromServerElb"></span><span id="xlpmg::Communicator::receiveFromServer__l.b"></span><span class="target" id="classxlpmg_1_1_communicator_1aeea949a04b9328874b4b27576adeeede"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">receiveFromServer</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeout</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg12Communicator7TIMEOUTE" title="xlpmg::Communicator::TIMEOUT"><span class="n"><span class="pre">TIMEOUT</span></span></a>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator17receiveFromServerElb" title="Link to this definition"></a><br /></dt>
+<dd><p>Receives a message from the server. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout</strong> – Timeout for the operation in seconds. </p></li>
+<li><p><strong>log</strong> – Whether the message should be logged or not. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a> as string. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator12sendToServerENSt6stringElb">
+<span id="_CPPv3N5xlpmg12Communicator12sendToServerENSt6stringElb"></span><span id="_CPPv2N5xlpmg12Communicator12sendToServerENSt6stringElb"></span><span id="xlpmg::Communicator::sendToServer__ss.l.b"></span><span class="target" id="classxlpmg_1_1_communicator_1a7c58687e28dfacde35b516a6ada1a240"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sendToServer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">message</span></span>, <span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeout</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg12Communicator7TIMEOUTE" title="xlpmg::Communicator::TIMEOUT"><span class="n"><span class="pre">TIMEOUT</span></span></a>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator12sendToServerENSt6stringElb" title="Link to this definition"></a><br /></dt>
+<dd><p>Sends a message to the server. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – String to send. </p></li>
+<li><p><strong>timeout</strong> – Timeout for the operation in seconds. </p></li>
+<li><p><strong>log</strong> – Whether the message should be logged or not. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 if successful, 1 otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator6getLogERNSt6stringE">
+<span id="_CPPv3N5xlpmg12Communicator6getLogERNSt6stringE"></span><span id="_CPPv2N5xlpmg12Communicator6getLogERNSt6stringE"></span><span id="xlpmg::Communicator::getLog__ssR"></span><span class="target" id="classxlpmg_1_1_communicator_1adb2fcee5acf1c6b33579a606d423299c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getLog</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_logData</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator6getLogERNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the log data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o_logData</strong> – Pointer to the string which the log will be written into. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator8clearLogEv">
+<span id="_CPPv3N5xlpmg12Communicator8clearLogEv"></span><span id="_CPPv2N5xlpmg12Communicator8clearLogEv"></span><span id="xlpmg::Communicator::clearLog"></span><span class="target" id="classxlpmg_1_1_communicator_1a58c944b892e7c8bb0406aa705515fe16"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clearLog</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator8clearLogEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Clears the log data. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator11startServerEi">
+<span id="_CPPv3N5xlpmg12Communicator11startServerEi"></span><span id="_CPPv2N5xlpmg12Communicator11startServerEi"></span><span id="xlpmg::Communicator::startServer__i"></span><span class="target" id="classxlpmg_1_1_communicator_1ad1b79c5ea333a1463bd44115c3b7acd4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">startServer</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">PORT</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator11startServerEi" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a server socket and waits for connections. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>PORT</strong> – Port for communication with client. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator10stopServerEv">
+<span id="_CPPv3N5xlpmg12Communicator10stopServerEv"></span><span id="_CPPv2N5xlpmg12Communicator10stopServerEv"></span><span id="xlpmg::Communicator::stopServer"></span><span class="target" id="classxlpmg_1_1_communicator_1a12528ddba3ae7fe4a0c6e4dc1513c3dc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stopServer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator10stopServerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Stops all connections of the server. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator17receiveFromClientEb">
+<span id="_CPPv3N5xlpmg12Communicator17receiveFromClientEb"></span><span id="_CPPv2N5xlpmg12Communicator17receiveFromClientEb"></span><span id="xlpmg::Communicator::receiveFromClient__b"></span><span class="target" id="classxlpmg_1_1_communicator_1adf23dda12a5090289deb0695dc90ae6a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">receiveFromClient</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator17receiveFromClientEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Receives a message from a client. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log</strong> – Whether the message should be logged or not. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a> as string. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator12sendToClientENSt6stringEb">
+<span id="_CPPv3N5xlpmg12Communicator12sendToClientENSt6stringEb"></span><span id="_CPPv2N5xlpmg12Communicator12sendToClientENSt6stringEb"></span><span id="xlpmg::Communicator::sendToClient__ss.b"></span><span class="target" id="classxlpmg_1_1_communicator_1a9dcb03c985322dde11ca8685dc6b56d8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sendToClient</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">message</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator12sendToClientENSt6stringEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Sends a message to a client. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> – <a class="reference internal" href="#structxlpmg_1_1_message"><span class="std std-ref">Message</span></a> to send. </p></li>
+<li><p><strong>log</strong> – Whether the message should be logged or not. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator22BUFF_SIZE_READ_DEFAULTE">
+<span id="_CPPv3N5xlpmg12Communicator22BUFF_SIZE_READ_DEFAULTE"></span><span id="_CPPv2N5xlpmg12Communicator22BUFF_SIZE_READ_DEFAULTE"></span><span id="xlpmg::Communicator::BUFF_SIZE_READ_DEFAULT__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1a38c8d2b033535c4b566bebc06c4f8e39"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BUFF_SIZE_READ_DEFAULT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">8096</span></span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator22BUFF_SIZE_READ_DEFAULTE" title="Link to this definition"></a><br /></dt>
+<dd><p>default size of the reading buffer </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator14BUFF_SIZE_READE">
+<span id="_CPPv3N5xlpmg12Communicator14BUFF_SIZE_READE"></span><span id="_CPPv2N5xlpmg12Communicator14BUFF_SIZE_READE"></span><span id="xlpmg::Communicator::BUFF_SIZE_READ__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1acb8191cf66e33383b570a5d00bf0b9e2"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BUFF_SIZE_READ</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg12Communicator22BUFF_SIZE_READ_DEFAULTE" title="xlpmg::Communicator::BUFF_SIZE_READ_DEFAULT"><span class="n"><span class="pre">BUFF_SIZE_READ_DEFAULT</span></span></a><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator14BUFF_SIZE_READE" title="Link to this definition"></a><br /></dt>
+<dd><p>actual size of the reading buffer </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator22BUFF_SIZE_SEND_DEFAULTE">
+<span id="_CPPv3N5xlpmg12Communicator22BUFF_SIZE_SEND_DEFAULTE"></span><span id="_CPPv2N5xlpmg12Communicator22BUFF_SIZE_SEND_DEFAULTE"></span><span id="xlpmg::Communicator::BUFF_SIZE_SEND_DEFAULT__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1aa8788ddb06697afdc6fde9af3f110248"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BUFF_SIZE_SEND_DEFAULT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">8096</span></span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator22BUFF_SIZE_SEND_DEFAULTE" title="Link to this definition"></a><br /></dt>
+<dd><p>default size of the sending buffer </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator14BUFF_SIZE_SENDE">
+<span id="_CPPv3N5xlpmg12Communicator14BUFF_SIZE_SENDE"></span><span id="_CPPv2N5xlpmg12Communicator14BUFF_SIZE_SENDE"></span><span id="xlpmg::Communicator::BUFF_SIZE_SEND__unsigned-i"></span><span class="target" id="classxlpmg_1_1_communicator_1afa263c554e38947be14e5897b3b7a1ca"></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BUFF_SIZE_SEND</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5xlpmg12Communicator22BUFF_SIZE_SEND_DEFAULTE" title="xlpmg::Communicator::BUFF_SIZE_SEND_DEFAULT"><span class="n"><span class="pre">BUFF_SIZE_SEND_DEFAULT</span></span></a><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator14BUFF_SIZE_SENDE" title="Link to this definition"></a><br /></dt>
+<dd><p>actual size of the sending buffer </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator11isConnectedE">
+<span id="_CPPv3N5xlpmg12Communicator11isConnectedE"></span><span id="_CPPv2N5xlpmg12Communicator11isConnectedE"></span><span id="xlpmg::Communicator::isConnected__b"></span><span class="target" id="classxlpmg_1_1_communicator_1a37706b6f6556795039a68e102b429a78"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isConnected</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator11isConnectedE" title="Link to this definition"></a><br /></dt>
+<dd><p>true if there is a connection </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5xlpmg12Communicator7TIMEOUTE">
+<span id="_CPPv3N5xlpmg12Communicator7TIMEOUTE"></span><span id="_CPPv2N5xlpmg12Communicator7TIMEOUTE"></span><span id="xlpmg::Communicator::TIMEOUT__lC"></span><span class="target" id="classxlpmg_1_1_communicator_1a7bf2e8256b4141521492c050ab836659"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIMEOUT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv4N5xlpmg12Communicator7TIMEOUTE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="io.html" class="btn btn-neutral float-left" title="I/O" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="patches.html" class="btn btn-neutral float-right" title="Patches" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

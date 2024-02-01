@@ -139,7 +139,8 @@
 </pre></div>
 </div>
 <p>And got following results:</p>
-<p><strong>Without parallelization</strong></p>
+<section id="without-parallelization">
+<h4>Without parallelization<a class="headerlink" href="#without-parallelization" title="Link to this heading"></a></h4>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
 entering time loop
 finished time loop
@@ -149,7 +150,9 @@ Calculation time: 1.94101e+06ms
 = 32.3501 minutes
 </pre></div>
 </div>
-<p><strong>With parallelization on 72 cores with 72 threads</strong></p>
+</section>
+<section id="with-parallelization-on-72-cores-with-72-threads">
+<h4>With parallelization on 72 cores with 72 threads<a class="headerlink" href="#with-parallelization-on-72-cores-with-72-threads" title="Link to this heading"></a></h4>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
 entering time loop
 finished time loop
@@ -164,7 +167,9 @@ Calculation time: 75507.5ms
 <p>We compiled in benchmark mode (no IO).</p>
 </div>
 <p>Speedup: <span class="math notranslate nohighlight">\(\frac{1941}{75.5} = 25.7\)</span></p>
-<p><strong>With parallelization on 72 cores with 144 threads</strong></p>
+</section>
+<section id="with-parallelization-on-72-cores-with-144-threads">
+<h4>With parallelization on 72 cores with 144 threads<a class="headerlink" href="#with-parallelization-on-72-cores-with-144-threads" title="Link to this heading"></a></h4>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Note: max 10520 steps will be computed.
 entering time loop
 finished time loop
@@ -177,6 +182,7 @@ Calculation time: 215822ms
 <p>Speedup: <span class="math notranslate nohighlight">\(\frac{1941}{215} = 8.99\)</span></p>
 <p>We can see that having twice the amount of threads resulted in a much slower computation.
 We conclude that using more threads than cores results in a slowed down performance.</p>
+</section>
 </section>
 <section id="d-for-loop-parallelization">
 <h3>9.1.3 - 2D for loop parallelization<a class="headerlink" href="#d-for-loop-parallelization" title="Link to this heading"></a></h3>
@@ -191,7 +197,8 @@ The parallelized inner loops leads to following time:</p>
 </section>
 <section id="pinning-and-scheduling">
 <h3>9.1.4 - Pinning and Scheduling<a class="headerlink" href="#pinning-and-scheduling" title="Link to this heading"></a></h3>
-<p><strong>Scheduling</strong></p>
+<section id="scheduling">
+<h4>Scheduling<a class="headerlink" href="#scheduling" title="Link to this heading"></a></h4>
 <p>The upper implementation used the basic <code class="code docutils literal notranslate"><span class="pre">scheduling(static)</span></code>.</p>
 <p>For <code class="code docutils literal notranslate"><span class="pre">scheduling(dynamic)</span></code> we get:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 1.57024e+06ms
@@ -211,7 +218,9 @@ The parallelized inner loops leads to following time:</p>
     = 1.40911 minutes
 </pre></div>
 </div>
-<p><strong>Pinning</strong></p>
+</section>
+<section id="pinning">
+<h4>Pinning<a class="headerlink" href="#pinning" title="Link to this heading"></a></h4>
 <p>Using <code class="code docutils literal notranslate"><span class="pre">OMP_PLACES={0}:36:1</span></code> we get:</p>
 <img alt="../../_images/task_9-4-1_Pinning_36.png" src="../../_images/task_9-4-1_Pinning_36.png" />
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculation time: 1.39672e+06ms
@@ -230,6 +239,7 @@ The parallelized inner loops leads to following time:</p>
 </section>
 </section>
 </section>
+</section>
 
 
            </div>
@@ -242,7 +252,7 @@ The parallelized inner loops leads to following time:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
