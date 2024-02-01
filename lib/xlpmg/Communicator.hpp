@@ -4,8 +4,8 @@
  * # Description
  * Library to easily create a client-server connection and handle its communication and logging.
  **/
-#ifndef COMMUNICATOR_H
-#define COMMUNICATOR_H
+#ifndef XLPMG_COMMUNICATOR_H
+#define XLPMG_COMMUNICATOR_H
 
 #include <stdio.h>
 #include <string.h>
@@ -27,28 +27,38 @@ namespace xlpmg
     class Communicator
     {
     private:
-        int TIMEOUT = 2;
+        // Log data for storing communication logs
         std::string logData = "";
+        // Client socket related variables
         int sockStatus, sockValread, sockClient_fd = -1;
+        // Server socket related variables
         int server_fd, new_socket;
 
+        /**
+         * @enum LogType
+         * @brief Defines different types of log messages that can be logged during communication.
+         */
         enum LogType
         {
-            SENT,
-            RECEIVED,
-            ERROR,
-            INFO,
-            DEBUG
+            SENT,     // Sent message log type
+            RECEIVED, // Received message log type
+            ERROR,    // Error log type
+            INFO,     // Info log type
+            DEBUG     // Debug log type
         };
 
-        /// @brief Adds a string to the log with correct formatting.
-        /// @param message string to add to the log.
-        /// @param logtype @see xlpmg::Communicator::LogType
-        /// @param log Whether the message should be logged or not.
-        /// @param logtype type of message.
+        /**
+         *  @brief Adds a string to the log with correct formatting.
+         *  @param message string to add to the log.
+         *  @param logtype xlpmg::Communicator::LogType
+         *  @param log Whether the message should be logged or not.
+         *  @param replaceLastLine Whether the last line should be replaced or not.
+         *  @see xlpmg::Communicator::LogType
+         */
         void logEvent(std::string message, LogType logtype, bool log, bool replaceLastLine = false)
         {
-            if(!log){
+            if (!log)
+            {
                 return;
             }
 
@@ -101,25 +111,60 @@ namespace xlpmg
             }
         }
 
+        /**
+         * Sets the send timeout for a socket.
+         * @param socket The socket to set the send timeout for.
+         * @param timeout The timeout value in seconds.
+         */
+        void setSendTimeout(int socket, long timeout){
+            struct timeval tv;
+            tv.tv_sec = timeout;
+            tv.tv_usec = 0;
+            setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
+        }
+
+        /**
+         * Sets the receive timeout for a socket.
+         * @param socket The socket to set the receive timeout for.
+         * @param timeout The timeout value in seconds.
+         */
+        void setRecvTimeout(int socket, long timeout){
+            struct timeval tv;
+            tv.tv_sec = timeout;
+            tv.tv_usec = 0;
+            setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
+        }
+
     public:
+        // Timeout value for normal socket operations in seconds
+        static const long TIMEOUT = 2;
         //! default size of the reading buffer
-        const unsigned int BUFF_SIZE_READ_DEFAULT = 8096;
+        unsigned int BUFF_SIZE_READ_DEFAULT = 8096;
         //! actual size of the reading buffer
         unsigned int BUFF_SIZE_READ = BUFF_SIZE_READ_DEFAULT;
-
         //! default size of the sending buffer
-        const unsigned int BUFF_SIZE_SEND_DEFAULT = 8096;
+        unsigned int BUFF_SIZE_SEND_DEFAULT = 8096;
         //! actual size of the sending buffer
         unsigned int BUFF_SIZE_SEND = BUFF_SIZE_SEND_DEFAULT;
 
         //! true if there is a connection
         bool isConnected = false;
 
+        /**
+         * @brief Sets the read buffer size.
+         * 
+         * @param newSize The new size of the read buffer.
+         */
         void setReadBufferSize(unsigned int newSize)
         {
             BUFF_SIZE_READ = newSize;
         }
 
+        /**
+         * @brief Sets the send buffer size.
+         * 
+         * @param newSize The new size of the send buffer.
+         */
         void setSendBufferSize(unsigned int newSize)
         {
             BUFF_SIZE_SEND = newSize;
@@ -129,15 +174,14 @@ namespace xlpmg
         //     CLIENT     //
         ////////////////////
 
-        /// @brief Creates a client socket and searches for a server.
-        /// @param PORT Port for communication with server.
-        /// @return 0 on success, -1 for errors.
+        /**
+         * @brief Creates a client socket and searches for a server.
+         * @param PORT Port for communication with server.
+         * @return 0 on success, -1 for errors.
+         */
         int startClient(char *IPADDRESS, int PORT)
         {
             struct sockaddr_in serv_addr;
-            struct timeval tv;
-            tv.tv_sec = TIMEOUT;
-            tv.tv_usec = 0;
 
             if ((sockClient_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             {
@@ -147,8 +191,8 @@ namespace xlpmg
             }
             logEvent("Socket created.", INFO, true);
 
-            setsockopt(sockClient_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
-            setsockopt(sockClient_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
+            setSendTimeout(sockClient_fd, TIMEOUT);
+            setRecvTimeout(sockClient_fd, TIMEOUT);
 
             serv_addr.sin_family = AF_INET;
             serv_addr.sin_port = htons(PORT);
@@ -175,7 +219,9 @@ namespace xlpmg
             return sockStatus;
         }
 
-        /// @brief Stops all connections of the client socket.
+        /**
+         * @brief Stops all connections of the client socket.
+         */
         void stopClient()
         {
             // closing the connected socket
@@ -183,10 +229,13 @@ namespace xlpmg
             isConnected = false;
         }
 
-        /// @brief Receives a message from the server.
-        /// @return Message as string.
-        /// @param log Whether the message should be logged or not.
-        std::string receiveFromServer(bool log = true)
+        /**
+         * @brief Receives a message from the server.
+         * @return Message as string.
+         * @param timeout Timeout for the operation in seconds.
+         * @param log Whether the message should be logged or not.
+         */
+        std::string receiveFromServer(long timeout = TIMEOUT, bool log = true)
         {
             if (sockClient_fd < 0)
             {
@@ -198,6 +247,8 @@ namespace xlpmg
             char readBuffer[BUFF_SIZE_READ];
             bool finished = false;
             unsigned long totalBytes = 0;
+
+            setRecvTimeout(sockClient_fd, timeout);
 
             logEvent(std::to_string(totalBytes) + " Bytes (" + std::to_string(totalBytes / 1000000) + " MB) received             ", DEBUG, log);
 
@@ -237,35 +288,19 @@ namespace xlpmg
                     finished = true;
                 }
             }
+            setRecvTimeout(sockClient_fd, TIMEOUT);
             isConnected = true;
             return message;
         }
 
-        /// @brief Checks if the server responded with OK.
-        /// @return true if server responded
-        bool checkServerResponse()
-        {
-            // char readBuffer[BUFF_SIZE_READ];
-            // memset(readBuffer, 0, BUFF_SIZE_READ);
-            // sockValread = read(sockClient_fd, readBuffer,
-            //                    BUFF_SIZE_READ - 1); // subtract 1 for the null
-            // bool returnValue = true;
-            // if (std::string(readBuffer).compare("OK") != 0)
-            //     returnValue = false;
-
-            // // DONE
-            // sockValread = read(sockClient_fd, readBuffer,
-            //                    BUFF_SIZE_READ - 1); // subtract 1 for the null
-            // if (std::string(readBuffer).compare("DONE") != 0)
-            //     returnValue = false;
-
-            return true;
-        }
-
-        /// @brief Sends a message to the server.
-        /// @param message String to send.
-        /// @param log Whether the message should be logged or not.
-        int sendToServer(std::string message, bool log = true)
+        /**
+         * @brief Sends a message to the server.
+         * @param message String to send.
+         * @param timeout Timeout for the operation in seconds.
+         * @param log Whether the message should be logged or not.
+         * @return 0 if successful, 1 otherwise.
+         */
+        int sendToServer(std::string message, long timeout = TIMEOUT, bool log = true)
         {
             if (sockClient_fd < 0)
             {
@@ -273,6 +308,9 @@ namespace xlpmg
                 isConnected = false;
                 return 1;
             }
+
+            setSendTimeout(sockClient_fd, timeout);
+
             // terminator
             message.append("#!");
 
@@ -308,18 +346,23 @@ namespace xlpmg
                     logEvent(bytesSentStr.c_str(), DEBUG, log, true);
                 }
             }
+            setSendTimeout(sockClient_fd, TIMEOUT);
             isConnected = true;
             return 0;
         }
 
-        /// @brief Gets the log data.
-        /// @param o_logData Pointer to the string which the log will be written into.
+        /**
+         * @brief Gets the log data.
+         * @param o_logData Pointer to the string which the log will be written into.
+         */
         void getLog(std::string &o_logData)
         {
             o_logData = logData;
         }
 
-        /// @brief Clears the log data.
+        /**
+         * @brief Clears the log data.
+         */
         void clearLog()
         {
             logData.clear();
@@ -329,8 +372,10 @@ namespace xlpmg
         //     SERVER     //
         ////////////////////
 
-        /// @brief Creates a server socket and waits for connections.
-        /// @param PORT Port for communication with client.
+        /**
+         * @brief Creates a server socket and waits for connections.
+         * @param PORT Port for communication with client.
+         */
         void startServer(int PORT)
         {
             ssize_t valread;
@@ -355,9 +400,12 @@ namespace xlpmg
                 isConnected = false;
                 exit(EXIT_FAILURE);
             }
+            
             address.sin_family = AF_INET;
             address.sin_addr.s_addr = INADDR_ANY;
             address.sin_port = htons(PORT);
+
+            setSendTimeout(new_socket, TIMEOUT);
 
             // Forcefully attaching socket to the port 8080
             if (bind(server_fd, (struct sockaddr *)&address,
@@ -383,7 +431,9 @@ namespace xlpmg
             isConnected = true;
         }
 
-        /// @brief Stops all connections of the server.
+        /**
+         * @brief Stops all connections of the server.
+         */
         void stopServer()
         {
             // closing the connected socket
@@ -394,9 +444,11 @@ namespace xlpmg
             isConnected = false;
         }
 
-        /// @brief Receives a message froma  client.
-        /// @return Message as string.
-        /// @param log Whether the message should be logged or not.
+        /**
+         * @brief Receives a message from a client.
+         * @return Message as string.
+         * @param log Whether the message should be logged or not.
+         */
         std::string receiveFromClient(bool log = true)
         {
             if (new_socket < 0)
@@ -443,9 +495,11 @@ namespace xlpmg
             return message;
         }
 
-        /// @brief Sends a message to a client.
-        /// @param message Message to send.
-        /// @param log Whether the message should be logged or not.
+        /**
+         * @brief Sends a message to a client.
+         * @param message Message to send.
+         * @param log Whether the message should be logged or not.
+         */
         void sendToClient(std::string message, bool log = true)
         {
             // terminator

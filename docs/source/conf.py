@@ -9,12 +9,11 @@ import subprocess, os
 # Doxygen
 subprocess.call('doxygen ../Doxyfile', shell=True)
 
-
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'tsunami_lab'
-copyright = '2023, Luca-Philipp Grumbach & Richard Hofmann'
+copyright = '2024, Luca-Philipp Grumbach & Richard Hofmann'
 author = 'Luca-Philipp Grumbach & Richard Hofmann'
 
 # -- General configuration ---------------------------------------------------

@@ -6,5 +6,3 @@ Patches
 .. doxygennamespace:: tsunami_lab::patches
     :project: tsunami_lab
     :private-members:
-    :content-only:
-    :no-link:

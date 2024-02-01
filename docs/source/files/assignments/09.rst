@@ -1,11 +1,13 @@
+==================
 9. Parallelization
-********************
+==================
 
+************
 9.1 OpenMP
-============
+************
 
 9.1.1 - Parallelization with OpenMP
-----------------------------------------
+====================================
 
 An easy way to parallelize our for loops is using 
 
@@ -22,7 +24,7 @@ example:
     ...
 
 9.1.2 - Parallelization speedup
-------------------------------------------
+====================================
 
 We have used following batch script for ara:
 
@@ -42,7 +44,8 @@ We have used following batch script for ara:
 
 And got following results:
 
-**Without parallelization**
+Without parallelization
+-----------------------
 
 .. code:: text
 
@@ -54,7 +57,8 @@ And got following results:
     = 1941.01 seconds
     = 32.3501 minutes
 
-**With parallelization on 72 cores with 72 threads**
+With parallelization on 72 cores with 72 threads
+------------------------------------------------
 
 .. code:: text
 
@@ -72,7 +76,8 @@ And got following results:
 
 Speedup: :math:`\frac{1941}{75.5} = 25.7`
 
-**With parallelization on 72 cores with 144 threads**
+With parallelization on 72 cores with 144 threads
+-------------------------------------------------
 
 .. code:: text
 
@@ -90,7 +95,7 @@ We can see that having twice the amount of threads resulted in a much slower com
 We conclude that using more threads than cores results in a slowed down performance.
 
 9.1.3 - 2D for loop parallelization
-------------------------------------------
+====================================
 
 The results from above used parallelization in the outer loop.
 The parallelized inner loops leads to following time:
@@ -105,9 +110,10 @@ The parallelized inner loops leads to following time:
 It is clear, that parallelizing the outer loop is more effficient.
 
 9.1.4 - Pinning and Scheduling
-------------------------------------------
+===============================
 
-**Scheduling**
+Scheduling
+----------
 
 The upper implementation used the basic :code:`scheduling(static)`.
 
@@ -136,7 +142,8 @@ For :code:`scheduling(auto)` we get:
             = 84.5467 seconds
             = 1.40911 minutes
 
-**Pinning** 
+Pinning
+------- 
 
 Using :code:`OMP_PLACES={0}:36:1` we get:
 

@@ -1,0 +1,16 @@
+{
+    "solver": "fwave",
+    "simulationSizeX": 10,
+    "simulationSizeY": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "nx":10,
+    "ny":1,
+    "setup":"DAMBREAK1D",
+    "writingFrequency":10,
+    "endTime":10,
+    "baseHeight":5,
+    "height":100,
+    "outputMethod":"csv",
+    "timeStepScaling":0.2
+}
