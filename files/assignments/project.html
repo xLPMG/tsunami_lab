@@ -124,11 +124,42 @@ Integrating a GUI directly into the solver application while maintaining this re
 to assure that the GUI thread has always time for the user.</p>
 <p>We started off with this directly integrated and threaded approach and quickly realized that handling correct communication between two or more asynchronous running threads was getting closer and closer to just having two separate applications communicating over an API.
 Knowing that this approach meant we would have to invest a lot more effort and work overtime, we decided on taking this path nontheless as it would come with a lot of other benefits as well.
-Now, using the Server-Client model we have a GUI that can just send commands to the server without needing to wait for a response (most of the time, unless you’re specifically asking for data such as water/bathymetry data).</p>
-<p>It can also be used in scenarios when using a more powerful machine (e.g. HPC-Cluster) without display access. Just start the program as a server on the remote machine and control it from home via laptop - its that easy.</p>
+Thanks to the Client-Server model we now have a GUI that can simply send commands to the server without being interrupted by long operations and without needing to wait for a response. (Most of the time at least, unless you’re specifically asking for data such as water/bathymetry data.)</p>
+<p>It can also be used in scenarios in which there is no graphical output available such as when computing on a HPC cluster.
+Just start the program as a server on the remote machine and control it visually from anywhere via laptop - its that easy. You may as well start multiple servers on different machines and control them all from one GUI.</p>
+<p>Lastly we would like to mention that this separation even enables you to create your own GUI application in any programming language you like.
+All it takes is to send the correct commands to the server by sticking to the API and you’re good to go.</p>
 </section>
 <section id="gui-client-side">
 <h2>GUI (Client-side)<a class="headerlink" href="#gui-client-side" title="Link to this heading"></a></h2>
+<p>The Gui is desigend to be as instinctively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.</p>
+<img alt="../../_images/task-10-Gui_help.png" src="../../_images/task-10-Gui_help.png" />
+<p>The first tab gives some basic information about the project. It further presents a link to the documentation for more details.</p>
+<img alt="../../_images/task-10-Gui_connectivity.png" src="../../_images/task-10-Gui_connectivity.png" />
+<p>On this page the user connects the client side GUI with the server. Necessary inputs for the connection are the IP address and the port.
+The connection can then be opened or later closed.
+Furthermore, the buffersize for data transfer between server and client can be modified there.</p>
+<img alt="../../_images/task-10-Gui_simulation_controlls.png" src="../../_images/task-10-Gui_simulation_controlls.png" />
+<p>The features of this tab focus on the progress of the wave simulation. Firstly, it can be started here and be canceled anytime via “kill simulation”.
+In addition to that, the simulation can be stopped and continued in order to modify parameters or compile options, without further computation.
+Additional information about time steps and the estimated computation duration are shown and vizualised.
+The last items on this page reset or delete files and data of the former run.</p>
+<img alt="../../_images/task-10-Gui_windows_conf.png" src="../../_images/task-10-Gui_windows_conf.png" />
+<p>The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying programm via compiler options.
+For recompilation are several modes and choices available. Multiple flags like OpenMP usage and optimization levels further grant  more options for working with the simulation.
+The user can also enter the number of threads that OpenMP will use. Furthermore, reports can be created and and the runner for recompilation selected.</p>
+<p>The second window of the tab contains all simulation parameters before the start of computation.
+Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
+Artificial and custom events further use bathymetry and displacement. Therefore input for file paths is for these two available.
+Down below, the file input and output can be specified in terms of  output format and writing frequency. The boundary conditions follow, as well as the station input.
+Here every station gets a name and position, which will be printed in the textbox below.
+The last feature of this window is the time step scaling. It has the purpose to calculate more timesteps and therefore get more detailed file output.</p>
+<img alt="../../_images/task-10-Gui_windows_obs.png" src="../../_images/task-10-Gui_windows_obs.png" />
+<p>The “Observation tools” tab features data vizualization and logging of various events.
+Station, bathymetry and water heigth data can be observed over time.
+The system info vizualization shows usaga of the RAM during computation.</p>
+<img alt="../../_images/task-10-Gui_file_transfer.png" src="../../_images/task-10-Gui_file_transfer.png" />
+<p>On the last window data files can be selected and then send to the server. Also receiving from the server ist possible.</p>
 </section>
 <section id="server-side">
 <h2>Server-side<a class="headerlink" href="#server-side" title="Link to this heading"></a></h2>
