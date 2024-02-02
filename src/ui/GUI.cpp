@@ -208,7 +208,6 @@ int tsunami_lab::ui::GUI::launch()
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
-    bool showSimulationControlsWindow = false;
     bool showStationDataVisualizer = false;
     bool showDataVisualizer = false;
 
@@ -285,12 +284,15 @@ int tsunami_lab::ui::GUI::launch()
                 //--------------------------------------------//
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
+                    ImGui::SeparatorText("Connect your client to the server.");
+                    
                     int width = 32;
                     ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
                     ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputInt("Port", &PORT, 0);
                     PORT = abs(PORT);
+                    
 
                     ImGui::BeginDisabled(m_connected);
                     if (ImGui::Button("Connect"))
@@ -419,16 +421,17 @@ int tsunami_lab::ui::GUI::launch()
 
                     ImGui::EndTabItem();
                 }
-                //----------------------------------------------//
-                //------------Simulation Controls---------------//
-                //----------------------------------------------//
-                if (showSimulationControlsWindow)
+                //-------------------------------------------//
+                //------------Simulation Controls------------//
+                //-------------------------------------------//
+                if (ImGui::BeginTabItem("Simulation Controls"))
                 {
-                    ImGui::Begin("Simulation controls", &showSimulationControlsWindow);
-
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 1.0f, 0.8f));
+
+                    ImGui::SeparatorText("Change the state of the simulation.");
+
                     if (ImGui::Button("Run simulation"))
                     {
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
@@ -534,21 +537,30 @@ int tsunami_lab::ui::GUI::launch()
                         m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
                     }
 
-                    ImGui::End();
+                    ImGui::EndTabItem();
                 }
                 //-------------------------------------------//
-                //------------------WINDOWS------------------//
+                //------------Simulation Options-------------//
                 //-------------------------------------------//
                 if (ImGui::BeginTabItem("Windows"))
                 {
-                    ImGui::Checkbox("Show Demo Window", &show_demo_window);
-                    ImGui::Checkbox("Show simulation controls", &showSimulationControlsWindow);
-                    ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
-                    ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-                    ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
-                    ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
-                    ImGui::Checkbox("Show client log", &showClientLog);
-                    ImGui::Checkbox("Show system info", &showSystemInfoWindow);
+                    ImGui::SeparatorText("Windows for modification and observation of the simulation.");
+                    if (ImGui::BeginTabBar("Options"))
+                    {
+                        if (ImGui::BeginTabItem("Configuration")){
+                            ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                            ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
+                            ImGui::EndTabItem();
+                        }
+                        if (ImGui::BeginTabItem("Observation tools")){
+                            ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
+                            ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
+                            ImGui::Checkbox("Show client log", &showClientLog);
+                            ImGui::Checkbox("Show system info", &showSystemInfoWindow);
+                            ImGui::EndTabItem();
+                        }
+                        ImGui::EndTabBar();
+                    }
                     ImGui::EndTabItem();
                 }
                 //---------------------------------------------//
@@ -556,6 +568,7 @@ int tsunami_lab::ui::GUI::launch()
                 //---------------------------------------------//
                 if (ImGui::BeginTabItem("File transfer"))
                 {
+                    ImGui::SeparatorText("Send and receive files from the server.");
                     if (ImGui::CollapsingHeader("Send to server"))
                     {
                         ImGui::Indent();
@@ -628,19 +641,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::TextWrapped("Our file transfer implementaion uses byte transfer over standard tcp sockets without additional security or performance. For large or confident files we recommend using other services such as sftp.");
                     ImGui::EndTabItem();
                 }
-                //------------------------------------------//
-                //--------------UNSROTED ITEMS--------------//
-                //------------------------------------------//
-                if (ImGui::BeginTabItem("Experimental"))
-                {
-                    if (ImGui::Button("Get simulation sizes"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
-                        std::cout << m_communicator.receiveFromServer() << std::endl;
-                    }
-
-                    ImGui::EndTabItem();
-                }
+                
                 ImGui::EndTabBar();
             }
 
