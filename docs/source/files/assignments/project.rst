@@ -30,7 +30,37 @@ All it takes is to send the correct commands to the server by sticking to the AP
 GUI (Client-side)
 *********************
 
-// TODO
+The Gui is desigend to be as instinctively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.
+
+..  image:: ../../_static/assets/task-10-Gui_help.png
+
+The first tab gives some basic information about the project. It furthermore presents a link to the documentation for more details.
+
+..  image:: ../../_static/assets/task-10-Gui_connectivity.png
+
+On this page the user connects the client side GUI with the server. Necessary inputs for the connection are the IP address and the port. 
+The connection can then be opened ore later closed.
+Furthermore, the buffersize for data transfer between server and client can be modified there.
+
+..  image:: ../../_static/assets/task-10-Gui_simulation_controlls.png
+
+The features of this tab focus on the progress of the wave simulation. Firstly, it can be started here and be canceled anytime via "kill simulation".
+In addition to that, the simulation can be stoped and continued in order to modify parameters or compile options, without further computation.
+The last items on this page reset or delete files and data of the former run.
+
+..  image:: ../../_static/assets/task-10-Gui_windows_conf.png
+
+The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying project via compiler options.
+
+
+..  image:: ../../_static/assets/task-10-Gui_windows_obs.png
+
+..  image:: ../../_static/assets/task-10-Gui_file_transfer.png
+
+
+
+
+
 
 *********************
 Server-side
