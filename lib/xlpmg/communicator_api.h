@@ -64,7 +64,7 @@ namespace xlpmg
   /**
    * @brief Macro to briefly define a mapping between MessageUrgency enum and JSON
    */
-  NLOHMANN_JSON_SERIALIZE_ENUM(MessageUrgency, {{CRITICAl, "critical"},
+  NLOHMANN_JSON_SERIALIZE_ENUM(MessageUrgency, {{CRITICAL, "critical"},
                                                 {HIGH, "high"},
                                                 {MEDIUM, "medium"},
                                                 {LOW, "low"}});

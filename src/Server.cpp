@@ -134,7 +134,7 @@ int main(int i_argc, char *i_argv[])
             if (l_expectation == xlpmg::NO_RESPONSE)
             {
                 // CRITICAL
-                if (l_urgency == xlpmg::CRITICAl)
+                if (l_urgency == xlpmg::CRITICAL)
                 {
                     if (l_key == xlpmg::KILL_SIMULATION.key)
                     {
@@ -348,7 +348,7 @@ int main(int i_argc, char *i_argv[])
             else if (l_expectation == xlpmg::EXPECT_RESPONSE)
             {
                 // CRITICAL
-                if (l_urgency == xlpmg::CRITICAl)
+                if (l_urgency == xlpmg::CRITICAL)
                 {
                     if (l_key == xlpmg::GET_TIME_VALUES.key)
                     {
