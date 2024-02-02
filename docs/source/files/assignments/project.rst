@@ -45,15 +45,15 @@ Furthermore, the buffersize for data transfer between server and client can be m
 ..  image:: ../../_static/assets/task-10-Gui_simulation_controlls.png
 
 The features of this tab focus on the progress of the wave simulation. Firstly, it can be started here and be canceled anytime via "kill simulation".
-In addition to that, the simulation can be stoped and continued in order to modify parameters or compile options, without further computation.
+In addition to that, the simulation can be stopped and continued in order to modify parameters or compile options, without further computation.
 Additional information about time steps and the estimated computation duration are shown and vizualised. 
 The last items on this page reset or delete files and data of the former run.
 
 ..  image:: ../../_static/assets/task-10-Gui_windows_conf.png
 
 The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying programm via compiler options.
-For recompilation are several modes and choices available. Multiple flags like OpenMp usage and optimization levels further grant  more options working with the simulation.
-The user can also enter the wanted thread number for OpenMp. Furthermore, reports can be created and and the runner for recompilation be selected.
+For recompilation are several modes and choices available. Multiple flags like OpenMP usage and optimization levels further grant  more options for working with the simulation.
+The user can also enter the number of threads that OpenMP will use. Furthermore, reports can be created and and the runner for recompilation selected.
 
 The second window of the tab contains all simulation parameters before the start of computation. 
 Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
