@@ -34,32 +34,43 @@ The Gui is desigend to be as instinctively usable as possible. Therefore, we div
 
 ..  image:: ../../_static/assets/task-10-Gui_help.png
 
-The first tab gives some basic information about the project. It furthermore presents a link to the documentation for more details.
+The first tab gives some basic information about the project. It further presents a link to the documentation for more details.
 
 ..  image:: ../../_static/assets/task-10-Gui_connectivity.png
 
 On this page the user connects the client side GUI with the server. Necessary inputs for the connection are the IP address and the port. 
-The connection can then be opened ore later closed.
+The connection can then be opened or later closed.
 Furthermore, the buffersize for data transfer between server and client can be modified there.
 
 ..  image:: ../../_static/assets/task-10-Gui_simulation_controlls.png
 
 The features of this tab focus on the progress of the wave simulation. Firstly, it can be started here and be canceled anytime via "kill simulation".
 In addition to that, the simulation can be stoped and continued in order to modify parameters or compile options, without further computation.
+Additional information about time steps and the estimated computation duration are shown and vizualised. 
 The last items on this page reset or delete files and data of the former run.
 
 ..  image:: ../../_static/assets/task-10-Gui_windows_conf.png
 
-The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying project via compiler options.
+The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying programm via compiler options.
+For recompilation are several modes and choices available. Multiple flags like OpenMp usage and optimization levels further grant  more options working with the simulation.
+The user can also enter the wanted thread number for OpenMp. Furthermore, reports can be created and and the runner for recompilation be selected.
 
+The second window of the tab contains all simulation parameters before the start of computation. 
+Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
+Artificial and custom events further use bathymetry and displacement. Therefore input for file paths is for these two available.
+Down below, the file input and output can be specified in terms of  output format and writing frequency. The boundary conditions follow, as well as the station input.
+Here every station gets a name and position, which will be printed in the textbox below.
+The last feature of this window is the time step scaling. It has the purpose to calculate more timesteps and therefore get more detailed file output.
 
 ..  image:: ../../_static/assets/task-10-Gui_windows_obs.png
 
+The "Observation tools" tab features data vizualization and logging of various events.
+Station, bathymetry and water heigth data can be observed over time. 
+The system info vizualization shows usaga of the RAM during computation.
+
 ..  image:: ../../_static/assets/task-10-Gui_file_transfer.png
 
-
-
-
+On the last window data files can be selected and then send to the server. Also receiving from the server ist possible.
 
 
 *********************
