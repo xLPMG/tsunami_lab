@@ -10,14 +10,10 @@ on:
     branches:    
       - 'develop'
       - 'main'
-
   pull_request:
     branches:    
       - 'develop'
       - 'main'
-
-  schedule:
-    - cron: 0 0 * * *
 
 jobs:
   CI:
@@ -43,21 +39,21 @@ jobs:
 
       - name: Sanitize
         run: |
-          scons mode=debug+san omp=gnu gui=no servermode=yes
+          scons mode=debug+san omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
-          scons mode=release+san omp=gnu gui=no servermode=yes
+          scons mode=release+san omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Valgrind
         run: |
-          scons mode=debug omp=gnu gui=no servermode=yes
+          scons mode=debug omp=gnu gui=no
           valgrind ./build/tests
           valgrind ./build/tsunami_lab configs/minimalConfig.json
 
       - name: Release
         run: |
-          scons omp=gnu gui=no servermode=yes
+          scons omp=gnu gui=no
           ./build/tests
           ./build/tsunami_lab configs/minimalConfig.json

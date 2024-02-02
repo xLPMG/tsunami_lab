@@ -208,7 +208,6 @@ int tsunami_lab::ui::GUI::launch()
     bool showClientLog = false;
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
-    bool showSimulationControlsWindow = false;
     bool showStationDataVisualizer = false;
     bool showDataVisualizer = false;
 
@@ -285,6 +284,8 @@ int tsunami_lab::ui::GUI::launch()
                 //--------------------------------------------//
                 if (ImGui::BeginTabItem("Connectivity"))
                 {
+                    ImGui::SeparatorText("Connect your client to the server.");
+
                     int width = 32;
                     ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
                     ImGui::InputText("IP address", &IPADDRESS[0], IM_ARRAYSIZE(IPADDRESS));
@@ -331,104 +332,108 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::PopStyleColor(3);
                     ImGui::EndDisabled();
 
-                    ImGui::PushID(301);
-                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                    ImGui::InputInt("", &m_clientReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
-                    ImGui::SameLine();
-                    if (ImGui::Button("Set"))
+                    if (ImGui::TreeNode("Buffer settings"))
                     {
-                        m_communicator.setReadBufferSize(m_clientReadBufferSize);
-                    }
+                        ImGui::PushID(301);
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                        ImGui::InputInt("", &m_clientReadBufferSize, 0);
+                        ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                        ImGui::SameLine();
+                        if (ImGui::Button("Set"))
+                        {
+                            m_communicator.setReadBufferSize(m_clientReadBufferSize);
+                        }
 
-                    ImGui::SetItemTooltip("Sets the input.");
-                    ImGui::SameLine();
-                    ImGui::Text("Buffer size for receiving (client)");
-                    ImGui::SameLine();
-                    HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
-                    if (m_clientReadBufferSize < 256)
-                    {
-                        m_clientReadBufferSize = 256;
-                    }
-                    ImGui::PopID();
+                        ImGui::SetItemTooltip("Sets the input.");
+                        ImGui::SameLine();
+                        ImGui::Text("Buffer size for receiving (client)");
+                        ImGui::SameLine();
+                        HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
+                        if (m_clientReadBufferSize < 256)
+                        {
+                            m_clientReadBufferSize = 256;
+                        }
+                        ImGui::PopID();
 
-                    ImGui::PushID(302);
-                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                    ImGui::InputInt("", &m_clientSendBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
-                    ImGui::SameLine();
-                    if (ImGui::Button("Set"))
-                    {
-                        m_communicator.setSendBufferSize(m_clientSendBufferSize);
-                    }
-                    ImGui::SetItemTooltip("Sets the input.");
-                    ImGui::SameLine();
-                    ImGui::Text("Buffer size for sending (client)");
-                    ImGui::SameLine();
-                    HelpMarker("Size of the TCP Send Window.");
-                    if (m_clientSendBufferSize < 256)
-                    {
-                        m_clientSendBufferSize = 256;
-                    }
-                    ImGui::PopID();
+                        ImGui::PushID(302);
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                        ImGui::InputInt("", &m_clientSendBufferSize, 0);
+                        ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                        ImGui::SameLine();
+                        if (ImGui::Button("Set"))
+                        {
+                            m_communicator.setSendBufferSize(m_clientSendBufferSize);
+                        }
+                        ImGui::SetItemTooltip("Sets the input.");
+                        ImGui::SameLine();
+                        ImGui::Text("Buffer size for sending (client)");
+                        ImGui::SameLine();
+                        HelpMarker("Size of the TCP Send Window.");
+                        if (m_clientSendBufferSize < 256)
+                        {
+                            m_clientSendBufferSize = 256;
+                        }
+                        ImGui::PopID();
 
-                    ImGui::PushID(303);
-                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                    ImGui::InputInt("", &m_serverReadBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
-                    ImGui::SameLine();
-                    if (ImGui::Button("Set"))
-                    {
+                        ImGui::PushID(303);
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                        ImGui::InputInt("", &m_serverReadBufferSize, 0);
+                        ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_READ_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                        ImGui::SameLine();
+                        if (ImGui::Button("Set"))
+                        {
 
-                        xlpmg::Message msg = xlpmg::SET_READ_BUFFER_SIZE;
-                        msg.args = m_serverReadBufferSize;
-                        m_communicator.sendToServer(messageToJsonString(msg));
-                    }
-                    ImGui::SetItemTooltip("Sets the input.");
-                    ImGui::SameLine();
-                    ImGui::Text("Buffer size for receiving (server)");
-                    ImGui::SameLine();
-                    HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
-                    if (m_serverReadBufferSize < 256)
-                    {
-                        m_serverReadBufferSize = 256;
-                    }
-                    ImGui::PopID();
+                            xlpmg::Message msg = xlpmg::SET_READ_BUFFER_SIZE;
+                            msg.args = m_serverReadBufferSize;
+                            m_communicator.sendToServer(messageToJsonString(msg));
+                        }
+                        ImGui::SetItemTooltip("Sets the input.");
+                        ImGui::SameLine();
+                        ImGui::Text("Buffer size for receiving (server)");
+                        ImGui::SameLine();
+                        HelpMarker("Size of the TCP Receive Window: generally the amount of data that the recipient can accept without acknowledging the sender.");
+                        if (m_serverReadBufferSize < 256)
+                        {
+                            m_serverReadBufferSize = 256;
+                        }
+                        ImGui::PopID();
 
-                    ImGui::PushID(304);
-                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
-                    ImGui::InputInt("", &m_serverSendBufferSize, 0);
-                    ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
-                    ImGui::SameLine();
-                    if (ImGui::Button("Set"))
-                    {
-                        xlpmg::Message msg = xlpmg::SET_SEND_BUFFER_SIZE;
-                        msg.args = m_serverSendBufferSize;
-                        m_communicator.sendToServer(messageToJsonString(msg));
+                        ImGui::PushID(304);
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
+                        ImGui::InputInt("", &m_serverSendBufferSize, 0);
+                        ImGui::SetItemTooltip("%s", (std::string("in bytes. Default: ") + std::to_string(m_communicator.BUFF_SIZE_SEND_DEFAULT) + std::string(". Max recommended: 8.000.000")).c_str());
+                        ImGui::SameLine();
+                        if (ImGui::Button("Set"))
+                        {
+                            xlpmg::Message msg = xlpmg::SET_SEND_BUFFER_SIZE;
+                            msg.args = m_serverSendBufferSize;
+                            m_communicator.sendToServer(messageToJsonString(msg));
+                        }
+                        ImGui::SetItemTooltip("Sets the input.");
+                        ImGui::SameLine();
+                        ImGui::Text("Buffer size for sending (server)");
+                        ImGui::SameLine();
+                        HelpMarker("Size of the TCP Send Window.");
+                        if (m_serverSendBufferSize < 256)
+                        {
+                            m_serverSendBufferSize = 256;
+                        }
+                        ImGui::PopID();
+                        ImGui::TreePop();
                     }
-                    ImGui::SetItemTooltip("Sets the input.");
-                    ImGui::SameLine();
-                    ImGui::Text("Buffer size for sending (server)");
-                    ImGui::SameLine();
-                    HelpMarker("Size of the TCP Send Window.");
-                    if (m_serverSendBufferSize < 256)
-                    {
-                        m_serverSendBufferSize = 256;
-                    }
-                    ImGui::PopID();
-
                     ImGui::EndTabItem();
                 }
-                //----------------------------------------------//
-                //------------Simulation Controls---------------//
-                //----------------------------------------------//
-                if (showSimulationControlsWindow)
+                //-------------------------------------------//
+                //------------Simulation Controls------------//
+                //-------------------------------------------//
+                if (ImGui::BeginTabItem("Simulation Controls"))
                 {
-                    ImGui::Begin("Simulation controls", &showSimulationControlsWindow);
-
                     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.7f));
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 1.0f, 0.8f));
+
+                    ImGui::SeparatorText("Change the state of the simulation.");
+
                     if (ImGui::Button("Run simulation"))
                     {
                         xlpmg::Message startSimMsg = xlpmg::START_SIMULATION;
@@ -479,25 +484,31 @@ int tsunami_lab::ui::GUI::launch()
 
                     // SIMULATION STATUS
                     ImGui::SeparatorText("Simulation status");
-                    if (m_lastTimeValuesUpdate <= std::chrono::system_clock::now() && m_connected)
+                    if (m_lastTimeValuesUpdate <= std::chrono::system_clock::now() && m_connected && m_timeValuesUpdateFrequency > 0)
                     {
                         updateTimeValues();
                         m_lastTimeValuesUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_timeValuesUpdateFrequency);
                     }
                     ImGui::Text("STATUS: %s", m_simulationStatus.c_str());
 
+                    if (m_simulationStatus == "CALCULATING")
+                    {
+                        ImGui::SetNextItemWidth(ImGui::GetFontSize() * 24);
+                        ImGui::ProgressBar((float)m_currentTimeStep / (float)m_maxTimeSteps, ImVec2(0.0f, 0.0f));
+                        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+                        ImGui::Text("%% complete");
+                    }
+
                     ImGui::Text("%i / %i time steps", m_currentTimeStep, m_maxTimeSteps);
                     ImGui::SameLine();
                     HelpMarker("The continuous dimension of time is discretized using 'time steps'. The length of a time step is computed anew for each simulation in a way such that the waves do not interact with each other.");
-
-                    ImGui::ProgressBar((float)m_currentTimeStep / (float)m_maxTimeSteps, ImVec2(0.0f, 0.0f));
 
                     ImGui::Text("Time per time step: %ims", m_timePerTimeStep);
                     ImGui::SetItemTooltip("in milliseconds");
                     ImGui::SameLine();
                     HelpMarker("The time the solver takes to compute one time step.");
 
-                    ImGui::Text("Estimated time left: %is", (int)m_estimatedTimeLeft);
+                    ImGui::Text("Estimated time left: %is (= %f min)", (int)m_estimatedTimeLeft, m_estimatedTimeLeft / 60);
                     ImGui::SetItemTooltip("in seconds");
                     ImGui::SameLine();
                     HelpMarker("Time until the solver has finished the whole computation.");
@@ -507,7 +518,7 @@ int tsunami_lab::ui::GUI::launch()
                     {
                         ImGui::SetNextItemWidth(ImGui::GetFontSize() * 16);
                         ImGui::InputInt("Update frequency", &m_timeValuesUpdateFrequency, 0);
-                        ImGui::SetItemTooltip("in seconds");
+                        ImGui::SetItemTooltip("in seconds. Set to 0 for no update.");
                         ImGui::SameLine();
                         HelpMarker("The server will update data with a constant frequency. With this option, you can only specify the frequency with which the client/gui is getting that data from the server.");
                         m_timeValuesUpdateFrequency = abs(m_timeValuesUpdateFrequency);
@@ -534,21 +545,32 @@ int tsunami_lab::ui::GUI::launch()
                         m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
                     }
 
-                    ImGui::End();
+                    ImGui::EndTabItem();
                 }
                 //-------------------------------------------//
-                //------------------WINDOWS------------------//
+                //------------Simulation Options-------------//
                 //-------------------------------------------//
                 if (ImGui::BeginTabItem("Windows"))
                 {
-                    ImGui::Checkbox("Show Demo Window", &show_demo_window);
-                    ImGui::Checkbox("Show simulation controls", &showSimulationControlsWindow);
-                    ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
-                    ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-                    ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
-                    ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
-                    ImGui::Checkbox("Show client log", &showClientLog);
-                    ImGui::Checkbox("Show system info", &showSystemInfoWindow);
+                    ImGui::SeparatorText("Windows for modification and observation of the simulation.");
+                    if (ImGui::BeginTabBar("Options"))
+                    {
+                        if (ImGui::BeginTabItem("Configuration"))
+                        {
+                            ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                            ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
+                            ImGui::EndTabItem();
+                        }
+                        if (ImGui::BeginTabItem("Observation tools"))
+                        {
+                            ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
+                            ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
+                            ImGui::Checkbox("Show client log", &showClientLog);
+                            ImGui::Checkbox("Show system info", &showSystemInfoWindow);
+                            ImGui::EndTabItem();
+                        }
+                        ImGui::EndTabBar();
+                    }
                     ImGui::EndTabItem();
                 }
                 //---------------------------------------------//
@@ -556,6 +578,7 @@ int tsunami_lab::ui::GUI::launch()
                 //---------------------------------------------//
                 if (ImGui::BeginTabItem("File transfer"))
                 {
+                    ImGui::SeparatorText("Send and receive files from the server.");
                     if (ImGui::CollapsingHeader("Send to server"))
                     {
                         ImGui::Indent();
@@ -602,6 +625,7 @@ int tsunami_lab::ui::GUI::launch()
                     }
                     if (ImGui::CollapsingHeader("Receive from server"))
                     {
+                        ImGui::Indent();
                         ImGui::InputText("Remote file path", m_transferRemoteFilePath, IM_ARRAYSIZE(m_transferRemoteFilePath));
                         ImGui::InputText("Local file path", m_transferLocalFilePath, IM_ARRAYSIZE(m_transferLocalFilePath));
                         if (ImGui::Button("Receive file"))
@@ -623,24 +647,13 @@ int tsunami_lab::ui::GUI::launch()
                                 l_writeFile.close();
                             }
                         }
+                        ImGui::Unindent();
                     }
                     ImGui::SeparatorText("INFO");
-                    ImGui::TextWrapped("Our file transfer implementaion uses byte transfer over standard tcp sockets without additional security or performance. For large or confident files we recommend using other services such as sftp.");
+                    ImGui::TextWrapped("Our file transfer implementaion uses byte transfer over standard tcp sockets without additional security measures or performance improvements. For large or confident files we recommend using other services such as sftp.");
                     ImGui::EndTabItem();
                 }
-                //------------------------------------------//
-                //--------------UNSROTED ITEMS--------------//
-                //------------------------------------------//
-                if (ImGui::BeginTabItem("Experimental"))
-                {
-                    if (ImGui::Button("Get simulation sizes"))
-                    {
-                        m_communicator.sendToServer(messageToJsonString(xlpmg::GET_SIMULATION_SIZES));
-                        std::cout << m_communicator.receiveFromServer() << std::endl;
-                    }
 
-                    ImGui::EndTabItem();
-                }
                 ImGui::EndTabBar();
             }
 
@@ -882,7 +895,7 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::InputInt("Diameter", &m_diameter, 0);
             }
 
-            if (m_tsunamiEvent == 2)
+            if (m_tsunamiEvent > 0)
             {
                 ImGui::BeginDisabled();
             }
@@ -896,7 +909,7 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::SameLine();
             HelpMarker("Must be a valid displacement file on the file path. Path is specified relative to the executable.");
 
-            if (m_tsunamiEvent == 2)
+            if (m_tsunamiEvent > 0)
             {
                 ImGui::EndDisabled();
             }
@@ -911,6 +924,11 @@ int tsunami_lab::ui::GUI::launch()
             m_ny = abs(m_ny);
             m_nk = abs(m_nk);
 
+            if (m_tsunamiEvent == 1)
+            {
+                ImGui::BeginDisabled();
+            }
+
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Simulation size X", &m_simulationSizeX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
@@ -922,6 +940,11 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::InputFloat("Offset X", &m_offsetX, 0);
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputFloat("Offset Y", &m_offsetY, 0);
+
+            if (m_tsunamiEvent == 1)
+            {
+                ImGui::EndDisabled();
+            }
 
             ImGui::SetNextItemWidth(ImGui::GetFontSize() * width);
             ImGui::InputInt("End time", &m_endTime, 0);
@@ -1224,14 +1247,14 @@ int tsunami_lab::ui::GUI::launch()
                         m_bathymetryData = nullptr;
                     }
 
-                    currCellsX = l_simSizes.args.value("cellsX", 0);
-                    currCellsY = l_simSizes.args.value("cellsY", 0);
-                    currOffsetX = l_simSizes.args.value("offsetX", 0.f);
-                    currOffsetY = l_simSizes.args.value("offsetY", 0.f);
-                    currSimSizeX = l_simSizes.args.value("simulationSizeX", 0.f);
-                    currSimSizeY = l_simSizes.args.value("simulationSizeY", 0.f);
-                    m_bathymetryData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
-                    m_heightData = new tsunami_lab::t_real[currCellsX * currCellsY]{0};
+                    m_currCellsX = l_simSizes.args.value("cellsX", 0);
+                    m_currCellsY = l_simSizes.args.value("cellsY", 0);
+                    m_currOffsetX = l_simSizes.args.value("offsetX", 0.f);
+                    m_currOffsetY = l_simSizes.args.value("offsetY", 0.f);
+                    m_currSimSizeX = l_simSizes.args.value("simulationSizeX", 0.f);
+                    m_currSimSizeY = l_simSizes.args.value("simulationSizeY", 0.f);
+                    m_bathymetryData = new tsunami_lab::t_real[m_currCellsX * m_currCellsY]{0};
+                    m_heightData = new tsunami_lab::t_real[m_currCellsX * m_currCellsY]{0};
 
                     if (m_communicator.sendToServer(messageToJsonString(xlpmg::GET_BATHYMETRY_DATA)) == 0)
                     {
@@ -1276,23 +1299,23 @@ int tsunami_lab::ui::GUI::launch()
             HelpMarker("The GUI might freeze as its waiting for the server response. This might take several minutes depending on how many cells need to be processed.");
 
             ImGui::SetNextItemWidth(225);
-            ImGui::DragFloatRange2("Min / Max", &scale_min, &scale_max, 0.01f, -20, 20);
+            ImGui::DragFloatRange2("Min / Max", &m_scaleMin, &m_scaleMax, 0.01f, -20, 20);
             ImPlot::PushColormap("WATERHEIGHTSMAP");
-            ImPlot::ColormapScale("Colormap scale", scale_min, scale_max, ImVec2(60, 225));
+            ImPlot::ColormapScale("Colormap scale", m_scaleMin, m_scaleMax, ImVec2(60, 225));
             ImGui::SameLine();
             if (m_bathymetryData != nullptr || m_heightData != nullptr)
             {
 
                 if (ImPlot::BeginPlot("Water height and bathymetry", ImVec2(550, 550)))
                 {
-                    ImPlot::SetupAxesLimits(currOffsetX, currOffsetX + currSimSizeX, currOffsetY, currOffsetY + currSimSizeY);
+                    ImPlot::SetupAxesLimits(m_currOffsetX, m_currOffsetX + m_currSimSizeX, m_currOffsetY, m_currOffsetY + m_currSimSizeY);
                     if (m_bathymetryData != nullptr)
                     {
-                        ImPlot::PlotHeatmap("bathymetry", m_bathymetryData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                        ImPlot::PlotHeatmap("bathymetry", m_bathymetryData, m_currCellsY, m_currCellsX, m_scaleMin, m_scaleMax, nullptr, ImPlotPoint(m_currOffsetX, m_currOffsetY), ImPlotPoint(m_currOffsetX + m_currSimSizeX, m_currOffsetY + m_currSimSizeY), 0);
                     }
                     if (m_heightData != nullptr)
                     {
-                        ImPlot::PlotHeatmap("water level", m_heightData, currCellsY, currCellsX, scale_min, scale_max, nullptr, ImPlotPoint(currOffsetX, currOffsetY), ImPlotPoint(currOffsetX + currSimSizeX, currOffsetY + currSimSizeY), 0);
+                        ImPlot::PlotHeatmap("water level", m_heightData, m_currCellsY, m_currCellsX, m_scaleMin, m_scaleMax, nullptr, ImPlotPoint(m_currOffsetX, m_currOffsetY), ImPlotPoint(m_currOffsetX + m_currSimSizeX, m_currOffsetY + m_currSimSizeY), 0);
                     }
                     ImPlot::EndPlot();
                 }

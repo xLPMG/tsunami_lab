@@ -26,23 +26,33 @@ namespace xlpmg
   enum MessagePart
   {
     EXPECTATION,
-    URGENCY,
-    KEY,
-    ARGS
+    URGENCY,    
+    KEY,        
+    ARGS 
   };
 
+  /**
+   * @brief Enum representing the expectation of a message.
+   *
+   * The MessageExpectation enum defines the different expectations of a message, such as whether a response is expected or not.
+   */
   enum MessageExpectation
   {
     NO_RESPONSE,
     EXPECT_RESPONSE
   };
 
+  /**
+   * @brief Enum representing the urgency of a message.
+   *
+   * The MessageUrgency enum defines the different levels of urgency for a message, such as critical, high, medium, and low.
+   */
   enum MessageUrgency
   {
-    CRITICAl,
-    HIGH,
-    MEDIUM,
-    LOW
+    CRITICAL, 
+    HIGH, 
+    MEDIUM, 
+    LOW     
   };
 
   /**
@@ -54,7 +64,7 @@ namespace xlpmg
   /**
    * @brief Macro to briefly define a mapping between MessageUrgency enum and JSON
    */
-  NLOHMANN_JSON_SERIALIZE_ENUM(MessageUrgency, {{CRITICAl, "critical"},
+  NLOHMANN_JSON_SERIALIZE_ENUM(MessageUrgency, {{CRITICAL, "critical"},
                                                 {HIGH, "high"},
                                                 {MEDIUM, "medium"},
                                                 {LOW, "low"}});
@@ -127,13 +137,13 @@ namespace xlpmg
   // CRITICAL
 
   //! Server will stop the running simulation.
-  inline const Message KILL_SIMULATION = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "kill_simulation"};
+  inline const Message KILL_SIMULATION = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "kill_simulation"};
   //! Tells the Simulator to write a checkpoint.
-  inline const Message WRITE_CHECKPOINT = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "write_checkpoint"};
+  inline const Message WRITE_CHECKPOINT = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "write_checkpoint"};
   //! Pauses a simulation.
-  inline const Message PAUSE_SIMULATION = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "pause_simulation"};
+  inline const Message PAUSE_SIMULATION = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "pause_simulation"};
   //! Tells the server to shutdown.
-  inline const Message SHUTDOWN_SERVER = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "shutdown_server"};
+  inline const Message SHUTDOWN_SERVER = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "shutdown_server"};
 
   // HIGH
 
@@ -185,11 +195,11 @@ namespace xlpmg
   // CRITICAL
 
   //! Returns the current timestep from the simulator.
-  inline const Message GET_TIME_VALUES = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAl, "get_time_values"};
+  inline const Message GET_TIME_VALUES = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAL, "get_time_values"};
   //! Gets system info such as CPU and RAM usage.
-  inline const Message GET_SYSTEM_INFORMATION = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAl, "get_system_information"};
+  inline const Message GET_SYSTEM_INFORMATION = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAL, "get_system_information"};
   //! Returns the current simulation sizes from the simulator.
-  inline const Message GET_SIMULATION_SIZES = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAl, "get_simulation_sizes"};
+  inline const Message GET_SIMULATION_SIZES = {MessageExpectation::EXPECT_RESPONSE, MessageUrgency::CRITICAL, "get_simulation_sizes"};
 
   // HIGH
 
@@ -208,9 +218,9 @@ namespace xlpmg
   ////////////////////////////////
 
   //! Tells the client that a buffered sending operation has finished.
-  inline const Message BUFFERED_SEND_FINISHED = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "buff_send_finished"};
+  inline const Message BUFFERED_SEND_FINISHED = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "buff_send_finished"};
   //! Server response template
-  inline const Message SERVER_RESPONSE = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAl, "server_response"};
+  inline const Message SERVER_RESPONSE = {MessageExpectation::NO_RESPONSE, MessageUrgency::CRITICAL, "server_response"};
 }
 
 #endif

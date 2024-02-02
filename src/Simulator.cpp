@@ -224,7 +224,7 @@ void tsunami_lab::Simulator::constructSetup()
                                                       m_offsetX,
                                                       m_offsetY);
   }
-  else if (m_setupChoice == "CUSTOM")
+  else if (m_setupChoice == "CUSTOM2D")
   {
     if (m_ny > 1)
     {
@@ -689,7 +689,7 @@ void tsunami_lab::Simulator::prepareForCalculation()
     std::cout << ">> Configuring file data" << std::endl;
     configureFiles();
   }
-  else if (m_setupChoice != "CUSTOM")
+  else if (m_setupChoice != "CUSTOM2D")
   {
     m_setupChoice = m_configData.value("setup", "CIRCULARDAMBREAK2D");
     if (m_setupChoice == "CHECKPOINT")

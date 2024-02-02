@@ -28,6 +28,7 @@ private:
     //! To check whether its the first time of reading cpu usage data; Linux only
     bool m_firstCPURead = true;
 
+    //! Struct for CPU usage data; Linux only
     struct CPUData
     {
         unsigned long long user;
@@ -72,9 +73,10 @@ public:
    * This function collects CPU usage data. On MacOS it will return one
    * value as the overall CPU usage over all cores. This value is read from
    * the "top" command. On Linux, /proc/stat is read and the
-   * values are calculated for each core.
+   * values are calculated for each core. 
+   * The first entry will be the overall CPU usage, the following entries are the indivual core usages.
    *
-   * @return vector with CPU usage in percent for each core.
+   * @return Vector with CPU usage in percent for each core.
    */
     std::vector<float> getCPUUsage();
 };
