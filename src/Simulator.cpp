@@ -97,10 +97,10 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_offsetX = m_configData.value("offsetX", 0);
   m_offsetY = m_configData.value("offsetY", 0);
   m_endTime = m_configData.value("endTime", 20);
-  m_height = m_configData.value("height",10);
+  m_height = m_configData.value("height", 10);
   m_baseHeight = m_configData.value("baseHeight", 5);
-  m_diameter = m_configData.value("diameter",10);
-  m_timeStepScaling = m_configData.value("timeStepScaling",1.0);
+  m_diameter = m_configData.value("diameter", 10);
+  m_timeStepScaling = m_configData.value("timeStepScaling", 1.0);
 
   // read boundary config
   std::string l_boundaryStringL = m_configData.value("boundaryL", "outflow");
@@ -280,7 +280,8 @@ void tsunami_lab::Simulator::setUpNetCdf()
     std::cout << "  Current time step:        " << m_timeStep << std::endl;
     std::cout << std::endl;
 
-    if(m_timeStepMax < m_timeStep){
+    if (m_timeStepMax < m_timeStep)
+    {
       m_timeStepMax = m_timeStep;
     }
   }
@@ -459,7 +460,8 @@ void tsunami_lab::Simulator::loadBathymetry(std::string *i_file)
 
 void tsunami_lab::Simulator::loadStations(json i_jsonData)
 {
-  if(i_jsonData == ""){
+  if (i_jsonData == "")
+  {
     i_jsonData = m_configData;
   }
 
@@ -582,10 +584,6 @@ void tsunami_lab::Simulator::freeMemory()
     std::filesystem::remove(m_checkPointFilePathString);
   }
   deleteNetCdf();
-  for (tsunami_lab::io::Station *l_s : m_stations)
-  {
-    delete l_s;
-  }
 }
 //------------------------------------------//
 //-------------PUBLIC FUNCTIONS-------------//
@@ -606,6 +604,7 @@ void tsunami_lab::Simulator::deleteStations()
   {
     delete l_s;
   }
+  m_stations.clear();
 }
 
 void tsunami_lab::Simulator::resetSimulator()
@@ -793,6 +792,7 @@ void tsunami_lab::Simulator::runCalculation()
       // write stations
       if (m_simTime >= m_stationFrequency * m_captureCount)
       {
+        std::cout << "  capturing station data" << std::endl;
         for (tsunami_lab::io::Station *l_s : m_stations)
         {
           l_s->capture(m_simTime);
@@ -900,4 +900,5 @@ int tsunami_lab::Simulator::start(std::string i_config)
 tsunami_lab::Simulator::~Simulator()
 {
   freeMemory();
+  deleteStations();
 }
