@@ -40,7 +40,7 @@ The first tab gives some basic information about the project. It further present
 
 On this page the user connects the client side GUI with the server. Necessary inputs for the connection are the IP address and the port. 
 The connection can then be opened or later closed.
-Furthermore, the buffersize for data transfer between server and client can be modified there.
+Furthermore, the buffer size for data transfer between server and client can be modified here.
 
 ..  image:: ../../_static/assets/task-10-Gui_simulation_controlls.png
 
@@ -51,13 +51,13 @@ The last items on this page reset or delete files and data of the former run.
 
 ..  image:: ../../_static/assets/task-10-Gui_windows_conf.png
 
-The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying programm via compiler options.
-For recompilation are several modes and choices available. Multiple flags like OpenMP usage and optimization levels further grant  more options for working with the simulation.
-The user can also enter the number of threads that OpenMP will use. Furthermore, reports can be created and and the runner for recompilation selected.
+The next tab is divided into two sections. The first one concludes all options to modify the simulation parameters and the undelying programm via compiler options.
+You can choose from a variety of modes to recompile. Multiple flags like OpenMP usage and optimization levels further grant more options for working with the simulation.
+The user can also enter the number of threads that OpenMP will use. Lastly, reports can be created and and the runner for recompilation selected.
 
 The second window of the tab contains all simulation parameters before the start of computation. 
 Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
-Artificial and custom events further use bathymetry and displacement. Therefore input for file paths is for these two available.
+Artificial and custom events further use bathymetry and displacement. Therefore file path input is available for these two.
 Down below, the file input and output can be specified in terms of  output format and writing frequency. The boundary conditions follow, as well as the station input.
 Here every station gets a name and position, which will be printed in the textbox below.
 The last feature of this window is the time step scaling. It has the purpose to calculate more timesteps and therefore get more detailed file output.
@@ -70,7 +70,7 @@ The system info vizualization shows usaga of the RAM during computation.
 
 ..  image:: ../../_static/assets/task-10-Gui_file_transfer.png
 
-On the last window data files can be selected and then send to the server. Also receiving from the server ist possible.
+In the last window, data files can be selected and then sent to the server. Receiving from the server is possible as well.
 
 
 *********************
@@ -100,7 +100,7 @@ Compiling
 SConstruct
 ======================
 
-As a base four our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
+As a base for our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
 We chose the `GLFW <https://www.glfw.org/>`_ implementation as it is cross-platform and also very well known.
 
 Currently we support building the sources on Linux, MacOS and Windows and therefore had to implement different include processes for each platform:
