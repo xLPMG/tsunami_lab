@@ -457,14 +457,18 @@ void tsunami_lab::Simulator::loadBathymetry(std::string *i_file)
   }
 }
 
-void tsunami_lab::Simulator::loadStations()
+void tsunami_lab::Simulator::loadStations(json i_jsonData)
 {
+  if(i_jsonData == ""){
+    i_jsonData = m_configData;
+  }
+
   // set up stations
-  if (m_configData.contains("stations"))
+  if (i_jsonData.contains("stations"))
   {
     std::cout << "Setting up stations..." << std::endl;
     std::cout << "Frequency for all stations is " << m_stationFrequency << std::endl;
-    for (json &elem : m_configData["stations"])
+    for (json &elem : i_jsonData["stations"])
     {
       // location in meters
       tsunami_lab::t_real l_x = elem.at("locX");

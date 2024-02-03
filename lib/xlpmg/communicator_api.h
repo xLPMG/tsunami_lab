@@ -187,6 +187,8 @@ namespace xlpmg
   inline const Message SET_READ_BUFFER_SIZE = {MessageExpectation::NO_RESPONSE, MessageUrgency::MEDIUM, "set_read_buffer_size"};
   //! Tells the server to change the send buffer size.
   inline const Message SET_SEND_BUFFER_SIZE = {MessageExpectation::NO_RESPONSE, MessageUrgency::MEDIUM, "set_send_buffer_size"};
+  //! Updates stations
+  inline const Message LOAD_STATIONS = {MessageExpectation::NO_RESPONSE, MessageUrgency::MEDIUM, "load_stations"};
 
   ////////////////////////////////
   //      EXPECT_RESPONSE       //

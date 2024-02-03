@@ -206,13 +206,6 @@ private:
     void loadBathymetry(std::string *i_file);
 
     /**
-     *  Helper method that sets up the stations from the config data.
-     *
-     *  @return void
-     */
-    void loadStations();
-
-    /**
      *  Helper method that writes out station data to files.
      *
      *  @return void
@@ -499,6 +492,13 @@ private:
      *  @return void
      */
     void loadConfigDataJson(json i_config);
+
+    /**
+     *  Sets up stations from config data.
+     *
+     *  @return void
+     */
+    void loadStations(json i_jsonData = "");
 
     /**
      *  Sets up a station.

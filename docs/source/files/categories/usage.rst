@@ -100,19 +100,19 @@ As of now, these are:
      - simulation size in y-direction
      - float
      - metres, >0
-   * - hasBoundaryL
+   * - boundaryL
      - is there a boundary on the left?
      - boolean
      - true or false
-   * - hasBoundaryR
+   * - boundaryR
      - is there a boundary on the right?
      - boolean
      - true or false
-   * - hasBoundaryT
+   * - boundaryT
      - is there a boundary at the top?
      - boolean
      - true or false
-   * - hasBoundaryB
+   * - boundaryB
      - is there a boundary at the bottom?
      - boolean
      - true or false
