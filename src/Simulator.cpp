@@ -318,6 +318,11 @@ void tsunami_lab::Simulator::createWaveProp()
                                                              m_boundaryT,
                                                              m_boundaryB);
   }
+
+  // provide stations with new waveprop
+  for(tsunami_lab::io::Station *l_s : m_stations){
+    l_s->setWaveProp(m_waveProp);
+  }
 }
 
 void tsunami_lab::Simulator::constructSolver()
