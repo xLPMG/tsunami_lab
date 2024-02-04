@@ -88,5 +88,14 @@ public:
   std::vector<std::vector<tsunami_lab::t_real>> getData(){
     return *m_data;
   }
+
+  /**
+   * @brief Sets the wave propagation object for the station.
+   * 
+   * @param i_waveProp Pointer to the WavePropagation object.
+   */
+  void setWaveProp(tsunami_lab::patches::WavePropagation *i_waveProp){
+    m_waveProp = i_waveProp;
+  }
 };
 #endif

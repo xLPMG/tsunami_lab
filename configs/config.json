@@ -4,12 +4,13 @@
     "simulationSizeY": 100,
     "offsetX": -50,
     "offsetY": -50,
-    "nx":100,
-    "ny":100,
+    "nx":300,
+    "ny":300,
     "setup":"CIRCULARDAMBREAK2D",
     "writingFrequency":50,
-    "endTime":30,
+    "endTime":5,
     "baseHeight":5,
     "diameter":10,
-    "height":100
+    "height":100,
+    "timeStepScaling": 0.2
 }

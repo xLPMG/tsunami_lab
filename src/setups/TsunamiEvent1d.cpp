@@ -22,24 +22,27 @@ tsunami_lab::setups::TsunamiEvent1d::TsunamiEvent1d(const std::string &i_file)
     {
         std::cerr << "Error: File not found "
                   << "(TsunamiEvent1d.cpp)" << std::endl;
-        exit(1);
+        m_fileExists = false;
     }
 #endif
 
-    std::ifstream l_inputFile(i_file);
-    m_bathymetry = new std::vector<tsunami_lab::t_real>;
-
-    std::string l_line;
-    std::vector<std::string> l_row;
-    while (getline(l_inputFile, l_line))
+    if (m_fileExists)
     {
-        if (l_line.substr(0, 1) == "#")
-            continue;
-        tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
-        m_bathymetry->push_back(std::stof(l_row[3]));
+        std::ifstream l_inputFile(i_file);
+        m_bathymetry = new std::vector<tsunami_lab::t_real>;
+
+        std::string l_line;
+        std::vector<std::string> l_row;
+        while (getline(l_inputFile, l_line))
+        {
+            if (l_line.substr(0, 1) == "#")
+                continue;
+            tsunami_lab::io::Csv::splitLine(std::stringstream(l_line), ',', l_row);
+            m_bathymetry->push_back(std::stof(l_row[3]));
+        }
+        l_inputFile.close();
+        m_bathymetryDataSize = m_bathymetry->size();
     }
-    l_inputFile.close();
-    m_bathymetryDataSize = m_bathymetry->size();
 }
 
 tsunami_lab::setups::TsunamiEvent1d::~TsunamiEvent1d()
@@ -50,6 +53,10 @@ tsunami_lab::setups::TsunamiEvent1d::~TsunamiEvent1d()
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getHeight(t_real i_x,
                                                                    t_real) const
 {
+    if (!m_fileExists)
+    {
+        return 0;
+    }
     i_x /= 250;
     if (i_x <= (m_bathymetryDataSize - 1) && m_bathymetry->at(int(i_x)) < 0)
     {
@@ -83,6 +90,10 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getMomentumY(t_real,
 tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getBathymetry(t_real i_x,
                                                                        t_real) const
 {
+    if (!m_fileExists)
+    {
+        return 0;
+    }
     i_x /= 250;
     if (i_x <= (m_bathymetryDataSize - 1))
     {

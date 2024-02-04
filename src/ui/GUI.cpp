@@ -86,7 +86,7 @@ void tsunami_lab::ui::GUI::updateTimeValues()
         xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
         m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
         m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
-        m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
+        m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (double)0);
         m_estimatedTimeLeft = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
         m_simulationStatus = responseMessage.args.value("status", "UNKNOWN");
     }
@@ -119,10 +119,10 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"writingFrequency", m_writingFrequency},
                    {"outputFileName", m_outputFileName},
                    {"checkpointFrequency", m_checkpointFrequency},
-                   {"hasBoundaryL", m_boundaryL},
-                   {"hasBoundaryR", m_boundaryR},
-                   {"hasBoundaryT", m_boundaryT},
-                   {"hasBoundaryB", m_boundaryB},
+                   {"boundaryL", m_boundaryL ? "WALL" : "OUTFLOW"},
+                   {"boundaryR", m_boundaryR ? "WALL" : "OUTFLOW"},
+                   {"boundaryT", m_boundaryT ? "WALL" : "OUTFLOW"},
+                   {"boundaryB", m_boundaryB ? "WALL" : "OUTFLOW"},
                    {"setup", m_tsunamiEvents[m_tsunamiEvent]},
                    {"bathymetry", m_bathymetryFilePath},
                    {"displacement", m_displacementFilePath},
@@ -130,16 +130,6 @@ json tsunami_lab::ui::GUI::createConfigJson()
                    {"timeStepScaling", m_timeStepScaling},
                    {"baseHeight", m_baseHeight},
                    {"diameter", m_diameter}};
-    // stations
-    for (Station l_s : m_stations)
-    {
-        json l_stationData;
-        l_stationData["name"] = l_s.name;
-        l_stationData["locX"] = l_s.positionX;
-        l_stationData["locY"] = l_s.positionY;
-        config["stations"].push_back(l_stationData);
-    }
-
     return config;
 }
 
@@ -209,6 +199,7 @@ int tsunami_lab::ui::GUI::launch()
     bool showSimulationParameterWindow = false;
     bool showSystemInfoWindow = false;
     bool showStationDataVisualizer = false;
+    bool showStationsWindow = false;
     bool showDataVisualizer = false;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -503,7 +494,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     HelpMarker("The continuous dimension of time is discretized using 'time steps'. The length of a time step is computed anew for each simulation in a way such that the waves do not interact with each other.");
 
-                    ImGui::Text("Time per time step: %ims", m_timePerTimeStep);
+                    ImGui::Text("Time per time step: %fms", m_timePerTimeStep);
                     ImGui::SetItemTooltip("in milliseconds");
                     ImGui::SameLine();
                     HelpMarker("The time the solver takes to compute one time step.");
@@ -536,15 +527,6 @@ int tsunami_lab::ui::GUI::launch()
                         xlpmg::Message deleteCPMsg = xlpmg::DELETE_CHECKPOINTS;
                         m_communicator.sendToServer(messageToJsonString(deleteCPMsg));
                     }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Delete stations"))
-                    {
-                        xlpmg::Message deleteStationsMsg = xlpmg::DELETE_STATIONS;
-                        m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
-                    }
-
                     ImGui::EndTabItem();
                 }
                 //-------------------------------------------//
@@ -558,6 +540,7 @@ int tsunami_lab::ui::GUI::launch()
                         if (ImGui::BeginTabItem("Configuration"))
                         {
                             ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
+                            ImGui::Checkbox("Manage stations", &showStationsWindow);
                             ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
                             ImGui::EndTabItem();
                         }
@@ -1023,56 +1006,6 @@ int tsunami_lab::ui::GUI::launch()
                 ImGui::TreePop();
             }
 
-            if (ImGui::TreeNode("Stations"))
-            {
-                ImGui::InputText("Station name", m_currStationName, IM_ARRAYSIZE(m_currStationName));
-                ImGui::InputFloat("Location X", &m_currStationX, 0);
-                ImGui::InputFloat("Location Y", &m_currStationY, 0);
-
-                if (ImGui::Button("Add"))
-                {
-                    if (strlen(m_currStationName) > 0)
-                    {
-                        bool l_nameExists = false;
-                        for (Station l_s : m_stations)
-                        {
-                            if (l_s.name == m_currStationName)
-                            {
-                                l_nameExists = true;
-                                break;
-                            }
-                        }
-
-                        if (!l_nameExists)
-                        {
-                            Station l_station = {m_currStationName, m_currStationX, m_currStationY};
-                            m_stations.push_back(l_station);
-                        }
-                    }
-                }
-
-                if (ImGui::BeginListBox("Stations"))
-                {
-                    auto it = m_stations.begin();
-                    while (it != m_stations.end())
-                    {
-                        std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
-                        if (ImGui::Selectable(name.c_str(), it->isSelected))
-                        {
-                            it = m_stations.erase(it);
-                        }
-                        else
-                        {
-                            it++;
-                        }
-                    }
-                    ImGui::EndListBox();
-                }
-                ImGui::SetItemTooltip("Click to remove");
-
-                ImGui::TreePop();
-            }
-
             if (ImGui::TreeNode("Time step scaling"))
             {
                 ImGui::Text("Current time step scaling: %f", m_timeStepScaling);
@@ -1097,6 +1030,83 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::TextWrapped("Our advice: only set config data before running a simulation and if you are not writing into an existing solution file.");
             ImGui::End();
         }
+
+        if (showStationsWindow)
+        {
+            ImGui::Begin("Stations", &showStationsWindow);
+
+            ImGui::InputText("Station name", m_currStationName, IM_ARRAYSIZE(m_currStationName));
+            ImGui::InputFloat("Location X", &m_currStationX, 0);
+            ImGui::InputFloat("Location Y", &m_currStationY, 0);
+
+            if (ImGui::Button("Add to local list"))
+            {
+                if (strlen(m_currStationName) > 0)
+                {
+                    bool l_nameExists = false;
+                    for (Station l_s : m_stations)
+                    {
+                        if (l_s.name == m_currStationName)
+                        {
+                            l_nameExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!l_nameExists)
+                    {
+                        Station l_station = {m_currStationName, m_currStationX, m_currStationY};
+                        m_stations.push_back(l_station);
+                    }
+                }
+            }
+
+            if (ImGui::BeginListBox("Local stations"))
+            {
+                auto it = m_stations.begin();
+                while (it != m_stations.end())
+                {
+                    std::string name = it->name + " (" + std::to_string(it->positionX) + ", " + std::to_string(it->positionY) + ")";
+                    if (ImGui::Selectable(name.c_str(), it->isSelected))
+                    {
+                        it = m_stations.erase(it);
+                    }
+                    else
+                    {
+                        it++;
+                    }
+                }
+                ImGui::EndListBox();
+            }
+            ImGui::SetItemTooltip("Click to remove");
+
+            if (ImGui::Button("Add stations to server"))
+            {
+                xlpmg::Message l_addStationMessage = xlpmg::LOAD_STATIONS;
+                json l_args;
+                // stations
+                for (Station l_s : m_stations)
+                {
+                    json l_stationData;
+                    l_stationData["name"] = l_s.name;
+                    l_stationData["locX"] = l_s.positionX;
+                    l_stationData["locY"] = l_s.positionY;
+                    l_args["stations"].push_back(l_stationData);
+                }
+                l_addStationMessage.args = l_args;
+                m_communicator.sendToServer(messageToJsonString(l_addStationMessage));
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Delete stations on server"))
+            {
+                xlpmg::Message deleteStationsMsg = xlpmg::DELETE_STATIONS;
+                m_communicator.sendToServer(messageToJsonString(deleteStationsMsg));
+            }
+
+            ImGui::End();
+        }
         //--------------------------------------------//
         //-------------SYSTEM INFORMATION-------------//
         //--------------------------------------------//
@@ -1108,7 +1118,7 @@ int tsunami_lab::ui::GUI::launch()
                 m_lastSystemInfoUpdate = std::chrono::system_clock::now() + std::chrono::seconds(m_systemInfoUpdateFrequency);
             }
 
-            ImGui::Begin("System information");
+            ImGui::Begin("System information", &showSystemInfoWindow);
 
             ImGui::Text("%f / %f GiB RAM usage", m_usedRAM, m_totalRAM);
 

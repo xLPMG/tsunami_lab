@@ -297,6 +297,9 @@ int main(int i_argc, char *i_argv[])
                         tsunami_lab::t_idx l_nCellsY = l_args["cellsY"];
                         simulator->setCellAmount(l_nCellsX, l_nCellsY);
                     }
+                    else if(l_key == xlpmg::LOAD_STATIONS.key){
+                        simulator->loadStations(l_args);
+                    }
                 }
                 // LOW
                 else if (l_urgency == xlpmg::LOW)

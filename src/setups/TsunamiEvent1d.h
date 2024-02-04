@@ -35,8 +35,11 @@ private:
   //! constant for pi
   static t_real constexpr m_pi = 3.14159265358979323846;
 
-  //
+  //! delta value
   static t_real constexpr m_delta = 20;
+
+  //! true if the bathymetry file exists
+  bool m_fileExists = true;
 
 public:
   /**
