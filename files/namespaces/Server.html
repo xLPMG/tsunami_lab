@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Server &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/namespaces/Server.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Simulator" href="Simulator.html" />
+    <link rel="prev" title="Client" href="Client.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Client.html">Client</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Server</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv44json"><code class="docutils literal notranslate"><span class="pre">json</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv44execNSt6stringE"><code class="docutils literal notranslate"><span class="pre">exec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv420exitSimulationThreadv"><code class="docutils literal notranslate"><span class="pre">exitSimulationThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv420checkSimThreadActivev"><code class="docutils literal notranslate"><span class="pre">checkSimThreadActive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412canRunThreadv"><code class="docutils literal notranslate"><span class="pre">canRunThread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv410updateDatav"><code class="docutils literal notranslate"><span class="pre">updateData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv44mainiA_Pc"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46m_PORT"><code class="docutils literal notranslate"><span class="pre">m_PORT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46m_EXIT"><code class="docutils literal notranslate"><span class="pre">m_EXIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv49simulator"><code class="docutils literal notranslate"><span class="pre">simulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv418m_simulationThread"><code class="docutils literal notranslate"><span class="pre">m_simulationThread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414m_updateThread"><code class="docutils literal notranslate"><span class="pre">m_updateThread</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414m_stopUpdating"><code class="docutils literal notranslate"><span class="pre">m_stopUpdating</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421m_isSimulationRunning"><code class="docutils literal notranslate"><span class="pre">m_isSimulationRunning</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv416m_lastDataUpdate"><code class="docutils literal notranslate"><span class="pre">m_lastDataUpdate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421m_dataUpdateFrequency"><code class="docutils literal notranslate"><span class="pre">m_dataUpdateFrequency</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412l_systemInfo"><code class="docutils literal notranslate"><span class="pre">l_systemInfo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv49l_usedRAM"><code class="docutils literal notranslate"><span class="pre">l_usedRAM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv410l_totalRAM"><code class="docutils literal notranslate"><span class="pre">l_totalRAM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv410l_cpuUsage"><code class="docutils literal notranslate"><span class="pre">l_cpuUsage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">UI</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/namespaces.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Server</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/namespaces/Server.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="server">
+<h1>Server<a class="headerlink" href="#server" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv44json">
+<span id="_CPPv34json"></span><span id="_CPPv24json"></span><span class="target" id="_server_8cpp_1ab701e3ac61a85b337ec5c1abaad6742d"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">json</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">nlohmann</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">json</span></span><a class="headerlink" href="#_CPPv44json" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44execNSt6stringE">
+<span id="_CPPv34execNSt6stringE"></span><span id="_CPPv24execNSt6stringE"></span><span id="exec__ss"></span><span class="target" id="_server_8cpp_1a615108d2fbe9cf45dfc282d5a877667f"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">exec</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_cmd</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44execNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Executes the given command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_cmd</strong> – The command to be executed. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The exit status of the command. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420exitSimulationThreadv">
+<span id="_CPPv320exitSimulationThreadv"></span><span id="_CPPv220exitSimulationThreadv"></span><span id="exitSimulationThread"></span><span class="target" id="_server_8cpp_1a4e9ce1c7bcb854281fa991242a9d3e0a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">exitSimulationThread</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420exitSimulationThreadv" title="Link to this definition"></a><br /></dt>
+<dd><p>Function to exit the simulation thread. </p>
+<p>This function sets the shouldExit flag of the simulator object to true, indicating that the simulation should be terminated as soon as possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420checkSimThreadActivev">
+<span id="_CPPv320checkSimThreadActivev"></span><span id="_CPPv220checkSimThreadActivev"></span><span id="checkSimThreadActive"></span><span class="target" id="_server_8cpp_1ad5b2e710cc2fceb5848ce0c3e2249fb9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">checkSimThreadActive</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420checkSimThreadActivev" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if the simulation thread is active. If the simulator is preparing, calculating, or resetting, the simulation is considered running. If the simulation thread is joinable, it is joined and the simulation is considered not running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412canRunThreadv">
+<span id="_CPPv312canRunThreadv"></span><span id="_CPPv212canRunThreadv"></span><span id="canRunThread"></span><span class="target" id="_server_8cpp_1a8c7751bf7f4ac1f699400076adcd3df1"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">canRunThread</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412canRunThreadv" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if a simulation thread can be run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>true if the simulation thread can be run, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410updateDatav">
+<span id="_CPPv310updateDatav"></span><span id="_CPPv210updateDatav"></span><span id="updateData"></span><span class="target" id="_server_8cpp_1a389fed96244d8611aad3f0000e947be4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">updateData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410updateDatav" title="Link to this definition"></a><br /></dt>
+<dd><p>Updates the data related to CPU and RAM usage. </p>
+<p>This function checks if it is time to update the data and if so, it retrieves the CPU usage and RAM usage. The updated data is stored in the respective variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv44mainiA_Pc">
+<span id="_CPPv34mainiA_Pc"></span><span id="_CPPv24mainiA_Pc"></span><span id="main__i.cPA"></span><span class="target" id="_server_8cpp_1ad326631151704dee3aa2d880d265fee0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">main</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_argc</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">i_argv</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44mainiA_Pc" title="Link to this definition"></a><br /></dt>
+<dd><p>Main function for the tsunami_lab server program. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Exit code (0 for success, non-zero for errors). </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv46m_PORT">
+<span id="_CPPv36m_PORT"></span><span id="_CPPv26m_PORT"></span><span id="m_PORT__i"></span><span class="target" id="_server_8cpp_1acdc1f199ea579d3cb3da8a2b986e8b19"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_PORT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">8080</span></span><a class="headerlink" href="#_CPPv46m_PORT" title="Link to this definition"></a><br /></dt>
+<dd><p>port for the server </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv46m_EXIT">
+<span id="_CPPv36m_EXIT"></span><span id="_CPPv26m_EXIT"></span><span id="m_EXIT__b"></span><span class="target" id="_server_8cpp_1a1829137b0861be185af11e6b5d18212c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_EXIT</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv46m_EXIT" title="Link to this definition"></a><br /></dt>
+<dd><p>exit flag </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv49simulator">
+<span id="_CPPv39simulator"></span><span id="_CPPv29simulator"></span><span id="simulator__tsunami_lab::SimulatorP"></span><span class="target" id="_server_8cpp_1a0188cc3b6fe29a050b886971e6b65913"></span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="Simulator.html#_CPPv4N11tsunami_lab9SimulatorE" title="tsunami_lab::Simulator"><span class="n"><span class="pre">Simulator</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">simulator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv49simulator" title="Link to this definition"></a><br /></dt>
+<dd><p>simulator object pointer </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv418m_simulationThread">
+<span id="_CPPv318m_simulationThread"></span><span id="_CPPv218m_simulationThread"></span><span id="m_simulationThread__std::thread"></span><span class="target" id="_server_8cpp_1a74b1eb8ecbbe3016da5d5b5f68861410"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">thread</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_simulationThread</span></span></span><a class="headerlink" href="#_CPPv418m_simulationThread" title="Link to this definition"></a><br /></dt>
+<dd><p>thread object while will be used to run simulation tasks </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv414m_updateThread">
+<span id="_CPPv314m_updateThread"></span><span id="_CPPv214m_updateThread"></span><span id="m_updateThread__std::thread"></span><span class="target" id="_server_8cpp_1a80a02bfe6b51386839694a94c85688ca"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">thread</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_updateThread</span></span></span><a class="headerlink" href="#_CPPv414m_updateThread" title="Link to this definition"></a><br /></dt>
+<dd><p>thread object which will be used to update system info </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv414m_stopUpdating">
+<span id="_CPPv314m_stopUpdating"></span><span id="_CPPv214m_stopUpdating"></span><span id="m_stopUpdating__std::atomic:b:"></span><span class="target" id="_server_8cpp_1a8c11d39cbe7877d5e06418f2e5a2a9c8"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">atomic</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_stopUpdating</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv414m_stopUpdating" title="Link to this definition"></a><br /></dt>
+<dd><p>flag to stop updating </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv421m_isSimulationRunning">
+<span id="_CPPv321m_isSimulationRunning"></span><span id="_CPPv221m_isSimulationRunning"></span><span id="m_isSimulationRunning__b"></span><span class="target" id="_server_8cpp_1ab6b799343a4bb1a85e8e3235244b9c0f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_isSimulationRunning</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv421m_isSimulationRunning" title="Link to this definition"></a><br /></dt>
+<dd><p>flag to check if simulation is running </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv416m_lastDataUpdate">
+<span id="_CPPv316m_lastDataUpdate"></span><span id="_CPPv216m_lastDataUpdate"></span><span id="m_lastDataUpdate__std::chrono::time_point"></span><span class="target" id="_server_8cpp_1a3f86309e9d8ac9fec94e6128eeb9bc34"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">chrono</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">time_point</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_lastDataUpdate</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">chrono</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">high_resolution_clock</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">now</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv416m_lastDataUpdate" title="Link to this definition"></a><br /></dt>
+<dd><p>last update time point </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv421m_dataUpdateFrequency">
+<span id="_CPPv321m_dataUpdateFrequency"></span><span id="_CPPv221m_dataUpdateFrequency"></span><span id="m_dataUpdateFrequency__i"></span><span class="target" id="_server_8cpp_1afe55c1a14a13cfc98fc40ef730f50ff4"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_dataUpdateFrequency</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">10</span></span><a class="headerlink" href="#_CPPv421m_dataUpdateFrequency" title="Link to this definition"></a><br /></dt>
+<dd><p>data update frequency in ms </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv412l_systemInfo">
+<span id="_CPPv312l_systemInfo"></span><span id="_CPPv212l_systemInfo"></span><span id="l_systemInfo__tsunami_lab::systeminfo::SystemInfo"></span><span class="target" id="_server_8cpp_1a7322fe7285eac56ca105877a8c7287da"></span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">systeminfo</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SystemInfo</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">l_systemInfo</span></span></span><a class="headerlink" href="#_CPPv412l_systemInfo" title="Link to this definition"></a><br /></dt>
+<dd><p>system info object </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv49l_usedRAM">
+<span id="_CPPv39l_usedRAM"></span><span id="_CPPv29l_usedRAM"></span><span id="l_usedRAM__double"></span><span class="target" id="_server_8cpp_1a1f3dcae74d3ba83ec418a9b7829cfa8b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">l_usedRAM</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv49l_usedRAM" title="Link to this definition"></a><br /></dt>
+<dd><p>amount of used RAM </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv410l_totalRAM">
+<span id="_CPPv310l_totalRAM"></span><span id="_CPPv210l_totalRAM"></span><span id="l_totalRAM__double"></span><span class="target" id="_server_8cpp_1ad7259e50c70328440cae2f26622b0a65"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">l_totalRAM</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv410l_totalRAM" title="Link to this definition"></a><br /></dt>
+<dd><p>total amount of RAM </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv410l_cpuUsage">
+<span id="_CPPv310l_cpuUsage"></span><span id="_CPPv210l_cpuUsage"></span><span id="l_cpuUsage__std::vector:float:"></span><span class="target" id="_server_8cpp_1a08b066115816e104c0adf350ee3bb12e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">l_cpuUsage</span></span></span><a class="headerlink" href="#_CPPv410l_cpuUsage" title="Link to this definition"></a><br /></dt>
+<dd><p>CPU usage vector. </p>
+</dd></dl>
+
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Client.html" class="btn btn-neutral float-left" title="Client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Simulator.html" class="btn btn-neutral float-right" title="Simulator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

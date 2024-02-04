@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulator &mdash; tsunami_lab  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://xlpmg.github.io/tsunami_lab/files/namespaces/Simulator.html" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Calculations" href="calculations.html" />
+    <link rel="prev" title="Server" href="Server.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tsunami_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categories/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../categories/usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../categories/assignments.html">Assignments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../categories/namespaces.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Server.html">Server</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N11tsunami_lab9SimulatorE"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator11isPreparingEv"><code class="docutils literal notranslate"><span class="pre">Simulator::isPreparing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator13isCalculatingEv"><code class="docutils literal notranslate"><span class="pre">Simulator::isCalculating()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator11isResettingEv"><code class="docutils literal notranslate"><span class="pre">Simulator::isResetting()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator11getWavePropEv"><code class="docutils literal notranslate"><span class="pre">Simulator::getWaveProp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator14getSetupChoiceERNSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::getSetupChoice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator13getTimeValuesERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxERN11tsunami_lab6t_realE"><code class="docutils literal notranslate"><span class="pre">Simulator::getTimeValues()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator13getCellAmountERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxE"><code class="docutils literal notranslate"><span class="pre">Simulator::getCellAmount()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator17getSimulationSizeERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"><code class="docutils literal notranslate"><span class="pre">Simulator::getSimulationSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator19getSimulationOffsetERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"><code class="docutils literal notranslate"><span class="pre">Simulator::getSimulationOffset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator14setSetupChoiceENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::setSetupChoice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator13setCellAmountEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"><code class="docutils literal notranslate"><span class="pre">Simulator::setCellAmount()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator9setOffsetEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"><code class="docutils literal notranslate"><span class="pre">Simulator::setOffset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator21setBathymetryFilePathENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::setBathymetryFilePath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator23setDisplacementFilePathENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::setDisplacementFilePath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator11setPreparedEb"><code class="docutils literal notranslate"><span class="pre">Simulator::setPrepared()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9SimulatorD0Ev"><code class="docutils literal notranslate"><span class="pre">Simulator::~Simulator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator17deleteCheckpointsEv"><code class="docutils literal notranslate"><span class="pre">Simulator::deleteCheckpoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator14deleteStationsEv"><code class="docutils literal notranslate"><span class="pre">Simulator::deleteStations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator14resetSimulatorEv"><code class="docutils literal notranslate"><span class="pre">Simulator::resetSimulator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator15writeCheckpointEv"><code class="docutils literal notranslate"><span class="pre">Simulator::writeCheckpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator22loadConfigDataFromFileENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::loadConfigDataFromFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator18loadConfigDataJsonE4json"><code class="docutils literal notranslate"><span class="pre">Simulator::loadConfigDataJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator12loadStationsE4json"><code class="docutils literal notranslate"><span class="pre">Simulator::loadStations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator10addStationEN11tsunami_lab6t_realEN11tsunami_lab6t_realENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::addStation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator21prepareForCalculationEv"><code class="docutils literal notranslate"><span class="pre">Simulator::prepareForCalculation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator14runCalculationEv"><code class="docutils literal notranslate"><span class="pre">Simulator::runCalculation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator12toggleFileIOEb"><code class="docutils literal notranslate"><span class="pre">Simulator::toggleFileIO()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator5startENSt6stringE"><code class="docutils literal notranslate"><span class="pre">Simulator::start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator10shouldExitEb"><code class="docutils literal notranslate"><span class="pre">Simulator::shouldExit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator16setPausingStatusEb"><code class="docutils literal notranslate"><span class="pre">Simulator::setPausingStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator24computeEstimatedTimeLeftEv"><code class="docutils literal notranslate"><span class="pre">Simulator::computeEstimatedTimeLeft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator17m_calculationTimeE"><code class="docutils literal notranslate"><span class="pre">Simulator::m_calculationTime</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator15m_preparingTimeE"><code class="docutils literal notranslate"><span class="pre">Simulator::m_preparingTime</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11tsunami_lab9Simulator17m_timePerTimeStepE"><code class="docutils literal notranslate"><span class="pre">Simulator::m_timePerTimeStep</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="calculations.html">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html">I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patches.html">Patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setups.html">Setups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui.html">UI</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tsunami_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../categories/namespaces.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Simulator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/files/namespaces/Simulator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simulator">
+<h1>Simulator<a class="headerlink" href="#simulator" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9SimulatorE">
+<span id="_CPPv3N11tsunami_lab9SimulatorE"></span><span id="_CPPv2N11tsunami_lab9SimulatorE"></span><span id="tsunami_lab::Simulator"></span><span class="target" id="classtsunami__lab_1_1_simulator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Simulator</span></span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab9SimulatorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator11isPreparingEv">
+<span id="_CPPv3N11tsunami_lab9Simulator11isPreparingEv"></span><span id="_CPPv2N11tsunami_lab9Simulator11isPreparingEv"></span><span id="tsunami_lab::Simulator::isPreparing"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a643e163dfe7b56cc007225b91b438c24"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isPreparing</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator11isPreparingEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the preparing status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Preparing status. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator13isCalculatingEv">
+<span id="_CPPv3N11tsunami_lab9Simulator13isCalculatingEv"></span><span id="_CPPv2N11tsunami_lab9Simulator13isCalculatingEv"></span><span id="tsunami_lab::Simulator::isCalculating"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ae43e5c111cd3a28bc3607eed0f17598d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isCalculating</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator13isCalculatingEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the calculating status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Calculating status. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator11isResettingEv">
+<span id="_CPPv3N11tsunami_lab9Simulator11isResettingEv"></span><span id="_CPPv2N11tsunami_lab9Simulator11isResettingEv"></span><span id="tsunami_lab::Simulator::isResetting"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a5f10f4e827aa0f1df980d60c49b7b1c6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isResetting</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator11isResettingEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the resetting status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Resetting status. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator11getWavePropEv">
+<span id="_CPPv3N11tsunami_lab9Simulator11getWavePropEv"></span><span id="_CPPv2N11tsunami_lab9Simulator11getWavePropEv"></span><span id="tsunami_lab::Simulator::getWaveProp"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a0133a16c15701e2dee0de1e2dc381ef1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="patches.html#_CPPv4N11tsunami_lab7patchesE" title="tsunami_lab::patches"><span class="n"><span class="pre">patches</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="patches.html#_CPPv4N11tsunami_lab7patches15WavePropagationE" title="tsunami_lab::patches::WavePropagation"><span class="n"><span class="pre">WavePropagation</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">getWaveProp</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator11getWavePropEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a pointer to the current Wavepropagation patch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pointer to wavepropagation patch. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator14getSetupChoiceERNSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator14getSetupChoiceERNSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator14getSetupChoiceERNSt6stringE"></span><span id="tsunami_lab::Simulator::getSetupChoice__ssR"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a5f28515e4ad4259976e042b3a4e27511"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSetupChoice</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_setupChoice</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator14getSetupChoiceERNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the setup choice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o_setupChoice</strong> – setup choice</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator13getTimeValuesERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxERN11tsunami_lab6t_realE">
+<span id="_CPPv3N11tsunami_lab9Simulator13getTimeValuesERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxERN11tsunami_lab6t_realE"></span><span id="_CPPv2N11tsunami_lab9Simulator13getTimeValuesERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxERN11tsunami_lab6t_realE"></span><span id="tsunami_lab::Simulator::getTimeValues__tsunami_lab::t_idxR.tsunami_lab::t_idxR.tsunami_lab::t_realR"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ae276414442442e67e80e126313cdb1e4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getTimeValues</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_currentTimeStep</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_maxTimeStep</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_timePerTimestep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator13getTimeValuesERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxERN11tsunami_lab6t_realE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets time step values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o_currentTimeStep</strong> – pointer to current time step </p></li>
+<li><p><strong>o_maxTimeStep</strong> – pointer to maximum time step </p></li>
+<li><p><strong>o_timePerTimestep</strong> – pointer to time per time step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator13getCellAmountERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxE">
+<span id="_CPPv3N11tsunami_lab9Simulator13getCellAmountERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxE"></span><span id="_CPPv2N11tsunami_lab9Simulator13getCellAmountERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxE"></span><span id="tsunami_lab::Simulator::getCellAmount__tsunami_lab::t_idxR.tsunami_lab::t_idxR"></span><span class="target" id="classtsunami__lab_1_1_simulator_1aae6967301e518ac5d58f451e33ae6f44"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getCellAmount</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_ncellsX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_ncellsY</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator13getCellAmountERN11tsunami_lab5t_idxERN11tsunami_lab5t_idxE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the cell amounts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o_ncellsX</strong> – pointer to cell amount for x dimension </p></li>
+<li><p><strong>o_ncellsY</strong> – pointer to cell amount for y dimension</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator17getSimulationSizeERN11tsunami_lab6t_realERN11tsunami_lab6t_realE">
+<span id="_CPPv3N11tsunami_lab9Simulator17getSimulationSizeERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"></span><span id="_CPPv2N11tsunami_lab9Simulator17getSimulationSizeERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"></span><span id="tsunami_lab::Simulator::getSimulationSize__tsunami_lab::t_realR.tsunami_lab::t_realR"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ade8935b88693086893c801fcb97289cb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSimulationSize</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_sizeX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_sizeY</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator17getSimulationSizeERN11tsunami_lab6t_realERN11tsunami_lab6t_realE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the simulation size. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o_sizeX</strong> – pointer to simulation size for x dimension </p></li>
+<li><p><strong>o_sizeY</strong> – pointer to simulation size for y dimension </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator19getSimulationOffsetERN11tsunami_lab6t_realERN11tsunami_lab6t_realE">
+<span id="_CPPv3N11tsunami_lab9Simulator19getSimulationOffsetERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"></span><span id="_CPPv2N11tsunami_lab9Simulator19getSimulationOffsetERN11tsunami_lab6t_realERN11tsunami_lab6t_realE"></span><span id="tsunami_lab::Simulator::getSimulationOffset__tsunami_lab::t_realR.tsunami_lab::t_realR"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a8a7312c27b4e7e5206e10cabab8f5d54"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSimulationOffset</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_offsetX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">o_offsetY</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator19getSimulationOffsetERN11tsunami_lab6t_realERN11tsunami_lab6t_realE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the simulation offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o_offsetX</strong> – pointer to offset for x dimension </p></li>
+<li><p><strong>o_offsetY</strong> – pointer to offset for y dimension</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator14setSetupChoiceENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator14setSetupChoiceENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator14setSetupChoiceENSt6stringE"></span><span id="tsunami_lab::Simulator::setSetupChoice__ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ae488571ac5a66e217f1e490f639b9c8f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setSetupChoice</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_setupChoice</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator14setSetupChoiceENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the setup choice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_setupChoice</strong> – Setup choice. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator13setCellAmountEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE">
+<span id="_CPPv3N11tsunami_lab9Simulator13setCellAmountEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"></span><span id="_CPPv2N11tsunami_lab9Simulator13setCellAmountEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"></span><span id="tsunami_lab::Simulator::setCellAmount__tsunami_lab::t_idx.tsunami_lab::t_idx"></span><span class="target" id="classtsunami__lab_1_1_simulator_1aea597563c803a7e193ec0963662d660f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setCellAmount</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_ncellsX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_ncellsY</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator13setCellAmountEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the cell amount.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_ncellsX</strong> – cells in x-direction. </p></li>
+<li><p><strong>i_ncellsY</strong> – cells in y-direction. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator9setOffsetEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE">
+<span id="_CPPv3N11tsunami_lab9Simulator9setOffsetEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"></span><span id="_CPPv2N11tsunami_lab9Simulator9setOffsetEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE"></span><span id="tsunami_lab::Simulator::setOffset__tsunami_lab::t_idx.tsunami_lab::t_idx"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a3ec1d3ba59cd97364f6ae15c56097590"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setOffset</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_idx</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_offsetY</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator9setOffsetEN11tsunami_lab5t_idxEN11tsunami_lab5t_idxE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_offsetX</strong> – offset in x-direction. </p></li>
+<li><p><strong>i_offsetY</strong> – offset in y-direction. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator21setBathymetryFilePathENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator21setBathymetryFilePathENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator21setBathymetryFilePathENSt6stringE"></span><span id="tsunami_lab::Simulator::setBathymetryFilePath__ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a4a8c0f2a4af9f80e0c0cfe25304c3d18"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setBathymetryFilePath</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_filePath</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator21setBathymetryFilePathENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the bathymetry file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_filePath</strong> – file path. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator23setDisplacementFilePathENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator23setDisplacementFilePathENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator23setDisplacementFilePathENSt6stringE"></span><span id="tsunami_lab::Simulator::setDisplacementFilePath__ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ac0237e39e76abe34a134189b1ab6b7ef"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setDisplacementFilePath</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_filePath</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator23setDisplacementFilePathENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets displacement file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_filePath</strong> – file path. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator11setPreparedEb">
+<span id="_CPPv3N11tsunami_lab9Simulator11setPreparedEb"></span><span id="_CPPv2N11tsunami_lab9Simulator11setPreparedEb"></span><span id="tsunami_lab::Simulator::setPrepared__b"></span><span class="target" id="classtsunami__lab_1_1_simulator_1adc583803544b81f50bba9886496d033c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPrepared</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_prepared</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator11setPreparedEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the prepared flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_prepared</strong> – prepared flag </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9SimulatorD0Ev">
+<span id="_CPPv3N11tsunami_lab9SimulatorD0Ev"></span><span id="_CPPv2N11tsunami_lab9SimulatorD0Ev"></span><span id="tsunami_lab::Simulator::~Simulator"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ac90d22447cf0851391c8cfbd56cc293b"></span><span class="sig-name descname"><span class="n"><span class="pre">~Simulator</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9SimulatorD0Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>Destructor which frees all allocated memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator17deleteCheckpointsEv">
+<span id="_CPPv3N11tsunami_lab9Simulator17deleteCheckpointsEv"></span><span id="_CPPv2N11tsunami_lab9Simulator17deleteCheckpointsEv"></span><span id="tsunami_lab::Simulator::deleteCheckpoints"></span><span class="target" id="classtsunami__lab_1_1_simulator_1afc6d83c88358eb34c68d4e175a24ffbc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deleteCheckpoints</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator17deleteCheckpointsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Deletes the Checkpoint files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator14deleteStationsEv">
+<span id="_CPPv3N11tsunami_lab9Simulator14deleteStationsEv"></span><span id="_CPPv2N11tsunami_lab9Simulator14deleteStationsEv"></span><span id="tsunami_lab::Simulator::deleteStations"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ad967087c6c91c30458ea866251c8e2e5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deleteStations</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator14deleteStationsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Deletes all stations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator14resetSimulatorEv">
+<span id="_CPPv3N11tsunami_lab9Simulator14resetSimulatorEv"></span><span id="_CPPv2N11tsunami_lab9Simulator14resetSimulatorEv"></span><span id="tsunami_lab::Simulator::resetSimulator"></span><span class="target" id="classtsunami__lab_1_1_simulator_1aed42f16a298b57788a2a6e674f9deeba"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">resetSimulator</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator14resetSimulatorEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Resets the simulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator15writeCheckpointEv">
+<span id="_CPPv3N11tsunami_lab9Simulator15writeCheckpointEv"></span><span id="_CPPv2N11tsunami_lab9Simulator15writeCheckpointEv"></span><span id="tsunami_lab::Simulator::writeCheckpoint"></span><span class="target" id="classtsunami__lab_1_1_simulator_1afb9413640f8dca4c86bcb42c9b712325"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">writeCheckpoint</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator15writeCheckpointEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Calls the netcdf writeCheckpoint function with necessary parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator22loadConfigDataFromFileENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator22loadConfigDataFromFileENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator22loadConfigDataFromFileENSt6stringE"></span><span id="tsunami_lab::Simulator::loadConfigDataFromFile__ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a70447e0d9772617d96cf93e37efcc8ac"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadConfigDataFromFile</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_configFilePath</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator22loadConfigDataFromFileENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Loads the config data from a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_configFilePath</strong> – path of the config file </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator18loadConfigDataJsonE4json">
+<span id="_CPPv3N11tsunami_lab9Simulator18loadConfigDataJsonE4json"></span><span id="_CPPv2N11tsunami_lab9Simulator18loadConfigDataJsonE4json"></span><span id="tsunami_lab::Simulator::loadConfigDataJson__json"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a16575a8e00008d6366289a3ff5f4da19"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadConfigDataJson</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="Server.html#_CPPv44json" title="json"><span class="n"><span class="pre">json</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator18loadConfigDataJsonE4json" title="Link to this definition"></a><br /></dt>
+<dd><p>Loads the config data from an input json string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_config</strong> – config data in json format </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator12loadStationsE4json">
+<span id="_CPPv3N11tsunami_lab9Simulator12loadStationsE4json"></span><span id="_CPPv2N11tsunami_lab9Simulator12loadStationsE4json"></span><span id="tsunami_lab::Simulator::loadStations__json"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a67743cc48bd36c8aaf8bb31f581b190e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadStations</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="Server.html#_CPPv44json" title="json"><span class="n"><span class="pre">json</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">i_jsonData</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator12loadStationsE4json" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets up stations from config data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator10addStationEN11tsunami_lab6t_realEN11tsunami_lab6t_realENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator10addStationEN11tsunami_lab6t_realEN11tsunami_lab6t_realENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator10addStationEN11tsunami_lab6t_realEN11tsunami_lab6t_realENSt6stringE"></span><span id="tsunami_lab::Simulator::addStation__tsunami_lab::t_real.tsunami_lab::t_real.ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a6fe43680b5b3a31fe9732556b619549c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addStation</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_locationX</span></span>, <span class="n"><span class="pre">tsunami_lab</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">t_real</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_locationY</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_stationName</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator10addStationEN11tsunami_lab6t_realEN11tsunami_lab6t_realENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets up a station.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_locationX</strong> – location of the station in x-direction </p></li>
+<li><p><strong>i_locationY</strong> – location of the station in y-direction </p></li>
+<li><p><strong>i_stationName</strong> – name of the station </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator21prepareForCalculationEv">
+<span id="_CPPv3N11tsunami_lab9Simulator21prepareForCalculationEv"></span><span id="_CPPv2N11tsunami_lab9Simulator21prepareForCalculationEv"></span><span id="tsunami_lab::Simulator::prepareForCalculation"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a7f6a2f4ccf71513953b71cbb14a04022"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepareForCalculation</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator21prepareForCalculationEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Prepares the solver for calculation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator14runCalculationEv">
+<span id="_CPPv3N11tsunami_lab9Simulator14runCalculationEv"></span><span id="_CPPv2N11tsunami_lab9Simulator14runCalculationEv"></span><span id="tsunami_lab::Simulator::runCalculation"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ac111cdc8fb73c59d0250bae8e78dd772"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">runCalculation</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator14runCalculationEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Starts the calculation with the set parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator12toggleFileIOEb">
+<span id="_CPPv3N11tsunami_lab9Simulator12toggleFileIOEb"></span><span id="_CPPv2N11tsunami_lab9Simulator12toggleFileIOEb"></span><span id="tsunami_lab::Simulator::toggleFileIO__b"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a6d8dc64fa757654f04ffb7d07efee4ca"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">toggleFileIO</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_useFileIO</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator12toggleFileIOEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Enables or disables file I/O.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_useFileIO</strong> – true if file I/O should be enabled. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator5startENSt6stringE">
+<span id="_CPPv3N11tsunami_lab9Simulator5startENSt6stringE"></span><span id="_CPPv2N11tsunami_lab9Simulator5startENSt6stringE"></span><span id="tsunami_lab::Simulator::start__ss"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a0a9d712cd539819d41449bf3beb52a05"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">start</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator5startENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Starts the main loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_config</strong> – path to a config .json file or “”. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>exit code </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator10shouldExitEb">
+<span id="_CPPv3N11tsunami_lab9Simulator10shouldExitEb"></span><span id="_CPPv2N11tsunami_lab9Simulator10shouldExitEb"></span><span id="tsunami_lab::Simulator::shouldExit__b"></span><span class="target" id="classtsunami__lab_1_1_simulator_1afb7e629af22f68880dd127cb4d4808d6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">shouldExit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_shouldExit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator10shouldExitEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the exit flag to provide a safe-exit mechanism.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_shouldExit</strong> – whether to exit or not. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator16setPausingStatusEb">
+<span id="_CPPv3N11tsunami_lab9Simulator16setPausingStatusEb"></span><span id="_CPPv2N11tsunami_lab9Simulator16setPausingStatusEb"></span><span id="tsunami_lab::Simulator::setPausingStatus__b"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ab97e85a402ab884ee7954751c04e66e4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPausingStatus</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i_pauseStatus</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator16setPausingStatusEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the pause flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_pauseStatus</strong> – whether to pause or not. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator24computeEstimatedTimeLeftEv">
+<span id="_CPPv3N11tsunami_lab9Simulator24computeEstimatedTimeLeftEv"></span><span id="_CPPv2N11tsunami_lab9Simulator24computeEstimatedTimeLeftEv"></span><span id="tsunami_lab::Simulator::computeEstimatedTimeLeft"></span><span class="target" id="classtsunami__lab_1_1_simulator_1abb1570b6010b13d0b9564a07008d4e84"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeEstimatedTimeLeft</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator24computeEstimatedTimeLeftEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator17m_calculationTimeE">
+<span id="_CPPv3N11tsunami_lab9Simulator17m_calculationTimeE"></span><span id="_CPPv2N11tsunami_lab9Simulator17m_calculationTimeE"></span><span id="tsunami_lab::Simulator::m_calculationTime__std::atomic:double:"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ac0b022d9d6c59dc7e9c1f9e81ae45254"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">atomic</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_calculationTime</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator17m_calculationTimeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator15m_preparingTimeE">
+<span id="_CPPv3N11tsunami_lab9Simulator15m_preparingTimeE"></span><span id="_CPPv2N11tsunami_lab9Simulator15m_preparingTimeE"></span><span id="tsunami_lab::Simulator::m_preparingTime__std::atomic:double:"></span><span class="target" id="classtsunami__lab_1_1_simulator_1a4e1be4ad7b7caebcc8460aba2ae37368"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">atomic</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_preparingTime</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator15m_preparingTimeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11tsunami_lab9Simulator17m_timePerTimeStepE">
+<span id="_CPPv3N11tsunami_lab9Simulator17m_timePerTimeStepE"></span><span id="_CPPv2N11tsunami_lab9Simulator17m_timePerTimeStepE"></span><span id="tsunami_lab::Simulator::m_timePerTimeStep__std::atomic:double:"></span><span class="target" id="classtsunami__lab_1_1_simulator_1ab189330e09fa05c4685c9e4eb8c0912a"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">atomic</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_timePerTimeStep</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N11tsunami_lab9Simulator17m_timePerTimeStepE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Server.html" class="btn btn-neutral float-left" title="Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="calculations.html" class="btn btn-neutral float-right" title="Calculations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Luca-Philipp Grumbach &amp; Richard Hofmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
