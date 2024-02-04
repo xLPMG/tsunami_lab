@@ -30,7 +30,7 @@ All it takes is to send the correct commands to the server by sticking to the AP
 GUI (Client-side)
 *********************
 
-The Gui is desigend to be as instinctively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.
+The Gui is desigend to be as intuitively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.
 
 ..  image:: ../../_static/assets/task-10-Gui_help.png
 
