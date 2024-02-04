@@ -302,7 +302,9 @@ private:
 
     /**
      *  Gets the setup choice.
-     *
+     * 
+     *  @param o_setupChoice setup choice 
+     * 
      *  @return void
      */
     void getSetupChoice(std::string &o_setupChoice)
@@ -312,8 +314,12 @@ private:
 
     /**
      *  Gets time step values.
-     *
-     *  @return time step
+     * 
+     *  @param o_currentTimeStep pointer to current time step
+     *  @param o_maxTimeStep pointer to maximum time step
+     *  @param o_timePerTimestep pointer to time per time step
+     * 
+     *  @return void
      */
     void getTimeValues(tsunami_lab::t_idx &o_currentTimeStep,
                        tsunami_lab::t_idx &o_maxTimeStep,
@@ -326,7 +332,10 @@ private:
 
     /**
      *  Gets the cell amounts.
-     *
+     * 
+     *  @param o_ncellsX pointer to cell amount for x dimension
+     *  @param o_ncellsY pointer to cell amount for y dimension
+     * 
      *  @return void
      */
     void getCellAmount(tsunami_lab::t_idx &o_ncellsX,
@@ -338,7 +347,8 @@ private:
 
     /**
      *  Gets the simulation size.
-     *
+     *  @param o_sizeX pointer to simulation size for x dimension
+     *  @param o_sizeY pointer to simulation size for y dimension
      *  @return void
      */
     void getSimulationSize(tsunami_lab::t_real &o_sizeX,
@@ -351,6 +361,9 @@ private:
     /**
      *  Gets the simulation offset.
      *
+     *  @param o_offsetX pointer to offset for x dimension 
+     *  @param o_offsetY pointer to offset for y dimension 
+     * 
      *  @return void
      */
     void getSimulationOffset(tsunami_lab::t_real &o_offsetX,
