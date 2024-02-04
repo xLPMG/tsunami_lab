@@ -120,12 +120,12 @@ Calculating the used RAM was a bit more tricky: there are several ways to do thi
 After some research, we found out that that value is roughly calculated by adding the amount of ``active``, ``wired`` and ``occupied`` pages and substracing ``purgeable`` ones.
 This data is retrieved from ``vm_stat``. To get a value in Bytes, we just had to multiply the amount of pages with the page size.
 
-*********************
+******************************************
 Compiling
-*********************
+******************************************
 
 SConstruct
-======================
+-----------
 
 As a base for our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
 We chose the `GLFW <https://www.glfw.org/>`_ implementation as it is cross-platform and also very well known.
@@ -167,7 +167,7 @@ We also added the ImGui and ImPlot sources to the build path.
 If ``gui=no`` is set in the compile command, the GUI will not be built (therefore all GUI libraries ignored) and the program can be run normally using ``./tsunami_lab``.
 
 Known error when building documentary
-======================================
+--------------------------------------
 
 When building the documentary, the following error may occur:
 
@@ -201,7 +201,7 @@ the Communicator and the API. The code itself is already extensively documented,
     That is why messages from the API need to be converted to text before they can be sent.
 
 Communicator
-=====================
+--------------------------------------
 
 For communication between simulation and the GUI we implemented a communication library. 
 The **Communicator.hpp** library can be used to easily create a client-server TCP connection and handle its communication and logging.
@@ -211,7 +211,7 @@ There are also features such as different log messages with time stamps or autom
 All this code is hidden behind a simple interface, so the actual code stays clean and easy to read.
 
 Communicator API
-=====================
+--------------------------------------
 
 (**File: communicator_api.h**)
 
