@@ -203,7 +203,7 @@ private:
   //! Maximum number of time steps
   int m_maxTimeSteps = 0;
   //! Time per time step in milliseconds
-  int m_timePerTimeStep = 0;
+  double m_timePerTimeStep = 0;
   //! Estimated time left in seconds
   double m_estimatedTimeLeft = 0;
 

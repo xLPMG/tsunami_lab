@@ -86,7 +86,7 @@ void tsunami_lab::ui::GUI::updateTimeValues()
         xlpmg::Message responseMessage = xlpmg::jsonToMessage(json::parse(response));
         m_currentTimeStep = responseMessage.args.value("currentTimeStep", (int)0);
         m_maxTimeSteps = responseMessage.args.value("maxTimeStep", (int)0);
-        m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (int)0);
+        m_timePerTimeStep = responseMessage.args.value("timePerTimeStep", (double)0);
         m_estimatedTimeLeft = ((m_maxTimeSteps - m_currentTimeStep) * m_timePerTimeStep) / 1000;
         m_simulationStatus = responseMessage.args.value("status", "UNKNOWN");
     }
@@ -494,7 +494,7 @@ int tsunami_lab::ui::GUI::launch()
                     ImGui::SameLine();
                     HelpMarker("The continuous dimension of time is discretized using 'time steps'. The length of a time step is computed anew for each simulation in a way such that the waves do not interact with each other.");
 
-                    ImGui::Text("Time per time step: %ims", m_timePerTimeStep);
+                    ImGui::Text("Time per time step: %fms", m_timePerTimeStep);
                     ImGui::SetItemTooltip("in milliseconds");
                     ImGui::SameLine();
                     HelpMarker("The time the solver takes to compute one time step.");

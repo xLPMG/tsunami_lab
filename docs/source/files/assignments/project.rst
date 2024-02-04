@@ -53,7 +53,7 @@ The last items on this page reset or delete files and data of the former run.
 
 The next tab is divided into two sections. The first one concludes all options to modify the simulation parameters and the undelying programm via compiler options.
 You can choose from a variety of modes to recompile. Multiple flags like OpenMP usage and optimization levels further grant more options for working with the simulation.
-The user can also enter the number of threads that OpenMP will use. Lastly, reports can be created and and the runner for recompilation selected.
+The user can also enter the number of threads that OpenMP will use. Lastly, reports can be created and the runner for recompilation selected.
 
 The second window of the tab contains all simulation parameters before the start of computation. 
 Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
@@ -112,7 +112,7 @@ MacOS
 ^^^^^^
   
 Getting a good estimate of the CPU utilization was a bit tricky. As of now, we found that the quickest way to do this was to just read the output of the ``top`` command and parse the CPU usage from there.
-We had to sacrifice performance and and are only able to view the overall usage, but we ended up with a simple and working solution.
+We had to sacrifice performance and are only able to view the overall usage, but we ended up with a simple and working solution.
 People who are interested in individual core usage will most likely not be running the server application on a MacOS machine anyway.
 
 ``getRAMUsage()`` uses the ``sysctl.h`` header file to read the total amount of RAM. 

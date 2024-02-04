@@ -834,7 +834,7 @@ void tsunami_lab::Simulator::runCalculation()
     m_simTime += m_dt;
 
     auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - l_beginCalc);
-    m_timePerTimeStep = l_durationTimeSteps.count() / m_timeStep;
+    m_timePerTimeStep = (double) l_durationTimeSteps.count() / m_timeStep;
   }
 
   auto l_endCalc = std::chrono::high_resolution_clock::now();
