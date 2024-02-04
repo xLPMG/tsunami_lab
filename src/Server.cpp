@@ -8,31 +8,31 @@
 #include <atomic>
 using json = nlohmann::json;
 
-//! port for the server
+//! Port for the server
 int m_PORT = 8080;
-//! exit flag
+//! Exit flag
 bool m_EXIT = false;
-//! simulator object pointer
+//! Simulator object pointer
 tsunami_lab::Simulator *simulator = nullptr;
-//! thread object while will be used to run simulation tasks
+//! Thread object which will be used to run simulation tasks
 std::thread m_simulationThread;
-//! thread object which will be used to update system info
+//! Thread object which will be used to update system info
 std::thread m_updateThread;
-//! flag to stop updating
+//! Flag to stop updating
 std::atomic<bool> m_stopUpdating = false;
-//! flag to check if simulation is running
+//! Flag to check if simulation is running
 bool m_isSimulationRunning = false;
 
-//! last update time point
+//! Last update time point
 std::chrono::time_point m_lastDataUpdate = std::chrono::high_resolution_clock::now();
-//! data update frequency in ms
+//! Lata update frequency in ms
 int m_dataUpdateFrequency = 10;
 
-//! system info object
+//! System info object
 tsunami_lab::systeminfo::SystemInfo l_systemInfo;
-//! amount of used RAM
+//! Amount of used RAM
 double l_usedRAM = 0;
-//! total amount of RAM
+//! Total amount of RAM
 double l_totalRAM = 0;
 //! CPU usage vector
 std::vector<float> l_cpuUsage;
