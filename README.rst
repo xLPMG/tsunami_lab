@@ -1,7 +1,3 @@
-.. figure:: docs/source/_static/assets/tohoku_example.png
-    
-    Visualization of an OpenMP-parallelized tsunami simulation of the March 11, 2011 M 9.1 Tohoku event.
-
 #############
 Tsunami Lab
 #############
@@ -14,5 +10,9 @@ During the class, we received weekly assignments which make up the final grade. 
 implementations of the given weekly tasks are what make up this repository - a fully functional 2D wave equation solver for Linux and MacOS.
 
 The documentation can be found here: https://xlpmg.github.io/tsunami_lab/index.html
+
+.. figure:: docs/source/_static/assets/tohoku_example.png
+    
+    Visualization of an OpenMP-parallelized tsunami simulation of the March 11, 2011 M 9.1 Tohoku event.
 
 
