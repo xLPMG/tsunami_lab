@@ -311,15 +311,15 @@ private:
     }
 
     /**
-     *  Gets the maximum timestep.
+     *  Gets time step values.
      *
      *  @return time step
      */
-    void getTimeValues(tsunami_lab::t_idx &o_currenttimeStep,
+    void getTimeValues(tsunami_lab::t_idx &o_currentTimeStep,
                        tsunami_lab::t_idx &o_maxTimeStep,
                        tsunami_lab::t_real &o_timePerTimestep)
     {
-        o_currenttimeStep = m_timeStep;
+        o_currentTimeStep = m_timeStep;
         o_maxTimeStep = m_timeStepMax;
         o_timePerTimestep = m_timePerTimeStep;
     }
