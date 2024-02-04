@@ -11,7 +11,7 @@ Table of Contents
    files/categories/usage
 
 .. toctree::
-   :caption: Code documentation
+   :caption: Documentation
    :maxdepth: 2
    :glob:
 

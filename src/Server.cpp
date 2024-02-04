@@ -8,43 +8,67 @@
 #include <atomic>
 using json = nlohmann::json;
 
+//! port for the server
 int m_PORT = 8080;
+//! exit flag
 bool m_EXIT = false;
+//! simulator object pointer
 tsunami_lab::Simulator *simulator = nullptr;
+//! thread object while will be used to run simulation tasks
 std::thread m_simulationThread;
+//! thread object which will be used to update system info
 std::thread m_updateThread;
+//! flag to stop updating
 std::atomic<bool> m_stopUpdating = false;
+//! flag to check if simulation is running
 bool m_isSimulationRunning = false;
 
-// last update time point
+//! last update time point
 std::chrono::time_point m_lastDataUpdate = std::chrono::high_resolution_clock::now();
-// data update frequency in ms
+//! data update frequency in ms
 int m_dataUpdateFrequency = 10;
 
-// system info
+//! system info object
 tsunami_lab::systeminfo::SystemInfo l_systemInfo;
+//! amount of used RAM
 double l_usedRAM = 0;
+//! total amount of RAM
 double l_totalRAM = 0;
+//! CPU usage vector
 std::vector<float> l_cpuUsage;
 
-int execWithOutput(std::string i_cmd, std::string i_outputFile)
-{
-    std::string commandString = (i_cmd + " > " + i_outputFile + " 2>&1 &").data();
-    const char *commandChars = commandString.data();
-    return system(commandChars);
-}
-
+/**
+ * Executes the given command.
+ * 
+ * @param i_cmd The command to be executed.
+ * @return The exit status of the command.
+ */
 int exec(std::string i_cmd)
 {
     return system(i_cmd.data());
 }
 
+/**
+ * @brief Function to exit the simulation thread.
+ * 
+ * This function sets the shouldExit flag of the simulator object to true,
+ * indicating that the simulation should be terminated as soon as possible.
+ * 
+ * @return void
+ */
 void exitSimulationThread()
 {
     std::cout << "Terminating as soon as possible..." << std::endl;
     simulator->shouldExit(true);
 }
 
+/**
+ * Checks if the simulation thread is active.
+ * If the simulator is preparing, calculating, or resetting, the simulation is considered running.
+ * If the simulation thread is joinable, it is joined and the simulation is considered not running.
+ * 
+ * @return void
+ */
 void checkSimThreadActive()
 {
     if (simulator->isPreparing() || simulator->isCalculating() || simulator->isResetting())
@@ -61,6 +85,11 @@ void checkSimThreadActive()
     }
 }
 
+/**
+ * Checks if a simulation thread can be run.
+ * 
+ * @return true if the simulation thread can be run, false otherwise.
+ */
 bool canRunThread()
 {
     checkSimThreadActive();
@@ -76,6 +105,14 @@ bool canRunThread()
     }
 }
 
+/**
+ * @brief Updates the data related to CPU and RAM usage.
+ * 
+ * This function checks if it is time to update the data and if so, it retrieves the CPU usage and RAM usage.
+ * The updated data is stored in the respective variables.
+ * 
+ * @return void
+ */
 void updateData()
 {
     if (m_lastDataUpdate <= std::chrono::high_resolution_clock::now())
@@ -86,6 +123,11 @@ void updateData()
     }
 }
 
+/**
+ * @brief Main function for the tsunami_lab server program.
+ * 
+ * @return Exit code (0 for success, non-zero for errors).
+ */
 int main(int i_argc, char *i_argv[])
 {
     int exitCode = 0;
