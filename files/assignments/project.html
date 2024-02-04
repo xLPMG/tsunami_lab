@@ -67,7 +67,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">10. Project Phase</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preface">Preface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gui-client-side">GUI (Client-side)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#server-side">Server-side</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server-side">Server-side</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#systeminfo">SystemInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#compiling">Compiling</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#sconstruct">SConstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#known-error-when-building-documentary">Known error when building documentary</a></li>
@@ -132,25 +135,25 @@ All it takes is to send the correct commands to the server by sticking to the AP
 </section>
 <section id="gui-client-side">
 <h2>GUI (Client-side)<a class="headerlink" href="#gui-client-side" title="Link to this heading"></a></h2>
-<p>The Gui is desigend to be as instinctively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.</p>
+<p>The Gui is desigend to be as intuitively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.</p>
 <img alt="../../_images/task-10-Gui_help.png" src="../../_images/task-10-Gui_help.png" />
 <p>The first tab gives some basic information about the project. It further presents a link to the documentation for more details.</p>
 <img alt="../../_images/task-10-Gui_connectivity.png" src="../../_images/task-10-Gui_connectivity.png" />
 <p>On this page the user connects the client side GUI with the server. Necessary inputs for the connection are the IP address and the port.
 The connection can then be opened or later closed.
-Furthermore, the buffersize for data transfer between server and client can be modified there.</p>
+Furthermore, the buffer size for data transfer between server and client can be modified here.</p>
 <img alt="../../_images/task-10-Gui_simulation_controlls.png" src="../../_images/task-10-Gui_simulation_controlls.png" />
 <p>The features of this tab focus on the progress of the wave simulation. Firstly, it can be started here and be canceled anytime via “kill simulation”.
 In addition to that, the simulation can be stopped and continued in order to modify parameters or compile options, without further computation.
 Additional information about time steps and the estimated computation duration are shown and vizualised.
 The last items on this page reset or delete files and data of the former run.</p>
 <img alt="../../_images/task-10-Gui_windows_conf.png" src="../../_images/task-10-Gui_windows_conf.png" />
-<p>The next tab is divided into two section. The first concludes all options to modify the simulation parameters and the undelying programm via compiler options.
-For recompilation are several modes and choices available. Multiple flags like OpenMP usage and optimization levels further grant  more options for working with the simulation.
-The user can also enter the number of threads that OpenMP will use. Furthermore, reports can be created and and the runner for recompilation selected.</p>
+<p>The next tab is divided into two sections. The first one concludes all options to modify the simulation parameters and the undelying programm via compiler options.
+You can choose from a variety of modes to recompile. Multiple flags like OpenMP usage and optimization levels further grant more options for working with the simulation.
+The user can also enter the number of threads that OpenMP will use. Lastly, reports can be created and the runner for recompilation selected.</p>
 <p>The second window of the tab contains all simulation parameters before the start of computation.
 Users can select between three events, for which the variables like cell size, cell amount, offset and endtime can be inserted. The Circular dambreak needs two water heights and a diameter for the setup.
-Artificial and custom events further use bathymetry and displacement. Therefore input for file paths is for these two available.
+Artificial and custom events further use bathymetry and displacement. Therefore file path input is available for these two.
 Down below, the file input and output can be specified in terms of  output format and writing frequency. The boundary conditions follow, as well as the station input.
 Here every station gets a name and position, which will be printed in the textbox below.
 The last feature of this window is the time step scaling. It has the purpose to calculate more timesteps and therefore get more detailed file output.</p>
@@ -159,7 +162,7 @@ The last feature of this window is the time step scaling. It has the purpose to 
 Station, bathymetry and water heigth data can be observed over time.
 The system info vizualization shows usaga of the RAM during computation.</p>
 <img alt="../../_images/task-10-Gui_file_transfer.png" src="../../_images/task-10-Gui_file_transfer.png" />
-<p>On the last window data files can be selected and then send to the server. Also receiving from the server ist possible.</p>
+<p>In the last window, data files can be selected and then sent to the server. Receiving from the server is possible as well.</p>
 </section>
 <section id="server-side">
 <h2>Server-side<a class="headerlink" href="#server-side" title="Link to this heading"></a></h2>
@@ -175,12 +178,34 @@ To not iterate through all message keys to find the right one, a message contain
 <p>The actual simulation is started by sending a <code class="docutils literal notranslate"><span class="pre">START_SIMULATION</span></code> message to the server.
 We then use an <code class="docutils literal notranslate"><span class="pre">std::thread</span></code> to run the simulation in a separate thread, so the server can still receive commands while the simulation is running.
 Note that only one simulation thread can be running at a time, but the GUI also provides an option to kill the current thread.</p>
+<section id="systeminfo">
+<h3>SystemInfo<a class="headerlink" href="#systeminfo" title="Link to this heading"></a></h3>
+<p>To collect information on CPU and RAM usage, the Server uses the <code class="docutils literal notranslate"><span class="pre">SystemInfo</span></code> class. Since this task is mostly OS-specific, we had to implement different methods for different operating systems.</p>
+<section id="linux">
+<h4>Linux<a class="headerlink" href="#linux" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">getCPUUsage()</span></code> reads from <code class="docutils literal notranslate"><span class="pre">/proc/stat</span></code> and calculates the CPU usage based on the values in that file.
+It provides us with info for each core on how much time it spent in different states (user, system, idle, etc.).
+The time is measures in jiffies, which are typically 1/100th of a second.
+The server reads this file every 10 milliseconds and calculates the CPU usage based on the difference between the current and the last read.</p>
+<p><code class="docutils literal notranslate"><span class="pre">getRAMUsage()</span></code> makes use of the <code class="docutils literal notranslate"><span class="pre">sysinfo.h</span></code> linux header file. It would’ve been possible to read from <code class="docutils literal notranslate"><span class="pre">/proc/meminfo</span></code> however we would have needed to parse the file and collect the correct value ourselves.</p>
+</section>
+<section id="macos">
+<h4>MacOS<a class="headerlink" href="#macos" title="Link to this heading"></a></h4>
+<p>Getting a good estimate of the CPU utilization was a bit tricky. As of now, we found that the quickest way to do this was to just read the output of the <code class="docutils literal notranslate"><span class="pre">top</span></code> command and parse the CPU usage from there.
+We had to sacrifice performance and are only able to view the overall usage, but we ended up with a simple and working solution.
+People who are interested in individual core usage will most likely not be running the server application on a MacOS machine anyway.</p>
+<p><code class="docutils literal notranslate"><span class="pre">getRAMUsage()</span></code> uses the <code class="docutils literal notranslate"><span class="pre">sysctl.h</span></code> header file to read the total amount of RAM.
+Calculating the used RAM was a bit more tricky: there are several ways to do this, but we wanted to get as close as possible to the value displayed in the <code class="docutils literal notranslate"><span class="pre">Activity</span> <span class="pre">Monitor</span></code>.
+After some research, we found out that that value is roughly calculated by adding the amount of <code class="docutils literal notranslate"><span class="pre">active</span></code>, <code class="docutils literal notranslate"><span class="pre">wired</span></code> and <code class="docutils literal notranslate"><span class="pre">occupied</span></code> pages and substracing <code class="docutils literal notranslate"><span class="pre">purgeable</span></code> ones.
+This data is retrieved from <code class="docutils literal notranslate"><span class="pre">vm_stat</span></code>. To get a value in Bytes, we just had to multiply the amount of pages with the page size.</p>
+</section>
+</section>
 </section>
 <section id="compiling">
 <h2>Compiling<a class="headerlink" href="#compiling" title="Link to this heading"></a></h2>
 <section id="sconstruct">
 <h3>SConstruct<a class="headerlink" href="#sconstruct" title="Link to this heading"></a></h3>
-<p>As a base four our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
+<p>As a base for our GUI, we decided to use OpenGL, as it is one of or maybe even the most widely compatible and commonly known graphics standard.
 We chose the <a class="reference external" href="https://www.glfw.org/">GLFW</a> implementation as it is cross-platform and also very well known.</p>
 <p>Currently we support building the sources on Linux, MacOS and Windows and therefore had to implement different include processes for each platform:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">in</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;gui&#39;</span><span class="p">]:</span>
@@ -230,7 +255,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM<span class="w"> </span><span class="o">(</span>Mess
 </div>
 <p>This is because the C++ parser does know now about this macro and therefore identifies it as wrong syntax.
 However the code is correct <a class="reference external" href="https://json.nlohmann.me/api/macros/nlohmann_json_serialize_enum/">(view the documentation here)</a>
-and we have not found away to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
+and we have not found a way to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
 The documentation should still build correctly.</p>
 </section>
 </section>
