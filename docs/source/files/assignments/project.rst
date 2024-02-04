@@ -93,6 +93,33 @@ The actual simulation is started by sending a ``START_SIMULATION`` message to th
 We then use an ``std::thread`` to run the simulation in a separate thread, so the server can still receive commands while the simulation is running.
 Note that only one simulation thread can be running at a time, but the GUI also provides an option to kill the current thread.
 
+SystemInfo
+-----------
+
+To collect information on CPU and RAM usage, the Server uses the ``SystemInfo`` class. Since this task is mostly OS-specific, we had to implement different methods for different operating systems.
+
+Linux
+^^^^^
+
+``getCPUUsage()`` reads from ``/proc/stat`` and calculates the CPU usage based on the values in that file. 
+It provides us with info for each core on how much time it spent in different states (user, system, idle, etc.). 
+The time is measures in jiffies, which are typically 1/100th of a second. 
+The server reads this file every 10 milliseconds and calculates the CPU usage based on the difference between the current and the last read.
+
+``getRAMUsage()`` makes use of the ``sysinfo.h`` linux header file. It would've been possible to read from ``/proc/meminfo`` however we would have needed to parse the file and collect the correct value ourselves.
+
+MacOS
+^^^^^^
+  
+Getting a good estimate of the CPU utilization was a bit tricky. As of now, we found that the quickest way to do this was to just read the output of the ``top`` command and parse the CPU usage from there.
+We had to sacrifice performance and and are only able to view the overall usage, but we ended up with a simple and working solution.
+People who are interested in individual core usage will most likely not be running the server application on a MacOS machine anyway.
+
+``getRAMUsage()`` uses the ``sysctl.h`` header file to read the total amount of RAM. 
+Calculating the used RAM was a bit more tricky: there are several ways to do this, but we wanted to get as close as possible to the value displayed in the ``Activity Monitor``.
+After some research, we found out that that value is roughly calculated by adding the amount of ``active``, ``wired`` and ``occupied`` pages and substracing ``purgeable`` ones.
+This data is retrieved from ``vm_stat``. To get a value in Bytes, we just had to multiply the amount of pages with the page size.
+
 *********************
 Compiling
 *********************
@@ -157,7 +184,7 @@ When building the documentary, the following error may occur:
 
 This is because the C++ parser does know now about this macro and therefore identifies it as wrong syntax.
 However the code is correct `(view the documentation here) <https://json.nlohmann.me/api/macros/nlohmann_json_serialize_enum/>`_
-and we have not found away to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
+and we have not found a way to supress this message. The error does not seem to be on our side, which is why there will be no fix for this.
 The documentation should still build correctly.
 
 *********************
