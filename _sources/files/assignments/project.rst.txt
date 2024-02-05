@@ -5,6 +5,8 @@
 In the project phase we decided to implement a user-friendly Gui. The aim was to make the usage of our Tsunami solver
 as easy and interactive as possible. 
 
+All authors contributed in equal parts.
+
 *********************
 Preface
 *********************
@@ -103,7 +105,7 @@ Linux
 
 ``getCPUUsage()`` reads from ``/proc/stat`` and calculates the CPU usage based on the values in that file. 
 It provides us with info for each core on how much time it spent in different states (user, system, idle, etc.). 
-The time is measures in jiffies, which are typically 1/100th of a second. 
+The time is measured in jiffies, which are typically 1/100th of a second. 
 The server reads this file every 10 milliseconds and calculates the CPU usage based on the difference between the current and the last read.
 
 ``getRAMUsage()`` makes use of the ``sysinfo.h`` linux header file. It would've been possible to read from ``/proc/meminfo`` however we would have needed to parse the file and collect the correct value ourselves.
@@ -217,6 +219,5 @@ Communicator API
 
 Since all communication happens using text over TCP, we had to implement a structure that both server and client can adhere to
 in order to guarantee correct communication. For this, we decided to send all data in JSON format and a ``Message`` struct.
-
 
 .. note:: For further information, see :ref:`ns-lib`

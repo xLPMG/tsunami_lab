@@ -117,6 +117,7 @@
 <h1>10. Project Phase<a class="headerlink" href="#project-phase" title="Link to this heading"></a></h1>
 <p>In the project phase we decided to implement a user-friendly Gui. The aim was to make the usage of our Tsunami solver
 as easy and interactive as possible.</p>
+<p>All authors contributed in equal parts.</p>
 <section id="preface">
 <h2>Preface<a class="headerlink" href="#preface" title="Link to this heading"></a></h2>
 <p>While we tried to stick to our plan as best as we could, we decided to do some things a little different.
@@ -185,7 +186,7 @@ Note that only one simulation thread can be running at a time, but the GUI also 
 <h4>Linux<a class="headerlink" href="#linux" title="Link to this heading"></a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">getCPUUsage()</span></code> reads from <code class="docutils literal notranslate"><span class="pre">/proc/stat</span></code> and calculates the CPU usage based on the values in that file.
 It provides us with info for each core on how much time it spent in different states (user, system, idle, etc.).
-The time is measures in jiffies, which are typically 1/100th of a second.
+The time is measured in jiffies, which are typically 1/100th of a second.
 The server reads this file every 10 milliseconds and calculates the CPU usage based on the difference between the current and the last read.</p>
 <p><code class="docutils literal notranslate"><span class="pre">getRAMUsage()</span></code> makes use of the <code class="docutils literal notranslate"><span class="pre">sysinfo.h</span></code> linux header file. It would’ve been possible to read from <code class="docutils literal notranslate"><span class="pre">/proc/meminfo</span></code> however we would have needed to parse the file and collect the correct value ourselves.</p>
 </section>
