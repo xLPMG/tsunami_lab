@@ -135,7 +135,7 @@ All it takes is to send the correct commands to the server by sticking to the AP
 </section>
 <section id="gui-client-side">
 <h2>GUI (Client-side)<a class="headerlink" href="#gui-client-side" title="Link to this heading"></a></h2>
-<p>The Gui is desigend to be as intuitively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.</p>
+<p>The GUI is designed to be as intuitively usable as possible. We divided the functionality into 5 sections, which are represented by the main tabs.</p>
 <img alt="../../_images/task-10-Gui_help.png" src="../../_images/task-10-Gui_help.png" />
 <p>The first tab gives some basic information about the project. It further presents a link to the documentation for more details.</p>
 <img alt="../../_images/task-10-Gui_connectivity.png" src="../../_images/task-10-Gui_connectivity.png" />
@@ -166,7 +166,7 @@ The system info vizualization shows usaga of the RAM during computation.</p>
 </section>
 <section id="server-side">
 <h2>Server-side<a class="headerlink" href="#server-side" title="Link to this heading"></a></h2>
-<p>The first thing we did was to modularize our main <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> program.</p>
+<p>The first task we had to tackle was to modularize our main <code class="docutils literal notranslate"><span class="pre">tsunami_lab</span></code> program.</p>
 <p>The original <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> had one main function that executed the whole program loop.
 The code was moved to <code class="docutils literal notranslate"><span class="pre">Simulator.cpp</span></code> and we now have separate functions for the different parts of the program, such as <code class="docutils literal notranslate"><span class="pre">prepareForCalculation()</span></code> and <code class="docutils literal notranslate"><span class="pre">runCalculation()</span></code>.
 <code class="docutils literal notranslate"><span class="pre">prepareForCalculation()</span></code> itself also calls different functions, such as <code class="docutils literal notranslate"><span class="pre">setupFolders()</span></code>, <code class="docutils literal notranslate"><span class="pre">loadConfiguration()</span></code>, <code class="docutils literal notranslate"><span class="pre">constructSetup()</span></code> and so on.

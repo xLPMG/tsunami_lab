@@ -30,7 +30,7 @@ All it takes is to send the correct commands to the server by sticking to the AP
 GUI (Client-side)
 *********************
 
-The Gui is desigend to be as intuitively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.
+The GUI is designed to be as intuitively usable as possible. We divided the functionality into 5 sections, which are represented by the main tabs.
 
 ..  image:: ../../_static/assets/task-10-Gui_help.png
 
@@ -77,7 +77,7 @@ In the last window, data files can be selected and then sent to the server. Rece
 Server-side
 *********************
 
-The first thing we did was to modularize our main ``tsunami_lab`` program. 
+The first task we had to tackle was to modularize our main ``tsunami_lab`` program. 
 
 The original ``main.cpp`` had one main function that executed the whole program loop.
 The code was moved to ``Simulator.cpp`` and we now have separate functions for the different parts of the program, such as ``prepareForCalculation()`` and ``runCalculation()``. 
