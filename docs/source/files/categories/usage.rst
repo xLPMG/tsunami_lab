@@ -30,17 +30,10 @@ also from inside the ``tsunami_lab`` folder. The ``<PORT>`` parameter specifies 
 The two applications may run on different machines, but you have to make sure that the server can be reached over TCP using
 the machines ip address and the specified port.
 
-Basic GUI Usage
------------------
+How to use the GUI
+---------------------
 
-After starting a server, you can connect to it using the ``Connectivity`` tab of the main window:
-
-.. image:: ../../_static/assets/gui_connect.png
-
-Simply enter the server data and click ``Connect``.
-
-.. warning::
-  Since as of now the GUI is constantly being worked on, the usage guide will end here. We will complete it once the GUI has reached a stable phase.
+This part of the usage documentation was moved to its own :ref:`separate page <gui-doc>`.
 
 Running without GUI
 ----------------------
@@ -62,6 +55,8 @@ executing the command from. For example
 
 in case ``yourconfig.json`` is also located inside the ``tsunami_lab`` folder. If it were inside the ``resources`` folder,
 you would need to specify the relative path like ``resources/yourconfig.json``
+
+.. _config-files:
 
 Configuration files
 ---------------------

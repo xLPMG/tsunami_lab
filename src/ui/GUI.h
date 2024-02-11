@@ -27,6 +27,8 @@ namespace tsunami_lab
 class tsunami_lab::ui::GUI
 {
 private:
+  //! Version of the GUI
+  const char *VERSION = "1.0.2";
   //! Width of the window
   const unsigned int WINDOW_WIDTH = 1500;
   //! Height of the window

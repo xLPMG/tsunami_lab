@@ -134,7 +134,7 @@ void tsunami_lab::Simulator::loadConfiguration()
   m_checkpointFrequency = m_configData.value("checkpointFrequency", -1);
 
   // read station data
-  m_stationFrequency = m_configData.value("stationFrequency", 1);
+  m_stationFrequency = m_configData.value("stationFrequency", 0);
   if (m_useFileIO)
   {
     std::string l_outputMethod = m_configData.value("outputMethod", "netcdf");
@@ -543,7 +543,11 @@ void tsunami_lab::Simulator::deriveTimeStep()
     // set count in case we load from a checkpoint file
     if (m_simTime > 0)
     {
+      if(m_stationFrequency > 0){
       m_captureCount = std::floor(m_simTime / m_stationFrequency);
+      }else{
+        m_captureCount = 0;
+      }
     }
   }
 }
@@ -795,7 +799,7 @@ void tsunami_lab::Simulator::runCalculation()
         }
       }
       // write stations
-      if (m_simTime >= m_stationFrequency * m_captureCount)
+      if (m_stationFrequency > 0 && m_simTime >= m_stationFrequency * m_captureCount)
       {
         std::cout << "  capturing station data" << std::endl;
         for (tsunami_lab::io::Station *l_s : m_stations)

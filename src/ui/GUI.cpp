@@ -539,17 +539,17 @@ int tsunami_lab::ui::GUI::launch()
                     {
                         if (ImGui::BeginTabItem("Configuration"))
                         {
-                            ImGui::Checkbox("Edit simulation parameters", &showSimulationParameterWindow);
-                            ImGui::Checkbox("Manage stations", &showStationsWindow);
-                            ImGui::Checkbox("Edit compiler/runtime options", &showCompilerOptionsWindow);
+                            ImGui::Checkbox("Simulation parameter editor", &showSimulationParameterWindow);
+                            ImGui::Checkbox("Stations manager", &showStationsWindow);
+                            ImGui::Checkbox("Compiler/runtime options editor", &showCompilerOptionsWindow);
                             ImGui::EndTabItem();
                         }
                         if (ImGui::BeginTabItem("Observation tools"))
                         {
-                            ImGui::Checkbox("Show station data visualizer", &showStationDataVisualizer);
-                            ImGui::Checkbox("Show data visualizer", &showDataVisualizer);
-                            ImGui::Checkbox("Show client log", &showClientLog);
-                            ImGui::Checkbox("Show system info", &showSystemInfoWindow);
+                            ImGui::Checkbox("Heights visualizer", &showDataVisualizer);
+                            ImGui::Checkbox("Station data visualizer", &showStationDataVisualizer);
+                            ImGui::Checkbox("Client log", &showClientLog);
+                            ImGui::Checkbox("System info", &showSystemInfoWindow);
                             ImGui::EndTabItem();
                         }
                         ImGui::EndTabBar();
@@ -645,6 +645,7 @@ int tsunami_lab::ui::GUI::launch()
             ImGui::ColorEdit3("Background color", (float *)&clear_color);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::Text("You are currently using version %s", VERSION);
             ImGui::Text("made by Luca-Philipp Grumbach and Richard Hofmann");
             ImGui::End();
         }

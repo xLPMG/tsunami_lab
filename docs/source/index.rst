@@ -9,6 +9,7 @@ Table of Contents
    files/categories/introduction
    files/categories/setup
    files/categories/usage
+   files/categories/gui_documentation
 
 .. toctree::
    :caption: Documentation
