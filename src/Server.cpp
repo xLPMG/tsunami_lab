@@ -39,7 +39,7 @@ std::vector<float> l_cpuUsage;
 
 /**
  * Executes the given command.
- * 
+ *
  * @param i_cmd The command to be executed.
  * @return The exit status of the command.
  */
@@ -50,10 +50,10 @@ int exec(std::string i_cmd)
 
 /**
  * @brief Function to exit the simulation thread.
- * 
+ *
  * This function sets the shouldExit flag of the simulator object to true,
  * indicating that the simulation should be terminated as soon as possible.
- * 
+ *
  * @return void
  */
 void exitSimulationThread()
@@ -66,7 +66,7 @@ void exitSimulationThread()
  * Checks if the simulation thread is active.
  * If the simulator is preparing, calculating, or resetting, the simulation is considered running.
  * If the simulation thread is joinable, it is joined and the simulation is considered not running.
- * 
+ *
  * @return void
  */
 void checkSimThreadActive()
@@ -87,7 +87,7 @@ void checkSimThreadActive()
 
 /**
  * Checks if a simulation thread can be run.
- * 
+ *
  * @return true if the simulation thread can be run, false otherwise.
  */
 bool canRunThread()
@@ -107,10 +107,10 @@ bool canRunThread()
 
 /**
  * @brief Updates the data related to CPU and RAM usage.
- * 
+ *
  * This function checks if it is time to update the data and if so, it retrieves the CPU usage and RAM usage.
  * The updated data is stored in the respective variables.
- * 
+ *
  * @return void
  */
 void updateData()
@@ -125,7 +125,7 @@ void updateData()
 
 /**
  * @brief Main function for the tsunami_lab server program.
- * 
+ *
  * @return Exit code (0 for success, non-zero for errors).
  */
 int main(int i_argc, char *i_argv[])
@@ -339,7 +339,8 @@ int main(int i_argc, char *i_argv[])
                         tsunami_lab::t_idx l_nCellsY = l_args["cellsY"];
                         simulator->setCellAmount(l_nCellsX, l_nCellsY);
                     }
-                    else if(l_key == xlpmg::LOAD_STATIONS.key){
+                    else if (l_key == xlpmg::LOAD_STATIONS.key)
+                    {
                         simulator->loadStations(l_args);
                     }
                 }
@@ -355,14 +356,17 @@ int main(int i_argc, char *i_argv[])
                     }
                     else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                     {
-                        simulator->loadConfigDataJson(l_args);
-                        if (canRunThread())
+                        if (json::accept(l_args))
                         {
-                            m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
-                        }
-                        else
-                        {
-                            std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
+                            simulator->loadConfigDataJson(l_args);
+                            if (canRunThread())
+                            {
+                                m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
+                            }
+                            else
+                            {
+                                std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
+                            }
                         }
                     }
                     else if (l_key == xlpmg::LOAD_CONFIG_FILE.key)
@@ -436,7 +440,7 @@ int main(int i_argc, char *i_argv[])
                         l_response.args = l_data;
                         l_communicator.sendToClient(xlpmg::messageToJsonString(l_response), false);
                     }
-                    
+
                     else if (l_key == xlpmg::GET_SIMULATION_SIZES.key)
                     {
                         xlpmg::Message l_msg = xlpmg::SERVER_RESPONSE;
@@ -483,7 +487,6 @@ int main(int i_argc, char *i_argv[])
                         }
                         l_heightDataMsg.args = l_data;
                         l_communicator.sendToClient(xlpmg::messageToJsonString(l_heightDataMsg));
-                        
                     }
                     else if (l_key == xlpmg::GET_BATHYMETRY_DATA.key)
                     {
