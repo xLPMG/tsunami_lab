@@ -320,7 +320,8 @@ void tsunami_lab::Simulator::createWaveProp()
   }
 
   // provide stations with new waveprop
-  for(tsunami_lab::io::Station *l_s : m_stations){
+  for (tsunami_lab::io::Station *l_s : m_stations)
+  {
     l_s->setWaveProp(m_waveProp);
   }
 }
@@ -543,9 +544,12 @@ void tsunami_lab::Simulator::deriveTimeStep()
     // set count in case we load from a checkpoint file
     if (m_simTime > 0)
     {
-      if(m_stationFrequency > 0){
-      m_captureCount = std::floor(m_simTime / m_stationFrequency);
-      }else{
+      if (m_stationFrequency > 0)
+      {
+        m_captureCount = std::floor(m_simTime / m_stationFrequency);
+      }
+      else
+      {
         m_captureCount = 0;
       }
     }
@@ -649,7 +653,10 @@ void tsunami_lab::Simulator::writeCheckpoint()
 void tsunami_lab::Simulator::loadConfigDataFromFile(std::string i_configFilePath)
 {
   std::ifstream l_configFile(i_configFilePath);
-  m_configData = json::parse(l_configFile);
+  if (json::accept(l_configFile))
+  {
+    m_configData = json::parse(l_configFile);
+  }
 }
 
 void tsunami_lab::Simulator::loadConfigDataJson(json i_config)
@@ -838,7 +845,7 @@ void tsunami_lab::Simulator::runCalculation()
     m_simTime += m_dt;
 
     auto l_durationTimeSteps = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - l_beginCalc);
-    m_timePerTimeStep = (double) l_durationTimeSteps.count() / m_timeStep;
+    m_timePerTimeStep = (double)l_durationTimeSteps.count() / m_timeStep;
   }
 
   auto l_endCalc = std::chrono::high_resolution_clock::now();
