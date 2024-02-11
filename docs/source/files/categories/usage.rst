@@ -7,7 +7,7 @@ Navigate to the local git repository. If the name wasnt explicitly changed, this
 If you have yet to set up and build the git repository locally, check out the :ref:`setup` page first.
 
 
-Running with GUI
+Running with the GUI
 ----------------------
 
 .. note:: 
@@ -26,24 +26,15 @@ inside the ``tsunami_lab`` folder. To start the server, run
     ./build/tsunami_lab server <PORT>
 
 also from inside the ``tsunami_lab`` folder. The ``<PORT>`` parameter specifies which port will be used for the remote connection.
+If no port is specified, ``8080`` will be used.
 
 The two applications may run on different machines, but you have to make sure that the server can be reached over TCP using
 the machines ip address and the specified port.
 
-Basic GUI Usage
------------------
+For instructions on how to use the GUI, check out :ref:`this page <gui-doc>`.
 
-After starting a server, you can connect to it using the ``Connectivity`` tab of the main window:
-
-.. image:: ../../_static/assets/gui_connect.png
-
-Simply enter the server data and click ``Connect``.
-
-.. warning::
-  Since as of now the GUI is constantly being worked on, the usage guide will end here. We will complete it once the GUI has reached a stable phase.
-
-Running without GUI
-----------------------
+Running without the GUI
+-------------------------
 
 Make sure you are inside the ``tsunami_lab`` folder.
 To run the simulator, execute
@@ -62,6 +53,8 @@ executing the command from. For example
 
 in case ``yourconfig.json`` is also located inside the ``tsunami_lab`` folder. If it were inside the ``resources`` folder,
 you would need to specify the relative path like ``resources/yourconfig.json``
+
+.. _config-files:
 
 Configuration files
 ---------------------
