@@ -7,7 +7,7 @@ Navigate to the local git repository. If the name wasnt explicitly changed, this
 If you have yet to set up and build the git repository locally, check out the :ref:`setup` page first.
 
 
-Running with GUI
+Running with the GUI
 ----------------------
 
 .. note:: 
@@ -26,17 +26,15 @@ inside the ``tsunami_lab`` folder. To start the server, run
     ./build/tsunami_lab server <PORT>
 
 also from inside the ``tsunami_lab`` folder. The ``<PORT>`` parameter specifies which port will be used for the remote connection.
+If no port is specified, ``8080`` will be used.
 
 The two applications may run on different machines, but you have to make sure that the server can be reached over TCP using
 the machines ip address and the specified port.
 
-How to use the GUI
----------------------
+For instructions on how to use the GUI, check out :ref:`this page <gui-doc>`.
 
-This part of the usage documentation was moved to its own :ref:`separate page <gui-doc>`.
-
-Running without GUI
-----------------------
+Running without the GUI
+-------------------------
 
 Make sure you are inside the ``tsunami_lab`` folder.
 To run the simulator, execute

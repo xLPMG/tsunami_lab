@@ -2,7 +2,7 @@
 10. Project Phase
 ###################
 
-In the project phase we decided to implement a user-friendly Gui. The aim was to make the usage of our Tsunami solver
+In the project phase we decided to implement a user-friendly graphical user interface. The aim was to make the usage of our Tsunami solver
 as easy and interactive as possible. 
 
 *********************
@@ -30,7 +30,7 @@ All it takes is to send the correct commands to the server by sticking to the AP
 GUI (Client-side)
 *********************
 
-The Gui is desigend to be as intuitively usable as possible. Therefore, we divided the functionality of the GUI into 5 sections, which are represented by the main tabs.
+We divided all functionality into 5 sections, which are represented by the main tabs.
 
 ..  image:: ../../_static/assets/task-10-Gui_help.png
 
@@ -71,7 +71,6 @@ The system info vizualization shows usaga of the RAM during computation.
 ..  image:: ../../_static/assets/task-10-Gui_file_transfer.png
 
 In the last window, data files can be selected and then sent to the server. Receiving from the server is possible as well.
-
 
 *********************
 Server-side
