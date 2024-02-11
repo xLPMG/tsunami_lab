@@ -653,10 +653,14 @@ void tsunami_lab::Simulator::writeCheckpoint()
 void tsunami_lab::Simulator::loadConfigDataFromFile(std::string i_configFilePath)
 {
   std::ifstream l_configFile(i_configFilePath);
-  if (json::accept(l_configFile))
+  json l_configData = json::parse(l_configFile, nullptr, false);
+  if (l_configData.is_discarded())
   {
-    m_configData = json::parse(l_configFile);
+    std::cerr << "parse error" << std::endl;
+    return;
   }
+
+  m_configData = l_configData;
 }
 
 void tsunami_lab::Simulator::loadConfigDataJson(json i_config)

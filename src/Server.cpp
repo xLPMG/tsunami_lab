@@ -356,17 +356,14 @@ int main(int i_argc, char *i_argv[])
                     }
                     else if (l_key == xlpmg::LOAD_CONFIG_JSON.key)
                     {
-                        if (json::accept(l_args))
+                        simulator->loadConfigDataJson(l_args);
+                        if (canRunThread())
                         {
-                            simulator->loadConfigDataJson(l_args);
-                            if (canRunThread())
-                            {
-                                m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
-                            }
-                            else
-                            {
-                                std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
-                            }
+                            m_simulationThread = std::thread(&tsunami_lab::Simulator::resetSimulator, simulator);
+                        }
+                        else
+                        {
+                            std::cout << "Warning: Could not reset because the simulation is still running." << std::endl;
                         }
                     }
                     else if (l_key == xlpmg::LOAD_CONFIG_FILE.key)
